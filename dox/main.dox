@@ -1,0 +1,44 @@
+/**
+  * @mainpage
+  *
+  * <img src="https://github.com/SmartCAMPUSZCU/KETCube-docs/raw/master/resources/images/ketCube_all_photo_webQ.jpg" alt="KETCube platform" style="max-width:30%; margin-right: 15px; margin-bottom: 15px" align="left">
+  *
+  * KETCube is the prototyping and demo platform developed by the SmartCAMPUS team at the 
+  * Department of Technologies and Measurement (<a href="http://fel.zcu.cz/en/departments/ket/about/">KET</a>), <a href="https://www.zcu.cz/">University of West Bohemia in Pilsen</a>.
+  *
+  *
+  * The general information about the KETCube platform can be found in <a href="https://github.com/SmartCAMPUSZCU/KETCube-docs/blob/master/KETCubeDatasheet.pdf">KETCube datasheet</a>.
+  * More detailed info related to KETCube in general can be found in <a href="https://github.com/SmartCAMPUSZCU/KETCube-docs/tree/master/appNotes">Application Notes</a>
+  *
+  * This documentation describes the KETCube firmware, which is divided to two groups @ref KETCube_Core and @ref KETCube_Mods.
+  *
+  * <img src="https://github.com/SmartCAMPUSZCU/KETCube-docs/raw/master/resources/images/fw_stack.png" alt="KETCube firmware structure" style="max-width:30%; margin: 15px" align="right">
+  *
+  * <h2>KETCube Core</h2> 
+  * @ref KETCube_Core is the principal part of the KETCube platform. It is NOT closely related to underlying hardware and it is designed to be easily ported to any MCU platform if necessary. 
+  * The hardware-related part of KETCube Core is separated to @ref KETCube_Drivers. These are EEPROM driver enabling the non-volatile configuration storage, the @ref KETCube_mainBoard definition file or a serial line driver enabling the command line interface.
+  *
+  * <h2>KETCube Modules</h2> 
+  * @ref KETCube_Mods contains the hardware- and particular function-related code. A particular module is related to KETCube mainBoard itself or to KETCube extension board. 
+  * The KETCube module could be simply understand as an extension adding/enabling particular functionality to/of KETCube.
+  *
+  * @ref KETCube_Mods are additionally divided into:
+  *
+  * <h3>Sensing Modules</h3>
+  * The @ref KETCube_SensMods serve (from the KETCube platform perspective) as the data-input.
+  *
+  * <h3>Communication Modules</h3>
+  * The @ref KETCube_CommMods "KETCube Communication Module" deliver data produced by @ref KETCube_SensMods to another system (to the cloud, another KETCube device, ...)
+  *
+  * <h3>Actuating Modules</h3>
+  * The @ref KETCube_ActMods group is currently empty.
+  *
+  * <h3>Module drivers</h3>
+  * @ref KETCube_ModuleDrivers provide functionality required by modules (drivers).
+  * They do not represent data IN/OUT functionality out of the KETCube platform bounds and they are MCU-specific but not external peripheral specific (e.g. I2C support).
+  *
+  * <h3>Examples</h3>
+  * E.g.: if @ref KETCube_ADC (@ref KETCube_SensMods) and @ref KETCube_LoRa (@ref KETCube_CommMods) modules are enabled, data produced by the ADC module are delivered thru LoRaWAN network to the cloud.
+  *
+
+  */

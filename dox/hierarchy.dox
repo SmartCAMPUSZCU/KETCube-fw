@@ -1,0 +1,30 @@
+/**
+ * @defgroup KETCube_Core KETCube Core
+ * @brief KETCube Core Parts
+ *
+ * @defgroup KETCube_Mods KETCube Modules
+ * @brief KETCube Extension Modules
+ *
+ * @defgroup KETCube_SensMods KETCube Sensing Modules
+ * @ingroup KETCube_Mods
+ * @brief KETCube Modules providing sensor functionality
+ *
+ * @defgroup KETCube_ActMods KETCube Actuating Modules
+ * @ingroup KETCube_Mods
+ * @brief KETCube Modules providing actuator functionality
+ *
+ * @defgroup KETCube_CommMods KETCube Communication Modules
+ * @ingroup KETCube_Mods
+ * @brief KETCube Modules providing communication functionality
+ *
+ * @defgroup KETCube_Drivers KETCube Drivers
+ * @brief KETCube peripheral drivers 
+ *
+ * @defgroup KETCube_CoreDrivers KETCube Core Drivers
+ * @ingroup KETCube_Drivers
+ * @brief KETCube peripheral drivers for KETCube Core
+ *
+ * @defgroup KETCube_ModuleDrivers KETCube Module Drivers
+ * @ingroup KETCube_Drivers
+ * @brief KETCube peripheral drivers for KETCube Modules
+ */
