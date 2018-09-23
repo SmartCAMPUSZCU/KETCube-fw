@@ -73,12 +73,12 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
     uint8_t i;
 
     GPIO_InitTypeDef GPIO_InitStruct;
-    
+
     // Init drivers
     if (ketCube_I2C_Init() != KETCUBE_CFG_MODULE_OK) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
-    
+
     /* Init GPIO */
     FDC2214_SD_CLK_ENABLE();
 
@@ -88,7 +88,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 
     HAL_GPIO_Init(FDC2214_GPIO_PORT, &GPIO_InitStruct);
-    
+
     /* Power ON */
     FDC2214_ON();
 
@@ -129,10 +129,10 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
 
     // external OSC
     // reg = 0x0e01;
-    
+
     // internal OSC
     reg = 0x0c01;
-    
+
     while (ketCube_I2C_TexasWriteReg
            (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_CONFIG,
             &reg) == KETCUBE_CFG_MODULE_ERROR) {

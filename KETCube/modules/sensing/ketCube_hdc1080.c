@@ -140,7 +140,9 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
-    *value = (int16_t) (10.0 * (((((float) rawT) / pow(2, 16)) * 165.0) - 40.0));
+    *value =
+        (int16_t) (10.0 *
+                   (((((float) rawT) / pow(2, 16)) * 165.0) - 40.0));
 
     return KETCUBE_CFG_MODULE_OK;
 }
@@ -206,14 +208,14 @@ ketCube_cfg_ModError_t ketCube_hdc1080_ReadData(uint8_t * buffer,
 
     /* in % * 10  */
     if (getHumidity(&humidity) == KETCUBE_CFG_MODULE_ERROR) {
-        humidity = 0xFFFF; // out-of the range value indicates error
+        humidity = 0xFFFF;      // out-of the range value indicates error
     }
-    
+
     /* in °C * 10 */
     if (getTemperature(&temp) == KETCUBE_CFG_MODULE_OK) {
-        temperature = (uint16_t) (10000 + ((int16_t) (temp)));   /*  x * 10 - 10000 in C */   
+        temperature = (uint16_t) (10000 + ((int16_t) (temp)));  /*  x * 10 - 10000 in C */
     } else {
-        temperature = 0xFFFF; // out-of the range value indicates error
+        temperature = 0xFFFF;   // out-of the range value indicates error
     }
 
     buffer[i++] = (temperature >> 8) & 0xFF;
@@ -224,7 +226,7 @@ ketCube_cfg_ModError_t ketCube_hdc1080_ReadData(uint8_t * buffer,
     *len = i;
 
     ketCube_terminal_DebugPrintln("HDC1080 :: Temperature: %d °C, RH: %d",
-                                  (((int) temperature - 10000)/10),
+                                  (((int) temperature - 10000) / 10),
                                   (humidity / 10));
 
     return KETCUBE_CFG_MODULE_OK;

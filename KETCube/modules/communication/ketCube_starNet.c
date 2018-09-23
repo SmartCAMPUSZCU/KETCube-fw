@@ -271,7 +271,7 @@ static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
     Radio.Sleep();
 
     rxDone = TRUE;
-    
+
     // previous msg not processed ... ignore this one
     if ((ketCube_starNet_rssi.msgLen > 0) ||
         (ketCube_starNet_snr.msgLen > 0) ||

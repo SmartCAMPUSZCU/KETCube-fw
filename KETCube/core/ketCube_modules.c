@@ -52,15 +52,12 @@
 #include "ketCube_lora.h"
 #include "ketCube_i2c.h"
 #include "ketCube_hdc1080.h"
+#include "ketCube_batMeas.h"
 #include "ketCube_fdc2214.h"
-#include "ketCube_max1501.h"
-#include "ketCube_lis331hh.h"
 #include "ketCube_adc.h"
 #include "ketCube_starNet.h"
 #include "ketCube_rxDisplay.h"
-#include "ketCube_LEDBeacon.h"
-#include "ketCube_microDock.h"
-#include "ketCube_buzzer.h"
+#include "ketCube_asyncTx.h"
 
 /**
 * @brief List of KETCube modules
@@ -114,15 +111,15 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     {((char *) &("batMeas")),
      ((char *) &("On-chip battery voltage measurement.")),
-     (ketCube_cfg_ModInitFn_t) NULL,    /*·Module Init() */
+     &ketCube_batMeas_Init,     /*·Module Init() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
-     &HW_ketCube_getBatLevel,   /*·GetSensorData() */
+     &ketCube_batMeas_ReadData, /*·GetSensorData() */
      (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
      (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
      0,                         /*·CFG base addr -- set dynamicaly */
-     1,                         /*·CFG len in bytes */
+     2,                         /*·CFG len in bytes */
      TRUE                       /*·module CFG byte -- set dynamically */
      },
 #endif
@@ -201,76 +198,16 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
      TRUE                       /*·module CFG byte -- set dynamically */
      },
 #endif
-#ifdef KETCUBE_CFG_INC_MOD_LEDBEACON
-    {((char *) &("LEDBeacon")),
-     ((char *) &("LED FindMe Beacon.")),
-     &ketCube_LEDBeacon_Init,   /*·Module Init() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
-     &ketCube_LEDBeacon_ReadData,    /*·GetSensorData() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL,    /*·ProcessData() */
-     0,                         /*·CFG base addr -- set dynamicaly */
-     1,                         /*·CFG len in bytes */
-     TRUE                       /*·module CFG byte -- set dynamically */
-     },
-#endif
-#ifdef KETCUBE_CFG_INC_MOD_BUZZER
-    {((char *) &("Buzzer")),
-     ((char *) &("Buzzer FindMe Beacon.")),
-     &ketCube_buzzer_Init,   /*·Module Init() */
+#ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
+    {((char *) &("AsyncTx")),
+     ((char *) &("Asynchronously transmit data.")),
+     &ketCube_AsyncTx_Init,     /*·Module Init() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
      (ketCube_cfg_ModDataFn_t) NULL,    /*·GetSensorData() */
      (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL,    /*·ProcessData() */
-     0,                         /*·CFG base addr -- set dynamicaly */
-     1,                         /*·CFG len in bytes */
-     TRUE                       /*·module CFG byte -- set dynamically */
-     },
-#endif
-#ifdef KETCUBE_CFG_INC_MOD_MAX1501
-    {((char *) &("MAX1501")),
-     ((char *) &("TI\'s MAX1501 charger.")),
-     &ketCube_max1501_Init,     /*·Module Init() */
-     &ketCube_max1501_UnInit,    /*·SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
-     &ketCube_max1501_ReadData, /*·GetSensorData() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
-     0,                         /*·CFG base addr -- set dynamicaly */
-     1,                         /*·CFG len in bytes */
-     TRUE                       /*·module CFG byte -- set dynamically */
-     },
-#endif
-#ifdef KETCUBE_CFG_INC_MOD_LIS331HH
-    {((char *) &("LIS331HH")),
-     ((char *) &("STM\'s LIS331HH accelerometer.")),
-     &ketCube_lis331hh_Init,     /*·Module Init() */
-     &ketCube_lis331hh_UnInit,    /*·SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
-     &ketCube_lis331hh_ReadData, /*·GetSensorData() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
-     0,                         /*·CFG base addr -- set dynamicaly */
-     1,                         /*·CFG len in bytes */
-     TRUE                       /*·module CFG byte -- set dynamically */
-     },
-#endif
-#ifdef KETCUBE_CFG_INC_MOD_MICRO_DOCK
-    {((char *) &("MicroDock")),
-     ((char *) &("KET\'s MicroDock support.")),
-     &ketCube_microDock_Init,     /*·Module Init() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
-     &ketCube_microDock_ReadData, /*·GetSensorData() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
+     &ketCube_AsyncTx_ProcessData,      /*·ProcessData() */
      0,                         /*·CFG base addr -- set dynamicaly */
      1,                         /*·CFG len in bytes */
      TRUE                       /*·module CFG byte -- set dynamically */
@@ -351,9 +288,10 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
                      ketCube_modules_List[i].name);
 
                 len = 0;
-                (ketCube_modules_List[i].
-                 fnGetSensorData) (&(SensorBuffer[SensorBufferSize]),
-                                   &len);
+                (ketCube_modules_List[i].fnGetSensorData) (&
+                                                           (SensorBuffer
+                                                            [SensorBufferSize]),
+                                                           &len);
                 SensorBufferSize += len;
             }
         }
@@ -364,8 +302,8 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnSendData != NULL) {
                 ketCube_terminal_DebugPrintln("Module \"%s\" SendData()",
-                                              ketCube_modules_List[i].
-                                              name);
+                                              ketCube_modules_List
+                                              [i].name);
 
                 (ketCube_modules_List[i].fnSendData) (&(SensorBuffer[0]),
                                                       &SensorBufferSize);
@@ -404,8 +342,9 @@ ketCube_cfg_Error_t ketCube_modules_ProcessMsgs(void)
         if (InterModMsgBuffer[i] != (ketCube_InterModMsg_t **) NULL) {
             // data are ready to process
             msgID = 0;
-            if (ketCube_modules_List[(InterModMsgBuffer[i])[msgID]->modID].
-                fnProcessMsg != NULL) {
+            if (ketCube_modules_List
+                [(InterModMsgBuffer[i])[msgID]->modID].fnProcessMsg !=
+                NULL) {
                 while ((InterModMsgBuffer[i])[msgID] != NULL) {
                     // first byte is the target module ID (recipient)
                     if ((InterModMsgBuffer[i])[msgID]->msgLen > 0) {
@@ -414,8 +353,9 @@ ketCube_cfg_Error_t ketCube_modules_ProcessMsgs(void)
                              ketCube_modules_List[(InterModMsgBuffer[i])
                                                   [msgID]->modID].name);
                         (ketCube_modules_List
-                         [(InterModMsgBuffer[i])[msgID]->modID].
-                         fnProcessMsg) ((InterModMsgBuffer[i])[msgID]);
+                         [(InterModMsgBuffer[i])[msgID]->
+                          modID].fnProcessMsg) ((InterModMsgBuffer[i])
+                                                [msgID]);
                     }
                     msgID++;
                 }
@@ -442,8 +382,8 @@ ketCube_cfg_Error_t ketCube_modules_SleepEnter(void)
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnSleepEnter != NULL) {
                 ketCube_terminal_DebugPrintln("Module \"%s\" SleepEnter()",
-                                              ketCube_modules_List[i].
-                                              name);
+                                              ketCube_modules_List
+                                              [i].name);
 
                 if (((ketCube_modules_List[i].fnSleepEnter) ()) ==
                     KETCUBE_CFG_MODULE_ERROR) {
@@ -474,8 +414,8 @@ ketCube_cfg_Error_t ketCube_modules_SleepExit(void)
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnSleepExit != NULL) {
                 ketCube_terminal_DebugPrintln("Module \"%s\" SleepExit()",
-                                              ketCube_modules_List[i].
-                                              name);
+                                              ketCube_modules_List
+                                              [i].name);
 
                 (ketCube_modules_List[i].fnSleepExit) ();
             }

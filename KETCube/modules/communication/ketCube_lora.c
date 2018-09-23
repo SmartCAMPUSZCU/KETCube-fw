@@ -78,6 +78,12 @@
  */
 #define LORAWAN_APP_PORT                            2
 
+/*!
+ * LoRaWAN application port for Async messagess
+ * @note do not use 224. It is reserved for certification
+ */
+#define LORAWAN_ASYNCAPP_PORT                       3
+
 /* call back when LoRa will transmit a frame*/
 static void ketCube_lora_TxData(lora_AppData_t * AppData,
                                 FunctionalState * IsTxConfirmed);
@@ -147,12 +153,30 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
 
 static uint8_t *dataBuffer;
 static uint8_t dataBufferLen;
+static uint8_t txPort;
 
 /**
  * @brief Process lora state and prepare data...
  */
 ketCube_cfg_ModError_t ketCube_lora_Send(uint8_t * buffer, uint8_t * len)
 {
+    txPort = LORAWAN_APP_PORT;
+    dataBuffer = buffer;
+    dataBufferLen = *len;
+
+    // when timer elapsed tx next packet or join ...
+    OnSendEvent();
+
+    return KETCUBE_CFG_MODULE_OK;
+}
+
+/**
+ * @brief Process lora state and prepare data (for asynchronous send)...
+ */
+ketCube_cfg_ModError_t ketCube_lora_AsyncSend(uint8_t * buffer,
+                                              uint8_t * len)
+{
+    txPort = LORAWAN_ASYNCAPP_PORT;
     dataBuffer = buffer;
     dataBufferLen = *len;
 
@@ -187,7 +211,7 @@ ketCube_cfg_ModError_t ketCube_lora_SleepEnter(void)
 static void ketCube_lora_TxData(lora_AppData_t * AppData,
                                 FunctionalState * IsTxConfirmed)
 {
-    AppData->Port = LORAWAN_APP_PORT;
+    AppData->Port = txPort;
     *IsTxConfirmed = LORAWAN_CONFIRMED_MSG;
 
     memcpy(&(AppData->Buff[0]), &(dataBuffer[0]), dataBufferLen);

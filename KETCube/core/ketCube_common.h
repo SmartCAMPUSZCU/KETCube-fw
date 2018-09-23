@@ -261,11 +261,12 @@ static inline void ketCube_common_Dec2int(int32_t * output, char *str,
   * @retval min minimum
   *
   */
-static inline uint8_t ketCube_common_Min(uint8_t a, uint8_t b){
-	if (a < b)
-		return a;
-	else
-		return b;
+static inline uint8_t ketCube_common_Min(uint8_t a, uint8_t b)
+{
+    if (a < b)
+        return a;
+    else
+        return b;
 }
 
 /**
@@ -277,11 +278,12 @@ static inline uint8_t ketCube_common_Min(uint8_t a, uint8_t b){
   * @retval max maximum
   *
   */
-static inline uint8_t ketCube_common_Max(uint8_t a, uint8_t b){
-	if (a > b)
-		return a;
-	else
-		return b;
+static inline uint8_t ketCube_common_Max(uint8_t a, uint8_t b)
+{
+    if (a > b)
+        return a;
+    else
+        return b;
 }
 
 
@@ -294,21 +296,22 @@ static inline uint8_t ketCube_common_Max(uint8_t a, uint8_t b){
   * @retval med median
   *
   */
-static inline uint16_t ketCube_common_Med(uint16_t * values, uint16_t size) {
+static inline uint16_t ketCube_common_Med(uint16_t * values, uint16_t size)
+{
     uint16_t i, j, tmp;
 
-	// bubble-sort -- it's efficient for small arrays
-	for (i = 0; i < size-1; i++){
-		for (j = 0;j < size-1-i; j++){
-			if (values[j] < values[j+1]){
-				tmp = values[j];
-				values[j] = values[j+1];
-				values[j+1] = tmp;
-			}
-		}
-	}
+    // bubble-sort -- it's efficient for small arrays
+    for (i = 0; i < size - 1; i++) {
+        for (j = 0; j < size - 1 - i; j++) {
+            if (values[j] < values[j + 1]) {
+                tmp = values[j];
+                values[j] = values[j + 1];
+                values[j + 1] = tmp;
+            }
+        }
+    }
 
-	return (uint16_t) values[size/2];
+    return (uint16_t) values[size / 2];
 }
 
 /**
@@ -320,18 +323,19 @@ static inline uint16_t ketCube_common_Med(uint16_t * values, uint16_t size) {
   * @retval avg median
   *
   */
-static inline uint16_t ketCube_common_Avg(uint16_t * values, uint16_t size) {
+static inline uint16_t ketCube_common_Avg(uint16_t * values, uint16_t size)
+{
     uint16_t i;
-	uint32_t result = 0;
+    uint32_t result = 0;
 
-	// average
-	for (i = 0; i < size; i++) {
-		result += values[i];
-	}
+    // average
+    for (i = 0; i < size; i++) {
+        result += values[i];
+    }
 
-	result = result / size;
+    result = result / size;
 
-	return (uint16_t) result;
+    return (uint16_t) result;
 }
 
 
@@ -345,7 +349,8 @@ static inline uint16_t ketCube_common_Avg(uint16_t * values, uint16_t size) {
   * @retval n with swapped bytes
   *
   */
-static inline uint16_t ketCube_common_swapW(uint16_t n){
+static inline uint16_t ketCube_common_swapW(uint16_t n)
+{
     return ((n >> 8) | (n << 8));
 }
 

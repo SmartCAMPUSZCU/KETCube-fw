@@ -127,6 +127,8 @@ extern ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t ***
                                                 msg);
 extern ketCube_cfg_ModError_t ketCube_lora_Send(uint8_t * buffer,
                                                 uint8_t * len);
+extern ketCube_cfg_ModError_t ketCube_lora_AsyncSend(uint8_t * buffer,
+                                                     uint8_t * len);
 extern ketCube_cfg_ModError_t ketCube_lora_SleepEnter(void);
 
 /**

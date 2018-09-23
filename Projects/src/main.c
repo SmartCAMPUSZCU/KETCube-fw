@@ -66,48 +66,27 @@ static bool KETCube_PeriodTimerElapsed = FALSE;
  */
 static void KETCube_PeriodElapsed(void)
 {
-
-
     TimerStop(&KETCube_PeriodTimer);
-
 
     KETCube_PeriodTimerElapsed = TRUE;
 
-
     TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg_BasePeriod);
 
-
     TimerStart(&KETCube_PeriodTimer);
-
-
 }
 
 void KETCube_ErrorHandler(void)
 {
-
-
-
     KETCUBE_TERMINAL_ENDL();
-
 
     KETCUBE_TERMINAL_PRINTF("!!! KETCube ERROR !!!");
 
-
     KETCUBE_TERMINAL_ENDL();
-
-
 
     while (TRUE) {
 
-
-
     }
-
-
 }
-
-
-
 
 
 /**
@@ -117,81 +96,47 @@ void KETCube_ErrorHandler(void)
   */
 int main(void)
 {
-
-
     uint32_t basePeriodCnt = 0;
-
-
 
     /* STM32 HAL library initialization */
     HAL_Init();
 
-
-
     /* Configure the system clock */
     SystemClock_Config();
-
-
 
     /* Configure the debug mode */
     DBG_Init();
 
-
-
     /* Configure the hardware */
     HW_Init();
-
-
 
     /* Init Terminal */
     ketCube_terminal_Init();
 
-
-
     /* Init KETCube core config */
     if (ketCube_coreCfg_Init() != KETCUBE_CFG_OK) {
-
-
         KETCube_ErrorHandler();
-
-
     }
-
-
 
     /* Init KETCube modules */
     if (ketCube_modules_Init() != KETCUBE_CFG_OK) {
-
-
         KETCube_ErrorHandler();
-
-
     }
-
-
 
     /* Configure the periodic timer */
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
     TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
 
-
     TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg_StartDelay);
 
-
     TimerStart(&KETCube_PeriodTimer);
-
-
 #endif                          /*  */
 
     /* main loop */
     while (TRUE)
     {
-
-
         /* process pendig commands */
         ketCube_terminal_ProcessCMD();
-
-
 
         /* execute periodic function for enabled modules */
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
@@ -200,10 +145,8 @@ int main(void)
 
             KETCube_PeriodTimerElapsed = FALSE;
 
-
             ketCube_terminal_DebugPrintln
                 ("--- KETCube base period # %d ---", basePeriodCnt++);
-
 
             ketCube_modules_ExecutePeriodic();
 
@@ -214,39 +157,21 @@ int main(void)
         // process inter/module messages...
         ketCube_modules_ProcessMsgs();
 
-
-
         // execute module preSleep module functions
         if (ketCube_modules_SleepEnter() == KETCUBE_CFG_OK) {
 
-
-
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
-
             DISABLE_IRQ();
-
-
 
 #ifndef LOW_POWER_DISABLE
             LowPower_Handler();
 
-
 #endif                          /* LOW_POWER_DISABLE */
-
             ENABLE_IRQ();
-
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
-
 
             // execute module wake-up module functions
             ketCube_modules_SleepExit();
-
-
         }
-
-
-
     }
-
-
 }

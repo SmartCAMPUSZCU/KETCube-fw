@@ -53,7 +53,7 @@
 * @brief Array of registered descriptors
 */
 static ketCube_UART_descriptor_t
-    *ketCube_UART_descriptors[KETCUBE_UART_CHANNEL_COUNT] = {
+    * ketCube_UART_descriptors[KETCUBE_UART_CHANNEL_COUNT] = {
     NULL,
     NULL,
     NULL,

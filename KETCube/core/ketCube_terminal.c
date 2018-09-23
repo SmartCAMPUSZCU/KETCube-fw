@@ -1060,8 +1060,8 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
 {
     char buff[128];
 
-    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
-        enable != TRUE) {
+    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
+        cfgByte.enable != TRUE) {
         return;
     }
 
@@ -1085,8 +1085,8 @@ void ketCube_terminal_DebugPrint(char *format, ...)
 {
     char buff[128];
 
-    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
-        enable != TRUE) {
+    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
+        cfgByte.enable != TRUE) {
         return;
     }
 

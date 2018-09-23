@@ -58,7 +58,7 @@
   * @{
   */
 
-#define KETCUBE_MODULES_SENSOR_BYTES  512        //< Max number of bytes which can be read from all sensors
+#define KETCUBE_MODULES_SENSOR_BYTES  512       //< Max number of bytes which can be read from all sensors
 #define ketCube_modules_CNT  (KETCUBE_LISTS_MODULEID_LAST)
 
 

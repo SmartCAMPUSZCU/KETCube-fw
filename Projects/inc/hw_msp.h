@@ -76,7 +76,6 @@ Maintainer: Miguel Luis and Gregory Cristian
 
 #define VDDA_VREFINT_CAL            ((uint32_t) 3000)        
 #define BAT_CR2032               ((uint32_t) 3000)        
-#define BAT_LS33600               ((uint32_t) 3650)        
 #define VDD_BAT                  BAT_CR2032     
 #define VDD_MIN                  2900
 

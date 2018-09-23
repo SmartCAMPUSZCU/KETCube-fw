@@ -325,6 +325,9 @@ uint16_t HW_GetTemperatureLevel( void )
 }
 /**
   * @brief This function return the battery level
+  * 
+  * @note This function is deprecated. It has been replaced by ketCube_batMeas module
+  * 
   * @param none
   * @retval the battery level  1 (very low) to 254 (fully charged)
   */

@@ -109,7 +109,6 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "stm32l0xx_hal.h"
 
 #include "ketCube_uart.h"
-#include "ketCube_lis331hh.h"
 
 /** @addtogroup STM32L1xx_HAL_Examples
   * @{
@@ -383,8 +382,6 @@ void EXTI2_3_IRQHandler( void )
 
 void EXTI4_15_IRQHandler( void )
 {
-  ketCube_lis331hh_gDet();
-    
   HAL_GPIO_EXTI_IRQHandler( GPIO_PIN_4 );
   
   HAL_GPIO_EXTI_IRQHandler( GPIO_PIN_5 );

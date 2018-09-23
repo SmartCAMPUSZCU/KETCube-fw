@@ -58,28 +58,28 @@
 * @brief List of available timers
 */
 typedef enum {
-    KETCUBE_TIMER_LIST_TIM2,  //< 16-bit auto-reload up/down counter
-    KETCUBE_TIMER_LIST_TIM3,  //< 16-bit auto-reload up/down counter
-    KETCUBE_TIMER_LIST_TIM21, //< 16-bit auto-reload up/down counter.
-    KETCUBE_TIMER_LIST_TIM22, //< 16-bit auto-reload up/down counter.
-    KETCUBE_TIMER_LIST_TIM6,  //< A generic 16-bit timebase
-    KETCUBE_TIMER_LIST_TIM7,  //< A generic 16-bit timebase
-    KETCUBE_TIMER_LIST_LPTIM, //< The low-power timer
-    
-    KETCUBE_TIMER_LIST_CNT    //< # of timers
+    KETCUBE_TIMER_LIST_TIM2,    //< 16-bit auto-reload up/down counter
+    KETCUBE_TIMER_LIST_TIM3,    //< 16-bit auto-reload up/down counter
+    KETCUBE_TIMER_LIST_TIM21,   //< 16-bit auto-reload up/down counter.
+    KETCUBE_TIMER_LIST_TIM22,   //< 16-bit auto-reload up/down counter.
+    KETCUBE_TIMER_LIST_TIM6,    //< A generic 16-bit timebase
+    KETCUBE_TIMER_LIST_TIM7,    //< A generic 16-bit timebase
+    KETCUBE_TIMER_LIST_LPTIM,   //< The low-power timer
+
+    KETCUBE_TIMER_LIST_CNT      //< # of timers
 } ketCube_Timer_list_t;
 
 /**
 * @brief Timer Usage
 */
 typedef struct {
-   bool tim2  : 1;
-   bool tim3  : 1;
-   bool tim21 : 1;
-   bool tim22 : 1;
-   bool tim6  : 1;
-   bool tim7  : 1;
-   bool lptim : 1;
+    bool tim2:1;
+    bool tim3:1;
+    bool tim21:1;
+    bool tim22:1;
+    bool tim6:1;
+    bool tim7:1;
+    bool lptim:1;
 } ketCube_Timer_usage_t;
 
 /** @defgroup KETCube_Timer_fn Public Functions

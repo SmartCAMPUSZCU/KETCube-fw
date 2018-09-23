@@ -1,9 +1,10 @@
 /**
- * @file    ketCube_coreCfg.c
+ *
+ * @file    ketCube_s0_cmd.c
  * @author  Jan Belohoubek
  * @version 0.1
- * @date    2018-04-27
- * @brief   This file contains the KETCube core configuration
+ * @date    2018-08-19
+ * @brief   The command definitions for batMeas
  *
  * @attention
  *
@@ -42,57 +43,58 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-#include "ketCube_coreCfg.h"
+#ifndef __KETCUBE_BATMEAS_CMD_H
+#define __KETCUBE_BATMEAS_CMD_H
+
+#include "ketCube_cfg.h"
+#include "ketCube_common.h"
 #include "ketCube_terminal.h"
-
-uint32_t ketCube_coreCfg_BasePeriod;
-uint32_t ketCube_coreCfg_StartDelay;
+#include "ketCube_batMeas.h"
 
 
-/**
-  * @brief Initialize rxDisplay module
-	*
-  * @retval KETCUBE_CFG_OK in case of success
-  * @retval ketCube_cfg_Load_ERROR in case of failure
-  */
-ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
+void ketCube_terminal_cmd_set_batMeas_bat(void)
 {
-    ketCube_terminal_Println("--- Core configuration load START ---");
-    ketCube_terminal_Println("");
-
-    if (ketCube_EEPROM_ReadBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_BASEPERIOD,
-         (uint8_t *) & (ketCube_coreCfg_BasePeriod),
-         4) != KETCUBE_EEPROM_OK) {
-        return ketCube_cfg_Load_ERROR;
-    }
-
-    if (ketCube_EEPROM_ReadBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_STARTDELAY,
-         (uint8_t *) & (ketCube_coreCfg_StartDelay),
-         4) != KETCUBE_EEPROM_OK) {
-        return ketCube_cfg_Load_ERROR;
-    }
-
-    if (ketCube_coreCfg_BasePeriod < KETCUBE_CORECFG_MIN_BASEPERIOD) {
-        ketCube_coreCfg_BasePeriod = KETCUBE_CORECFG_MIN_BASEPERIOD;
-    }
-
-    if (ketCube_coreCfg_StartDelay < KETCUBE_CORECFG_MIN_STARTDELAY) {
-        ketCube_coreCfg_StartDelay = KETCUBE_CORECFG_MIN_STARTDELAY;
-    }
-
-    ketCube_terminal_Println("KETCube Core base period set to: %d ms",
-                             ketCube_coreCfg_BasePeriod);
-    ketCube_terminal_Println("KETCube Start delay set to: %d ms",
-                             ketCube_coreCfg_StartDelay);
-
-#if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD == TRUE)
-    ketCube_terminal_Println("KETCube Sleep period disabled!");
-#endif
-
-    ketCube_terminal_Println("");
-    ketCube_terminal_Println("--- Core configuration load END ---");
-
-    return KETCUBE_CFG_OK;
+    ketCube_terminal_saveCfgDECStr(&(commandBuffer[commandParams]),
+                                   KETCUBE_LISTS_MODULEID_BATMEAS,
+                                   (ketCube_cfg_AllocEEPROM_t)
+                                   KETCUBE_BATMEAS_CFGADR_BAT,
+                                   (ketCube_cfg_LenEEPROM_t)
+                                   KETCUBE_BATMEAS_CFGLEN_BAT);
 }
+
+
+void ketCube_terminal_cmd_show_batMeas_bat(void)
+{
+    ketCube_batMeas_battList_t selected;
+
+    ketCube_cfg_Load((uint8_t *) & selected,
+                     KETCUBE_LISTS_MODULEID_BATMEAS,
+                     KETCUBE_BATMEAS_CFGADR_BAT,
+                     KETCUBE_BATMEAS_CFGLEN_BAT);
+
+    if (selected >= KETCUBE_BATMEAS_BATLIST_LAST) {
+        selected = KETCUBE_BATMEAS_BATLIST_CR2032;
+    }
+
+    KETCUBE_TERMINAL_PRINTF("Selected battery: %s (%s)",
+                            ketCube_batMeas_batList[selected].batName,
+                            ketCube_batMeas_batList[selected].batDescr);
+    KETCUBE_TERMINAL_ENDL();
+}
+
+void ketCube_terminal_cmd_show_batMeas_list(void)
+{
+    uint8_t i;
+
+    KETCUBE_TERMINAL_PRINTF("Available batteries:");
+    KETCUBE_TERMINAL_ENDL();
+
+    for (i = 0; i < KETCUBE_BATMEAS_BATLIST_LAST; i++) {
+        KETCUBE_TERMINAL_PRINTF("%d)\t %s (%s)", i,
+                                ketCube_batMeas_batList[i].batName,
+                                ketCube_batMeas_batList[i].batDescr);
+        KETCUBE_TERMINAL_ENDL();
+    }
+}
+
+#endif                          /* __KETCUBE_BATMEAS_CMD_H */

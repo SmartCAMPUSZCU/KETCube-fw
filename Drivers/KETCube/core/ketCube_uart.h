@@ -84,7 +84,7 @@ typedef struct {
     ketCube_UART_SimpleCbFn_t fnIoDeInit;
     ketCube_UART_SimpleCbFn_t fnIRQCallback;
     ketCube_UART_SimpleCbFn_t fnReceiveCallback;
- 	ketCube_UART_SimpleCbFn_t fnTransmitCallback;
+    ketCube_UART_SimpleCbFn_t fnTransmitCallback;
     ketCube_UART_SimpleCbFn_t fnErrorCallback;
     ketCube_UART_SimpleCbFn_t fnWakeupCallback;
 } ketCube_UART_descriptor_t;
@@ -105,7 +105,8 @@ extern UART_HandleTypeDef *ketCube_UART_GetHandle(ketCube_UART_ChannelNo_t
 
 extern void ketCube_UART_IRQCallback(ketCube_UART_ChannelNo_t channel);
 extern void ketCube_UART_ReceiveCallback(ketCube_UART_ChannelNo_t channel);
-extern void ketCube_UART_TransmitCallback(ketCube_UART_ChannelNo_t channel);
+extern void ketCube_UART_TransmitCallback(ketCube_UART_ChannelNo_t
+                                          channel);
 extern void ketCube_UART_ErrorCallback(ketCube_UART_ChannelNo_t channel);
 extern void ketCube_UART_WakeupCallback(ketCube_UART_ChannelNo_t channel);
 

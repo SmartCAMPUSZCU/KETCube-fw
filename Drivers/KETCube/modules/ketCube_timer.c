@@ -48,7 +48,7 @@
 #include "ketCube_cfg.h"
 #include "ketCube_timer.h"
 
-ketCube_Timer_usage_t timerUsed = {0,0,0,0,0,0,0};
+ketCube_Timer_usage_t timerUsed = { 0, 0, 0, 0, 0, 0, 0 };
 
 /**
  * @brief  Configures Timer(s)
@@ -60,45 +60,45 @@ ketCube_Timer_usage_t timerUsed = {0,0,0,0,0,0,0};
  */
 ketCube_cfg_ModError_t ketCube_Timer_Init(ketCube_Timer_list_t tim)
 {
-    switch(tim) {
-        case KETCUBE_TIMER_LIST_TIM2:
-            if (timerUsed.tim2 == TRUE) {
-                return KETCUBE_CFG_MODULE_ERROR;
-            }
-            break;
-        case KETCUBE_TIMER_LIST_TIM3:
-            if (timerUsed.tim2 == TRUE) {
-                return KETCUBE_CFG_MODULE_ERROR;
-            }
-            break;
-        case KETCUBE_TIMER_LIST_TIM21:
-            if (timerUsed.tim21 == TRUE) {
-                return KETCUBE_CFG_MODULE_ERROR;
-            }
-            break;
-        case KETCUBE_TIMER_LIST_TIM22:
-            if (timerUsed.tim22 == TRUE) {
-                return KETCUBE_CFG_MODULE_ERROR;
-            }
-            break;
-        case KETCUBE_TIMER_LIST_TIM6:
-            if (timerUsed.tim6 == TRUE) {
-                return KETCUBE_CFG_MODULE_ERROR;
-            }
-            break;
-        case KETCUBE_TIMER_LIST_TIM7:
-            if (timerUsed.tim7 == TRUE) {
-                return KETCUBE_CFG_MODULE_ERROR;
-            }
-            break;
-        case KETCUBE_TIMER_LIST_LPTIM:
-            if (timerUsed.lptim == TRUE) {
-                return KETCUBE_CFG_MODULE_ERROR;
-            }
-            break;
-        default:
+    switch (tim) {
+    case KETCUBE_TIMER_LIST_TIM2:
+        if (timerUsed.tim2 == TRUE) {
             return KETCUBE_CFG_MODULE_ERROR;
+        }
+        break;
+    case KETCUBE_TIMER_LIST_TIM3:
+        if (timerUsed.tim2 == TRUE) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        break;
+    case KETCUBE_TIMER_LIST_TIM21:
+        if (timerUsed.tim21 == TRUE) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        break;
+    case KETCUBE_TIMER_LIST_TIM22:
+        if (timerUsed.tim22 == TRUE) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        break;
+    case KETCUBE_TIMER_LIST_TIM6:
+        if (timerUsed.tim6 == TRUE) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        break;
+    case KETCUBE_TIMER_LIST_TIM7:
+        if (timerUsed.tim7 == TRUE) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        break;
+    case KETCUBE_TIMER_LIST_LPTIM:
+        if (timerUsed.lptim == TRUE) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        break;
+    default:
+        return KETCUBE_CFG_MODULE_ERROR;
     }
-    
+
     return KETCUBE_CFG_MODULE_OK;
 }

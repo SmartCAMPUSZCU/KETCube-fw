@@ -71,7 +71,7 @@ ketCube_cfg_ModError_t ketCube_I2C_Init(void)
     if (HAL_I2C_GetState(&KETCUBE_I2C_Handle) == HAL_I2C_STATE_RESET) {
 
         /* I2C peripheral configuration */
-        KETCUBE_I2C_Handle.Init.Timing = KETCUBE_I2C_SPEED_100KHZ;     /* 100KHz */
+        KETCUBE_I2C_Handle.Init.Timing = KETCUBE_I2C_SPEED_100KHZ;      /* 100KHz */
 
         KETCUBE_I2C_Handle.Init.OwnAddress1 = KETCUBE_I2C_ADDRESS;
         KETCUBE_I2C_Handle.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -265,14 +265,14 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
 ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
                                                  uint8_t regAddr,
                                                  uint8_t * data,
-                                                 uint8_t try
-                                                )
+                                                 uint8_t try)
 {
     regAddr = regAddr & (~0x80);
-    
+
     while (try > 0) {
         HAL_StatusTypeDef status =
-            HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, devAddr, &(regAddr),
+            HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, devAddr,
+                                    &(regAddr),
                                     1, KETCUBE_I2C_TIMEOUT);
         if (status != HAL_OK) {
             try--;
@@ -287,7 +287,7 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
         }
         try--;
     }
-    
+
     return KETCUBE_CFG_MODULE_ERROR;
 }
 
@@ -303,17 +303,16 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
  */
 ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
-                                                 uint8_t regAddr,
-                                                 uint8_t * data,
-                                                 uint8_t len,
-                                                 uint8_t try
-                                                )
+                                                uint8_t regAddr,
+                                                uint8_t * data,
+                                                uint8_t len, uint8_t try)
 {
     regAddr = regAddr & (~0x80);
-    
+
     while (try > 0) {
         HAL_StatusTypeDef status =
-            HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, devAddr, &(regAddr),
+            HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, devAddr,
+                                    &(regAddr),
                                     1, KETCUBE_I2C_TIMEOUT);
         if (status != HAL_OK) {
             try--;
@@ -328,7 +327,7 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
         }
         try--;
     }
-    
+
     return KETCUBE_CFG_MODULE_ERROR;
 }
 
@@ -344,9 +343,8 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
  */
 ketCube_cfg_ModError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
                                                   uint8_t regAddr,
-                                                  uint8_t * data, 
-                                                  uint8_t try
-                                                 )
+                                                  uint8_t * data,
+                                                  uint8_t try)
 {
     while (try > 0) {
         if (ketCube_I2C_WriteData(devAddr, (regAddr & (~0x80)), data, 1)) {
