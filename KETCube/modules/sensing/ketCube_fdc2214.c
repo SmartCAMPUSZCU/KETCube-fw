@@ -70,14 +70,15 @@
 ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
 {
     uint16_t reg;
+    uint8_t i;
 
     GPIO_InitTypeDef GPIO_InitStruct;
-
+    
     // Init drivers
     if (ketCube_I2C_Init() != KETCUBE_CFG_MODULE_OK) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
-
+    
     /* Init GPIO */
     FDC2214_SD_CLK_ENABLE();
 
@@ -87,27 +88,32 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 
     HAL_GPIO_Init(FDC2214_GPIO_PORT, &GPIO_InitStruct);
-
+    
     /* Power ON */
     FDC2214_ON();
 
     reg = 0x8000;
+    i = 0;
     while (ketCube_I2C_TexasWriteReg
            (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_RESET_DEV,
             &reg) == KETCUBE_CFG_MODULE_ERROR) {
+        i++;
+        if (i == 200) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
         ketCube_terminal_DebugPrintln("FDC2214 :: E0");
     }
 
     reg = 0xffff;
     while (ketCube_I2C_TexasWriteReg
-           (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_RCOUNT_CH3,
+           (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_RCOUNT_CH0,
             &reg) == KETCUBE_CFG_MODULE_ERROR) {
         ketCube_terminal_DebugPrintln("FDC2214 :: E1");
     }
 
     reg = 0x0400;
     while (ketCube_I2C_TexasWriteReg
-           (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_SETTLECOUNT_CH3,
+           (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_SETTLECOUNT_CH0,
             &reg) == KETCUBE_CFG_MODULE_ERROR) {
         ketCube_terminal_DebugPrintln("FDC2214 :: E2");
     }
@@ -115,13 +121,18 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
     reg = 0x1001;
     while (ketCube_I2C_TexasWriteReg
            (KETCUBE_FDC2214_I2C_ADDRESS,
-            KETCUBE_FDC2214_CLOCK_DIVIDERS_CH3,
+            KETCUBE_FDC2214_CLOCK_DIVIDERS_CH0,
             &reg) == KETCUBE_CFG_MODULE_ERROR) {
         ketCube_terminal_DebugPrintln("FDC2214 :: E3");
     }
 
 
-    reg = 0xde01;
+    // external OSC
+    // reg = 0x0e01;
+    
+    // internal OSC
+    reg = 0x0c01;
+    
     while (ketCube_I2C_TexasWriteReg
            (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_CONFIG,
             &reg) == KETCUBE_CFG_MODULE_ERROR) {
@@ -135,16 +146,9 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
         ketCube_terminal_DebugPrintln("FDC2214 :: E6");
     }
 
-    reg = 0x420f;
-    while (ketCube_I2C_TexasWriteReg
-           (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_MUX_CONFIG,
-            &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_DebugPrintln("FDC2214 :: E7");
-    }
-
     reg = 0x8800;
     while (ketCube_I2C_TexasWriteReg
-           (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DRIVE_CURRENT_CH3,
+           (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DRIVE_CURRENT_CH0,
             &reg) == KETCUBE_CFG_MODULE_ERROR) {
         ketCube_terminal_DebugPrintln("FDC2214 :: E8");
     }
@@ -180,13 +184,13 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
     uint32_t raw;
 
     if (ketCube_I2C_TexasReadReg
-        (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DATA_CH3, &msb)) {
+        (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DATA_CH0, &msb)) {
         ketCube_terminal_DebugPrintln("FDC2214 :: E0");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
     if (ketCube_I2C_TexasReadReg
-        (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DATA_LSB_CH3,
+        (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DATA_LSB_CH0,
          &lsb)) {
         ketCube_terminal_DebugPrintln("FDC2214 :: E1");
         return KETCUBE_CFG_MODULE_ERROR;
@@ -201,7 +205,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
 
     *len = 4;
 
-    ketCube_terminal_DebugPrintln("FDC2214 :: RawCapacity: %d, ", raw);
+    ketCube_terminal_Println("FDC2214 :: RawCapacity: %d", raw);
 
     return KETCUBE_CFG_MODULE_OK;
 }

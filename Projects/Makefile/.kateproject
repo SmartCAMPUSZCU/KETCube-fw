@@ -1,0 +1,14 @@
+{
+  "name": "KETCube-fw"
+, "files": [ { "directory": "../..", "filters": ["*.c", "*.h"], "recursive": 1 }, { "directory": ".", "name": "KETCube", "filters": ["README.md", "Makefile", "startup_stm32l082xx.s", "STM32L072CZYx_FLASH.ld", "KETCube.map", ".kateproject"], "recursive": 0 }]
+, "build": {
+  "targets":[
+             {"name":"all", "build_cmd":"make all"}
+            ,{"name":"clean", "build_cmd":"make clean"}
+            ,{"name":"erase", "build_cmd":"make erase"}
+            ,{"name":"flash", "build_cmd":"make flash"}
+        ], 
+  "default_target": "all",
+  "clean_target": "clean"
+  }
+}

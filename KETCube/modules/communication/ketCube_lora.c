@@ -230,10 +230,10 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
         ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
     } else if (AppData->Port == 11) {   // received STRING
         if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
-            ketCube_lora_rxData.msg[i] = (char) NULL;
+            ketCube_lora_rxData.msg[i] = (char) 0;
             i++;
         } else {
-            ketCube_lora_rxData.msg[i - 1] = (char) NULL;
+            ketCube_lora_rxData.msg[i - 1] = (char) 0;
         }
         ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
     }

@@ -618,13 +618,13 @@ ketCube_cfg_Error_t lora_ketCubeInit(void)
 	ketCube_lora_moduleCfg_t loraCfg;
 	
 	// CFG
-	if (ketCube_cfg_Load((uint8_t *) &(loraCfg), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_CFG, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_CFG) != KETCUBE_EEPROM_OK) {
+	if (ketCube_cfg_Load((uint8_t *) &(loraCfg), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_CFG, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_CFG) != KETCUBE_CFG_OK) {
 	  return ketCube_cfg_Load_ERROR;
 	}
 	
 	if (loraCfg.devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
 	  // devEUI
-	  if (ketCube_cfg_Load((uint8_t *) &(DevEui[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_DEVEUI, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_DEVEUI) != KETCUBE_EEPROM_OK) {
+	  if (ketCube_cfg_Load((uint8_t *) &(DevEui[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_DEVEUI, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_DEVEUI) != KETCUBE_CFG_OK) {
 	    return ketCube_cfg_Load_ERROR;
 	  }
 		lora_ketCube_staticDevEUI = 1;
@@ -634,19 +634,19 @@ ketCube_cfg_Error_t lora_ketCubeInit(void)
 	
 	if (loraCfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {
 	  // appSKey
-	  if (ketCube_cfg_Load((uint8_t *) &(AppSKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPSKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPSKEY) != KETCUBE_EEPROM_OK) {
+	  if (ketCube_cfg_Load((uint8_t *) &(AppSKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPSKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPSKEY) != KETCUBE_CFG_OK) {
 	    return ketCube_cfg_Load_ERROR;
    	}
 	  // nwkSKey
-	  if (ketCube_cfg_Load((uint8_t *) &(NwkSKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_NWKSKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_NWKSKEY) != KETCUBE_EEPROM_OK) {
+	  if (ketCube_cfg_Load((uint8_t *) &(NwkSKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_NWKSKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_NWKSKEY) != KETCUBE_CFG_OK) {
 	    return ketCube_cfg_Load_ERROR;
 	  }
 	  // devAddr
-  	if (ketCube_cfg_Load((uint8_t *) &(DevAddr), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_DEVADDR, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_DEVADDR) != KETCUBE_EEPROM_OK) {
+  	if (ketCube_cfg_Load((uint8_t *) &(DevAddr), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_DEVADDR, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_DEVADDR) != KETCUBE_CFG_OK) {
 	    return ketCube_cfg_Load_ERROR;
 	  }
 		// NwkID
-  	if (ketCube_cfg_Load((uint8_t *) &(NwkID), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_NETID, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_NETID) != KETCUBE_EEPROM_OK) {
+  	if (ketCube_cfg_Load((uint8_t *) &(NwkID), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_NETID, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_NETID) != KETCUBE_CFG_OK) {
 	    return ketCube_cfg_Load_ERROR;
 	  }
 		lora_ketCube_otaa = 0;
@@ -657,11 +657,11 @@ ketCube_cfg_Error_t lora_ketCubeInit(void)
 	}
 	
 	// appEUI
-	if (ketCube_cfg_Load((uint8_t *) &(AppEui[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPEUI, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPEUI) != KETCUBE_EEPROM_OK) {
+	if (ketCube_cfg_Load((uint8_t *) &(AppEui[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPEUI, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPEUI) != KETCUBE_CFG_OK) {
 	  return ketCube_cfg_Load_ERROR;
 	}
 	// appKey
-	if (ketCube_cfg_Load((uint8_t *) &(AppKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPKEY) != KETCUBE_EEPROM_OK) {
+	if (ketCube_cfg_Load((uint8_t *) &(AppKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPKEY) != KETCUBE_CFG_OK) {
 	  return ketCube_cfg_Load_ERROR;
 	}
 	

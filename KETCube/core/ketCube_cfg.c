@@ -95,7 +95,7 @@ ketCube_cfg_Error_t ketCube_cfg_LoadStr(char *data, uint8_t buffLen,
 
     if (ketCube_cfg_Load
         ((uint8_t *) & (data[buffLen - len]), id, addr,
-         len) == KETCUBE_EEPROM_OK) {
+         len) == KETCUBE_CFG_OK) {
         for (i = 0; i < len; i++) {
             ketCube_common_Byte2hex(data[buffLen - len + i],
                                     &(data[3 * i]));
@@ -132,7 +132,7 @@ ketCube_cfg_Error_t ketCube_cfg_SaveStr(char *data,
 
     if (ketCube_EEPROM_WriteBuffer
         (ketCube_modules_List[id].cfgBase + addr, (uint8_t *) & (data[0]),
-         len) == KETCUBE_CFG_OK) {
+         len) == KETCUBE_EEPROM_OK) {
         return KETCUBE_CFG_OK;
     } else {
         return ketCube_cfg_Save_ERROR;

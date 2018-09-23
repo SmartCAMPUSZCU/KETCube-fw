@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_coreCfg.h
+ * @file    ketCube_timer.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-04-27
- * @brief   This file contains the KETCube core configuration defs
+ * @version 0.2
+ * @date    2018-07-12
+ * @brief   This file contains the ketCube Timer(s) driver
  *
  * @attention
  *
@@ -42,47 +42,63 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __KETCUBE_CORECFG_H
-#define __KETCUBE_CORECFG_H
+#include "stm32l0xx_hal.h"
+#include "stm32l0xx_hal.h"
 
 #include "ketCube_cfg.h"
+#include "ketCube_timer.h"
 
-/** @defgroup KETCube_coreCfg KETCube CfgCore
-  * @brief KETCube Core configuration
-  * @ingroup KETCube_Core
-  * @{
-  */
-
-#define KETCUBE_CORECFG_SKIP_SLEEP_PERIOD          TRUE  //< Skip sleep period (perform sensing with maximum speed)
-#define KETCUBE_CORECFG_MIN_BASEPERIOD             5000  //< Minimal period for periodic events
-#define KETCUBE_CORECFG_MIN_STARTDELAY             500   //< Minimal delay - the first periodic action is run at this time after power-on
+ketCube_Timer_usage_t timerUsed = {0,0,0,0,0,0,0};
 
 /**
-* @brief  Core CFG data relative addr.
-*/
-typedef enum {
-    KETCUBE_CORECFG_ADR_BASEPERIOD = 0, /*<! Base period configuration address (in ms) */
-    KETCUBE_CORECFG_ADR_STARTDELAY = 4, /*<! Start delay configuration address (in ms) */
-} ketCube_coreCfg_Addr_t;
-
-extern uint32_t ketCube_coreCfg_BasePeriod;     //< This period is used by KETCube core to run periodic events
-extern uint32_t ketCube_coreCfg_StartDelay;     //< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
-
-/** @defgroup KETCube_coreCfg_fn Public Functions
-* @{
-*/
-
-extern ketCube_cfg_Error_t ketCube_coreCfg_Init(void);
-
-/**
-* @}
-*/
-
-
-
-/**
-* @}
-*/
-
-#endif                          /* __KETCUBE_CORECFG_H */
+ * @brief  Configures Timer(s)
+ *
+ * @param tim requested timer
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure -- requested timer already used; resource not available
+ */
+ketCube_cfg_ModError_t ketCube_Timer_Init(ketCube_Timer_list_t tim)
+{
+    switch(tim) {
+        case KETCUBE_TIMER_LIST_TIM2:
+            if (timerUsed.tim2 == TRUE) {
+                return KETCUBE_CFG_MODULE_ERROR;
+            }
+            break;
+        case KETCUBE_TIMER_LIST_TIM3:
+            if (timerUsed.tim2 == TRUE) {
+                return KETCUBE_CFG_MODULE_ERROR;
+            }
+            break;
+        case KETCUBE_TIMER_LIST_TIM21:
+            if (timerUsed.tim21 == TRUE) {
+                return KETCUBE_CFG_MODULE_ERROR;
+            }
+            break;
+        case KETCUBE_TIMER_LIST_TIM22:
+            if (timerUsed.tim22 == TRUE) {
+                return KETCUBE_CFG_MODULE_ERROR;
+            }
+            break;
+        case KETCUBE_TIMER_LIST_TIM6:
+            if (timerUsed.tim6 == TRUE) {
+                return KETCUBE_CFG_MODULE_ERROR;
+            }
+            break;
+        case KETCUBE_TIMER_LIST_TIM7:
+            if (timerUsed.tim7 == TRUE) {
+                return KETCUBE_CFG_MODULE_ERROR;
+            }
+            break;
+        case KETCUBE_TIMER_LIST_LPTIM:
+            if (timerUsed.lptim == TRUE) {
+                return KETCUBE_CFG_MODULE_ERROR;
+            }
+            break;
+        default:
+            return KETCUBE_CFG_MODULE_ERROR;
+    }
+    
+    return KETCUBE_CFG_MODULE_OK;
+}

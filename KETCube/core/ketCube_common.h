@@ -253,6 +253,105 @@ static inline void ketCube_common_Dec2int(int32_t * output, char *str,
 
 
 /**
+  * @brief Return minimum of two bytes
+  *
+  * @param a a number
+  * @param b a number
+  * 
+  * @retval min minimum
+  *
+  */
+static inline uint8_t ketCube_common_Min(uint8_t a, uint8_t b){
+	if (a < b)
+		return a;
+	else
+		return b;
+}
+
+/**
+  * @brief Return maximum of two bytes
+  *
+  * @param a a number
+  * @param b a number
+  * 
+  * @retval max maximum
+  *
+  */
+static inline uint8_t ketCube_common_Max(uint8_t a, uint8_t b){
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+
+
+/**
+  * @brief Return median from an array of shorts
+  *
+  * @param values shorts array
+  * @param size array size
+  * 
+  * @retval med median
+  *
+  */
+static inline uint16_t ketCube_common_Med(uint16_t * values, uint16_t size) {
+    uint16_t i, j, tmp;
+
+	// bubble-sort -- it's efficient for small arrays
+	for (i = 0; i < size-1; i++){
+		for (j = 0;j < size-1-i; j++){
+			if (values[j] < values[j+1]){
+				tmp = values[j];
+				values[j] = values[j+1];
+				values[j+1] = tmp;
+			}
+		}
+	}
+
+	return (uint16_t) values[size/2];
+}
+
+/**
+  * @brief Return median from an array of shorts
+  *
+  * @param values shorts array
+  * @param size array size
+  * 
+  * @retval avg median
+  *
+  */
+static inline uint16_t ketCube_common_Avg(uint16_t * values, uint16_t size) {
+    uint16_t i;
+	uint32_t result = 0;
+
+	// average
+	for (i = 0; i < size; i++) {
+		result += values[i];
+	}
+
+	result = result / size;
+
+	return (uint16_t) result;
+}
+
+
+/**
+  * @brief Swap word (16-bit) values
+  * 
+  * This is intended for conversion when different Endianity is used
+  *
+  * @param n a 16-bit number
+  * 
+  * @retval n with swapped bytes
+  *
+  */
+static inline uint16_t ketCube_common_swapW(uint16_t n){
+    return ((n >> 8) | (n << 8));
+}
+
+
+
+/**
   * @}
   */
 

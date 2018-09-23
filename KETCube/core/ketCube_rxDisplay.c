@@ -85,7 +85,7 @@ ketCube_cfg_ModError_t ketCube_rxDisplay_ProcessData(ketCube_InterModMsg_t
     case KETCUBE_RXDISPLAY_DATATYPE_STRING:
         ketCube_terminal_Print("rxDisplay :: STR=");
         for (i = 1; i < msg->msgLen; i++) {
-            if (msg->msg[i] == (char) NULL) {
+            if (msg->msg[i] == (char) 0) {
                 break;
             }
             ketCube_terminal_Print("%c", msg->msg[i]);

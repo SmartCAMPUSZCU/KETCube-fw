@@ -4,7 +4,10 @@
  * @version 0.1
  * @date    2018-01-04
  * @brief   This file contains the HDC1080 driver
- *
+ * 
+ * HDC1080 Datasheet:
+ * www.ti.com/lit/ds/symlink/hdc1080.pdf
+ * 
  * @attention
  *
  * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
@@ -137,7 +140,7 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
-    *value = (int16_t) (((((float) rawT) / pow(2, 16)) * 165.0) - 40.0);
+    *value = (int16_t) (10.0 * (((((float) rawT) / pow(2, 16)) * 165.0) - 40.0));
 
     return KETCUBE_CFG_MODULE_OK;
 }
@@ -201,9 +204,17 @@ ketCube_cfg_ModError_t ketCube_hdc1080_ReadData(uint8_t * buffer,
     uint16_t temperature = 0;
     uint16_t humidity = 0;
 
-    getHumidity(&humidity);     /* in % * 10   */
-    getTemperature(&temp);
-    temperature = (uint16_t) 10000 + ((int16_t) (temp * 10));   /*  x * 10 - 10000 in C */
+    /* in % * 10  */
+    if (getHumidity(&humidity) == KETCUBE_CFG_MODULE_ERROR) {
+        humidity = 0xFFFF; // out-of the range value indicates error
+    }
+    
+    /* in °C * 10 */
+    if (getTemperature(&temp) == KETCUBE_CFG_MODULE_OK) {
+        temperature = (uint16_t) (10000 + ((int16_t) (temp)));   /*  x * 10 - 10000 in C */   
+    } else {
+        temperature = 0xFFFF; // out-of the range value indicates error
+    }
 
     buffer[i++] = (temperature >> 8) & 0xFF;
     buffer[i++] = (temperature & 0xFF);
@@ -212,8 +223,8 @@ ketCube_cfg_ModError_t ketCube_hdc1080_ReadData(uint8_t * buffer,
 
     *len = i;
 
-    ketCube_terminal_DebugPrintln("HDC1080 :: Temperature: %d, RH: %d",
-                                  (((int) temperature - 10000) / 10),
+    ketCube_terminal_DebugPrintln("HDC1080 :: Temperature: %d °C, RH: %d",
+                                  (((int) temperature - 10000)/10),
                                   (humidity / 10));
 
     return KETCUBE_CFG_MODULE_OK;

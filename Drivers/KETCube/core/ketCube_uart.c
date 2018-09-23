@@ -145,6 +145,12 @@ DEFINE_CALLBACK_FNC(IRQCallback, fnIRQCallback);
 DEFINE_CALLBACK_FNC(ReceiveCallback, fnReceiveCallback);
 
 /**
+ * @brief TX complete callback for given channel
+ * @param channel		UART channel
+ */
+DEFINE_CALLBACK_FNC(TransmitCallback, fnTransmitCallback);
+
+/**
  * @brief Error callback for given channel
  */
 DEFINE_CALLBACK_FNC(ErrorCallback, fnErrorCallback);
@@ -192,9 +198,11 @@ void ketCube_UART_IoDeInitAll(void)
 
 /**
  * @brief Setup pin for communication
- * @param pin		pin number
- * @param alternate		alternate function of given pin
+ * 
+ * @param pin pin number
+ * @param alternate alternate function of given pin
  * @param port	port in which the pin resembles
+ * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
  */
@@ -209,6 +217,32 @@ ketCube_cfg_ModError_t ketCube_UART_SetupPin(uint32_t pin,
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
     GPIO_InitStruct.Alternate = alternate;
+
+    HAL_GPIO_Init(port, &GPIO_InitStruct);
+
+    return KETCUBE_CFG_MODULE_OK;
+}
+
+/**
+ * @brief Release pin - setup as input pin
+ * 
+ * This can help in low-power modes to avoid leakage when uart pin(s) drive(s) something.
+ * 
+ * @param pin pin number
+ * @param port	port in which the pin resembles
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+ketCube_cfg_ModError_t ketCube_UART_ReleasePin(uint32_t pin,
+                                               GPIO_TypeDef * port)
+{
+    static GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+
+    GPIO_InitStruct.Pin = pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
 
     HAL_GPIO_Init(port, &GPIO_InitStruct);
 

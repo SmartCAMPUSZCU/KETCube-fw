@@ -419,6 +419,15 @@ void HW_RTC_DelayMs( uint32_t delay )
 }
 
 /*!
+ * @brief HAL_GetTick RTC-based replacement
+ * @retval current ms
+ */
+uint32_t HAL_GetTick(void)
+{
+  return HW_RTC_GetTimerValue();
+}
+
+/*!
  * @brief set Time Reference set also the RTC_DateStruct and RTC_TimeStruct
  * @param none
  * @retval Timer Value

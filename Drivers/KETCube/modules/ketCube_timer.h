@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_coreCfg.h
+ * @file    ketCube_timer.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-04-27
- * @brief   This file contains the KETCube core configuration defs
+ * @version 0.2
+ * @date    2018-07-12
+ * @brief   This file contains definitions for the ketCube Timer(s) driver
  *
  * @attention
  *
@@ -43,46 +43,58 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __KETCUBE_CORECFG_H
-#define __KETCUBE_CORECFG_H
+#ifndef __KETCUBE_TIMER_H
+#define __KETCUBE_TIMER_H
 
 #include "ketCube_cfg.h"
 
-/** @defgroup KETCube_coreCfg KETCube CfgCore
-  * @brief KETCube Core configuration
-  * @ingroup KETCube_Core
+/** @defgroup KETCube_Timer KETCube timer
+  * @brief KETCube Timer module
+  * @ingroup KETCube_ModuleDrivers
   * @{
   */
 
-#define KETCUBE_CORECFG_SKIP_SLEEP_PERIOD          TRUE  //< Skip sleep period (perform sensing with maximum speed)
-#define KETCUBE_CORECFG_MIN_BASEPERIOD             5000  //< Minimal period for periodic events
-#define KETCUBE_CORECFG_MIN_STARTDELAY             500   //< Minimal delay - the first periodic action is run at this time after power-on
-
 /**
-* @brief  Core CFG data relative addr.
+* @brief List of available timers
 */
 typedef enum {
-    KETCUBE_CORECFG_ADR_BASEPERIOD = 0, /*<! Base period configuration address (in ms) */
-    KETCUBE_CORECFG_ADR_STARTDELAY = 4, /*<! Start delay configuration address (in ms) */
-} ketCube_coreCfg_Addr_t;
+    KETCUBE_TIMER_LIST_TIM2,  //< 16-bit auto-reload up/down counter
+    KETCUBE_TIMER_LIST_TIM3,  //< 16-bit auto-reload up/down counter
+    KETCUBE_TIMER_LIST_TIM21, //< 16-bit auto-reload up/down counter.
+    KETCUBE_TIMER_LIST_TIM22, //< 16-bit auto-reload up/down counter.
+    KETCUBE_TIMER_LIST_TIM6,  //< A generic 16-bit timebase
+    KETCUBE_TIMER_LIST_TIM7,  //< A generic 16-bit timebase
+    KETCUBE_TIMER_LIST_LPTIM, //< The low-power timer
+    
+    KETCUBE_TIMER_LIST_CNT    //< # of timers
+} ketCube_Timer_list_t;
 
-extern uint32_t ketCube_coreCfg_BasePeriod;     //< This period is used by KETCube core to run periodic events
-extern uint32_t ketCube_coreCfg_StartDelay;     //< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
-
-/** @defgroup KETCube_coreCfg_fn Public Functions
-* @{
+/**
+* @brief Timer Usage
 */
+typedef struct {
+   bool tim2  : 1;
+   bool tim3  : 1;
+   bool tim21 : 1;
+   bool tim22 : 1;
+   bool tim6  : 1;
+   bool tim7  : 1;
+   bool lptim : 1;
+} ketCube_Timer_usage_t;
 
-extern ketCube_cfg_Error_t ketCube_coreCfg_Init(void);
+/** @defgroup KETCube_Timer_fn Public Functions
+  * @brief Public functions
+  * @{
+  */
+
+extern ketCube_cfg_ModError_t ketCube_Timer_Init(ketCube_Timer_list_t tim);
 
 /**
 * @}
 */
 
-
-
 /**
 * @}
 */
 
-#endif                          /* __KETCUBE_CORECFG_H */
+#endif                          /* __KETCUBE_TIMER_H */

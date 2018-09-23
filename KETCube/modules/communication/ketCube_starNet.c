@@ -98,7 +98,7 @@ static ketCube_InterModMsg_t *modMsgQueue[4];
 #define FSK_AFC_BANDWIDTH                           83.333e3    // Hz
 #define FSK_PREAMBLE_LENGTH                         5   // Same for Tx and Rx
 #define FSK_FIX_LENGTH_PAYLOAD_ON                   FALSE
-#define RX_TIMEOUT_VALUE                            10000
+#define RX_TIMEOUT_VALUE                            1000
 
 /**
  * @brief Prepare sleep mode
@@ -270,6 +270,8 @@ static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
 
     Radio.Sleep();
 
+    rxDone = TRUE;
+    
     // previous msg not processed ... ignore this one
     if ((ketCube_starNet_rssi.msgLen > 0) ||
         (ketCube_starNet_snr.msgLen > 0) ||
@@ -291,8 +293,6 @@ static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
         ketCube_starNet_rxData.msg[i + 1] = payload[i];
     }
     ketCube_terminal_DebugPrintln("\b; ");
-
-    rxDone = TRUE;
 
     ketCube_starNet_rssi.msgLen = 2;
     ketCube_starNet_snr.msgLen = 2;

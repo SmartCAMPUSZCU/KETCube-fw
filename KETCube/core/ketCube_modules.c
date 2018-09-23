@@ -53,9 +53,14 @@
 #include "ketCube_i2c.h"
 #include "ketCube_hdc1080.h"
 #include "ketCube_fdc2214.h"
+#include "ketCube_max1501.h"
+#include "ketCube_lis331hh.h"
 #include "ketCube_adc.h"
 #include "ketCube_starNet.h"
 #include "ketCube_rxDisplay.h"
+#include "ketCube_LEDBeacon.h"
+#include "ketCube_microDock.h"
+#include "ketCube_buzzer.h"
 
 /**
 * @brief List of KETCube modules
@@ -196,6 +201,81 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
      TRUE                       /*·module CFG byte -- set dynamically */
      },
 #endif
+#ifdef KETCUBE_CFG_INC_MOD_LEDBEACON
+    {((char *) &("LEDBeacon")),
+     ((char *) &("LED FindMe Beacon.")),
+     &ketCube_LEDBeacon_Init,   /*·Module Init() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     &ketCube_LEDBeacon_ReadData,    /*·GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL,    /*·ProcessData() */
+     0,                         /*·CFG base addr -- set dynamicaly */
+     1,                         /*·CFG len in bytes */
+     TRUE                       /*·module CFG byte -- set dynamically */
+     },
+#endif
+#ifdef KETCUBE_CFG_INC_MOD_BUZZER
+    {((char *) &("Buzzer")),
+     ((char *) &("Buzzer FindMe Beacon.")),
+     &ketCube_buzzer_Init,   /*·Module Init() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL,    /*·ProcessData() */
+     0,                         /*·CFG base addr -- set dynamicaly */
+     1,                         /*·CFG len in bytes */
+     TRUE                       /*·module CFG byte -- set dynamically */
+     },
+#endif
+#ifdef KETCUBE_CFG_INC_MOD_MAX1501
+    {((char *) &("MAX1501")),
+     ((char *) &("TI\'s MAX1501 charger.")),
+     &ketCube_max1501_Init,     /*·Module Init() */
+     &ketCube_max1501_UnInit,    /*·SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     &ketCube_max1501_ReadData, /*·GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
+     0,                         /*·CFG base addr -- set dynamicaly */
+     1,                         /*·CFG len in bytes */
+     TRUE                       /*·module CFG byte -- set dynamically */
+     },
+#endif
+#ifdef KETCUBE_CFG_INC_MOD_LIS331HH
+    {((char *) &("LIS331HH")),
+     ((char *) &("STM\'s LIS331HH accelerometer.")),
+     &ketCube_lis331hh_Init,     /*·Module Init() */
+     &ketCube_lis331hh_UnInit,    /*·SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     &ketCube_lis331hh_ReadData, /*·GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
+     0,                         /*·CFG base addr -- set dynamicaly */
+     1,                         /*·CFG len in bytes */
+     TRUE                       /*·module CFG byte -- set dynamically */
+     },
+#endif
+#ifdef KETCUBE_CFG_INC_MOD_MICRO_DOCK
+    {((char *) &("MicroDock")),
+     ((char *) &("KET\'s MicroDock support.")),
+     &ketCube_microDock_Init,     /*·Module Init() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     &ketCube_microDock_ReadData, /*·GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
+     0,                         /*·CFG base addr -- set dynamicaly */
+     1,                         /*·CFG len in bytes */
+     TRUE                       /*·module CFG byte -- set dynamically */
+     },
+#endif
 };
 
 uint8_t SensorBuffer[KETCUBE_MODULES_SENSOR_BYTES];     //<·sensor data are stored here
@@ -270,6 +350,7 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
                     ("Module \"%s\" GetSensorData()",
                      ketCube_modules_List[i].name);
 
+                len = 0;
                 (ketCube_modules_List[i].
                  fnGetSensorData) (&(SensorBuffer[SensorBufferSize]),
                                    &len);

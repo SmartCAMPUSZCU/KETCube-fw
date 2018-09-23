@@ -5,6 +5,9 @@
  * @date    2018-01-04
  * @brief   This file contains definitions for the HDC1080 driver
  *
+ * HDC1080 Datasheet:
+ * www.ti.com/lit/ds/symlink/hdc1080.pdf
+ * 
  * @attention
  *
  * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
@@ -131,7 +134,9 @@ typedef enum {
 /**
 * @brief  HDC1080 Init structure definition.
 */
+#ifdef __ARMCC_VERSION
 #pragma anon_unions
+#endif
 typedef struct {
     uint8_t rawData;
     struct {

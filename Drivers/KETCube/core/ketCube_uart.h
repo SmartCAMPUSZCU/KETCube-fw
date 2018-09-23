@@ -57,6 +57,8 @@
 
 /**
 * @brief UART supported channels
+* 
+* @todo rename to respect channel names: USART 1,2,4,5, LPUART
 */
 typedef enum {
     KETCUBE_UART_CHANNEL_1 = 0,
@@ -82,6 +84,7 @@ typedef struct {
     ketCube_UART_SimpleCbFn_t fnIoDeInit;
     ketCube_UART_SimpleCbFn_t fnIRQCallback;
     ketCube_UART_SimpleCbFn_t fnReceiveCallback;
+ 	ketCube_UART_SimpleCbFn_t fnTransmitCallback;
     ketCube_UART_SimpleCbFn_t fnErrorCallback;
     ketCube_UART_SimpleCbFn_t fnWakeupCallback;
 } ketCube_UART_descriptor_t;
@@ -94,11 +97,15 @@ ketCube_UART_UnRegisterHandle(ketCube_UART_ChannelNo_t channel);
 extern ketCube_cfg_ModError_t ketCube_UART_SetupPin(uint32_t pin,
                                                     uint32_t alternate,
                                                     GPIO_TypeDef * port);
+extern ketCube_cfg_ModError_t ketCube_UART_ReleasePin(uint32_t pin,
+                                                      GPIO_TypeDef * port);
+
 extern UART_HandleTypeDef *ketCube_UART_GetHandle(ketCube_UART_ChannelNo_t
                                                   channel);
 
 extern void ketCube_UART_IRQCallback(ketCube_UART_ChannelNo_t channel);
 extern void ketCube_UART_ReceiveCallback(ketCube_UART_ChannelNo_t channel);
+extern void ketCube_UART_TransmitCallback(ketCube_UART_ChannelNo_t channel);
 extern void ketCube_UART_ErrorCallback(ketCube_UART_ChannelNo_t channel);
 extern void ketCube_UART_WakeupCallback(ketCube_UART_ChannelNo_t channel);
 

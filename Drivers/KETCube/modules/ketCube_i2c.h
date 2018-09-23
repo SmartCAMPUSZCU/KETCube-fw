@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_i2c.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-01-04
+ * @version 0.2
+ * @date    2018-07-12
  * @brief   This file contains definitions for the ketCube I2C driver
  *
  * @attention
@@ -61,11 +61,15 @@
 
 #define KETCUBE_I2C_ADDRESS                   (uint8_t)0x33     /*<! KETCube I2C address */
 #define KETCUBE_I2C_HANDLE                     I2C1
-#define KETCUBE_I2C_TIMEOUT                    0x5000   /*<! The value of the maximal timeout for BUS waiting loops */
+#define KETCUBE_I2C_TIMEOUT                    0x5000           /*<! The value of the maximal timeout for BUS waiting loops */
 
-#define KETCUBE_I2C_TIMING_100KHZ              0x10A13E56       /* Analog Filter ON, Rise Time 400ns, Fall Time 100ns */
-#define KETCUBE_I2C_TIMING_400KHZ              0x00B1112E       /* Analog Filter ON, Rise Time 250ns, Fall Time 100ns */
-#define KETCUBE_I2C_SPEED                      100000
+/**
+* @brief I2C Speed selection
+*/
+typedef enum {
+    KETCUBE_I2C_SPEED_100KHZ = 0x10A13E56,    /* Analog Filter ON, Rise Time 400ns, Fall Time 100ns */
+    KETCUBE_I2C_SPEED_400KHZ = 0x00B1112E     /* Analog Filter ON, Rise Time 250ns, Fall Time 100ns */
+} ketCube_I2C_SPEED_t;
 
 #define KETCUBE_I2C_CLK_ENABLE()               __I2C1_CLK_ENABLE()
 #define KETCUBE_I2C_SCL_SDA_GPIO_CLK_ENABLE()  __GPIOB_CLK_ENABLE()
@@ -96,9 +100,29 @@ extern uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg,
 extern ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
                                                         uint8_t regAddr,
                                                         uint16_t * data);
+
 extern ketCube_cfg_ModError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
                                                        uint8_t RegAddr,
                                                        uint16_t * data);
+
+extern ketCube_cfg_ModError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
+                                                         uint8_t regAddr,
+                                                         uint8_t * data,
+                                                         uint8_t try
+                                                        );
+
+extern ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
+                                                        uint8_t RegAddr,
+                                                        uint8_t * data,
+                                                        uint8_t try
+                                                       );
+
+extern ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
+                                                       uint8_t regAddr,
+                                                       uint8_t * data,
+                                                       uint8_t len,
+                                                       uint8_t try
+                                                      );
 
 /**
 * @}

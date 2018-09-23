@@ -71,7 +71,7 @@ ketCube_cfg_ModError_t ketCube_I2C_Init(void)
     if (HAL_I2C_GetState(&KETCUBE_I2C_Handle) == HAL_I2C_STATE_RESET) {
 
         /* I2C peripheral configuration */
-        KETCUBE_I2C_Handle.Init.Timing = KETCUBE_I2C_TIMING_100KHZ;     /* 100KHz */
+        KETCUBE_I2C_Handle.Init.Timing = KETCUBE_I2C_SPEED_100KHZ;     /* 100KHz */
 
         KETCUBE_I2C_Handle.Init.OwnAddress1 = KETCUBE_I2C_ADDRESS;
         KETCUBE_I2C_Handle.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -126,7 +126,6 @@ ketCube_cfg_ModError_t ketCube_I2C_UnInit(void)
         initRuns -= 1;
         return KETCUBE_CFG_MODULE_OK;
     } else if (initRuns == 0) {
-        // shuld not happen
         return KETCUBE_CFG_MODULE_OK;
     }
     // Run UnInit body once only: (initRuns == 1)
@@ -251,4 +250,110 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
     } else {
         return KETCUBE_CFG_MODULE_OK;
     }
+}
+
+/**
+ * @brief  Read STM I2C Single 8-bit register
+ * @param  devAddr I2C Address
+ * @param  regAddr register address
+ * @param  data pointer to 8-bit value
+ * @param  try # of tries when I2C failed
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
+                                                 uint8_t regAddr,
+                                                 uint8_t * data,
+                                                 uint8_t try
+                                                )
+{
+    regAddr = regAddr & (~0x80);
+    
+    while (try > 0) {
+        HAL_StatusTypeDef status =
+            HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, devAddr, &(regAddr),
+                                    1, KETCUBE_I2C_TIMEOUT);
+        if (status != HAL_OK) {
+            try--;
+            continue;
+        }
+        //HAL_Delay(1);
+        status =
+            HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, devAddr, data,
+                                   1, KETCUBE_I2C_TIMEOUT);
+        if (status == HAL_OK) {
+            return KETCUBE_CFG_MODULE_OK;
+        }
+        try--;
+    }
+    
+    return KETCUBE_CFG_MODULE_ERROR;
+}
+
+/**
+ * @brief  Read STM I2C Single 8-bit register
+ * @param  devAddr I2C Address
+ * @param  regAddr register address
+ * @param  data pointer to 8-bit value
+ * @param  len data length to read
+ * @param  try # of tries when I2C failed
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
+                                                 uint8_t regAddr,
+                                                 uint8_t * data,
+                                                 uint8_t len,
+                                                 uint8_t try
+                                                )
+{
+    regAddr = regAddr & (~0x80);
+    
+    while (try > 0) {
+        HAL_StatusTypeDef status =
+            HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, devAddr, &(regAddr),
+                                    1, KETCUBE_I2C_TIMEOUT);
+        if (status != HAL_OK) {
+            try--;
+            continue;
+        }
+        //HAL_Delay(1);
+        status =
+            HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, devAddr, data,
+                                   len, KETCUBE_I2C_TIMEOUT);
+        if (status == HAL_OK) {
+            return KETCUBE_CFG_MODULE_OK;
+        }
+        try--;
+    }
+    
+    return KETCUBE_CFG_MODULE_ERROR;
+}
+
+/**
+ * @brief  Write STM I2C Single 8-bit register
+ * @param  devAddr I2C Address
+ * @param  regAddr register address
+ * @param  data pointer to 8-bit value
+ * @param  try # of tries when I2C failed
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+ketCube_cfg_ModError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
+                                                  uint8_t regAddr,
+                                                  uint8_t * data, 
+                                                  uint8_t try
+                                                 )
+{
+    while (try > 0) {
+        if (ketCube_I2C_WriteData(devAddr, (regAddr & (~0x80)), data, 1)) {
+            try--;
+        } else {
+            return KETCUBE_CFG_MODULE_OK;
+        }
+    }
+    return KETCUBE_CFG_MODULE_ERROR;
 }

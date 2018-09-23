@@ -56,14 +56,14 @@ Maintainer: Miguel Luis and Gregory Cristian
   * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   *
   ******************************************************************************
-	*
-	*
-	* @author  Martin Ubl
+  *
+  *
+  * @author  Martin Ubl
   * @version 0.1
   * @date    2018-05-07
-	* @brief   This file has been modified to fit into the KETCube platform
-	*
-	* @attention
+  * @brief   This file has been modified to fit into the KETCube platform
+  *
+  * @attention
   *
   * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
   * All rights reserved.</center></h2>
@@ -106,8 +106,10 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "hw.h"
 #include "mlm32l0xx_it.h"
 #include "low_power.h"
+#include "stm32l0xx_hal.h"
 
 #include "ketCube_uart.h"
+#include "ketCube_lis331hh.h"
 
 /** @addtogroup STM32L1xx_HAL_Examples
   * @{
@@ -381,6 +383,8 @@ void EXTI2_3_IRQHandler( void )
 
 void EXTI4_15_IRQHandler( void )
 {
+  ketCube_lis331hh_gDet();
+    
   HAL_GPIO_EXTI_IRQHandler( GPIO_PIN_4 );
   
   HAL_GPIO_EXTI_IRQHandler( GPIO_PIN_5 );
