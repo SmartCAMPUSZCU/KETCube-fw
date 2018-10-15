@@ -82,14 +82,14 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="elf" artifactName="mlm32l07x01" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="com.atollic.truestudio.exe.debug.1730797119" name="Debug" parent="com.atollic.truestudio.exe.debug">
+				<configuration artifactExtension="elf" artifactName="KETCube" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe" cleanCommand="rm -rf" description="" id="com.atollic.truestudio.exe.debug.1730797119" name="Debug" parent="com.atollic.truestudio.exe.debug">
 					<folderInfo id="com.atollic.truestudio.exe.debug.1730797119." name="/" resourcePath="">
 						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1483650675" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain">
 							<option id="com.atollic.truestudio.general.runtimelib.1792530794" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib" value="com.atollic.truestudio.ld.general.clib.small" valueType="enumerated"/>
 							<option id="com.atollic.truestudio.toolchain_options.mcu.1383932340" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu" value="STM32L072CZ" valueType="string"/>
 							<option id="com.atollic.truestudio.toolchain_options.vendor.1920565620" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor" value="STMicroelectronics" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform.259545734" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
-							<builder buildPath="${workspace_loc:/mlm32l07x01}/Debug" id="com.atollic.truestudio.mbs.builder1.1536496161" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
+							<builder buildPath="${workspace_loc:/mlm32l07x01}/Debug" customBuilderProperties="toolChainpathType=1|toolChainpathString=/opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.0.1/ARMTools/bin|" id="com.atollic.truestudio.mbs.builder1.1536496161" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1290732351" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as">
 								<option id="com.atollic.truestudio.as.general.incpath.420564049" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath">
 									<listOptionValue builtIn="false" value=""/>
@@ -107,18 +107,22 @@
 								<option id="com.atollic.truestudio.exe.debug.toolchain.gcc.debug.info.1577315906" name="Debug Level" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.debug.info" value="com.atollic.truestudio.gcc.debug.info.3" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.gcc.directories.select.431717214" name="Include path" superClass="com.atollic.truestudio.gcc.directories.select" valueType="includePath">
 									<listOptionValue builtIn="false" value="../../../../inc"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/BSP/MLM32L07X01"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/BSP/MLM32L07X01/Phy"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/STM32L0xx_HAL_Driver/Inc"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/Device/ST/STM32L0xx/Include"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/Include"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/Lora/Crypto"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/Lora/Mac"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/Lora/Phy"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/Lora/Utilities"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/Lora/Core"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/Lora/Mac/region"/>
-									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/KETCube"/>
+									<listOptionValue builtIn="false" value="../../../../../Drivers/BSP/MLM32L07X01"/>
+									<listOptionValue builtIn="false" value="../../../../../Drivers/BSP/MLM32L07X01/Phy"/>
+									<listOptionValue builtIn="false" value="../../../../../Drivers/STM32L0xx_HAL_Driver/Inc"/>
+									<listOptionValue builtIn="false" value="../../../../../Drivers/CMSIS/Device/ST/STM32L0xx/Include"/>
+									<listOptionValue builtIn="false" value="../../../../../Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/Lora/Crypto"/>
+									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/Lora/Mac"/>
+									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/Lora/Phy"/>
+									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/Lora/Utilities"/>
+									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/Lora/Core"/>
+									<listOptionValue builtIn="false" value="../../../../../Middlewares/Third_Party/Lora/Mac/region"/>
+									<listOptionValue builtIn="false" value="../../../../../Drivers/KETCube/core"/>
+									<listOptionValue builtIn="false" value="../../../../../Drivers/KETCube/modules"/>
+									<listOptionValue builtIn="false" value="../../../../../KETCube/core"/>
+									<listOptionValue builtIn="false" value="../../../../../KETCube/modules/communication"/>
+									<listOptionValue builtIn="false" value="../../../../../KETCube/modules/sensing"/>
 								</option>
 								<option id="com.atollic.truestudio.gcc.symbols.defined.1268006817" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32L072xx"/>
@@ -173,7 +177,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="KETCube/modules/sensing/ketCube_batMeas_cmd.c|KETCube/modules/communication/ketCube_lora_cmd.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
