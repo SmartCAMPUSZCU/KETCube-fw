@@ -47,10 +47,11 @@
 
 #include "ketCube_cfg.h"
 #include "ketCube_i2c.h"
+#include "ketCube_terminal.h"
 
 // local fn declarations
 I2C_HandleTypeDef KETCUBE_I2C_Handle;
-static void ketCube_I2C_Error(uint8_t Addr);
+static void ketCube_I2C_Error();
 
 static uint8_t initRuns = 0;    //< This driver can be initialized in number of modules. If 0 == not initialized, else initialized
 
@@ -126,11 +127,12 @@ ketCube_cfg_ModError_t ketCube_I2C_UnInit(void)
         initRuns -= 1;
         return KETCUBE_CFG_MODULE_OK;
     } else if (initRuns == 0) {
+        // UnInit here ...
+        HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
         return KETCUBE_CFG_MODULE_OK;
     }
     // Run UnInit body once only: (initRuns == 1)
     initRuns -= 1;
-    // UnInit here ...
 
     return KETCUBE_CFG_MODULE_OK;
 }
@@ -147,13 +149,13 @@ uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                          KETCUBE_I2C_TIMEOUT);
 
     /* Check the communication status */
-    if (status != HAL_OK) {
-
-        /* Execute user timeout callback */
-        ketCube_I2C_Error(Addr);
+    if (status == HAL_OK) {
+        return 0;
+    } else if (status == HAL_ERROR) {
+        ketCube_I2C_Error();
         return 1;
     } else {
-        return 0;
+        return 1;
     }
 }
 
@@ -169,29 +171,77 @@ uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                           KETCUBE_I2C_TIMEOUT);
 
     /* Check the communication status */
-    if (status != HAL_OK) {
-
-        /* Execute user timeout callback */
-        ketCube_I2C_Error(Addr);
+    if (status == HAL_OK) {
+        return 0;
+    } else if (status == HAL_ERROR) {
+        ketCube_I2C_Error();
         return 1;
     } else {
+        return 1;
+    }
+}
+
+
+uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer, uint16_t Size)
+{
+    HAL_StatusTypeDef status = HAL_OK;
+    
+    status =
+        HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, Addr, pBuffer, Size,
+                                KETCUBE_I2C_TIMEOUT);
+
+    /* Check the communication status */
+    if (status == HAL_OK) {
         return 0;
+    } else if (status == HAL_ERROR) {
+        ketCube_I2C_Error();
+        return 1;
+    } else {
+        return 1;
+    }
+}
+
+uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer, uint16_t Size)
+{
+    HAL_StatusTypeDef status = HAL_OK;
+    
+    status =
+        HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, Addr, pBuffer, Size,
+                               KETCUBE_I2C_TIMEOUT);
+
+    /* Check the communication status */
+    if (status == HAL_OK) {
+        return 0;
+    } else if (status == HAL_ERROR) {
+        ketCube_I2C_Error();
+        return 1;
+    } else {
+        return 1;
     }
 }
 
 /**
  * @brief  Manages error callback by re-initializing I2C
- * @param  Addr I2C Address
  * @retval None
  */
-static void ketCube_I2C_Error(uint8_t Addr)
+static void ketCube_I2C_Error()
 {
-
+    uint8_t i;
+    uint8_t tmpInitRuns = initRuns;
+    
+    ketCube_terminal_DebugPrintln("I2C :: Re-Initialize()");
+    
     /* De-initialize the I2C comunication bus */
-    HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
+    for (i = tmpInitRuns; i > 0; i--) {
+        ketCube_I2C_UnInit(); 
+    }
+    /* De-initialize the I2C comunication bus */
+    // HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
 
     /* Re-Initiaize the I2C comunication bus */
-    ketCube_I2C_Init();
+    for (i = tmpInitRuns; i > 0; i--) {
+        ketCube_I2C_Init(); 
+    }
 }
 
 /**
@@ -289,6 +339,26 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
     }
 
     return KETCUBE_CFG_MODULE_ERROR;
+}
+
+/**
+ * @brief  Write AnalogDevices I2C periph 8-bit register
+ * @param  devAddr I2C Address
+ * @param  regAddr register address
+ * @param  data 8-bit register value
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+ketCube_cfg_ModError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
+                                                  uint8_t regAddr,
+                                                  uint8_t data)
+{
+    if (ketCube_I2C_WriteData(devAddr, regAddr, &(data), 1)) {
+        return KETCUBE_CFG_MODULE_ERROR;
+    } else {
+        return KETCUBE_CFG_MODULE_OK;
+    }
 }
 
 /**

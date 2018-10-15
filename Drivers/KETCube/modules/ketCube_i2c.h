@@ -96,6 +96,10 @@ extern uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg,
                                     uint8_t * pBuffer, uint16_t Size);
 extern uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg,
                                      uint8_t * pBuffer, uint16_t Size);
+extern uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer, 
+                                        uint16_t Size);
+extern uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer, 
+                                       uint16_t Size);
 
 extern ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
                                                         uint8_t regAddr,
@@ -121,6 +125,9 @@ extern ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
                                                        uint8_t len,
                                                        uint8_t try);
 
+extern ketCube_cfg_ModError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
+                                                         uint8_t regAddr,
+                                                         uint8_t data);
 /**
 * @}
 */
