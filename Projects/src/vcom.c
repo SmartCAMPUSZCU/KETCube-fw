@@ -232,6 +232,7 @@ void vcom_Print( void)
     HAL_UART_Transmit(&UartHandle,(uint8_t *) CurChar, 1, 300);    
   }
   HAL_NVIC_ClearPendingIRQ(USARTX_IRQn);
+  HAL_UART_Receive_IT(&UartHandle, (uint8_t *)&rxBuff[rxBuffW], 1);
 }
 
 void vcom_Receive( void)

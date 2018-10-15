@@ -61,7 +61,7 @@
   * @{
   */
 
-#define KETCUBE_MAIN_BOARD_LED1_PIN                           GPIO_PIN_5
+#define KETCUBE_MAIN_BOARD_LED1_PIN                           GPIO_PIN_7
 #define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     GPIOB
 #define KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_ENABLE()             __HAL_RCC_GPIOB_CLK_ENABLE()
 #define KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_DISABLE()            __HAL_RCC_GPIOB_CLK_DISABLE()
