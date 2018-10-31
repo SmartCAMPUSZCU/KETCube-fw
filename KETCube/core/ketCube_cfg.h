@@ -59,6 +59,8 @@
   */
 
 
+#define KETCUBE_CFG_DEV_NAME           "KETCube"  //< Device name
+
 /** @defgroup KETCube_inc_mod Included KETCube Modules
   * Define/undefine to include/exclude KETCube modules
   * @{
@@ -114,7 +116,7 @@ typedef enum {
 #ifdef KETCUBE_CFG_INC_MOD_FDC2214
     KETCUBE_LISTS_MODULEID_FDC2214,     /*<! Module FDC2214 */
 #endif
-
+    
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
     KETCUBE_LISTS_MODULEID_RXDISPLAY,   /*<! Module RxDisplay */
 #endif
@@ -160,6 +162,14 @@ typedef enum {
     KETCUBE_CFG_MODULE_OK = (uint8_t) 0,
     KETCUBE_CFG_MODULE_ERROR = !(KETCUBE_CFG_MODULE_OK)
 } ketCube_cfg_ModError_t;
+
+/**
+* @brief  Error code type.
+*/
+typedef enum {
+    KETCUBE_CFG_DRV_OK = (uint8_t) 0,
+    KETCUBE_CFG_DRV_ERROR = !(KETCUBE_CFG_MODULE_OK)
+} ketCube_cfg_DrvError_t;
 
 /**
 * @brief  KETCube inter-module message

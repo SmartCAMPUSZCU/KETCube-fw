@@ -125,14 +125,14 @@ Maintainer: Miguel Luis and Gregory Cristian
 * @param  None
 * @return None
 */
-void vcom_Init(void);
+/// void vcom_Init(void);
 
    /** 
 * @brief  DeInit the VCOM.
 * @param  None
 * @return None
 */
-void vcom_DeInit(void);
+/// void vcom_DeInit(void);
 
 /** 
 * @brief  Records string on circular Buffer and set SW interrupt
@@ -140,11 +140,11 @@ void vcom_DeInit(void);
 * @param  string
 * @return None
 */
-void vcom_Send( char *format, ... );
+/// void vcom_Send( char *format, ... );
 
-bool IsNewCharReceived ( void);
+/// bool IsNewCharReceived ( void);
 
-char GetNewChar ( void);
+/// char GetNewChar ( void);
 
 /** 
 * @brief  Records string on circular Buffer
@@ -153,11 +153,11 @@ char GetNewChar ( void);
 * @param  string
 * @return None
 */
-void vcom_Send_Lp( char *format, ... );
+/// void vcom_Send_Lp( char *format, ... );
 
 /* Exported macros -----------------------------------------------------------*/
-#if 1
-#define PRINTF(...)          if (KETCUBE_TERMINAL_DEBUG == TRUE) vcom_Send(__VA_ARGS__)
+#if (KETCUBE_TERMINAL_DEBUG == TRUE)
+#define PRINTF(...)          vcom_Send(__VA_ARGS__)
 #else
 #define PRINTF(...)
 #endif

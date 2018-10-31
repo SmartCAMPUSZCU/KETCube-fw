@@ -66,7 +66,7 @@
 #define KETCUBE_TERMINAL_HISTORY_LEN     3      /*<! Remember last 3 commands */
 #define KETCUBE_TERMINAL_CMD_MAX_LEN     128    /*<! Max command length */
 
-#define KETCUBE_TERMINAL_PRINTF(...)     vcom_Send(__VA_ARGS__)
+#define KETCUBE_TERMINAL_PRINTF(...)     ketCube_terminal_UsartPrint(__VA_ARGS__)
 
 #define KETCUBE_TERMINAL_PROMPT()        KETCUBE_TERMINAL_PRINTF(">> ")
 #define KETCUBE_TERMINAL_ENDL()          KETCUBE_TERMINAL_PRINTF("\n\r")
@@ -96,6 +96,8 @@ extern void ketCube_terminal_UpdateCmdLine(void);
 
 extern void ketCube_terminal_cmd_about(void);
 extern void ketCube_terminal_cmd_help(void);
+
+void ketCube_terminal_UsartPrint(char *format, ...);
 
 void ketCube_terminal_Print(char *format, ...);
 void ketCube_terminal_Println(char *format, ...);

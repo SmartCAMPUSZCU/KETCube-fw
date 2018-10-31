@@ -2,8 +2,8 @@
  * @file    ketCube_terminal.c
  * @author  Jan Belohoubek
  * @author  Martin Ubl
- * @version 0.1
- * @date    2018-05-07
+ * @version 0.2
+ * @date    2018-10-10
  * @brief   This file contains the KETCube Terminal
  *
  * @attention
@@ -44,7 +44,11 @@
  */
 
 #include <string.h>
+#include <stdio.h>
 #include <stdarg.h>
+#include <stdlib.h>
+
+#include "utilities.h"
 
 #include "ketCube_terminal.h"
 #include "ketCube_common.h"
@@ -52,7 +56,39 @@
 #include "ketCube_coreCfg.h"
 #include "ketCube_eeprom.h"
 #include "ketCube_modules.h"
-#include "vcom.h"
+#include "ketCube_uart.h"
+
+// BEGIN of USART configuration
+#define KETCUBE_TERMINAL_USART_INSTANCE                  USART1
+#define KETCUBE_TERMINAL_USART_IRQn                      USART1_IRQn
+#define KETCUBE_TERMINAL_USART_BR                        9600
+#define KETCUBE_TERMINAL_USART_CHANNEL                   KETCUBE_UART_CHANNEL_1
+
+#define KETCUBE_TERMINAL_USART_CLK_ENABLE()              __USART1_CLK_ENABLE();
+#define KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE()
+#define KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE() 
+#define KETCUBE_TERMINAL_USART_FORCE_RESET()             __USART1_FORCE_RESET()
+#define KETCUBE_TERMINAL_USART_RELEASE_RESET()           __USART1_RELEASE_RESET()
+
+#define KETCUBE_TERMINAL_USART_TX_PIN                    GPIO_PIN_9
+#define KETCUBE_TERMINAL_USART_TX_GPIO_PORT              GPIOA  
+#define KETCUBE_TERMINAL_USART_TX_AF                     GPIO_AF4_USART1
+#define KETCUBE_TERMINAL_USART_RX_PIN                    GPIO_PIN_10
+#define KETCUBE_TERMINAL_USART_RX_GPIO_PORT              GPIOA 
+#define KETCUBE_TERMINAL_USART_RX_AF                     GPIO_AF4_USART1
+
+static UART_HandleTypeDef ketCube_terminal_UsartHandle;
+static ketCube_UART_descriptor_t ketCube_terminal_UsartDescriptor;
+
+#define USART_BUFFER_SIZE                                256 // It must be 256, because overflows control circular buffer properties
+
+static volatile uint8_t usartRxWrite = 0;
+static volatile uint8_t usartRxRead = 0;
+static char usartRxBuffer[USART_BUFFER_SIZE];
+
+static char usartTxBuffer[USART_BUFFER_SIZE];
+
+// END of USART configuration
 
 static ketCube_terminal_buffer_t
     commandHistory[KETCUBE_TERMINAL_HISTORY_LEN];
@@ -62,6 +98,7 @@ static uint8_t commandHistoryPtr = 0;
 static uint8_t commandParams;   //< Index of the first command parameter in buffer
 
 /* Helper function prototypes */
+static uint8_t ketCube_terminal_getNextParam(uint8_t ptr);
 static void ketCube_terminal_printCmdList(uint16_t cmdIndex,
                                           uint8_t level);
 static void ketCube_terminal_saveCfgHEXStr(char *data,
@@ -86,7 +123,25 @@ static void ketCube_terminal_cmd_set_core_basePeriod(void);
 static void ketCube_terminal_cmd_set_core_startDelay(void);
 
 // Place module command sets here
+#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
+#include "ketCube_batMeas_cmd.c"
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_LORA
 #include "ketCube_lora_cmd.c"
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_MBUS
+#include "ketCube_mbus_cmd.c"
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_S0
+#include "ketCube_s0_cmd.c"
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_MODBUS_AL
+#include "ketCube_modBUSAL_cmd.c"
+#endif
 
 /**
   *
@@ -96,7 +151,7 @@ static void ketCube_terminal_cmd_set_core_startDelay(void);
 ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
     {((char *) &("about")),
      ((char *)
-      &("Print information about KETCube, Copyright, License, ...")),
+      &("Print ABOUT information: Copyright, License, ...")),
      0,
      0,
      &ketCube_terminal_cmd_about},
@@ -155,6 +210,27 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
      0,
      &ketCube_terminal_cmd_show_core_startDelay},
 
+#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
+    {((char *) &("batMeas")),
+     ((char *) &("Show batMeas parameters")),
+     1,
+     0,
+     (void *) NULL},
+
+    {((char *) &("bat")),
+     ((char *) &("Show selected battery.")),
+     2,
+     0,
+     &ketCube_terminal_cmd_show_batMeas_bat},
+     
+     {((char *) &("list")),
+     ((char *) &("Show supported batteries.")),
+     2,
+     0,
+     &ketCube_terminal_cmd_show_batMeas_list},
+     
+#endif        /* KETCUBE_CFG_INC_MOD_BATMEAS */
+     
 #ifdef KETCUBE_CFG_INC_MOD_LORA
 
     {((char *) &("LoRa")),
@@ -222,6 +298,188 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
 
 #endif                          /* KETCUBE_CFG_INC_MOD_LORA */
 
+#ifdef KETCUBE_CFG_INC_MOD_MBUS
+    {((char *) &("MBUS")),
+     ((char *) &("Show M-BUS parameters")),
+     1,
+     0,
+     (void *) NULL},
+     
+     {((char *) &("attempts")),
+     ((char *) &("Show M-BUS # attempts.")),
+     2,
+     0,
+     &ketCube_terminal_cmd_show_MBUS_RetryCount},
+
+    {((char *) &("baudrate")),
+     ((char *) &("Show M-BUS configured baudrate.")),
+     2,
+     0,
+     &ketCube_terminal_cmd_show_MBUS_baudRate},
+
+    {((char *) &("challenge")),
+     ((char *) &("Show M-BUS challenge parameters")),
+     2,
+     0,
+     (void *) NULL},
+
+    {((char *) &("address")),
+     ((char *) &("Show address of slave to be challenged")),
+     3,
+     0,
+     &ketCube_terminal_cmd_show_MBUS_ChallengeAddress},
+
+    {((char *) &("class")),
+     ((char *) &("Show class of request")),
+     3,
+     0,
+     &ketCube_terminal_cmd_show_MBUS_ChallengeClass},
+
+    {((char *) &("response")),
+     ((char *) &("Show M-BUS response cutting parameters")),
+     2,
+     0,
+     (void *) NULL},
+
+    {((char *) &("offset")),
+     ((char *) &("Show offset of data to be extracted")),
+     3,
+     0,
+     &ketCube_terminal_cmd_show_MBUS_ResponseOffset},
+
+    {((char *) &("length")),
+     ((char *) &("Show length of data to be extracted, beginning from <offset>")),
+     3,
+     0,
+     &ketCube_terminal_cmd_show_MBUS_ResponseLength},
+#endif        /* KETCUBE_CFG_INC_MOD_MBUS */
+
+#ifdef KETCUBE_CFG_INC_MOD_S0
+    {((char *) &("S0")),
+     ((char *) &("Show S0 parameters")),
+     1,
+     0,
+     (void *) NULL},
+
+    {((char *) &("OnOff")),
+     ((char *) &("Show S0 timers ON/OFF state.")),
+     2,
+     1,
+     &ketCube_terminal_cmd_show_S0_OnOff},
+
+     {((char *) &("Timeout")),
+     ((char *) &("Show S0 timer's Timeout.")),
+     2,
+     1,
+     &ketCube_terminal_cmd_show_S0_timeout},
+     
+     {((char *) &("Value")),
+     ((char *) &("Show S0 timer's current value.")),
+     2,
+     1,
+     &ketCube_terminal_cmd_show_S0_value},
+     
+#endif        /* KETCUBE_CFG_INC_MOD_S0 */
+
+#ifdef KETCUBE_CFG_INC_MOD_MODBUS_AL
+    {((char *) &("MODBUS")),
+     ((char *) &("Show Modbus parameters")),
+     1,
+     0,
+     (void *) NULL},
+    
+    {((char *) &("baudrate")),
+     ((char *) &("Show ModBUS baudrate")),
+     2,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_BaudRate},
+
+    {((char *) &("challenge")),
+     ((char *) &("Show Modbus challenge parameters")),
+     2,
+     0,
+     (void *) NULL},
+
+    {((char *) &("address")),
+     ((char *) &("Show address of slave to be challenged")),
+     3,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_ChallengeAddress},
+
+    {((char *) &("coil")),
+     ((char *) &("Show coil challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Show coil starting address")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_CoilStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Show coil count")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_CoilCount},
+		
+    {((char *) &("discreteinput")),
+     ((char *) &("Show discrete input challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Show discrete input starting address")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_DiscreteInputStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Show discrete input count")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_DiscreteInputCount},
+		
+		{((char *) &("inputregister")),
+     ((char *) &("Show input register challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Show input register starting address")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_InputRegisterStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Show input register count")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_InputRegisterCount},
+
+		{((char *) &("holdingregister")),
+     ((char *) &("Show holding register challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Show holding register starting address")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_HoldingRegisterStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Show input register count")),
+     4,
+     0,
+     &ketCube_terminal_cmd_show_ModBUS_AL_HoldingRegisterCount},
+
+#endif        /* KETCUBE_CFG_INC_MOD_MODBUS_AL */
+     
     {((char *) &("set")),
      ((char *) &("Set LoRa, Sigfox ... parameters")),
      0,
@@ -247,6 +505,21 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
      1,
      &ketCube_terminal_cmd_set_core_startDelay},
 
+#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
+    {((char *) &("batMeas")),
+     ((char *) &("Set batMeas parameters")),
+     1,
+     0,
+     (void *) NULL},
+
+    {((char *) &("bat")),
+     ((char *) &("Select battery.")),
+     2,
+     1,
+     &ketCube_terminal_cmd_set_batMeas_bat},
+     
+#endif        /* KETCUBE_CFG_INC_MOD_BATMEAS */
+     
 #ifdef KETCUBE_CFG_INC_MOD_LORA
 
     {((char *) &("LoRa")),
@@ -317,6 +590,183 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
 
 #endif                          /* KETCUBE_CFG_INC_MOD_LORA */
 
+#ifdef KETCUBE_CFG_INC_MOD_MBUS
+    {((char *) &("MBUS")),
+     ((char *) &("Set M-BUS parameters")),
+     1,
+     0,
+     (void *) NULL},
+
+     {((char *) &("attempts")),
+     ((char *) &("Set M-BUS # attempts")),
+     2,
+     1,
+     &ketCube_terminal_cmd_set_MBUS_RetryCount},
+     
+    {((char *) &("baudrate")),
+     ((char *) &("Set M-BUS baudrate (use 300, 600, 1200, 2400, 4800, 9600, 19200 and 38400 only)")),
+     2,
+     1,
+     &ketCube_terminal_cmd_set_MBUS_baudRate},
+
+    {((char *) &("challenge")),
+     ((char *) &("M-BUS challenge parameters")),
+     2,
+     0,
+     (void *) NULL},
+
+     {((char *) &("address")),
+     ((char *) &("Address of slave to be challenged (0 - 253)")),
+     3,
+     1,
+     &ketCube_terminal_cmd_set_MBUS_ChallengeAddress},
+
+    {((char *) &("class")),
+     ((char *) &("Class of request (1 or 2)")),
+     3,
+     1,
+     &ketCube_terminal_cmd_set_MBUS_ChallengeClass},
+
+    {((char *) &("response")),
+     ((char *) &("M-BUS response cutting parameters")),
+     2,
+     0,
+     (void *) NULL},
+
+    {((char *) &("offset")),
+     ((char *) &("Offset of data to be extracted (0 - 255)")),
+     3,
+     1,
+     &ketCube_terminal_cmd_set_MBUS_ResponseOffset},
+
+    {((char *) &("length")),
+     ((char *) &("Length of data to be extracted, beginning from <offset> (1 - 255)")),
+     3,
+     1,
+     &ketCube_terminal_cmd_set_MBUS_ResponseLength},
+
+#endif        /* KETCUBE_CFG_INC_MOD_MBUS */
+     
+#ifdef KETCUBE_CFG_INC_MOD_S0
+    {((char *) &("S0")),
+     ((char *) &("Set S0 parameters")),
+     1,
+     0,
+     (void *) NULL},
+
+    {((char *) &("OnOff")),
+     ((char *) &("Set S0 timers ON/OFF state.")),
+     2,
+     1,
+     &ketCube_terminal_cmd_set_S0_OnOff},
+
+     {((char *) &("Timeout")),
+     ((char *) &("Set S0 timer's Timeout [minutes].")),
+     2,
+     2,
+     &ketCube_terminal_cmd_set_S0_timeout},
+     
+#endif        /* KETCUBE_CFG_INC_MOD_S0 */
+
+#ifdef KETCUBE_CFG_INC_MOD_MODBUS_AL
+    {((char *) &("MODBUS")),
+     ((char *) &("Set Modbus parameters")),
+     1,
+     0,
+     (void *) NULL},
+    
+    {((char *) &("baudrate")),
+     ((char *) &("Set ModBUS baudrate (use 300, 600, 1200, 2400, 4800, 9600, 19200 or 38400 only)")),
+     2,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_BaudRate},
+
+    {((char *) &("challenge")),
+     ((char *) &("Set Modbus challenge parameters")),
+     2,
+     0,
+     (void *) NULL},
+
+    {((char *) &("address")),
+     ((char *) &("Set address of slave to be challenged")),
+     3,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_ChallengeAddress},
+
+    {((char *) &("coil")),
+     ((char *) &("Set coil challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Set coil starting address")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_CoilStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Set coil count")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_CoilCount},
+		
+    {((char *) &("discreteinput")),
+     ((char *) &("Set discrete input challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Set discrete input starting address")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_DiscreteInputStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Set discrete input count")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_DiscreteInputCount},
+		
+		{((char *) &("inputregister")),
+     ((char *) &("Set input register challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Set input register starting address")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_InputRegisterStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Set input register count")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_InputRegisterCount},
+
+		{((char *) &("holdingregister")),
+     ((char *) &("Set holding register challenge parameters")),
+     3,
+     0,
+     (void *) NULL},
+
+    {((char *) &("start")),
+     ((char *) &("Set holding register starting address")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_HoldingRegisterStart},
+		
+    {((char *) &("count")),
+     ((char *) &("Set input register count")),
+     4,
+     1,
+     &ketCube_terminal_cmd_set_ModBUS_AL_HoldingRegisterCount},
+
+#endif        /* KETCUBE_CFG_INC_MOD_MODBUS_AL */
+
     {(char *) NULL,
      (char *) NULL,
      0,
@@ -360,7 +810,7 @@ void ketCube_terminal_saveCfgHEXStr(char *data, ketCube_cfg_moduleIDs_t id,
 /**
  * @brief A wrapper to ketCube_cfg_saveStr function 
  *
- * Provides textual output to terminal is provided
+ * Provides textual output to terminal
  */
 void ketCube_terminal_saveCfgDECStr(char *data, ketCube_cfg_moduleIDs_t id,
                                     ketCube_cfg_AllocEEPROM_t addr,
@@ -439,7 +889,7 @@ static void ketCube_terminal_printCmdList(uint16_t cmdIndex, uint8_t level)
 void ketCube_terminal_cmd_help(void)
 {
     KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("KETCube Command-line Interface HELP");
+    KETCUBE_TERMINAL_PRINTF("%s Command-line Interface HELP", KETCUBE_CFG_DEV_NAME);
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF("-----------------------------------");
     KETCUBE_TERMINAL_ENDL();
@@ -453,17 +903,19 @@ void ketCube_terminal_cmd_help(void)
 void ketCube_terminal_cmd_about(void)
 {
     KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("About KETCube");
+    KETCUBE_TERMINAL_PRINTF("About %s", KETCUBE_CFG_DEV_NAME);
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF("-------------");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
-
+    
     KETCUBE_TERMINAL_PRINTF
-        ("KETCube was created on University of West Bohemia in Pilsen");
+        ("KETCube was created on University of West Bohemia in Pilsen.");
+    KETCUBE_TERMINAL_ENDL();
+    KETCUBE_TERMINAL_PRINTF ("KETCube home: https://github.com/SmartCAMPUSZCU/KETCube-docs");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF
-        ("and is provided under NCSA Open Source License - see LICENSE.txt");
+        ("KETCube is provided under NCSA Open Source License - see LICENSE.txt.");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF
@@ -521,7 +973,7 @@ void ketCube_terminal_cmd_reload(void)
     KETCUBE_TERMINAL_ENDL();
 
     KETCUBE_TERMINAL_PRINTF
-        ("Performing system reset and reloading KETCube configuration ...");
+        ("Performing system reset and reloading %s configuration ...", KETCUBE_CFG_DEV_NAME);
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
 
@@ -649,16 +1101,161 @@ void ketCube_terminal_cmd_disable(void)
     KETCUBE_TERMINAL_ENDL();
 }
 
+void ketCube_terminal_usartIoInit(void)
+{
+      /* Enable USART1 clock */
+      KETCUBE_TERMINAL_USART_CLK_ENABLE(); 
+      
+      /* Enable RX/TX port clocks */
+      KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE();
+      KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE();
+      
+      /* UART TX GPIO pin configuration  */
+      ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN, KETCUBE_TERMINAL_USART_TX_AF, KETCUBE_TERMINAL_USART_TX_GPIO_PORT);
+      ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_RX_PIN, KETCUBE_TERMINAL_USART_RX_AF, KETCUBE_TERMINAL_USART_RX_GPIO_PORT);
+}
+
+void ketCube_terminal_usartIoDeInit(void)
+{
+    GPIO_InitTypeDef GPIO_InitStructure={0};
+      
+    KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE();
+    KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE();
+    
+    GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStructure.Pull = GPIO_NOPULL;
+      
+    GPIO_InitStructure.Pin =  KETCUBE_TERMINAL_USART_TX_PIN ;
+    HAL_GPIO_Init(KETCUBE_TERMINAL_USART_TX_GPIO_PORT, &GPIO_InitStructure );
+    
+    __HAL_UART_ENABLE_IT(&ketCube_terminal_UsartHandle, UART_IT_WUF);
+    HAL_UARTEx_EnableStopMode(&ketCube_terminal_UsartHandle); 
+}
+
+void ketCube_terminal_usartRx(void)
+{
+#if (USART_BUFFER_SIZE == 256)
+  // buffer is sized to be 256 bytes long; usartRxWrite automatically overflows at the end of buffer ...
+  usartRxWrite = (usartRxWrite + 1) & 0xFF; 
+#else
+  usartRxWrite = (usartRxWrite + 1) % USART_BUFFER_SIZE; 
+#endif
+  HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+}
+
+void ketCube_terminal_usartTx(void)
+{
+     HAL_NVIC_ClearPendingIRQ(KETCUBE_TERMINAL_USART_IRQn);
+     HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+}
+
+void ketCube_terminal_usartErrorCallback(void)
+{
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+}
+
+void ketCube_terminal_usartWakeupCallback(void)
+{
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+}
+
+void ketCube_terminal_UsartPrintVa(char *format, va_list args)
+{
+    uint8_t len, i;
+    
+    len = vsprintf(&(usartTxBuffer[0]), format, args);
+    
+    for (i = 0; i < len; i++) {
+        HAL_UART_Transmit(&ketCube_terminal_UsartHandle,(uint8_t *) &(usartTxBuffer[i]), 1, 300);    
+    }
+    
+    if (ketCube_terminal_UsartHandle.RxState == HAL_UART_STATE_READY) {
+        // TODO This should never happen, but "(sh)it happens" !! Why?
+        // resolved by adding HAL_UART_Receive_IT to vcom_Print()
+        //ketCube_terminal_Println("VCOM UART :: %d ", usartRxWrite);
+        
+        // This causes, that ketCube_terminal_usartTx will restore IRQ ...
+        HAL_NVIC_SetPendingIRQ(KETCUBE_TERMINAL_USART_IRQn);
+    }
+
+}
+
+void ketCube_terminal_UsartPrint(char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    ketCube_terminal_UsartPrintVa(format, args);
+
+    va_end(args);
+}
+
+bool IsNewCharReceived(void)
+{
+    if (usartRxWrite != usartRxRead) {
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+char GetNewChar ( void)
+{
+    char byte;
+    
+    if (usartRxWrite != usartRxRead) {
+        byte = usartRxBuffer[usartRxRead];
+#if (USART_BUFFER_SIZE == 256)
+        // buffer is sized to be 256 bytes long; usartRxRead automatically overflows at the end of buffer ...
+        usartRxRead = (usartRxRead + 1) & 0xFF; 
+#else
+        usartRxRead = (usartRxRead + 1) % USART_BUFFER_SIZE; 
+#endif
+        return byte;
+    }
+    return '\0';
+}
+
 /**
   * @brief Init terminal
   *
   */
 void ketCube_terminal_Init(void)
 {
+    /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
+    ketCube_terminal_UsartHandle.Instance        = KETCUBE_TERMINAL_USART_INSTANCE;
+    ketCube_terminal_UsartHandle.Init.BaudRate   = KETCUBE_TERMINAL_USART_BR;
+    ketCube_terminal_UsartHandle.Init.WordLength = UART_WORDLENGTH_8B;
+    ketCube_terminal_UsartHandle.Init.StopBits   = UART_STOPBITS_1;
+    ketCube_terminal_UsartHandle.Init.Parity     = UART_PARITY_NONE;
+    ketCube_terminal_UsartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
+    ketCube_terminal_UsartHandle.Init.Mode       = UART_MODE_TX_RX;
+    
+    __HAL_RCC_USART1_CONFIG(RCC_USART1CLKSOURCE_HSI);
+    
+    /* register callbacks in generic UART manager */
+    ketCube_terminal_UsartDescriptor.handle = &ketCube_terminal_UsartHandle;
+    ketCube_terminal_UsartDescriptor.irqNumber = KETCUBE_TERMINAL_USART_IRQn;
+    ketCube_terminal_UsartDescriptor.irqPriority = 0x1;
+    ketCube_terminal_UsartDescriptor.irqSubPriority = 0;
+    ketCube_terminal_UsartDescriptor.fnIoInit = &ketCube_terminal_usartIoInit;
+    ketCube_terminal_UsartDescriptor.fnIoDeInit = &ketCube_terminal_usartIoDeInit;
+    ketCube_terminal_UsartDescriptor.fnIRQCallback = &ketCube_terminal_usartTx;
+    ketCube_terminal_UsartDescriptor.fnReceiveCallback = &ketCube_terminal_usartRx;
+    ketCube_terminal_UsartDescriptor.fnTransmitCallback = &ketCube_terminal_usartTx;
+    ketCube_terminal_UsartDescriptor.fnErrorCallback = &ketCube_terminal_usartErrorCallback;
+    ketCube_terminal_UsartDescriptor.fnWakeupCallback = &ketCube_terminal_usartWakeupCallback;
+    
+    if (ketCube_UART_RegisterHandle(KETCUBE_TERMINAL_USART_CHANNEL, &ketCube_terminal_UsartDescriptor) != KETCUBE_CFG_MODULE_OK) {
+        ketCube_common_BasicErrorHandler();
+    }
+    
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+    
     commandBuffer[0] = 0x00;
 
     KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("Welcome to KETCube Command-line Interface");
+    KETCUBE_TERMINAL_PRINTF("Welcome to %s Command-line Interface", KETCUBE_CFG_DEV_NAME);
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF("-----------------------------------------");
     KETCUBE_TERMINAL_ENDL();
@@ -780,6 +1377,7 @@ void ketCube_terminal_execCMD(void)
             commandPtr =
                 (uint8_t *) & (commandHistory[commandHistoryPtr].ptr);
             *commandPtr = 0;
+            commandBuffer[*commandPtr] = 0x00;
 
             return;
         }
@@ -795,6 +1393,7 @@ void ketCube_terminal_execCMD(void)
         (char *) &(commandHistory[commandHistoryPtr].buffer[0]);
     commandPtr = (uint8_t *) & (commandHistory[commandHistoryPtr].ptr);
     *commandPtr = 0;
+    commandBuffer[*commandPtr] = 0x00;
 
     return;
 }
@@ -929,6 +1528,35 @@ void ketCube_terminal_UpdateCmdLine(void)
 }
 
 /**
+  * @brief Return next command parameter index
+  *
+  * @param ptr index where to start parameter search
+  * 
+  * @retval index next parameter index
+  *
+  */
+uint8_t ketCube_terminal_getNextParam(uint8_t ptr)
+{
+    // find next param
+    while (commandBuffer[ptr] != ' ') {
+        if (ptr < KETCUBE_TERMINAL_CMD_MAX_LEN) {
+            ptr++;
+        } else {
+            return 0;
+        }
+    }
+    while (commandBuffer[ptr] == ' ') {
+        if (ptr < KETCUBE_TERMINAL_CMD_MAX_LEN) {
+            ptr++;
+        } else {
+            return 0;
+        }
+    }
+    
+    return ptr;
+}
+
+/**
   * @brief Process user input
   *
   */
@@ -942,10 +1570,10 @@ void ketCube_terminal_ProcessCMD(void)
         tmpchar = GetNewChar();
 
         if (((tmpchar >= 'a') && (tmpchar <= 'z'))
-            || ((tmpchar >= 'A') && (tmpchar <= 'Z')) || ((tmpchar >= '0')
-                                                          && (tmpchar <=
-                                                              '9'))
-            || (tmpchar == ' ')) {
+            || ((tmpchar >= 'A') && (tmpchar <= 'Z')) 
+            || ((tmpchar >= '0') && (tmpchar <= '9'))
+            || (tmpchar == ' ')
+            || (tmpchar == ',')) {
             if (*commandPtr > KETCUBE_TERMINAL_CMD_MAX_LEN) {
                 KETCUBE_TERMINAL_PRINTF
                     ("Command too long, remove characters or press [ENTER] to exec command!");
@@ -1019,17 +1647,25 @@ void ketCube_terminal_ProcessCMD(void)
   */
 void ketCube_terminal_Println(char *format, ...)
 {
-    char buff[128];
-
+//     char buff[128];
+// 
+//     va_list args;
+//     va_start(args, format);
+// 
+//     vsprintf(&(buff[0]), format, args);
+// 
+//     va_end(args);
+// 
+//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
+//     ketCube_terminal_UpdateCmdLine();
+    
     va_list args;
     va_start(args, format);
 
-    vsprintf(&(buff[0]), format, args);
-
-    va_end(args);
-
-    KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
+    ketCube_terminal_UsartPrintVa(format, args);
     ketCube_terminal_UpdateCmdLine();
+    
+    va_end(args);
 }
 
 
@@ -1039,16 +1675,23 @@ void ketCube_terminal_Println(char *format, ...)
   */
 void ketCube_terminal_Print(char *format, ...)
 {
-    char buff[128];
+//     char buff[128];
+// 
+//     va_list args;
+//     va_start(args, format);
+// 
+//     vsprintf(&(buff[0]), format, args);
+// 
+//     va_end(args);
+// 
+//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
 
     va_list args;
     va_start(args, format);
 
-    vsprintf(&(buff[0]), format, args);
-
+    ketCube_terminal_UsartPrintVa(format, args);
+    
     va_end(args);
-
-    KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
 }
 
 
@@ -1058,22 +1701,31 @@ void ketCube_terminal_Print(char *format, ...)
   */
 void ketCube_terminal_DebugPrintln(char *format, ...)
 {
-    char buff[128];
+//     char buff[128];
 
-    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
-        cfgByte.enable != TRUE) {
+    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
+        enable != TRUE) {
         return;
     }
 
+//     va_list args;
+//     va_start(args, format);
+// 
+//     vsprintf(&(buff[0]), format, args);
+// 
+//     va_end(args);
+// 
+//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
+//     ketCube_terminal_UpdateCmdLine();
+    
+    
     va_list args;
     va_start(args, format);
 
-    vsprintf(&(buff[0]), format, args);
-
-    va_end(args);
-
-    KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
+    ketCube_terminal_UsartPrintVa(format, args);
     ketCube_terminal_UpdateCmdLine();
+    
+    va_end(args);
 }
 
 
@@ -1083,21 +1735,29 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
   */
 void ketCube_terminal_DebugPrint(char *format, ...)
 {
-    char buff[128];
+//     char buff[128];
 
-    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
-        cfgByte.enable != TRUE) {
+    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
+        enable != TRUE) {
         return;
     }
 
+//     va_list args;
+//     va_start(args, format);
+// 
+//     vsprintf(&(buff[0]), format, args);
+// 
+//     va_end(args);
+// 
+//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
+    
+    
     va_list args;
     va_start(args, format);
 
-    vsprintf(&(buff[0]), format, args);
-
+    ketCube_terminal_UsartPrintVa(format, args);
+    
     va_end(args);
-
-    KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
 }
 
 

@@ -185,16 +185,6 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 }
 
 /**
-  * @brief  EXTI line detection callbacks.
-  * @param  GPIO_Pin: Specifies the pins connected to the EXTI line.
-  * @retval None
-  */
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
-  HW_GPIO_IrqHandler( GPIO_Pin );
-}
-
-/**
   * @brief  Gets IRQ number as a function of the GPIO_Pin.
   * @param  GPIO_Pin: Specifies the pins connected to the EXTI line.
   * @retval IRQ number
