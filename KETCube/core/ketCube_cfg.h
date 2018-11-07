@@ -48,7 +48,6 @@
 
 #include "ketCube_common.h"
 #include "ketCube_eeprom.h"
-#include "ketCube_compilation.h"
 
 /** @defgroup  KETCube_cfg KETCube Configuration Manager
   * @brief KETCube Configuration Manager
@@ -58,6 +57,76 @@
   * @ingroup KETCube_Core 
   * @{
   */
+
+
+#define KETCUBE_CFG_DEV_NAME           "KETCube"  //< Device name
+
+/** @defgroup KETCube_inc_mod Included KETCube Modules
+  * Define/undefine to include/exclude KETCube modules
+  * @{
+  */
+
+#define KETCUBE_CFG_INC_MOD_LORA        //< Include LoRa module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_DEBUGDISPLAY        //< Include SerialDisplay module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_HDC1080     //< Include HDC1080 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_BATMEAS     //< Include batMeas module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ADC //< Include batMeas module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_STARNET     //< Include StarNet module(s); undef to disable module
+#define KETCUBE_CFG_INC_MOD_FDC2214     //< Include FDC2214 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_RXDISPLAY   //< Include RxDisplay module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ASYNCTX     //< Include RxDisplay module; undef to disable module
+
+#define KETCUBE_CFG_INC_DRV_I2C //< Include KET's I2C driver; undef to disable driver
+#define KETCUBE_CFG_INC_DRV_MODBUS      //< Include KET's modBUS driver; undef to disable driver
+
+/**
+* @}
+*/
+
+
+/**
+* @brief  List of module Indeces.
+*/
+typedef enum {
+#ifdef KETCUBE_CFG_INC_MOD_LORA
+    KETCUBE_LISTS_MODULEID_LORA,        /*<! Module LoRa */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
+    KETCUBE_LISTS_MODULEID_DEBUGDISPLAY,        /*<! Module DebugDisplay */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_HDC1080
+    KETCUBE_LISTS_MODULEID_HDC1080,     /*<! Module HDC1080 */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
+    KETCUBE_LISTS_MODULEID_BATMEAS,     /*<! Module MeasBattery */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_ADC
+    KETCUBE_LISTS_MODULEID_ADC, /*<! Module ADC */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_STARNET
+    KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,        /*<! Module starNet */
+    KETCUBE_LISTS_MODULEID_STARNET_NODE,        /*<! Module starNet */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_FDC2214
+    KETCUBE_LISTS_MODULEID_FDC2214,     /*<! Module FDC2214 */
+#endif
+    
+#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
+    KETCUBE_LISTS_MODULEID_RXDISPLAY,   /*<! Module RxDisplay */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
+    KETCUBE_LISTS_MODULEID_ASYNCTX,     /*<! Module AsyncTx */
+#endif
+
+    KETCUBE_LISTS_MODULEID_LAST /*<! Last module index - do not modify! */
+} ketCube_cfg_moduleIDs_t;
 
 /**
 * @brief  Allocated CFG EEPROM addreses
