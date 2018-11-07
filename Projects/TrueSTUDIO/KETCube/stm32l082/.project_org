@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>mlm32l07x01</name>
+	<name>KETCube</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -26,14 +26,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>B-L072Z-LRWAN1/b-l072z-lrwan1.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/B-L072Z-LRWAN1/b-l072z-lrwan1.c</locationURI>
-		</link>
-		<link>
 			<name>Doc/readme.txt</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/readme.txt</locationURI>
+		</link>
+		<link>
+			<name>Drivers/KETCube</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/Drivers/KETCube</locationURI>
 		</link>
 		<link>
 			<name>Drivers/CMSIS/system_stm32l0xx.c</name>
@@ -186,36 +186,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/startup_stm32l072xx.s</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/Components/HTS221_Driver.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/Components/hts221/HTS221_Driver.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/HTS221_Driver_HL.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/Components/hts221/HTS221_Driver_HL.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/LPS22HB_Driver.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/Components/lps22hb/LPS22HB_Driver.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/LPS22HB_Driver_HL.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/Components/lps22hb/LPS22HB_Driver_HL.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/LPS25HB_Driver.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/Components/lps25hb/LPS25HB_Driver.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/Components/LPS25HB_Driver_HL.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/Components/lps25hb/LPS25HB_Driver_HL.c</locationURI>
-		</link>
-		<link>
 			<name>Drivers/BSP/MLM32L0X01/mlm32l07x01.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/MLM32L07X01/mlm32l07x01.c</locationURI>
@@ -224,26 +194,6 @@
 			<name>Drivers/BSP/MLM32L0X01/sx1276.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/MLM32L07X01/Phy/sx1276.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1_humidity.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1_humidity.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1_pressure.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1_pressure.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1_temperature.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/X_NUCLEO_IKS01A1/x_nucleo_iks01a1_temperature.c</locationURI>
 		</link>
 		<link>
 			<name>Middlewares/Lora/Core/lora.c</name>
