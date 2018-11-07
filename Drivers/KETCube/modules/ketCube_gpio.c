@@ -122,19 +122,19 @@ ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port, uint16_t pin,
     switch(port) {
          case KETCUBE_GPIO_PA:
              if ((portA_usage & pin) != 0) {
-                ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
+                //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
              }
              portA_usage |= pin;
              break;
          case KETCUBE_GPIO_PB:
              if ((portB_usage & pin) != 0) {
-                ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
+                //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
              }
              portB_usage |= pin;
              break;
          case KETCUBE_GPIO_PC:
              if ((portC_usage & pin) != 0) {
-                ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
+                //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
              }
              portC_usage |= pin;
              break;
