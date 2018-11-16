@@ -193,10 +193,30 @@ targets=2
 Launch Configurations=Launch Configuration 0
 
 [Launch][Launch Configuration 0]
-Configured Launch Modes=execute
-Configured Launchers=nativeAppLauncher
+Configured Launch Modes=execute,debug
+Configured Launchers=nativeAppLauncher,gdb
 Name=New Compiled Binary Launcher
 Type=Native Application
+
+[Launch][Launch Configuration 0][Data]
+Arguments=
+Debugger Shell=
+Dependencies=@Variant(\x00\x00\x00\t\x00\x00\x00\x00\x01\x00\x00\x00\x0b\x00\x00\x00\x00\x02\x00\x00\x00\x14\x00K\x00E\x00T\x00C\x00u\x00b\x00e\x00_\x00f\x00w\x00\x00\x00\x06\x00a\x00l\x00l)
+Dependency Action=Build
+Display Demangle Names=false
+Display Static Members=false
+EnvironmentGroup=
+Executable=file:///home/jan/projects/zcu/ketcube/repos/KETCube-fw/Projects/Makefile/build/KETCube.elf
+External Terminal=konsole --noclose --workdir %workdir -e %exe
+GDB Path=file:///usr/bin/arm-none-eabi-gdb
+Project Target=
+Remote GDB Config Script=
+Remote GDB Run Script=file:///home/jan/projects/zcu/ketcube/repos/KETCube-fw/Projects/Makefile/gdb_startup
+Remote GDB Shell Script=
+Start With=GdbConsole
+Use External Terminal=false
+Working Directory=file:///home/jan/projects/zcu/ketcube/repos/KETCube-fw/Projects/Makefile/
+isExecutable=true
 
 [Project]
 VersionControlSupport=kdevgit

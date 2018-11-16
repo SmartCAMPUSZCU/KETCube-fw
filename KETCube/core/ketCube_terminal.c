@@ -123,7 +123,7 @@ static void ketCube_terminal_cmd_set_core_basePeriod(void);
 static void ketCube_terminal_cmd_set_core_startDelay(void);
 
 // List of KETCube commands
-#include "ketCube_cmdList.c"
+#include "../../Projects/src/ketCube_cmdList.c" // include a project-specific file
 
 /* --------------------------------- */
 /* --- Terminal Helper functions --- */

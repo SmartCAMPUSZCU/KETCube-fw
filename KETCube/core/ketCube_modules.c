@@ -60,7 +60,7 @@
 #include "ketCube_asyncTx.h"
 
 // List of KETCube modules
-#include "ketCube_moduleList.c"
+#include "../../Projects/src/ketCube_moduleList.c" // include a project-specific file
 
 uint8_t SensorBuffer[KETCUBE_MODULES_SENSOR_BYTES];     //<·sensor data are stored here
 uint8_t SensorBufferSize = 0;   //<·sensor data buffer size

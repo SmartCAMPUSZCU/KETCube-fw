@@ -234,8 +234,9 @@ erase:
 	$(STLINK) erase
 	$(MAKE) sigdone
 
+debug: CFLAGS  += -DDEBUG
 debug: $(OUTDIR)$(TARGET).elf
-	$(GDB) --eval-command="target remote localhost:3333" $(OUTDIR)$(TARGET).elf -ex 'load'
+	$(GDB) -x gdb_startup $(OUTDIR)$(TARGET).elf
 
 sigdone:
 	@echo "ALL DONE"
