@@ -102,14 +102,31 @@ ketCube_cfg_Error_t ketCube_modules_Init(void)
                     ("--- Module \"%s\" Init() START ---",
                      ketCube_modules_List[i].name);
                 KETCUBE_TERMINAL_ENDL();
+                KETCUBE_TERMINAL_PRINTF("Module severity: ");
+                switch (ketCube_modules_List[i].cfgByte.severity) {
+                    case KETCUBE_CFG_SEVERITY_NONE:
+                        KETCUBE_TERMINAL_PRINTF("NONE");
+                        break;
+                    case KETCUBE_CFG_SEVERITY_ERROR:
+                        KETCUBE_TERMINAL_PRINTF("ERROR");
+                        break;
+                    case KETCUBE_CFG_SEVERITY_INFO:
+                        KETCUBE_TERMINAL_PRINTF("INFO");
+                        break;
+                    case KETCUBE_CFG_SEVERITY_DEBUG:
+                        KETCUBE_TERMINAL_PRINTF("DEBUG");
+                        break;
+                }
+                KETCUBE_TERMINAL_ENDL();
                 (ketCube_modules_List[i].fnInit) (&(InterModMsgBuffer[i]));
                 KETCUBE_TERMINAL_PRINTF("--- Module \"%s\" Init() END ---",
                                         ketCube_modules_List[i].name);
-                ketCube_terminal_UpdateCmdLine();
+                KETCUBE_TERMINAL_ENDL();
             }
         }
     }
 
+    ketCube_terminal_UpdateCmdLine();
     return KETCUBE_CFG_OK;
 }
 

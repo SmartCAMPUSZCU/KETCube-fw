@@ -51,7 +51,7 @@
 
 // local fn declarations
 I2C_HandleTypeDef KETCUBE_I2C_Handle;
-static void ketCube_I2C_Error();
+static void ketCube_I2C_Error(void);
 
 static uint8_t initRuns = 0;    //< This driver can be initialized in number of modules. If 0 == not initialized, else initialized
 

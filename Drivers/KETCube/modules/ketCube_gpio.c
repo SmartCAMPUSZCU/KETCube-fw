@@ -115,9 +115,9 @@ void ketCube_GPIO_noneIrqHandler()
  */
 ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port, uint16_t pin, GPIO_InitTypeDef* initStruct)
 {
-    static ketCube_gpio_pin_t portA_usage = 0;
-    static ketCube_gpio_pin_t portB_usage = 0;
-    static ketCube_gpio_pin_t portC_usage = 0;
+    static ketCube_gpio_pin_t portA_usage = KETCUBE_GPIO_NOPIN;
+    static ketCube_gpio_pin_t portB_usage = KETCUBE_GPIO_NOPIN;
+    static ketCube_gpio_pin_t portC_usage = KETCUBE_GPIO_NOPIN;
     
     switch(port) {
          case KETCUBE_GPIO_PA:

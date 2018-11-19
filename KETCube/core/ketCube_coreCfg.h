@@ -57,6 +57,7 @@
 #define KETCUBE_CORECFG_SKIP_SLEEP_PERIOD          FALSE        //< Skip sleep period (perform sensing at maximum speed)
 #define KETCUBE_CORECFG_MIN_BASEPERIOD             5000 //< Minimal period for periodic events
 #define KETCUBE_CORECFG_MIN_STARTDELAY             500  //< Minimal delay - the first periodic action is run at this time after power-on
+#define KETCUBE_CORECFG_DEFAULT_SEVERITY           KETCUBE_CFG_SEVERITY_ERROR  //< Default KETCube core severity
 
 /**
 * @brief  Core CFG data relative addr.
@@ -64,10 +65,12 @@
 typedef enum {
     KETCUBE_CORECFG_ADR_BASEPERIOD = 0, /*<! Base period configuration address (in ms) */
     KETCUBE_CORECFG_ADR_STARTDELAY = 4, /*<! Start delay configuration address (in ms) */
+    KETCUBE_CORECFG_ADR_SEVERITY   = 8, /*<! Core severity, see @ketCube_severity_t */
 } ketCube_coreCfg_Addr_t;
 
-extern uint32_t ketCube_coreCfg_BasePeriod;     //< This period is used by KETCube core to run periodic events
-extern uint32_t ketCube_coreCfg_StartDelay;     //< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
+extern uint32_t           ketCube_coreCfg_BasePeriod;     //< This period is used by KETCube core to run periodic events
+extern uint32_t           ketCube_coreCfg_StartDelay;     //< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
+extern ketCube_severity_t ketCube_coreCfg_severity;       //< Core messages severity
 
 /** @defgroup KETCube_coreCfg_fn Public Functions
 * @{

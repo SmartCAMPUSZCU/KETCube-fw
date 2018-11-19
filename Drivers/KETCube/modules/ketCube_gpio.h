@@ -59,6 +59,7 @@
 * @brief List of GPIO PINs
 */
 typedef enum {
+    KETCUBE_GPIO_NOPIN  = 0,
     KETCUBE_GPIO_PIN_0  = GPIO_PIN_0,
     KETCUBE_GPIO_PIN_1  = GPIO_PIN_1,
     KETCUBE_GPIO_PIN_2  = GPIO_PIN_2,
@@ -117,4 +118,4 @@ extern void EXTI4_15_IRQHandler(void);
 * @}
 */
 
-#endif                          /* __KETCUBE_GPIO_H */
+#endif          

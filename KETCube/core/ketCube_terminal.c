@@ -119,8 +119,10 @@ static void ketCube_terminal_cmd_disable(void);
 /* Core configuration */
 static void ketCube_terminal_cmd_show_core_basePeriod(void);
 static void ketCube_terminal_cmd_show_core_startDelay(void);
+static void ketCube_terminal_cmd_show_core_severity(void);
 static void ketCube_terminal_cmd_set_core_basePeriod(void);
 static void ketCube_terminal_cmd_set_core_startDelay(void);
+static void ketCube_terminal_cmd_set_core_severity(void);
 
 // List of KETCube commands
 #include "../../Projects/src/ketCube_cmdList.c" // include a project-specific file
@@ -338,11 +340,13 @@ void ketCube_terminal_cmd_list(void)
 {
     uint16_t i;
     ketCube_cfg_ModuleCfgByte_t data;
-
+    char severityEEPROM = 'N';
+    char severity = 'N';
+    
     KETCUBE_TERMINAL_ENDL();
 
     KETCUBE_TERMINAL_PRINTF
-        ("Available modules (E == Enabled; D == Disabled):");
+        ("Available modules:");
     KETCUBE_TERMINAL_ENDL();
 
     for (i = 0; i < ketCube_modules_CNT; i++) {
@@ -350,7 +354,43 @@ void ketCube_terminal_cmd_list(void)
             (((uint8_t *) & data), (ketCube_cfg_moduleIDs_t) i,
              (ketCube_cfg_AllocEEPROM_t) 0,
              (ketCube_cfg_LenEEPROM_t) 1) == KETCUBE_CFG_OK) {
-            KETCUBE_TERMINAL_PRINTF("\t");
+        
+            switch (data.severity) {
+                case KETCUBE_CFG_SEVERITY_NONE:
+                    severity = 'N';
+                    break;
+                case KETCUBE_CFG_SEVERITY_ERROR:
+                    severity = 'R';
+                    break;
+                case KETCUBE_CFG_SEVERITY_INFO:
+                    severity = 'I';
+                    break;
+                case KETCUBE_CFG_SEVERITY_DEBUG:
+                    severity = 'D';
+                    break;
+            }
+            
+            switch (ketCube_modules_List[i].cfgByte.severity) {
+                case KETCUBE_CFG_SEVERITY_NONE:
+                    severityEEPROM = 'N';
+                    break;
+                case KETCUBE_CFG_SEVERITY_ERROR:
+                    severityEEPROM = 'R';
+                    break;
+                case KETCUBE_CFG_SEVERITY_INFO:
+                    severityEEPROM = 'I';
+                    break;
+                case KETCUBE_CFG_SEVERITY_DEBUG:
+                    severityEEPROM = 'D';
+                    break;
+            }
+            
+            if (severityEEPROM != severity) {
+                KETCUBE_TERMINAL_PRINTF("%c -> %c\t", severityEEPROM, severity);   
+            } else {
+                KETCUBE_TERMINAL_PRINTF("  %c\t", severity);   
+            }
+        
             if (data.enable != ketCube_modules_List[i].cfgByte.enable) {
                 if (ketCube_modules_List[i].cfgByte.enable == TRUE) {
                     KETCUBE_TERMINAL_PRINTF("E -> ");
@@ -376,6 +416,16 @@ void ketCube_terminal_cmd_list(void)
 
     }
 
+    
+    KETCUBE_TERMINAL_ENDL();
+    
+    KETCUBE_TERMINAL_PRINTF
+        ("Module State: E == Module Enabled; D == Module Disabled");
+    KETCUBE_TERMINAL_ENDL();
+    KETCUBE_TERMINAL_PRINTF
+        ("Module severity: N = NONE, R = ERROR; I = INFO; D = DEBUG");
+    
+    
     KETCUBE_TERMINAL_ENDL();
 }
 
@@ -387,21 +437,31 @@ void ketCube_terminal_cmd_list(void)
  */
 void ketCube_terminal_cmd_enableDisable(bool enable)
 {
-    uint8_t j;
     uint16_t i;
     ketCube_cfg_ModuleCfgByte_t tmpCfgByte;
+    uint8_t tmpCmdLen;
+    ketCube_severity_t severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
+    int32_t tmpSeverity;
+    
 
     for (i = 0; i < ketCube_modules_CNT; i++) {
-        j = 0;
-        while (ketCube_modules_List[i].name[j] != 0x00) {
-            if (ketCube_modules_List[i].name[j] !=
-                commandBuffer[commandParams + j]) {
+        tmpCmdLen = strlen(&(ketCube_modules_List[i].name[0]));
+        
+        if (strncmp(&(ketCube_modules_List[i].name[0]), &(commandBuffer[commandParams]), tmpCmdLen) == 0) {
+            
+            if (commandBuffer[commandParams + tmpCmdLen] == 0x00) {
                 break;
             }
-            j++;
-        }
-        if (ketCube_modules_List[i].name[j] == 0x00) {
-            break;
+            
+            if (commandBuffer[commandParams + tmpCmdLen] == ' ') {
+                // get next param - severity
+                sscanf(&(commandBuffer[commandParams + tmpCmdLen + 1]), "%d", &tmpSeverity);
+                severity = (ketCube_severity_t) tmpSeverity;
+                if (severity > KETCUBE_CFG_SEVERITY_DEBUG) {
+                    severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
+                }
+                break;
+            }
         }
     }
 
@@ -416,6 +476,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
     //do not enable/disable now but when reload ...
     tmpCfgByte = ketCube_modules_List[i].cfgByte;
     tmpCfgByte.enable = enable; // enable/disable
+    tmpCfgByte.severity = severity; // set severity
 
     if (ketCube_cfg_Save
         (((uint8_t *) & (tmpCfgByte)), (ketCube_cfg_moduleIDs_t) i,
@@ -997,18 +1058,6 @@ void ketCube_terminal_ProcessCMD(void)
   */
 void ketCube_terminal_Println(char *format, ...)
 {
-//     char buff[128];
-// 
-//     va_list args;
-//     va_start(args, format);
-// 
-//     vsprintf(&(buff[0]), format, args);
-// 
-//     va_end(args);
-// 
-//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
-//     ketCube_terminal_UpdateCmdLine();
-    
     va_list args;
     va_start(args, format);
 
@@ -1025,17 +1074,6 @@ void ketCube_terminal_Println(char *format, ...)
   */
 void ketCube_terminal_Print(char *format, ...)
 {
-//     char buff[128];
-// 
-//     va_list args;
-//     va_start(args, format);
-// 
-//     vsprintf(&(buff[0]), format, args);
-// 
-//     va_end(args);
-// 
-//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
-
     va_list args;
     va_start(args, format);
 
@@ -1048,26 +1086,41 @@ void ketCube_terminal_Print(char *format, ...)
 /**
   * @brief Print Debug info to serial line + newline
   *
+  * @param msgSeverity mesage severity
+  * @param modID mesage origin moduleID
+  * @param format printf-style format string
+  * @param args va_list
+  * 
+  */
+void ketCube_terminal_SeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
+{
+    if (ketCube_modules_List[modId].cfgByte.
+        enable != TRUE) {
+        return;
+    }
+    
+    if (ketCube_modules_List[modId].cfgByte.
+        severity < msgSeverity) {
+        return;
+    }
+
+    KETCUBE_TERMINAL_PRINTF("%s :: ", &(ketCube_modules_List[modId].name[0]));
+    ketCube_terminal_UsartPrintVa(format, args);
+    ketCube_terminal_UpdateCmdLine();
+}
+
+/**
+  * @brief Print Debug info to serial line + newline
+  *
+  * @note this function is deprecated and it will be removed in the next release
+  * 
   */
 void ketCube_terminal_DebugPrintln(char *format, ...)
 {
-//     char buff[128];
-
     if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
         enable != TRUE) {
         return;
     }
-
-//     va_list args;
-//     va_start(args, format);
-// 
-//     vsprintf(&(buff[0]), format, args);
-// 
-//     va_end(args);
-// 
-//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
-//     ketCube_terminal_UpdateCmdLine();
-    
     
     va_list args;
     va_start(args, format);
@@ -1082,25 +1135,36 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
 /**
   * @brief Print Debug info to serial line
   *
+  * @param msgSeverity mesage severity
+  * @param modID mesage origin moduleID
+  * @param format printf-style format string
+  * @param args va_list
+  * 
+  */
+void ketCube_terminal_SeverityPrint(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
+{
+    if (ketCube_modules_List[modId].cfgByte.
+        enable != TRUE) {
+        return;
+    }
+    
+    KETCUBE_TERMINAL_PRINTF("%s :: ", &(ketCube_modules_List[modId].name[0]));
+    ketCube_terminal_UsartPrintVa(format, args);
+}
+
+
+/**
+  * @brief Print Debug info to serial line
+  *
+  * @note this function is deprecated and it will be removed in the next release
+  * 
   */
 void ketCube_terminal_DebugPrint(char *format, ...)
 {
-//     char buff[128];
-
     if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
         enable != TRUE) {
         return;
     }
-
-//     va_list args;
-//     va_start(args, format);
-// 
-//     vsprintf(&(buff[0]), format, args);
-// 
-//     va_end(args);
-// 
-//     KETCUBE_TERMINAL_PRINTF("%s", &(buff[0]));
-    
     
     va_list args;
     va_start(args, format);
@@ -1133,6 +1197,32 @@ void ketCube_terminal_cmd_show_core_startDelay(void)
 {
     KETCUBE_TERMINAL_PRINTF("KETCube Start delay is: %d ms",
                             ketCube_coreCfg_StartDelay);
+    KETCUBE_TERMINAL_ENDL();
+}
+
+/**
+ * @brief Show KETCube severity
+ * 
+ */
+void ketCube_terminal_cmd_show_core_severity(void)
+{
+    KETCUBE_TERMINAL_PRINTF("KETCube core severity: ");
+    
+    switch (ketCube_coreCfg_severity) {
+        case KETCUBE_CFG_SEVERITY_NONE:
+            KETCUBE_TERMINAL_PRINTF("NONE");
+            break;
+        case KETCUBE_CFG_SEVERITY_ERROR:
+            KETCUBE_TERMINAL_PRINTF("ERROR");
+            break;
+        case KETCUBE_CFG_SEVERITY_INFO:
+            KETCUBE_TERMINAL_PRINTF("INFO");
+            break;
+        case KETCUBE_CFG_SEVERITY_DEBUG:
+            KETCUBE_TERMINAL_PRINTF("DEBUG");
+            break;
+    }
+    
     KETCUBE_TERMINAL_ENDL();
 }
 
@@ -1177,5 +1267,52 @@ void ketCube_terminal_cmd_set_core_startDelay(void)
     } else {
         KETCUBE_TERMINAL_PRINTF("KETCube Start delay write error!");
     }
+    KETCUBE_TERMINAL_ENDL();
+}
+
+/**
+ * @brief Set KETCube severity
+ * 
+ */
+void ketCube_terminal_cmd_set_core_severity(void)
+{
+    uint32_t value;
+    char *endptr;
+
+    value = strtol(&(commandBuffer[commandParams]), &endptr, 10);
+
+    KETCUBE_TERMINAL_PRINTF("Setting KETCube core severity: ");
+    switch ((ketCube_severity_t) value) {
+        case KETCUBE_CFG_SEVERITY_NONE:
+            KETCUBE_TERMINAL_PRINTF("NONE");
+            break;
+        case KETCUBE_CFG_SEVERITY_ERROR:
+            KETCUBE_TERMINAL_PRINTF("ERROR");
+            break;
+        case KETCUBE_CFG_SEVERITY_INFO:
+            KETCUBE_TERMINAL_PRINTF("INFO");
+            break;
+        case KETCUBE_CFG_SEVERITY_DEBUG:
+            KETCUBE_TERMINAL_PRINTF("DEBUG");
+            break;
+        default:
+            KETCUBE_TERMINAL_PRINTF("IVALID SEVERITY VALUE");
+            KETCUBE_TERMINAL_ENDL();
+            KETCUBE_TERMINAL_PRINTF("KETCube core severity set error!");
+            KETCUBE_TERMINAL_ENDL();
+            return;
+    }
+    
+    KETCUBE_TERMINAL_ENDL();
+    
+    if (ketCube_EEPROM_WriteBuffer
+        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_SEVERITY,
+         (uint8_t *) & (value), 1) == KETCUBE_EEPROM_OK) {
+    } else {
+        KETCUBE_TERMINAL_PRINTF("error!");
+    }
+    
+    KETCUBE_TERMINAL_PRINTF("sucess!");
+    
     KETCUBE_TERMINAL_ENDL();
 }

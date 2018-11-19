@@ -133,6 +133,12 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
      2,
      0,
      &ketCube_terminal_cmd_show_core_startDelay},
+     
+    {((char *) &("severity")),
+     ((char *) &("Core messages severity")),
+     2,
+     0,
+     &ketCube_terminal_cmd_show_core_severity},
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     {((char *) &("batMeas")),
@@ -428,6 +434,12 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
      2,
      1,
      &ketCube_terminal_cmd_set_core_startDelay},
+     
+    {((char *) &("severity")),
+     ((char *) &("Core messages severity: 0 = NONE, 1 = ERROR; 2 = INFO; 3 = DEBUG")),
+     2,
+     1,
+     &ketCube_terminal_cmd_set_core_severity},
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     {((char *) &("batMeas")),

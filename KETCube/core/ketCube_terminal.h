@@ -46,6 +46,9 @@
 #ifndef __KETCUBE_TERMINAL_H
 #define __KETCUBE_TERMINAL_H
 
+#include <stdarg.h>
+#include <stdlib.h>
+
 #include "ketCube_common.h"
 #include "ketCube_cfg.h"
 #include "vcom.h"
@@ -71,6 +74,7 @@
 #define KETCUBE_TERMINAL_PROMPT()        KETCUBE_TERMINAL_PRINTF(">> ")
 #define KETCUBE_TERMINAL_ENDL()          KETCUBE_TERMINAL_PRINTF("\n\r")
 #define KETCUBE_TERMINAL_CLR_LINE()      KETCUBE_TERMINAL_PRINTF("\r                                                \r")
+
 
 /**
 * @brief  KETCube terminal command definition.
@@ -102,8 +106,72 @@ void ketCube_terminal_UsartPrint(char *format, ...);
 void ketCube_terminal_Print(char *format, ...);
 void ketCube_terminal_Println(char *format, ...);
 
+extern void ketCube_terminal_SeverityPrint(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args);
+extern void ketCube_terminal_SeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args);
+
 extern void ketCube_terminal_DebugPrint(char *format, ...);
 extern void ketCube_terminal_DebugPrintln(char *format, ...);
+
+
+
+/** @defgroup  KETCube_Terminal_SeverityPrintFn KETCube Terminal Severity print functions
+  * @brief  KETCube Terminal Severity print functions
+  *
+  * The following functions enable severity-configurable printing
+  * 
+  * @note Inline functions were used instead of variadic macros to achieve inter-compiler portability, while avoiding extrea ifdefs. The ##__VA_ARGS__ construct is only awailable in gnuc compiler
+  *
+  * @ingroup KETCube_Terminal 
+  * @{
+  */
+
+static inline void ketCube_terminal_NewDebugPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_SeverityPrint(KETCUBE_CFG_SEVERITY_DEBUG, modId, format, args);
+    va_end(args);
+}
+    
+static inline void ketCube_terminal_NewDebugPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_SeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, modId, format, args);
+    va_end(args);
+}    
+    
+static inline void ketCube_terminal_ErrorPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_SeverityPrint(KETCUBE_CFG_SEVERITY_ERROR, modId, format, args);
+    va_end(args);
+}
+
+static inline void ketCube_terminal_ErrorPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_SeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, modId, format, args);
+    va_end(args);
+}
+
+static inline void ketCube_terminal_InfoPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_SeverityPrint(KETCUBE_CFG_SEVERITY_INFO, modId, format, args);
+    va_end(args);
+}
+
+static inline void ketCube_terminal_InfoPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_SeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, modId, format, args);
+    va_end(args);
+}
+
+/**
+* @}
+*/
+
+
 /**
 * @}
 */
