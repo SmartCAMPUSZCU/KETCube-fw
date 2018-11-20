@@ -73,7 +73,7 @@
 
 #define KETCUBE_TERMINAL_PROMPT()        KETCUBE_TERMINAL_PRINTF(">> ")
 #define KETCUBE_TERMINAL_ENDL()          KETCUBE_TERMINAL_PRINTF("\n\r")
-#define KETCUBE_TERMINAL_CLR_LINE()      KETCUBE_TERMINAL_PRINTF("\r                                                \r")
+#define KETCUBE_TERMINAL_CLR_LINE()      ketCube_terminal_ClearCmdLine()
 
 
 /**
@@ -97,6 +97,7 @@ typedef struct {
 extern void ketCube_terminal_Init(void);
 extern void ketCube_terminal_ProcessCMD(void);
 extern void ketCube_terminal_UpdateCmdLine(void);
+extern void ketCube_terminal_ClearCmdLine(void);
 
 extern void ketCube_terminal_cmd_about(void);
 extern void ketCube_terminal_cmd_help(void);
