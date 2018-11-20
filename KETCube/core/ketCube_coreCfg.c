@@ -58,8 +58,8 @@ ketCube_severity_t ketCube_coreCfg_severity;
   */
 ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
 {
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "--- Core configuration load START ---");
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "");
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, "--- Core configuration load START ---");
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, "");
 
     if (ketCube_EEPROM_ReadBuffer
         (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_BASEPERIOD,
@@ -96,20 +96,19 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
     
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube Core base period set to: %d ms", ketCube_coreCfg_BasePeriod);
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube Start delay set to: %d ms", ketCube_coreCfg_StartDelay);
-    ketCube_terminal_CoreSeverityPrint(KETCUBE_CFG_SEVERITY_INFO, "KETCube core severity: ");
     
     switch (ketCube_coreCfg_severity) {
         case KETCUBE_CFG_SEVERITY_NONE:
-            ketCube_terminal_CoreSeverityPrint(KETCUBE_CFG_SEVERITY_INFO, "NONE");
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube core severity: NONE");
             break;
         case KETCUBE_CFG_SEVERITY_ERROR:
-            ketCube_terminal_CoreSeverityPrint(KETCUBE_CFG_SEVERITY_INFO, "ERROR");
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube core severity: ERROR");
             break;
         case KETCUBE_CFG_SEVERITY_INFO:
-            ketCube_terminal_CoreSeverityPrint(KETCUBE_CFG_SEVERITY_INFO, "INFO");
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube core severity: INFO");
             break;
         case KETCUBE_CFG_SEVERITY_DEBUG:
-            ketCube_terminal_CoreSeverityPrint(KETCUBE_CFG_SEVERITY_INFO, "DEBUG");
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube core severity: DEBUG");
             break;
     }
 
@@ -117,8 +116,8 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube Sleep period disabled!");
 #endif
 
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "");
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "--- Core configuration load END ---");
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, "");
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, "--- Core configuration load END ---");
 
     return KETCUBE_CFG_OK;
 }

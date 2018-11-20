@@ -97,9 +97,9 @@ static inline void ketCube_common_Byte2hex(uint8_t byte, char *str)
 /**
   * @brief Convert an integer to DEC string (with defined length, counting zero terminator)
   *
-  * @param number  a number to be converted
-  * @param str     pointer to a string of given length
-	* @param len		 length of given string
+  * @param number a number to be converted
+  * @param str pointer to a string of given length
+  * @param len length of given string
   */
 static inline void ketCube_common_Int2dec(int32_t number, char *str,
                                           int len)
