@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_rxDisplay.c
+ * @file    ketCube_txDisplay.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-04-17
- * @brief   This file contains the KETCube RxDisplay module
+ * @version 0.2
+ * @date    2018-11-20
+ * @brief   This file contains the KETCube module txDisplay
  *
  * @attention
  *
@@ -42,65 +42,44 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-
-/* Includes ------------------------------------------------------------------*/
+#include <stdio.h>
 #include <string.h>
-#include "ketCube_rxDisplay.h"
+
+#include "ketCube_cfg.h"
 #include "ketCube_common.h"
 #include "ketCube_terminal.h"
+#include "ketCube_modules.h"
+#include "ketCube_txDisplay.h"
 
-
-#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
+#ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
 
 /**
-  * @brief Initialize rxDisplay module
-	*
-	* @retval KETCUBE_CFG_MODULE_OK in case of success
+  * @brief Initialize starNet module
+  * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
-ketCube_cfg_ModError_t ketCube_rxDisplay_Init(ketCube_InterModMsg_t ***
-                                              msg)
+ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t *** msg)
 {
     return KETCUBE_CFG_MODULE_OK;
 }
 
 /**
-  * @brief Process data -- display on serial line
-	*
-	* @retval KETCUBE_CFG_MODULE_OK in case of success
-  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
-  */
-ketCube_cfg_ModError_t ketCube_rxDisplay_ProcessData(ketCube_InterModMsg_t
-                                                     * msg)
+ * @brief Just print ready to send data
+ */
+ketCube_cfg_ModError_t ketCube_txDisplay_Send(uint8_t * buffer, uint8_t * len)
 {
     uint8_t i;
-
-    switch (msg->msg[0]) {
-    case KETCUBE_RXDISPLAY_DATATYPE_RSSI:
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "RSSI=%d; ", msg->msg[1]);
-        break;
-    case KETCUBE_RXDISPLAY_DATATYPE_SNR:
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "SNR=%d; ", msg->msg[1]);
-        break;
-    case KETCUBE_RXDISPLAY_DATATYPE_STRING:
-        msg->msg[msg->msgLen-1] = 0x00; // to be sure ...
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "STR=%s", &(msg->msg[1]));
-        break;
-    default:
-    case KETCUBE_RXDISPLAY_DATATYPE_DATA:
-        for (i = 1; (i < msg->msgLen) && ((3*i) < KETCUBE_COMMON_BUFFER_LEN); i++) {
-            sprintf(&(ketCube_common_buffer[3*(i-1)]), "%02X-", msg->msg[i]);
-        }
-        ketCube_common_buffer[3*(i-1)] = 0x00;
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "DATA=%s", &(ketCube_common_buffer[0]));
-        break;
+    
+    // just print data from th Tx buffer ... 
+    
+    for (i = 0; (i < *len) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
+        sprintf(&(ketCube_common_buffer[3*i]), "%02X-", buffer[i]);
     }
-
-    // confirm msg reception 
-    msg->msgLen = 0;
-
+    ketCube_common_buffer[(3*i)-1] = 0x00;  // remove last -
+    ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_TXDISPLAY, "DATA=%s", &(ketCube_common_buffer[0]));
+    
     return KETCUBE_CFG_MODULE_OK;
 }
 
 
-#endif                          /* KETCUBE_CFG_INC_MOD_RXDISPLAY */
+#endif                          /* KETCUBE_CFG_INC_MOD_TXDISPLAY */

@@ -241,7 +241,7 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
     for (i = 0; (i < AppData->BuffSize) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
         sprintf(&(ketCube_common_buffer[3*i]), "%02X-", AppData->Buff[i]);
     }
-    ketCube_common_buffer[3*i] = 0x00;
+    ketCube_common_buffer[(3*i)-1] = 0x00; // remove last -
     
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s", &(ketCube_common_buffer[0]));
     

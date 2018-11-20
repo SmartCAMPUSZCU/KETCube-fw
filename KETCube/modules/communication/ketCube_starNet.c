@@ -120,7 +120,7 @@ ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void)
 
 /**
   * @brief Initialize starNet module
-	* @retval KETCUBE_CFG_MODULE_OK in case of success
+  * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
 ketCube_cfg_ModError_t ketCube_starNet_Init(ketCube_starNet_NodeType_t
@@ -241,14 +241,12 @@ ketCube_cfg_ModError_t ketCube_starNet_sendData(uint8_t * buffer,
         return KETCUBE_CFG_MODULE_ERROR;
     }
     txDone = FALSE;
-
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Transmitting sensor data: ");
     
     for (i = 0; (i < *len) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
         sprintf(&(ketCube_common_buffer[3*i]), "%02X-", buffer[i]);
     }
-    ketCube_common_buffer[3*i] = 0x00;
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "DATA=%s", &(ketCube_common_buffer[0]));
+    ketCube_common_buffer[(3*i)-1] = 0x00;  // remove last -
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Tx DATA=%s", &(ketCube_common_buffer[0]));
 
     Radio.Send(buffer, *len);
 
@@ -286,7 +284,7 @@ static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
     for (i = 0; (i < size) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
         sprintf(&(ketCube_common_buffer[3*i]), "%02X-", payload[i]);
     }
-    ketCube_common_buffer[3*i] = 0x00;
+    ketCube_common_buffer[(3*i)-1] = 0x00;  // remove last -
     
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx :: RSSI=%d; SNR=%d;DATA=%s", (int) rssi, (int) snr, &(ketCube_common_buffer[0]));
 

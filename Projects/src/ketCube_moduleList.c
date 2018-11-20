@@ -199,4 +199,19 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
      TRUE                       /*·module CFG byte -- set dynamically */
      },
 #endif
+#ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
+    {((char *) &("TxDisplay")),
+     ((char *) &("Display Tx KETCube data.")),
+     &ketCube_txDisplay_Init,     /*·Module Init() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·GetSensorData() */
+     &ketCube_txDisplay_Send,           /*·SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
+     0,                         /*·CFG base addr -- set dynamicaly */
+     1,                         /*·CFG len in bytes */
+     TRUE                       /*·module CFG byte -- set dynamically */
+     },
+#endif
 };

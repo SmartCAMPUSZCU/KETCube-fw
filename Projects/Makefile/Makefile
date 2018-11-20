@@ -164,6 +164,7 @@ SRCS += $(COREDIR)KETCube/core/ketCube_modules.c
 SRCS += $(COREDIR)KETCube/core/ketCube_terminal.c
 SRCS += $(COREDIR)KETCube/core/ketCube_rxDisplay.c
 SRCS += $(COREDIR)KETCube/core/ketCube_asyncTx.c
+SRCS += $(COREDIR)KETCube/core/ketCube_txDisplay.c
 SRCS += $(COREDIR)KETCube/core/ketCube_coreCfg.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_starNet.c

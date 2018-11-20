@@ -128,6 +128,20 @@ extern void ketCube_terminal_DebugPrintln(char *format, ...);
   * @{
   */
 
+static inline void ketCube_terminal_AlwaysPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_ModSeverityPrint(KETCUBE_CFG_SEVERITY_NONE, modId, format, args);
+    va_end(args);
+}
+    
+static inline void ketCube_terminal_AlwaysPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_ModSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, modId, format, args);
+    va_end(args);
+}
+
 static inline void ketCube_terminal_NewDebugPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
     va_list args;
     va_start(args, format);

@@ -58,6 +58,7 @@
 #include "ketCube_starNet.h"
 #include "ketCube_rxDisplay.h"
 #include "ketCube_asyncTx.h"
+#include "ketCube_txDisplay.h"
 
 // List of KETCube modules
 #include "../../Projects/src/ketCube_moduleList.c" // include a project-specific file
