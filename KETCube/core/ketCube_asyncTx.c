@@ -74,19 +74,19 @@ ketCube_cfg_ModError_t ketCube_AsyncTx_Init(ketCube_InterModMsg_t *** msg)
 ketCube_cfg_ModError_t ketCube_AsyncTx_ProcessData(ketCube_InterModMsg_t
                                                    * msg)
 {
-    ketCube_terminal_DebugPrintln("AsyncSend :: from module = %d",
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ASYNCTX, "Msg from module = %d",
                                   (int) msg->msg[0]);
 
 
-    if ((ketCube_modules_List[KETCUBE_LISTS_MODULEID_ASYNCTX].cfgByte.
-         enable & 0x01) == TRUE) {
-        ketCube_terminal_DebugPrintln
-            ("AsyncSend (LoRa) :: from module = %d", (int) msg->msg[0]);
+#ifdef KETCUBE_CFG_INC_MOD_LORA
+    if ((ketCube_modules_List[KETCUBE_LISTS_MODULEID_LORA].cfgByte.enable & 0x01) == TRUE) {
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ASYNCTX, "LoRa msg from module = %d", (int) msg->msg[0]);
         ketCube_lora_AsyncSend((uint8_t *) & (msg->msg[0]),
                                &(msg->msgLen));
     }
     // confirm msg reception 
     msg->msgLen = 0;
+#endif // KETCUBE_CFG_INC_MOD_LORA
 
     return KETCUBE_CFG_MODULE_OK;
 }

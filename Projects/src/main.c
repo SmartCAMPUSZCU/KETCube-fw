@@ -145,8 +145,7 @@ int main(void)
 
             KETCube_PeriodTimerElapsed = FALSE;
 
-            ketCube_terminal_DebugPrintln
-                ("--- KETCube base period # %d ---", basePeriodCnt++);
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "--- KETCube base period # %d ---", basePeriodCnt++);
 
             ketCube_modules_ExecutePeriodic();
 

@@ -89,7 +89,7 @@
 							<option id="com.atollic.truestudio.toolchain_options.mcu.995925360" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu" value="STM32L082CZ" valueType="string"/>
 							<option id="com.atollic.truestudio.toolchain_options.vendor.1741176216" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor" value="STMicroelectronics" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform.1381843655" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
-							<builder buildPath="${workspace_loc:/KETCube}/Debug" customBuilderProperties="com.atollic.truestudio.common_options.target.vendor=STMicroelectronics|com.atollic.truestudio.common_options.target.mcu=STM32L082CZ|" id="com.atollic.truestudio.mbs.builder1.267531761" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
+							<builder buildPath="${workspace_loc:/KETCube}/Debug" customBuilderProperties="com.atollic.truestudio.common_options.target.mcu=STM32L082CZ|com.atollic.truestudio.common_options.target.vendor=STMicroelectronics|" id="com.atollic.truestudio.mbs.builder1.267531761" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.84727262" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as">
 								<option id="com.atollic.truestudio.as.general.incpath.1833074141" name="Include path" superClass="com.atollic.truestudio.as.general.incpath" valueType="includePath">
 									<listOptionValue builtIn="false" value=""/>
@@ -189,11 +189,6 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1392066540" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.atollic.truestudio.exe.debug.1677492379.1965410511" name="stm32l0xx_hal_msp_template.c" rcbsApplicability="disable" resourcePath="Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_msp_template.c" toolsToInvoke="com.atollic.truestudio.exe.debug.toolchain.gcc.1889170299.1305682787">
-						<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.1889170299.1305682787" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1889170299">
-							<inputType id="com.atollic.truestudio.gcc.input.1019017632" superClass="com.atollic.truestudio.gcc.input"/>
-						</tool>
-					</fileInfo>
 					<fileInfo id="com.atollic.truestudio.exe.debug.1677492379.785504020" name="startup_stm32l072xx.s" rcbsApplicability="disable" resourcePath="Projects/SW4STM32/startup_stm32l072xx.s" toolsToInvoke="com.atollic.truestudio.exe.debug.toolchain.as.84727262.55168465">
 						<tool id="com.atollic.truestudio.exe.debug.toolchain.as.84727262.55168465" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.84727262">
 							<option id="com.atollic.truestudio.as.general.incpath.361002550" name="Include path" superClass="com.atollic.truestudio.as.general.incpath"/>
@@ -225,7 +220,7 @@
 							<option id="com.atollic.truestudio.toolchain_options.mcu.287085835" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu" value="STM32L082CZ" valueType="string"/>
 							<option id="com.atollic.truestudio.toolchain_options.vendor.1187152390" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor" value="STMicroelectronics" valueType="string"/>
 							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.release.toolchain.platform.1447186897" isAbstract="false" name="release platform" superClass="com.atollic.truestudio.exe.release.toolchain.platform"/>
-							<builder buildPath="${workspace_loc:/KETCube}/Release" customBuilderProperties="toolChainpathString=/opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.1.0/ARMTools/bin|toolChainpathType=1|com.atollic.truestudio.common_options.target.vendor=STMicroelectronics|com.atollic.truestudio.common_options.target.mcu=STM32L082CZ|" id="com.atollic.truestudio.mbs.builder1.205715098" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
+							<builder buildPath="${workspace_loc:/KETCube}/Release" customBuilderProperties="toolChainpathString=/opt/Atollic_TrueSTUDIO_for_STM32_x86_64_9.1.0/ARMTools/bin|com.atollic.truestudio.common_options.target.mcu=STM32L082CZ|toolChainpathType=1|com.atollic.truestudio.common_options.target.vendor=STMicroelectronics|" id="com.atollic.truestudio.mbs.builder1.205715098" keepEnvironmentInBuildfile="false" name="CDT Internal Builder" superClass="com.atollic.truestudio.mbs.builder1"/>
 							<tool id="com.atollic.truestudio.exe.release.toolchain.as.1371933008" name="Assembler" superClass="com.atollic.truestudio.exe.release.toolchain.as">
 								<option id="com.atollic.truestudio.common_options.target.fpucore.906641115" name="FPU" superClass="com.atollic.truestudio.common_options.target.fpucore" value="com.atollic.truestudio.common_options.target.fpucore.None" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.mcpu.436279394" name="Microcontroller" superClass="com.atollic.truestudio.common_options.target.mcpu" value="STM32L082CZ" valueType="enumerated"/>
@@ -308,11 +303,6 @@
 							<tool id="com.atollic.truestudio.exe.release.toolchain.secoutput.848884213" name="Other" superClass="com.atollic.truestudio.exe.release.toolchain.secoutput"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.atollic.truestudio.configuration.release.1406255655.1933099030" name="stm32l0xx_hal_msp_template.c" rcbsApplicability="disable" resourcePath="Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_msp_template.c" toolsToInvoke="com.atollic.truestudio.exe.release.toolchain.gcc.1299090565.1496041671">
-						<tool id="com.atollic.truestudio.exe.release.toolchain.gcc.1299090565.1496041671" name="C Compiler" superClass="com.atollic.truestudio.exe.release.toolchain.gcc.1299090565">
-							<inputType id="com.atollic.truestudio.gcc.input.1150265151" superClass="com.atollic.truestudio.gcc.input"/>
-						</tool>
-					</fileInfo>
 					<fileInfo id="com.atollic.truestudio.configuration.release.1406255655.730076430" name="startup_stm32l072xx.s" rcbsApplicability="disable" resourcePath="Projects/SW4STM32/startup_stm32l072xx.s" toolsToInvoke="com.atollic.truestudio.exe.release.toolchain.as.1371933008.1205648621">
 						<tool id="com.atollic.truestudio.exe.release.toolchain.as.1371933008.1205648621" name="Assembler" superClass="com.atollic.truestudio.exe.release.toolchain.as.1371933008">
 							<option id="com.atollic.truestudio.as.general.incpath.1539458479" name="Include path" superClass="com.atollic.truestudio.as.general.incpath"/>

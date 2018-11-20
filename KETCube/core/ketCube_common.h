@@ -70,6 +70,9 @@
   FALSE      = 0
 } bool;*/
 
+#define KETCUBE_COMMON_BUFFER_LEN    50
+extern char ketCube_common_buffer[];   /*!< Shared buffer for common usage anywhere. */
+
 /**
   * @brief Convert a single Byte to HEX string (two bytes)
   *

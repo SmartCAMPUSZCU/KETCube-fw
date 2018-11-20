@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_adc.c
- * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-03-02
- * @brief   This file contains definitions for the KETCube PA4 ADC driver
+  * @file    ketCube_common.c
+  * @author  Jan Belohoubek
+  * @version 0.2
+  * @date    2018-11-20
+  * @brief   KETCube common
  *
  * @attention
  *
@@ -42,80 +42,6 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-
-
-#include "stm32l0xx_hal.h"
-#include <math.h>
-
-#include "hw_msp.h"
 #include "ketCube_common.h"
-#include "ketCube_adc.h"
-#include "ketCube_terminal.h"
 
-#ifdef KETCUBE_CFG_INC_MOD_ADC
-
-/**
- * @brief  Configures ADC PIN
- * 
- * @retval KETCUBE_ADC_OK in case of success
- * @retval KETCUBE_ADC_ERROR in case of failure
- */
-ketCube_cfg_ModError_t ketCube_ADC_Init(ketCube_InterModMsg_t *** msg)
-{
-    GPIO_InitTypeDef initStruct;
-
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    initStruct.Mode = GPIO_MODE_ANALOG;
-    initStruct.Pull = GPIO_NOPULL;
-    initStruct.Speed = GPIO_SPEED_HIGH;
-    initStruct.Pin = GPIO_PIN_4;
-
-    HAL_GPIO_Init(GPIOA, &initStruct);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-/**
-  * @brief Get milivolt value form PA4
-  *
-  * @param buffer pointer to fuffer for storing the result of milivolt mesurement
-  * @param len data len in bytes
-  *
-  * @retval KETCUBE_CFG_MODULE_OK in case of success
-  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
-  */
-ketCube_cfg_ModError_t ketCube_ADC_ReadData(uint8_t * buffer,
-                                            uint8_t * len)
-{
-    uint32_t vddmv;
-    uint16_t vdd;
-    uint16_t vin;
-    uint16_t mv;
-
-    vdd = HW_AdcReadChannel(ADC_CHANNEL_VREFINT);
-
-    if (vdd == 0) {
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
-
-    vddmv =
-        (((uint32_t) KETCUBE_ADC_VDDA_VREFINT_CAL *
-          (*KETCUBE_ADC_VREFINT_CAL_ADDR)) / vdd);
-
-    vin = HW_AdcReadChannel(ADC_CHANNEL_4);
-
-    // for 12 bit resolution ...
-    mv = (uint16_t) ((vddmv * vin) / KETCUBE_ADC_MAX);
-
-    // write to buffer
-    *len = 2;
-    buffer[0] = ((uint8_t) ((mv >> 8) & 0xFF));
-    buffer[1] = ((uint8_t) (mv & 0xFF));
-
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ADC, "Voltage@PA4: %d", mv);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-#endif                          /* KETCUBE_CFG_INC_MOD_ADC */
+char ketCube_common_buffer[KETCUBE_COMMON_BUFFER_LEN];

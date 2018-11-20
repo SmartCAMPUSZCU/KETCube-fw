@@ -158,6 +158,7 @@ SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Utilities/timeServer.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Utilities/utilities.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Crypto/aes.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Crypto/cmac.c
+SRCS += $(COREDIR)KETCube/core/ketCube_common.c
 SRCS += $(COREDIR)KETCube/core/ketCube_cfg.c
 SRCS += $(COREDIR)KETCube/core/ketCube_modules.c
 SRCS += $(COREDIR)KETCube/core/ketCube_terminal.c

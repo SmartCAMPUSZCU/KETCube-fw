@@ -1082,6 +1082,28 @@ void ketCube_terminal_Print(char *format, ...)
     va_end(args);
 }
 
+/**
+  * @brief Print Debug info to serial line + newline
+  *
+  * @param msgSeverity mesage severity
+  * @param format printf-style format string
+  * @param args 
+  * 
+  * @note ketCube_terminal_CoreSeverityPrintln() does not introduce any formatting in contrast with ketCube_terminal_ModSeverityPrintln(), where the produced string is prefixed by originator module Name
+  * 
+  */
+void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity, char *format, ...)
+{
+    if (ketCube_coreCfg_severity < msgSeverity) {
+        return;
+    }
+    
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_UsartPrintVa(format, args);
+    va_end(args);
+    ketCube_terminal_UpdateCmdLine();
+}
 
 /**
   * @brief Print Debug info to serial line + newline
@@ -1092,13 +1114,8 @@ void ketCube_terminal_Print(char *format, ...)
   * @param args va_list
   * 
   */
-void ketCube_terminal_SeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
+void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
 {
-    if (ketCube_modules_List[modId].cfgByte.
-        enable != TRUE) {
-        return;
-    }
-    
     if (ketCube_modules_List[modId].cfgByte.
         severity < msgSeverity) {
         return;
@@ -1131,6 +1148,28 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
     va_end(args);
 }
 
+/**
+  * @brief Print Debug info to serial line + newline
+  *
+  * @param msgSeverity mesage severity
+  * @param format printf-style format string
+  * @param args 
+  * 
+  * @note ketCube_terminal_CoreSeverityPrint() does not introduce any formatting in contrast with ketCube_terminal_ModSeverityPrint(), where the produced string is prefixed by originator module Name
+  * 
+  */
+void ketCube_terminal_CoreSeverityPrint(ketCube_severity_t msgSeverity, char *format, ...)
+{
+    if (ketCube_coreCfg_severity < msgSeverity) {
+        return;
+    }
+
+    KETCUBE_TERMINAL_PRINTF("KETCube core :: ");
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_UsartPrintVa(format, args);
+    va_end(args);
+}
 
 /**
   * @brief Print Debug info to serial line
@@ -1141,10 +1180,10 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
   * @param args va_list
   * 
   */
-void ketCube_terminal_SeverityPrint(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
+void ketCube_terminal_ModSeverityPrint(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
 {
     if (ketCube_modules_List[modId].cfgByte.
-        enable != TRUE) {
+        severity < msgSeverity) {
         return;
     }
     

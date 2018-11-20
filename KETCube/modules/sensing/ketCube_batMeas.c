@@ -171,7 +171,7 @@ ketCube_cfg_ModError_t ketCube_batMeas_ReadData(uint8_t * buffer,
     *len = 1;
     buffer[0] = ketcube_batLevel_GetBattery();
 
-    ketCube_terminal_DebugPrintln("batLevel :: %d", buffer[0]);
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "%d", buffer[0]);
 
     return KETCUBE_CFG_MODULE_OK;
 }
