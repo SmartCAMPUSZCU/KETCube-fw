@@ -28,7 +28,7 @@
 		<link>
 			<name>KETCube</name>
 			<type>2</type>
-			<location>/home/jan/projects/zcu/ketcube/repos/KETCube-fw/KETCube</location>
+			<location>PARENT-4-PROJECT_LOC/KETCube</location>
 		</link>
 		<link>
 			<name>Drivers/KETCube</name>
@@ -38,12 +38,12 @@
 		<link>
 			<name>Drivers/STM32L0xx_HAL_Driver</name>
 			<type>2</type>
-			<location>/home/jan/projects/zcu/ketcube/repos/KETCube-fw/Drivers/STM32L0xx_HAL_Driver</location>
+			<location>PARENT-4-PROJECT_LOC/Drivers/STM32L0xx_HAL_Driver</location>
 		</link>
 		<link>
 			<name>Middlewares/Lora</name>
 			<type>2</type>
-			<location>/home/jan/projects/zcu/ketcube/repos/KETCube-fw/Middlewares/Third_Party/Lora</location>
+			<location>PARENT-4-PROJECT_LOC/Middlewares/Third_Party/Lora</location>
 		</link>
 		<link>
 			<name>Drivers/CMSIS/system_stm32l0xx.c</name>
@@ -98,7 +98,7 @@
 		<link>
 			<name>Drivers/CMSIS/BSP/MLM32L07X01</name>
 			<type>2</type>
-			<location>/home/jan/projects/zcu/ketcube/repos/KETCube-fw/Drivers/BSP/MLM32L07X01</location>
+			<location>PARENT-4-PROJECT_LOC/Drivers/BSP/MLM32L07X01</location>
 		</link>
 	</linkedResources>
 </projectDescription>
