@@ -121,7 +121,6 @@
 									<listOptionValue builtIn="false" value="../../../../../Drivers/STM32L0xx_HAL_Driver/Inc"/>
 									<listOptionValue builtIn="false" value="../../../../../KETCube/core"/>
 									<listOptionValue builtIn="false" value="../../../../../KETCube/modules"/>
-									<listOptionValue builtIn="false" value="../../../../../KETCube/modules/actuation"/>
 									<listOptionValue builtIn="false" value="../../../../../KETCube/modules/sensing"/>
 									<listOptionValue builtIn="false" value="../../../../../KETCube/modules/communication"/>
 									<listOptionValue builtIn="false" value="../../../../../Drivers/KETCube/core"/>

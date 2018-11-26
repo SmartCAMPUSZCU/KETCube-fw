@@ -54,7 +54,6 @@ static volatile uint32_t noiseCnt = 0;
 
 ketCube_cfg_ModError_t ketCube_ics43432_Init(ketCube_InterModMsg_t *** msg)
 {
-
     /* Initialise I2S bus and start synchronization */
     if (ketCube_I2S_Init() != KETCUBE_CFG_MODULE_OK) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_ICS43432,
@@ -87,7 +86,6 @@ ketCube_cfg_ModError_t ketCube_ics43432_UnInit(void)
 ketCube_cfg_ModError_t ketCube_ics43432_ReadData(uint8_t * buffer,
                                                  uint8_t * len)
 {
-
     uint8_t i = 0;
 
     // Fraction of samples over threshold scaled to byte
