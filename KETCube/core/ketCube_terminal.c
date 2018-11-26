@@ -455,7 +455,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
             
             if (commandBuffer[commandParams + tmpCmdLen] == ' ') {
                 // get next param - severity
-                sscanf(&(commandBuffer[commandParams + tmpCmdLen + 1]), "%d", &tmpSeverity);
+                sscanf(&(commandBuffer[commandParams + tmpCmdLen + 1]), "%d", (int *) &tmpSeverity);
                 severity = (ketCube_severity_t) tmpSeverity;
                 if (severity > KETCUBE_CFG_SEVERITY_DEBUG) {
                     severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
@@ -1136,12 +1136,12 @@ void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity, char *
   */
 void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
 {
-    KETCUBE_TERMINAL_CLR_LINE();
     if (ketCube_modules_List[modId].cfgByte.
         severity < msgSeverity) {
         return;
     }
 
+    KETCUBE_TERMINAL_CLR_LINE();
     KETCUBE_TERMINAL_PRINTF("%s :: ", &(ketCube_modules_List[modId].name[0]));
     ketCube_terminal_UsartPrintVa(format, args);
     ketCube_terminal_UpdateCmdLine();
@@ -1161,7 +1161,6 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
     }
     
     KETCUBE_TERMINAL_CLR_LINE();
-    
     va_list args;
     va_start(args, format);
 

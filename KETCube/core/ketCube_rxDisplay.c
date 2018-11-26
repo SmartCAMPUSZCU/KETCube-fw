@@ -91,7 +91,7 @@ ketCube_cfg_ModError_t ketCube_rxDisplay_ProcessData(ketCube_InterModMsg_t
         for (i = 1; (i < msg->msgLen) && ((3*i) < KETCUBE_COMMON_BUFFER_LEN); i++) {
             sprintf(&(ketCube_common_buffer[3*(i-1)]), "%02X-", msg->msg[i]);
         }
-        ketCube_common_buffer[3*(i-1)] = 0x00;
+        ketCube_common_buffer[3*(i-1)-1] = 0x00;
         ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "DATA=%s", &(ketCube_common_buffer[0]));
         break;
     }

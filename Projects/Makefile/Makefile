@@ -98,12 +98,13 @@ INCLUDE = $(addprefix -I, $(INC_DIRS))
 
 CFLAGS   = -Wall  -Wno-missing-braces -g -mthumb -mcpu=cortex-m0plus -fdiagnostics-color=auto $(OPTIMIZE)
 CFLAGS  += -march=armv6-m -mlittle-endian -Wl,--gc-sections -TSTM32L072CZYx_FLASH.ld $(DEBUG)
-CFLAGS  += -DSTM32L082xx -DUSE_B_L082Z_KETCube -DUSE_HAL_DRIVER -DREGION_EU868 -DHAL_LPTIM_MODULE_ENABLED
+CFLAGS  += -DSTM32L082xx -DUSE_B_L082Z_KETCube -DUSE_HAL_DRIVER -DREGION_EU868 -DHAL_LPTIM_MODULE_ENABLED -DHAL_I2S_MODULE_ENABLED
 
 ASFLAGS = -mcpu=cortex-m0plus -march=armv6-m -mthumb -mthumb-interwork
 
 LDFLAGS  = -mcpu=cortex-m0 -march=armv6-m -TSTM32L072CZYx_FLASH.ld -Wl,-Map=$(TARGET).map
 LDFLAGS += -mthumb -mfloat-abi=soft -specs=nano.specs -specs=nosys.specs
+LDFLAGS += -lc -lrdimon -u _printf_float
 
 
 ###################################################
@@ -130,6 +131,7 @@ SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim_ex.c
 SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_tim.c
 SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_lptim.c
 SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.c
+SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2s.c
 SRCS += $(COREDIR)Projects/src/debug.c
 SRCS += $(COREDIR)Projects/src/hw_rtc.c
 SRCS += $(COREDIR)Projects/src/hw_spi.c
@@ -172,13 +174,24 @@ SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_adc.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_fdc2214.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_hdc1080.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_batMeas.c
+SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_bmeX80.c
+SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_lis2hh12.c
+SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_ics43432.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_eeprom.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_uart.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2c.c
+SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2s.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_gpio.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_timer.c
 
 ASSRCS  = ./startup_stm32l082xx.s
+
+###################################################
+
+# Include project-specific sources here
+include Makefile_proj
+
+###################################################
 
 OBJS  = $(addprefix $(OUTDIR),$(notdir $(SRCS:.c=.o)))
 OBJS += $(addprefix $(OUTDIR),$(notdir $(ASSRCS:.s=.o)))
