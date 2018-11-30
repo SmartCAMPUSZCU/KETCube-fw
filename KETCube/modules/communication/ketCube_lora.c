@@ -226,6 +226,18 @@ static void ketCube_lora_TxData(lora_AppData_t * AppData,
     TimerStart(&TxLedTimer);
 }
 
+
+/**
+ * @brief Process custom data 
+ * 
+ * @param buffer received data
+ * 
+ * @note Redefine this function if you would like to process data received on port 12
+ */
+__weak void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len) {
+    
+}
+
 /**
  * @brief LoRa Rx Data callback ...
  */
@@ -262,6 +274,9 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
             ketCube_lora_rxData.msg[i - 1] = (char) 0;
         }
         ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
+    } else if (AppData->Port == 12) {
+        // custom data
+        ketCube_lora_processCustomData(&(AppData->Buff[0]), AppData->BuffSize);
     }
 
     ketCube_lora_rxData.msgLen = i;
