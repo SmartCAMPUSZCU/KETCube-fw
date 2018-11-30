@@ -71,7 +71,11 @@
 #define KETCUBE_CFG_INC_MOD_STARNET     //< Include StarNet module(s); undef to disable module
 #define KETCUBE_CFG_INC_MOD_FDC2214     //< Include FDC2214 module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_RXDISPLAY   //< Include RxDisplay module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ASYNCTX     //< Include RxDisplay module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ASYNCTX     //< Include AsyncTx module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_TXDISPLAY   //< Include TxDisplay module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_BMEX80      //< Include BMEx80 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_LIS2HH12    //< Include LIS2HH12 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ICS43432    //< Include ICS43432 module; undef to disable module
 
 #define KETCUBE_CFG_INC_DRV_I2C         //< Include KET's I2C driver; undef to disable driver
 #define KETCUBE_CFG_INC_DRV_MODBUS      //< Include KET's modBUS driver; undef to disable driver
@@ -120,6 +124,22 @@ typedef enum {
 
 #ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
     KETCUBE_LISTS_MODULEID_ASYNCTX,     /*<! Module AsyncTx */
+#endif
+    
+#ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
+    KETCUBE_LISTS_MODULEID_TXDISPLAY,   /*<! Module TxDisplay */
+#endif
+    
+#ifdef KETCUBE_CFG_INC_MOD_BMEX80
+    KETCUBE_LISTS_MODULEID_BMEX80,      /*<! Module BMEx80 */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_LIS2HH12
+    KETCUBE_LISTS_MODULEID_LIS2HH12,    /*<! Module LIS2HH12 */
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_ICS43432
+    KETCUBE_LISTS_MODULEID_ICS43432,    /*<! Module ICS43432 */
 #endif
 
     KETCUBE_LISTS_MODULEID_LAST /*<! Last module index - do not modify! */

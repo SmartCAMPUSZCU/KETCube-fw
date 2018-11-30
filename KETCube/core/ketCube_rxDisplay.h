@@ -56,7 +56,6 @@
   * @{
   */
 
-
 /**
 * @brief Rx data type
 */

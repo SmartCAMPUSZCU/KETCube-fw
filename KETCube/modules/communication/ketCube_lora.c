@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_lora.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-01-05
+ * @version 0.2
+ * @date    2018-11-20
  * @brief   This file contains the KETCube module wrapper for Semtech's LoRa
  *
  * @attention
@@ -218,12 +218,24 @@ static void ketCube_lora_TxData(lora_AppData_t * AppData,
 
     AppData->BuffSize = dataBufferLen;
 
-    ketCube_terminal_DebugPrintln("LoRa :: Transmitting sensor data ...");
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Transmitting sensor data ...");
 
     TimerInit(&TxLedTimer, ketCube_lora_OnTimerLed);
     TimerSetValue(&TxLedTimer, 200);
     KETCUBE_MAIN_BOARD_LED1_On();
     TimerStart(&TxLedTimer);
+}
+
+
+/**
+ * @brief Process custom data 
+ * 
+ * @param buffer received data
+ * 
+ * @note Redefine this function if you would like to process data received on port 12
+ */
+__weak void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len) {
+    
 }
 
 /**
@@ -238,14 +250,16 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
         return;
     }
 
-    ketCube_terminal_DebugPrint("LoRa :: DATA=");
-    for (i = 0;
-         (i < AppData->BuffSize) && ((i + 1) < KETCUBE_LORA_RX_BUFFER_LEN);
-         i++) {
-        ketCube_terminal_DebugPrint("%02X-", AppData->Buff[i]);
+    for (i = 0; (i < AppData->BuffSize) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
+        sprintf(&(ketCube_common_buffer[3*i]), "%02X-", AppData->Buff[i]);
+    }
+    ketCube_common_buffer[(3*i)-1] = 0x00; // remove last -
+    
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s", &(ketCube_common_buffer[0]));
+    
+    for (i = 0; (i < AppData->BuffSize) && ((i + 1) < KETCUBE_LORA_RX_BUFFER_LEN); i++) {
         ketCube_lora_rxData.msg[i + 1] = AppData->Buff[i];
     }
-    ketCube_terminal_DebugPrintln("\b; ");
 
     // update i to the actual position in ketCube_lora_rxData.msg buffer
     i++;
@@ -260,6 +274,9 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
             ketCube_lora_rxData.msg[i - 1] = (char) 0;
         }
         ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
+    } else if (AppData->Port == 12) {
+        // custom data
+        ketCube_lora_processCustomData(&(AppData->Buff[0]), AppData->BuffSize);
     }
 
     ketCube_lora_rxData.msgLen = i;

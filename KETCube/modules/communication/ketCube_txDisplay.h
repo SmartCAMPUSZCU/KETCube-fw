@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_adc.c
+ * @file    ketCube_txDisplay.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-03-02
- * @brief   This file contains definitions for the KETCube PA4 ADC driver
+ * @version 0.2
+ * @date    2018-11-20
+ * @brief   This file contains the KETCube txDisplay module definitions
  *
  * @attention
  *
@@ -42,80 +42,42 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
+ /* Define to prevent recursive inclusion ------------------------------------- */
+#ifndef __KETCUBE_TXDISPLAY_H
+#define __KETCUBE_TXDISPLAY_H
 
-
-#include "stm32l0xx_hal.h"
-#include <math.h>
-
-#include "hw_msp.h"
+#include "ketCube_cfg.h"
 #include "ketCube_common.h"
-#include "ketCube_adc.h"
-#include "ketCube_terminal.h"
 
-#ifdef KETCUBE_CFG_INC_MOD_ADC
-
-/**
- * @brief  Configures ADC PIN
- * 
- * @retval KETCUBE_ADC_OK in case of success
- * @retval KETCUBE_ADC_ERROR in case of failure
- */
-ketCube_cfg_ModError_t ketCube_ADC_Init(ketCube_InterModMsg_t *** msg)
-{
-    GPIO_InitTypeDef initStruct;
-
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    initStruct.Mode = GPIO_MODE_ANALOG;
-    initStruct.Pull = GPIO_NOPULL;
-    initStruct.Speed = GPIO_SPEED_HIGH;
-    initStruct.Pin = GPIO_PIN_4;
-
-    HAL_GPIO_Init(GPIOA, &initStruct);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-/**
-  * @brief Get milivolt value form PA4
-  *
-  * @param buffer pointer to fuffer for storing the result of milivolt mesurement
-  * @param len data len in bytes
-  *
-  * @retval KETCUBE_CFG_MODULE_OK in case of success
-  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+/** @defgroup KETCube_txDisplay KETCube txDisplay
+  * @brief KETCube txDisplay module allows to vizualize KETCube Tx data
+  * @ingroup KETCube_CommMods
+  * @{
   */
-ketCube_cfg_ModError_t ketCube_ADC_ReadData(uint8_t * buffer,
-                                            uint8_t * len)
-{
-    uint32_t vddmv;
-    uint16_t vdd;
-    uint16_t vin;
-    uint16_t mv;
 
-    vdd = HW_AdcReadChannel(ADC_CHANNEL_VREFINT);
+/**
+* @brief  txDisplay CFG data relative addr.
+*/
+typedef enum {
+    KETCUBE_TXDISPLAY_CFGADR_CFG = 0,        /*<! txDisplay cfg byte Addr */
+} ketCube_txDisplay_cfgAddr_t;
 
-    if (vdd == 0) {
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
 
-    vddmv =
-        (((uint32_t) KETCUBE_ADC_VDDA_VREFINT_CAL *
-          (*KETCUBE_ADC_VREFINT_CAL_ADDR)) / vdd);
+/**
+* @brief  Length of txDisplay CFG data
+*/
+typedef enum {
+    KETCUBE_TXDISPLAY_CFGLEN_CFG = 1,        /*<! txDisplay config len in bytes */
+} ketCube_txDisplay_cfgLen_t;
 
-    vin = HW_AdcReadChannel(ADC_CHANNEL_4);
 
-    // for 12 bit resolution ...
-    mv = (uint16_t) ((vddmv * vin) / KETCUBE_ADC_MAX);
+extern ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t ***
+                                                     msg);
+extern ketCube_cfg_ModError_t ketCube_txDisplay_Send(uint8_t * buffer,
+                                                     uint8_t * len);
 
-    // write to buffer
-    *len = 2;
-    buffer[0] = ((uint8_t) ((mv >> 8) & 0xFF));
-    buffer[1] = ((uint8_t) (mv & 0xFF));
+/**
+* @}
+*/
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ADC, "Voltage@PA4: %d", mv);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-#endif                          /* KETCUBE_CFG_INC_MOD_ADC */
+#endif                          /* __KETCUBE_TXDISPLAY_H */

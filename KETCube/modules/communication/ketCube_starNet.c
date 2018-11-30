@@ -120,7 +120,7 @@ ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void)
 
 /**
   * @brief Initialize starNet module
-	* @retval KETCUBE_CFG_MODULE_OK in case of success
+  * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
 ketCube_cfg_ModError_t ketCube_starNet_Init(ketCube_starNet_NodeType_t
@@ -216,7 +216,7 @@ ketCube_cfg_ModError_t ketCube_starNet_NodeInit(ketCube_InterModMsg_t ***
 ketCube_cfg_ModError_t ketCube_starNet_receiveData(void)
 {
     if (rxDone == TRUE) {
-        ketCube_terminal_DebugPrintln("starNet :: Rx START");
+        ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx START");
         rxDone = FALSE;
         Radio.Rx(RX_TIMEOUT_VALUE);
     }
@@ -241,13 +241,12 @@ ketCube_cfg_ModError_t ketCube_starNet_sendData(uint8_t * buffer,
         return KETCUBE_CFG_MODULE_ERROR;
     }
     txDone = FALSE;
-
-    ketCube_terminal_DebugPrint("StarNet :: transmitting sensor data: ");
-    ketCube_terminal_DebugPrint("DATA=");
-    for (i = 0; i < *len; i++) {
-        ketCube_terminal_DebugPrint("%02X-", buffer[i]);
+    
+    for (i = 0; (i < *len) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
+        sprintf(&(ketCube_common_buffer[3*i]), "%02X-", buffer[i]);
     }
-    ketCube_terminal_DebugPrintln("\b; ");
+    ketCube_common_buffer[(3*i)-1] = 0x00;  // remove last -
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Tx DATA=%s", &(ketCube_common_buffer[0]));
 
     Radio.Send(buffer, *len);
 
@@ -256,7 +255,7 @@ ketCube_cfg_ModError_t ketCube_starNet_sendData(uint8_t * buffer,
 
 static void ketCube_starNet_OnTxDone(void)
 {
-    ketCube_terminal_DebugPrintln("starNet :: Tx DONE");
+    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Tx DONE");
 
     txDone = TRUE;
 
@@ -282,17 +281,16 @@ static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
     ketCube_starNet_rssi.msg[1] = rssi;
     ketCube_starNet_snr.msg[1] = snr;
 
-    ketCube_terminal_DebugPrint("starNet :: Rx :: RSSI=%d; ", (int) rssi);
-    ketCube_terminal_DebugPrint("SNR=%d; ", (int) snr);
+    for (i = 0; (i < size) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
+        sprintf(&(ketCube_common_buffer[3*i]), "%02X-", payload[i]);
+    }
+    ketCube_common_buffer[(3*i)-1] = 0x00;  // remove last -
+    
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx :: RSSI=%d; SNR=%d;DATA=%s", (int) rssi, (int) snr, &(ketCube_common_buffer[0]));
 
-    ketCube_terminal_DebugPrint("DATA=");
-    for (i = 0;
-         (i < size) && ((i + 1) < KETCUBE_STARNET_RX_DATA_BUFFER_LEN);
-         i++) {
-        ketCube_terminal_DebugPrint("%02X-", payload[i]);
+    for (i = 0; (i < size) && ((i + 1) < KETCUBE_STARNET_RX_DATA_BUFFER_LEN); i++) {
         ketCube_starNet_rxData.msg[i + 1] = payload[i];
     }
-    ketCube_terminal_DebugPrintln("\b; ");
 
     ketCube_starNet_rssi.msgLen = 2;
     ketCube_starNet_snr.msgLen = 2;
@@ -301,7 +299,7 @@ static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
 
 static void ketCube_starNet_OnTxTimeout(void)
 {
-    ketCube_terminal_DebugPrintln("starNet :: Tx TIMEOUT");
+    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Tx TIMEOUT");
 
     txDone = TRUE;
 
@@ -310,7 +308,7 @@ static void ketCube_starNet_OnTxTimeout(void)
 
 static void ketCube_starNet_OnRxTimeout(void)
 {
-    ketCube_terminal_DebugPrintln("starNet :: Rx :: TIMEOUT");
+    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx TIMEOUT");
 
     rxDone = TRUE;
 
@@ -319,7 +317,7 @@ static void ketCube_starNet_OnRxTimeout(void)
 
 static void ketCube_starNet_OnRxError(void)
 {
-    ketCube_terminal_DebugPrintln("starNet :: Rx :: ERROR");
+    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx :: ERROR");
 
     rxDone = TRUE;
 
@@ -328,8 +326,7 @@ static void ketCube_starNet_OnRxError(void)
 
 static void ketCube_starNet_OnCadDone(bool channelActivityDetected)
 {
-    ketCube_terminal_DebugPrintln
-        ("starNet :: Tx :: ketCube_starNet_OnCadDone");
+    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Tx ketCube_starNet_OnCadDone");
 
     txDone = TRUE;
 

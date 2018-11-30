@@ -62,10 +62,9 @@
 */
 #define KETCUBE_FDC2214_I2C_ADDRESS  (uint8_t) (0x2A << 1)
 
-/**
-* @brief  I2C Timeout.
-*/
-#define KETCUBE_FDC2214_I2C_TIMEOUT 0x1000      /*<! Value of Timeout when I2C communication fails */
+
+#define KETCUBE_FDC2214_I2C_TIMEOUT 0x1000      /*<! Timeout value for I2C communication */
+#define KETCUBE_FDC2214_I2C_TRY        200      /*<! I2C try when not successfull */
 
 /**
 * @addtogroup KETCUBE_FDC2214_Registers

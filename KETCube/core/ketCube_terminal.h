@@ -62,9 +62,9 @@
   * @{
   */
 
-#define KETCUBE_TERMINAL_DEBUG    FALSE /*<! Turn ON/OFF low-level debug messages */
-#define KETCUBE_TERMINAL_MODDEBUG TRUE  /*<! Turn ON/OFF structured debug messages */
-#define KETCUBE_TERMINAL_ECHO     TRUE  /*<! Turn ON/OFF echo */
+#define KETCUBE_TERMINAL_DEBUG           FALSE /*<! Turn ON/OFF low-level debug messages */
+#define KETCUBE_TERMINAL_MODDEBUG        TRUE  /*<! Turn ON/OFF structured debug messages */
+#define KETCUBE_TERMINAL_ECHO            TRUE  /*<! Turn ON/OFF echo */
 
 #define KETCUBE_TERMINAL_HISTORY_LEN     3      /*<! Remember last 3 commands */
 #define KETCUBE_TERMINAL_CMD_MAX_LEN     128    /*<! Max command length */
@@ -73,7 +73,7 @@
 
 #define KETCUBE_TERMINAL_PROMPT()        KETCUBE_TERMINAL_PRINTF(">> ")
 #define KETCUBE_TERMINAL_ENDL()          KETCUBE_TERMINAL_PRINTF("\n\r")
-#define KETCUBE_TERMINAL_CLR_LINE()      KETCUBE_TERMINAL_PRINTF("\r                                                \r")
+#define KETCUBE_TERMINAL_CLR_LINE()      ketCube_terminal_ClearCmdLine()
 
 
 /**
@@ -97,6 +97,7 @@ typedef struct {
 extern void ketCube_terminal_Init(void);
 extern void ketCube_terminal_ProcessCMD(void);
 extern void ketCube_terminal_UpdateCmdLine(void);
+extern void ketCube_terminal_ClearCmdLine(void);
 
 extern void ketCube_terminal_cmd_about(void);
 extern void ketCube_terminal_cmd_help(void);
@@ -106,8 +107,9 @@ void ketCube_terminal_UsartPrint(char *format, ...);
 void ketCube_terminal_Print(char *format, ...);
 void ketCube_terminal_Println(char *format, ...);
 
-extern void ketCube_terminal_SeverityPrint(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args);
-extern void ketCube_terminal_SeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args);
+extern void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity, char *format, ...);
+
+extern void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args);
 
 extern void ketCube_terminal_DebugPrint(char *format, ...);
 extern void ketCube_terminal_DebugPrintln(char *format, ...);
@@ -124,46 +126,32 @@ extern void ketCube_terminal_DebugPrintln(char *format, ...);
   * @ingroup KETCube_Terminal 
   * @{
   */
-
-static inline void ketCube_terminal_NewDebugPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
+    
+static inline void ketCube_terminal_AlwaysPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
     va_list args;
     va_start(args, format);
-    ketCube_terminal_SeverityPrint(KETCUBE_CFG_SEVERITY_DEBUG, modId, format, args);
+    ketCube_terminal_ModSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, modId, format, args);
     va_end(args);
 }
     
 static inline void ketCube_terminal_NewDebugPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
     va_list args;
     va_start(args, format);
-    ketCube_terminal_SeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, modId, format, args);
-    va_end(args);
-}    
-    
-static inline void ketCube_terminal_ErrorPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
-    va_list args;
-    va_start(args, format);
-    ketCube_terminal_SeverityPrint(KETCUBE_CFG_SEVERITY_ERROR, modId, format, args);
+    ketCube_terminal_ModSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, modId, format, args);
     va_end(args);
 }
 
 static inline void ketCube_terminal_ErrorPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
     va_list args;
     va_start(args, format);
-    ketCube_terminal_SeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, modId, format, args);
-    va_end(args);
-}
-
-static inline void ketCube_terminal_InfoPrint(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
-    va_list args;
-    va_start(args, format);
-    ketCube_terminal_SeverityPrint(KETCUBE_CFG_SEVERITY_INFO, modId, format, args);
+    ketCube_terminal_ModSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, modId, format, args);
     va_end(args);
 }
 
 static inline void ketCube_terminal_InfoPrintln(ketCube_cfg_moduleIDs_t modId, char *format, ...) {
     va_list args;
     va_start(args, format);
-    ketCube_terminal_SeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, modId, format, args);
+    ketCube_terminal_ModSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, modId, format, args);
     va_end(args);
 }
 

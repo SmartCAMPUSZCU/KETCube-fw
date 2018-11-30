@@ -455,7 +455,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
             
             if (commandBuffer[commandParams + tmpCmdLen] == ' ') {
                 // get next param - severity
-                sscanf(&(commandBuffer[commandParams + tmpCmdLen + 1]), "%d", &tmpSeverity);
+                sscanf(&(commandBuffer[commandParams + tmpCmdLen + 1]), "%d", (int *) &tmpSeverity);
                 severity = (ketCube_severity_t) tmpSeverity;
                 if (severity > KETCUBE_CFG_SEVERITY_DEBUG) {
                     severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
@@ -928,7 +928,7 @@ void ketCube_terminal_printCMDHelp(void)
 /**
   * @brief Print current unfinished command 
   *
-  * Use when it is necessary to print something and not to disrupt
+  * Use when it is necessary to print something and not to disrupt current command
   *
   */
 void ketCube_terminal_UpdateCmdLine(void)
@@ -937,6 +937,25 @@ void ketCube_terminal_UpdateCmdLine(void)
     KETCUBE_TERMINAL_PROMPT();
     KETCUBE_TERMINAL_PRINTF("%s", commandBuffer);
 }
+
+/**
+  * @brief Clear command line
+  *
+  * Use to clear user input and prompt
+  *
+  */
+void ketCube_terminal_ClearCmdLine(void)
+{
+    uint8_t i;
+    
+    KETCUBE_TERMINAL_PRINTF("\r");
+    // clear command + prompt
+    for (i = 0; i < (*commandPtr + 3); i++) {
+        KETCUBE_TERMINAL_PRINTF(" ");
+    }
+    KETCUBE_TERMINAL_PRINTF("\r");
+}
+
 
 /**
   * @brief Return next command parameter index
@@ -1082,6 +1101,29 @@ void ketCube_terminal_Print(char *format, ...)
     va_end(args);
 }
 
+/**
+  * @brief Print Debug info to serial line + newline
+  *
+  * @param msgSeverity mesage severity
+  * @param format printf-style format string
+  * @param args 
+  * 
+  * @note ketCube_terminal_CoreSeverityPrintln() does not introduce any formatting in contrast with ketCube_terminal_ModSeverityPrintln(), where the produced string is prefixed by originator module Name
+  * 
+  */
+void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity, char *format, ...)
+{
+    if (ketCube_coreCfg_severity < msgSeverity) {
+        return;
+    }
+    
+    KETCUBE_TERMINAL_CLR_LINE();
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_UsartPrintVa(format, args);
+    va_end(args);
+    ketCube_terminal_UpdateCmdLine();
+}
 
 /**
   * @brief Print Debug info to serial line + newline
@@ -1092,18 +1134,14 @@ void ketCube_terminal_Print(char *format, ...)
   * @param args va_list
   * 
   */
-void ketCube_terminal_SeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
+void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
 {
-    if (ketCube_modules_List[modId].cfgByte.
-        enable != TRUE) {
-        return;
-    }
-    
     if (ketCube_modules_List[modId].cfgByte.
         severity < msgSeverity) {
         return;
     }
 
+    KETCUBE_TERMINAL_CLR_LINE();
     KETCUBE_TERMINAL_PRINTF("%s :: ", &(ketCube_modules_List[modId].name[0]));
     ketCube_terminal_UsartPrintVa(format, args);
     ketCube_terminal_UpdateCmdLine();
@@ -1122,6 +1160,7 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
         return;
     }
     
+    KETCUBE_TERMINAL_CLR_LINE();
     va_list args;
     va_start(args, format);
 
@@ -1130,28 +1169,6 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
     
     va_end(args);
 }
-
-
-/**
-  * @brief Print Debug info to serial line
-  *
-  * @param msgSeverity mesage severity
-  * @param modID mesage origin moduleID
-  * @param format printf-style format string
-  * @param args va_list
-  * 
-  */
-void ketCube_terminal_SeverityPrint(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
-{
-    if (ketCube_modules_List[modId].cfgByte.
-        enable != TRUE) {
-        return;
-    }
-    
-    KETCUBE_TERMINAL_PRINTF("%s :: ", &(ketCube_modules_List[modId].name[0]));
-    ketCube_terminal_UsartPrintVa(format, args);
-}
-
 
 /**
   * @brief Print Debug info to serial line

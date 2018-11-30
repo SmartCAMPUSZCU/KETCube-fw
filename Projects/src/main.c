@@ -88,6 +88,31 @@ void KETCube_ErrorHandler(void)
     }
 }
 
+/**
+ * @brief Process custom data 
+ * 
+ * @param buffer received data
+ * 
+ * @note This overwrites the weak function defined in ketCube_lora.c
+ */
+void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len) {
+    if (len < 1) {
+        return;
+    }
+    
+    // decode commands
+    switch(buffer[0]) {
+        case 0x01:
+            // do something ...
+            break;
+        case 0x02:
+            // do something else ...
+            break;
+        default:
+            // command not found
+            return;
+    }
+}
 
 /**
   * @brief  Main program
@@ -145,8 +170,7 @@ int main(void)
 
             KETCube_PeriodTimerElapsed = FALSE;
 
-            ketCube_terminal_DebugPrintln
-                ("--- KETCube base period # %d ---", basePeriodCnt++);
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "--- KETCube base period # %d ---", basePeriodCnt++);
 
             ketCube_modules_ExecutePeriodic();
 
