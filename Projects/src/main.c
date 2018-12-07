@@ -60,6 +60,15 @@ static TimerEvent_t KETCube_PeriodTimer;
 static bool KETCube_PeriodTimerElapsed = FALSE;
 
 
+bool KETCube_wasResetPOR;
+void KETCube_getResetFlags(void) {  
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) == TRUE) {
+        KETCube_wasResetPOR = TRUE;
+    } else {
+        KETCube_wasResetPOR = FALSE;
+    }
+    __HAL_RCC_CLEAR_RESET_FLAGS();
+}
 
 /*!
  * @brief Function executed on TxNextPacket Timeout event
@@ -122,22 +131,30 @@ void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len) {
 int main(void)
 {
     uint32_t basePeriodCnt = 0;
-
+    
     /* STM32 HAL library initialization */
     HAL_Init();
-
+            
     /* Configure the system clock */
     SystemClock_Config();
-
+    
     /* Configure the debug mode */
     DBG_Init();
-
+    
     /* Configure the hardware */
     HW_Init();
-
+    
     /* Init Terminal */
     ketCube_terminal_Init();
 
+    // A hot fix for non-operational RTC after POR - this should be removed in the future
+    if (KETCube_wasResetPOR == TRUE) {
+        //perform SW reset
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "POR detected - reseting!");
+        
+        NVIC_SystemReset();
+    }
+    
     /* Init KETCube core config */
     if (ketCube_coreCfg_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();

@@ -62,6 +62,8 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "hw.h"
 #include "low_power.h"
 
+#include "ketCube_terminal.h"
+
 /* Private typedef -----------------------------------------------------------*/
 typedef struct
 {
@@ -569,9 +571,9 @@ static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
   HAL_RTC_SetAlarm_IT( &RtcHandle, &RTC_AlarmStructure, RTC_FORMAT_BIN );
   
   /* Debug Printf*/
-  DBG( HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct ); );
-  DBG_PRINTF("it's %d:%d:%d:%d ", RTC_TimeStruct.Hours, RTC_TimeStruct.Minutes, RTC_TimeStruct.Seconds, ((PREDIV_S - RTC_TimeStruct.SubSeconds)*1000)>>N_PREDIV_S);
-  DBG_PRINTF("WU@ %d:%d:%d:%d\n\r", rtcAlarmHours, rtcAlarmMinutes, rtcAlarmSeconds, (rtcAlarmSubSeconds*1000)>>N_PREDIV_S );
+  HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
+  ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "it's %d:%d:%d:%d ", RTC_TimeStruct.Hours, RTC_TimeStruct.Minutes, RTC_TimeStruct.Seconds, ((PREDIV_S - RTC_TimeStruct.SubSeconds)*1000)>>N_PREDIV_S);
+  ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "WU@ %d:%d:%d:%d\n\r", rtcAlarmHours, rtcAlarmMinutes, rtcAlarmSeconds, (rtcAlarmSubSeconds*1000)>>N_PREDIV_S );
   
   DBG_GPIO_RST(GPIOB, GPIO_PIN_13);
 }
