@@ -67,41 +67,41 @@
 * @brief  RH resolution configuration.
 */
 typedef enum {
-    KETCUBE_HDC1080_HRES_8BIT = (uint8_t) 0x02, /*!<  8 bit resolution */
-    KETCUBE_HDC1080_HRES_11BIT = (uint8_t) 0x01,        /*!< 11 bit resolution */
-    KETCUBE_HDC1080_HRES_14BIT = (uint8_t) 0x00 /*!< 14 bit resolution */
+    KETCUBE_HDC1080_HRES_8BIT = (uint8_t) 0x02,       /*!<  8 bit resolution */
+    KETCUBE_HDC1080_HRES_11BIT = (uint8_t) 0x01,      /*!< 11 bit resolution */
+    KETCUBE_HDC1080_HRES_14BIT = (uint8_t) 0x00       /*!< 14 bit resolution */
 } ketCube_hdc1080_HRes_t;
 
 /**
 * @brief  temperature resolution configuration.
 */
 typedef enum {
-    KETCUBE_HDC1080_TRES_11BIT = (uint8_t) 0x01,        /*!< 11 bit resolution */
-    KETCUBE_HDC1080_TRES_14BIT = (uint8_t) 0x00 /*!< 14 bit resolution */
+    KETCUBE_HDC1080_TRES_11BIT = (uint8_t) 0x01,      /*!< 11 bit resolution */
+    KETCUBE_HDC1080_TRES_14BIT = (uint8_t) 0x00       /*!< 14 bit resolution */
 } ketCube_hdc1080_TRes_t;
 
 /**
 * @brief  Battery voltage
 */
 typedef enum {
-    KETCUBE_HDC1080_BAT_HIGH = (uint8_t) 0x00,  /*!< Bat above 2.8 V */
-    KETCUBE_HDC1080_BAT_LOW = (uint8_t) 0x01    /*!< Bat below 2.8 V */
+    KETCUBE_HDC1080_BAT_HIGH = (uint8_t) 0x00,         /*!< Bat above 2.8 V */
+    KETCUBE_HDC1080_BAT_LOW = (uint8_t) 0x01           /*!< Bat below 2.8 V */
 } ketCube_hdc1080_Bat_t;
 
 /**
 * @brief  Heater On/Off
 */
 typedef enum {
-    KETCUBE_HDC1080_HTR_ON = (uint8_t) 0x01,    /*!< HTR ON */
-    KETCUBE_HDC1080_HTR_OFF = (uint8_t) 0x00    /*!< HTR OFF */
+    KETCUBE_HDC1080_HTR_ON = (uint8_t) 0x01,           /*!< HTR ON */
+    KETCUBE_HDC1080_HTR_OFF = (uint8_t) 0x00           /*!< HTR OFF */
 } ketCube_hdc1080_Htr_t;
 
 /**
 * @brief Reset
 */
 typedef enum {
-    KETCUBE_HDC1080_RST_RESET = (uint8_t) 0x01, /*!< Invoke SW reset */
-    KETCUBE_HDC1080_RST_NONE = (uint8_t) 0x00   /*!< Normal operation */
+    KETCUBE_HDC1080_RST_RESET = (uint8_t) 0x01,         /*!< Invoke SW reset */
+    KETCUBE_HDC1080_RST_NONE = (uint8_t) 0x00           /*!< Normal operation */
 } ketCube_hdc1080_Rst_t;
 
 /**
@@ -109,15 +109,15 @@ typedef enum {
 */
 typedef enum {
     KETCUBE_HDC1080_AQ_SEPARATE = (uint8_t) 0x00,       /*!< Get temperature/Humidity separately */
-    KETCUBE_HDC1080_AQ_SEQ = (uint8_t) 0x01     /*!< get Temperature/Humidity in sequence; temperature first */
+    KETCUBE_HDC1080_AQ_SEQ = (uint8_t) 0x01             /*!< get Temperature/Humidity in sequence; temperature first */
 } ketCube_hdc1080_Aq_t;
 
 /**
 * @brief  Push-pull/Open Drain selection on DRDY pin.
 */
 typedef enum {
-    KETCUBE_HDC1080_PUSHPULL = (uint8_t) 0x00,  /*!< DRDY pin in push pull */
-    KETCUBE_HDC1080_OPENDRAIN = (uint8_t) 0x40  /*!< DRDY pin in open drain */
+    KETCUBE_HDC1080_PUSHPULL = (uint8_t) 0x00,           /*!< DRDY pin in push pull */
+    KETCUBE_HDC1080_OPENDRAIN = (uint8_t) 0x40           /*!< DRDY pin in open drain */
 } ketCube_hdc1080_OutputType_t;
 
 #define IS_KETCUBE_HDC1080_OutputType(MODE) ((MODE == KETCUBE_HDC1080_PUSHPULL) || (MODE == KETCUBE_HDC1080_OPENDRAIN))
@@ -126,8 +126,8 @@ typedef enum {
 * @brief  Active level of DRDY pin.
 */
 typedef enum {
-    KETCUBE_HDC1080_HIGH_LVL = (uint8_t) 0x00,  /*!< HIGH state level for DRDY pin */
-    KETCUBE_HDC1080_LOW_LVL = (uint8_t) 0x80    /*!< LOW state level for DRDY pin */
+    KETCUBE_HDC1080_HIGH_LVL = (uint8_t) 0x00,            /*!< HIGH state level for DRDY pin */
+    KETCUBE_HDC1080_LOW_LVL = (uint8_t) 0x80              /*!< LOW state level for DRDY pin */
 } ketCube_hdc1080_DrdyLevel_t;
 #define IS_KETCUBE_HDC1080_DrdyLevelType(MODE) ((MODE == KETCUBE_HDC1080_HIGH_LVL) || (MODE == KETCUBE_HDC1080_LOW_LVL))
 
@@ -158,7 +158,7 @@ typedef struct {
 /**
 * @brief  I2C Timeout.
 */
-#define KETCUBE_HDC1080_I2C_TIMEOUT 0x1000      /*<! Value of Timeout when I2C communication fails */
+#define KETCUBE_HDC1080_I2C_TIMEOUT 0x1000                /*<! Value of Timeout when I2C communication fails */
 
 /**
 * @addtogroup KETCUBE_HDC1080_Registers HDC1080 Registers

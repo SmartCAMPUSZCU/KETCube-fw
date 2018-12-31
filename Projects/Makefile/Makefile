@@ -240,11 +240,18 @@ clean:
 chipinfo:
 	st-info --chipid
 
-flash: $(OUTDIR)$(TARGET).bin
+stflash: $(OUTDIR)$(TARGET).bin
 	-$(STLINK) write $(OUTDIR)$(TARGET).bin 0x8000000
 	$(STLINK) reset
 	$(MAKE) sigdone
 
+ocd: erase
+	openocd -f ketcube-openocd.cfg
+
+flash: $(OUTDIR)$(TARGET).elf
+	$(GDB) -x gdb_flash $(OUTDIR)$(TARGET).elf
+	$(MAKE) sigdone
+	
 erase:
 	$(STLINK) erase
 	$(MAKE) sigdone

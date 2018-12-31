@@ -175,8 +175,8 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
     {((char *) &("FDC2214")),
      ((char *) &("TI\'s FDC2214 capacity to digital converter.")),
      &ketCube_fdc2214_Init,     /*·Module Init() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     &ketCube_fdc2214_SleepEnter,    /*·SleepEnter() */
+     &ketCube_fdc2214_SleepExit,    /*·SleepExit() */
      &ketCube_fdc2214_ReadData, /*·GetSensorData() */
      (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */

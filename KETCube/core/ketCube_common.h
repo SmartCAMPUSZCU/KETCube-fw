@@ -62,8 +62,8 @@
   * @{
   */
 
-#define TRUE    1               //< boolean TRUE
-#define FALSE   0               //< boolean FALSE
+#define TRUE    1               ///< boolean TRUE
+#define FALSE   0               ///< boolean FALSE
 
 /*typedef enum {
   TRUE       = 1,

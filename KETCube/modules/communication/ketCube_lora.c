@@ -222,7 +222,7 @@ static void ketCube_lora_TxData(lora_AppData_t * AppData,
 
     TimerInit(&TxLedTimer, ketCube_lora_OnTimerLed);
     TimerSetValue(&TxLedTimer, 200);
-    KETCUBE_MAIN_BOARD_LED1_On();
+    //KETCUBE_MAIN_BOARD_LED1_On();
     TimerStart(&TxLedTimer);
 }
 
@@ -287,7 +287,7 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
  */
 static void ketCube_lora_OnTimerLed(void)
 {
-    KETCUBE_MAIN_BOARD_LED1_Off();
+    //KETCUBE_MAIN_BOARD_LED1_Off();
 }
 
 #endif                          /* KETCUBE_CFG_INC_MOD_LORA */

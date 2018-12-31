@@ -56,9 +56,9 @@
   * @{
   */
 
-#define KETCUBE_STARNET_RF_FREQUENCY                                868000000   //< Hz for US, define: 915000000 // Hz
-#define KETCUBE_STARNET_TX_OUTPUT_POWER                             14  //< dBm
-#define KETCUBE_STARNET_RX_DATA_BUFFER_LEN                          64  //< Rx Data buffer length
+#define KETCUBE_STARNET_RF_FREQUENCY                                868000000   ///< Hz for US, define: 915000000 Hz
+#define KETCUBE_STARNET_TX_OUTPUT_POWER                             14          ///< dBm
+#define KETCUBE_STARNET_RX_DATA_BUFFER_LEN                          64          ///< Rx Data buffer length
 
 /**
 * @brief  Error code type.
