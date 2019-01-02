@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_fdc2214.h
  * @author  Jan Belohoubek
- * @version pre-alpha
- * @date    2018-03-18
+ * @version alpha
+ * @date    2019-01-01
  * @brief   This file contains definitions for the FDC2214 driver
  *
  * @attention
@@ -59,32 +59,48 @@
   */
 
 /**
-* @brief  I2C slave (FDC2214) address.
-* @note See FDC2214 datasheet for I2C address options
-*/
-#define KETCUBE_FDC2214_I2C_ADDRESS  (uint8_t) (0x2A << 1)
+ * @brief FDC2214 Channels
+ * 
+ */
+typedef enum {
+    FDC2214_CH0  = 0b00,          ///< Channel 0
+    FDC2214_CH1  = 0b01,          ///< Channel 1
+    FDC2214_CH2  = 0b10,          ///< Channel 2
+    FDC2214_CH3  = 0b11           ///< Channel 3
+} ketCube_fdc2214_chan_t;
 
+/**
+ * @brief Channel Sequencing
+ * 
+ * @note the values are used to fdc2214 register sequencing. Do not modify!
+ */
+typedef enum {
+    FDC2214_SINGLE_CH0  = 0b00,          ///< Enable single channel 0
+    FDC2214_SINGLE_CH1  = 0b01,          ///< Enable single channel 1
+    FDC2214_SINGLE_CH2  = 0b10,          ///< Enable single channel 2
+    FDC2214_SINGLE_CH3  = 0b11,          ///< Enable single channel 3
+    FDC2214_SEQ_CH_01   = (0b01 << 4),   ///< Sequence channels 0 and 2
+    FDC2214_SEQ_CH_012  = (0b10 << 4),   ///< Sequence channels 0 and 1 and 2
+    FDC2214_SEQ_CH_0123 = (0b11 << 4)    ///< Sequence channels 0 and 1 and 2 and 3
+} ketCube_fdc2214_chanSeq_t;
 
-#define KETCUBE_FDC2214_I2C_TIMEOUT         1000   ///< Timeout value for I2C communication [ms]
-#define KETCUBE_FDC2214_I2C_WU               100   ///< Wake-up time [ms]
-#define KETCUBE_FDC2214_I2C_TRY               50   ///< I2C try when not successfull 
+/**
+ * @brief Deglitch Filter
+ */
+typedef enum {
+    FDC2214_DGLF_1   = 0b001,          ///< 1 MHz
+    FDC2214_DGLF_3   = 0b100,          ///< 3.3 MHz
+    FDC2214_DGLF_10  = 0b101,          ///< 10 MHz
+    FDC2214_DGLF_33  = 0b111,          ///< 33 MHz
+} ketCube_fdc2214_dglFilter_t;
 
-#define FDC2214_SD_PORT                     KETCUBE_MAIN_BOARD_PIN_PWM_PORT
-#define FDC2214_SD_PIN                      KETCUBE_MAIN_BOARD_PIN_PWM_PIN
-#define FDC2214_INT_PORT                    KETCUBE_MAIN_BOARD_PIN_INT_PORT
-#define FDC2214_INT_PIN                     KETCUBE_MAIN_BOARD_PIN_INT_PIN
-#define FDC2214_LED_PORT                    KETCUBE_MAIN_BOARD_PIN_MOSI_PORT
-#define FDC2214_LED_PIN                     KETCUBE_MAIN_BOARD_PIN_MOSI_PIN
-
-#define FDC2214_USE_EXTERNAL_OSC            TRUE
-#define FDC2214_ENABLE_INT                  TRUE
-#define FDC2214_USE_LED_INDICATION          TRUE
-
-#define FDC2214_SINGLE_CHAN0                TRUE   ///< Enable just channel 0
-#define FDC2214_SINGLE_CHAN1                FALSE   ///< Enable just channel 1
-#define FDC2214_SINGLE_CHAN2                FALSE   ///< Enable just channel 2
-#define FDC2214_SINGLE_CHAN3                FALSE    ///< Enable just channel 3
-
+/**
+ * @brief Sensor type
+ */
+typedef enum {
+    FDC2214_SENSTYPE_DIFFERENTIAL,      ///< Differential sensor
+    FDC2214_SENSTYPE_SINGLE_ENDED       ///< Single-ended sensor
+} ketCube_fdc2214_sensType_t;
 
 /**
 * @addtogroup KETCUBE_FDC2214_Registers
@@ -138,6 +154,46 @@
 * @}
 */
 
+
+/** @defgroup KETCUBE_FDC2214_settingsn FDC2214 Settings
+* @{
+*/
+
+/**
+* @brief  I2C slave (FDC2214) address.
+* @note See FDC2214 datasheet for I2C address options
+*/
+#define KETCUBE_FDC2214_I2C_ADDRESS  (uint8_t) (0x2A << 1)
+
+#define KETCUBE_FDC2214_I2C_TIMEOUT         1000    ///< Timeout value for I2C communication [ms]
+#define KETCUBE_FDC2214_I2C_WU              100     ///< Wake-up time [ms]
+#define KETCUBE_FDC2214_I2C_TRY              50     ///< I2C try when not successfull 
+
+#define FDC2214_SD_PORT                     KETCUBE_MAIN_BOARD_PIN_PWM_PORT   ///< FDC2214 Shut-Down
+#define FDC2214_SD_PIN                      KETCUBE_MAIN_BOARD_PIN_PWM_PIN    ///< FDC2214 Shut-Down
+#define FDC2214_INT_PORT                    KETCUBE_MAIN_BOARD_PIN_INT_PORT   ///< FDC2214 INT
+#define FDC2214_INT_PIN                     KETCUBE_MAIN_BOARD_PIN_INT_PIN    ///< FDC2214 INT
+#define FDC2214_LED_PORT                    KETCUBE_MAIN_BOARD_PIN_MOSI_PORT  ///< Indication LED
+#define FDC2214_LED_PIN                     KETCUBE_MAIN_BOARD_PIN_MOSI_PIN   ///< Indication LED
+
+#define FDC2214_USE_EXTERNAL_OSC            TRUE                              ///< Enable/Disable external oscillator
+#define FDC2214_ENABLE_INT                  FALSE                             ///< Enable FDC2214 interrupt
+#define FDC2214_ENABLE_SLEEP                TRUE                              ///< Enter sleep mode instead of shut-down when KETCube goes low-power mode
+
+#define FDC2214_LED_INDICATION              TRUE                              ///< Enable LED indication
+#define FDC2214_LED_THRESHOLD               1000                              ///< FDC2214 raw value difference used to indicate significant capacity difference by using LED
+#define FDC2214_LED_CHAN                    FDC2214_CH0                       ///< FDC2214 channel used for LED indication, @see ketCube_fdc2214_chan_t
+
+#define FDC2214_RCOUNT                      0xFFFF //0x0080                   ///< RCount - to set the meas time
+#define FDC2214_SETTLECOUNT                 0x0400                            ///< SettleCount - to stabilize oscilaltions
+
+#define FDC2214_CHAN_SEQ                    FDC2214_SINGLE_CH0                ///< Selected/active channel(s), @see ketCube_fdc2214_chanSeq_t
+#define FDC2214_DGL_FILTER                  FDC2214_DGLF_10                   ///< Selected Deglitch filter, @see ketCube_fdc2214_dglFilter_t
+#define FDC2214_SENSTYPE                    FDC2214_SENSTYPE_SINGLE_ENDED     ///< Selected sensor type, @see ketCube_fdc2214_sensType_t
+
+/**
+* @}
+*/
 
 /** @defgroup KETCUBE_FDC2214_fn Public Functions
 * @{

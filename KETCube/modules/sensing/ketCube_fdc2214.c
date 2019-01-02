@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_fdc2214.c
  * @author  Jan Belohoubek
- * @version pre-alpha
- * @date    2018-03-18
+ * @version alpha
+ * @date    2019-01-01
  * @brief   This file contains the FDC2214 driver
  *
  * @attention
@@ -53,33 +53,64 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_FDC2214
 
+/**
+ * @brief Exit the FDC2214 shut-down mode
+ *
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
 static inline void ketCube_fdc2214_on(void) {
     ketCube_GPIO_Write(FDC2214_SD_PORT, FDC2214_SD_PIN, FALSE);
     HAL_Delay(KETCUBE_FDC2214_I2C_WU);
 }
 
+/**
+ * @brief Enter the FDC2214 shut-down mode
+ *
+ * @note Entering shut-down mode will reset all registers to their default states
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
 static inline void ketCube_fdc2214_off(void) {
     ketCube_GPIO_Write(FDC2214_SD_PORT, FDC2214_SD_PIN, TRUE);
 }
 
-static inline ketCube_cfg_ModError_t ketCube_fdc2214_writeReg( uint8_t regAddr, uint16_t * reg) {
+/**
+ * @brief Generic function to write the FDC2214 register
+ *
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+static ketCube_cfg_ModError_t ketCube_fdc2214_writeReg(uint8_t regAddr, uint16_t * reg, const char * str) {
     uint8_t i = 0;
     
-    *reg = 0;
     for (i = 0; i < KETCUBE_FDC2214_I2C_TRY; i++) {
        if (ketCube_I2C_TexasWriteReg(KETCUBE_FDC2214_I2C_ADDRESS, regAddr, reg) == KETCUBE_CFG_MODULE_OK) {
            break;
        }   
     }
     if (i == KETCUBE_FDC2214_I2C_TRY) {
-        ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Write Register %d! failed", regAddr);
+        if (str != NULL) {
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to write %s (RegAddr: 0x%02X)", str, regAddr);
+        }
         return KETCUBE_CFG_MODULE_ERROR;
+    }
+    
+    if (str != NULL) {
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "New %s value: 0x%04X", str, *reg);
     }
     
     return KETCUBE_CFG_MODULE_OK;
 }
 
-static inline ketCube_cfg_ModError_t ketCube_fdc2214_readReg(uint8_t regAddr, uint16_t * reg) {
+/**
+ * @brief Generic function to read the FDC2214 register
+ *
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+static ketCube_cfg_ModError_t ketCube_fdc2214_readReg(uint8_t regAddr, uint16_t * reg, const char * str) {
     uint8_t i = 0;
     
     *reg = 0;
@@ -89,19 +120,35 @@ static inline ketCube_cfg_ModError_t ketCube_fdc2214_readReg(uint8_t regAddr, ui
        }   
     }
     if (i == KETCUBE_FDC2214_I2C_TRY) {
-        ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Read Register %d! failed", regAddr);
+        if (str != NULL) {
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read %s (RegAddr: 0x%02X)", str, regAddr);
+        }
         return KETCUBE_CFG_MODULE_ERROR;
+    }
+    
+    if (str != NULL) {
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "%s: 0x%04X", str, *reg);
     }
     
     return KETCUBE_CFG_MODULE_OK;
 }
 
-
-static inline ketCube_cfg_ModError_t ketCube_fdc2214_reset(void) {
+/**
+ * @brief Exit the FDC2214 sleep-down mode
+ *
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+static ketCube_cfg_ModError_t ketCube_fdc2214_wakeUp(void) {
     uint16_t reg;
     
-    reg = 0x8000;
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_RESET_DEV, &reg) != KETCUBE_CFG_MODULE_OK) {
+    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_CONFIG, &reg, (char *) &"ConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
+        return KETCUBE_CFG_MODULE_ERROR;
+    }
+    
+    reg &= ~(0b1 << 13);
+    
+    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CONFIG, &reg, (char *) &"ConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
     
@@ -110,50 +157,96 @@ static inline ketCube_cfg_ModError_t ketCube_fdc2214_reset(void) {
     return KETCUBE_CFG_MODULE_OK;
 }
 
-void ketCube_fdc2214_irqStatusUpdated() {
+
+/**
+ * @brief Enter the FDC2214 sleep-down mode
+ *
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+static ketCube_cfg_ModError_t ketCube_fdc2214_sleep(void) {
+    uint16_t reg;
+    
+    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_CONFIG, &reg, (char *) &"ConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
+        return KETCUBE_CFG_MODULE_ERROR;
+    }
+    
+    reg |= (0b1 << 13);
+    
+    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CONFIG, &reg, (char *) &"ConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
+        return KETCUBE_CFG_MODULE_ERROR;
+    }
+    
+    return KETCUBE_CFG_MODULE_OK;
+}
+
+/**
+ * @brief Soft-reset the FDC2214 sensor
+ *
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+static inline ketCube_cfg_ModError_t ketCube_fdc2214_reset(void) {
+    uint16_t reg;
+    
+    reg = 0x8000;
+    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_RESET_DEV, &reg, (char *) &"ResetReg") != KETCUBE_CFG_MODULE_OK) {
+        return KETCUBE_CFG_MODULE_ERROR;
+    }
+    
+    HAL_Delay(KETCUBE_FDC2214_I2C_WU);
+    
+    return KETCUBE_CFG_MODULE_OK;
+}
+
+/**
+ * @brief LED indication
+ *
+ * @param raw fdc2214 current raw value produced by fdc2214 sensor
+ * 
+ */
+static void ketCube_fdc2214_LEDIndication(uint32_t raw) {
     static uint32_t pastValue;
-    uint32_t currentValue;
+    
+    if (abs(pastValue - raw) > FDC2214_LED_THRESHOLD) {
+#if (FDC2214_LED_INDICATION == TRUE)
+        if (pastValue < raw) {
+            ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
+            ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED ON.");
+        } else {
+            ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, TRUE);
+            ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED OFF.");
+        }
+#endif
+    }
+    
+    pastValue = raw;
+}
+
+
+void ketCube_fdc2214_irqStatusUpdated() {
     uint16_t msb, lsb;
+    uint32_t raw;
+    uint8_t i;
     
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "INT");
     
-//     if (ketCube_I2C_TexasReadReg
-//         (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_STATUS,
-//          &lsb)) {
-//         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read STATUS");
-//         return;
-//     }
-//     
-//     if (ketCube_I2C_TexasReadReg
-//         (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DATA_CH0, &msb)) {
-//         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read MSB");
-//         return;
-//     }
-// 
-//     if (ketCube_I2C_TexasReadReg
-//         (KETCUBE_FDC2214_I2C_ADDRESS, KETCUBE_FDC2214_DATA_LSB_CH0,
-//          &lsb)) {
-//         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read LSB");
-//         return;
-//     }
-//     
-//     currentValue = ((((uint32_t ) msb) << 16) | lsb);
-//     
-//     // TODO redefine threshold
-//     if (abs(pastValue - currentValue) > 10000) {
-//         ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Signifficant differnece indicated.");
-// #if (FDC2214_USE_LED_INDICATION == TRUE)
-//         //bool tmp_LED_state = ketCube_GPIO_Read(FDC2214_LED_PORT, FDC2214_LED_PIN);
-//         //ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, !tmp_LED_state);
-//         if (pastValue > currentValue) {
-//             ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
-//         } else {
-//             ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, TRUE);
-//         }
-// #endif
-//     }
-//     
-//     pastValue = currentValue;
+    // Loop through data registers
+    // note, that the trick for the loop condition can be found in the ketCube_fdc2214_chanSeq_t deffinition
+    for (i = (FDC2214_CHAN_SEQ & 0x0F); 
+         i <= ((FDC2214_CHAN_SEQ & 0x0F) | (FDC2214_CHAN_SEQ >> 4)); 
+         i++) {
+        
+        ketCube_fdc2214_readReg(KETCUBE_FDC2214_DATA_CH0, &msb, (char *) NULL);
+        ketCube_fdc2214_readReg(KETCUBE_FDC2214_DATA_LSB_CH0, &lsb, (char *) NULL);
+        
+        raw = ((((uint32_t) msb) << 16) | lsb) & 0x0FFFFFFF;
+        
+        if (FDC2214_LED_CHAN == i) {
+            // execute LED indication function
+            ketCube_fdc2214_LEDIndication(raw);
+        }
+    }   
 }
  
 
@@ -166,6 +259,7 @@ void ketCube_fdc2214_irqStatusUpdated() {
 ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
 {
     uint16_t reg;
+    uint8_t i;
 
     GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -181,7 +275,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
     if (ketCube_GPIO_Init(FDC2214_SD_PORT, FDC2214_SD_PIN, &GPIO_InitStruct) != KETCUBE_CFG_DRV_OK) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
-#if (FDC2214_USE_LED_INDICATION == TRUE)
+#if (FDC2214_LED_INDICATION == TRUE)
     if (ketCube_GPIO_Init(FDC2214_LED_PORT, FDC2214_LED_PIN, &GPIO_InitStruct) != KETCUBE_CFG_DRV_OK) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
@@ -210,98 +304,87 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
-    /**
-     * @todo Make the following code nice-looking after I2C API refactoring
-     */
+    // get DevID/ManID
+    ketCube_fdc2214_readReg(KETCUBE_FDC2214_DEVICE_ID, &reg, (char *) &"DevID");
+    ketCube_fdc2214_readReg(KETCUBE_FDC2214_MANUFACTURER_ID, &reg, (char *) &"ManID");
     
-    // osc settings include reserved bits configuration
-#if (FDC2214_USE_EXTERNAL_OSC == TRUE)
-    reg = 0x1e01;
-#else
+    // reserved bits configuration
     reg = 0x1c01;
+#if (FDC2214_USE_EXTERNAL_OSC == TRUE)
+    reg |= (0b1 << 9);
 #endif
     
 #if (FDC2214_ENABLE_INT == FALSE)
     reg |= 0x0080;
 #endif
     
-#if (FDC2214_SINGLE_CHAN3 == TRUE)
-    reg |= 0xC000;
-#elif (FDC2214_SINGLE_CHAN2 == TRUE)
-    reg |= 0x8000;
-#elif (FDC2214_SINGLE_CHAN1 == TRUE)
-    reg |= 0x4000;
-#elif (FDC2214_SINGLE_CHAN0 == TRUE)
-    reg |= 0x0000;
+#if (FDC2214_CHAN_SEQ <= FDC2214_SINGLE_CH3)
+    reg |= (FDC2214_CHAN_SEQ << 14);
 #endif
     
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CONFIG, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Config configuration failed");
+    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CONFIG, &reg, (char *) &"ConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
-    reg = (0x41 << 3); // Reserved bits must be set accordingly!
+    // Reserved bits must be set accordingly!
+    reg = (0x41 << 3);    
     
-#if (FDC2214_SINGLE_CHAN3 == TRUE)
-    // set RR_Sequence ...
-    reg |= (0b110 << 13);
+#if (FDC2214_CHAN_SEQ > FDC2214_SINGLE_CH3)
+    reg |= (0b1 << 15);   
+    reg |= (((FDC2214_CHAN_SEQ >> 4) - 1) << 13); // set RR_Sequence
 #else
-    reg |= (0b111 << 13);
+    reg |= (0b10 << 13); // set RR_Sequence
 #endif
-    // set deglitch
-    reg |= 0b001;
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_MUX_CONFIG, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "MuxConfig configuration failed");
+    // set deglitch filter
+    reg |= FDC2214_DGL_FILTER;
+    
+    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_MUX_CONFIG, &reg, (char *) &"MuxConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
     
     reg = 0;
-#if (FDC2214_ENABLE_INT == FALSE)
+#if (FDC2214_ENABLE_INT == TRUE)
     reg |= 0x0001;
 #endif
     
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_STATUS_CONFIG, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "StatusConfig configuration failed");
+    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_STATUS_CONFIG, &reg, (char *) &"StatusConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
     
-    // CH0 configuration
-    reg = 500;
-    //reg = 0x0080;
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_RCOUNT_CH0, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Setting CH0 failed (E0)!");
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
-
-    reg = 200;
-    //reg = 0x00C8;
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_SETTLECOUNT_CH0, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Setting CH0 failed (E1)!");
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
-
-    reg = 0x0001;
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CLOCK_DIVIDERS_CH0, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Setting CH0 failed (E2)!");
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
+    // Init channels you need to initialize ...
+    // note, that the trick for the loop condition can be found in the ketCube_fdc2214_chanSeq_t deffinition
+    for (i = (FDC2214_CHAN_SEQ & 0x0F); 
+         i <= ((FDC2214_CHAN_SEQ & 0x0F) | (FDC2214_CHAN_SEQ >> 4)); 
+         i++) {
     
-    reg = ((0b10000) << 11);
-    if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_DRIVE_CURRENT_CH0, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Setting CH0 failed (E3)!");
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Setting CH%d", i);
+        
+        reg = FDC2214_RCOUNT;
+        if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_RCOUNT_CH0 + i, &reg, (char *) &"RCountReg") == KETCUBE_CFG_MODULE_ERROR) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        
+        reg = FDC2214_SETTLECOUNT;
+        if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_SETTLECOUNT_CH0 + i, &reg, (char *) &"SettleCountReg") == KETCUBE_CFG_MODULE_ERROR) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        
+        // set default value for clock divider; It MUST != 0
+        reg = 0x0001;
+#if (FDC2214_SENSTYPE == FDC2214_SENSTYPE_SINGLE_ENDED)
+        reg |= 0b10 << 12;
+#else
+        reg |= 0b01 << 12;  // choose 10 for differential sensor with higher frequency
+#endif
+        if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CLOCK_DIVIDERS_CH0 + i, &reg, (char *) &"ClkDivReg") == KETCUBE_CFG_MODULE_ERROR) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+        
+        reg = ((0b10001) << 11);
+        if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_DRIVE_CURRENT_CH0 + i, &reg, (char *) &"CurrentReg") == KETCUBE_CFG_MODULE_ERROR) {
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
     
-    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_MANUFACTURER_ID, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read ManID");
-    } else {
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "ManID: 0x%04X", reg);
-    }
-    
-    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_DEVICE_ID, &reg) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read DevID");
-    } else {
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "DevID: 0x%04X", reg);
     }
     
     return KETCUBE_CFG_MODULE_OK;
@@ -315,13 +398,17 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
  */
 ketCube_cfg_ModError_t ketCube_fdc2214_SleepEnter(void)
 {
-#if (FDC2214_ENABLE_INT == TRUE)
-    return KETCUBE_CFG_MODULE_OK;
-#else
+    ketCube_cfg_ModError_t ret = KETCUBE_CFG_MODULE_OK;
+    
+#if (FDC2214_ENABLE_INT == FALSE) && (FDC2214_ENABLE_SLEEP == TRUE)
+    ret = ketCube_fdc2214_sleep();
+#elif (FDC2214_ENABLE_INT == FALSE) && (FDC2214_ENABLE_SLEEP == FALSE)
     // UnInit drivers
     ketCube_fdc2214_off();
-    return ketCube_I2C_UnInit();
+    ret = ketCube_I2C_UnInit();
 #endif
+    
+    return ret;
 }
 
 /**
@@ -332,13 +419,15 @@ ketCube_cfg_ModError_t ketCube_fdc2214_SleepEnter(void)
  */
 ketCube_cfg_ModError_t ketCube_fdc2214_SleepExit(void)
 {
-#if (FDC2214_ENABLE_INT == TRUE)
-    return KETCUBE_CFG_MODULE_OK;
-#else
-    // UnInit drivers
-    ketCube_fdc2214_on();
-    return ketCube_I2C_Init();
+    ketCube_cfg_ModError_t ret = KETCUBE_CFG_MODULE_OK;
+
+#if (FDC2214_ENABLE_INT == FALSE) && (FDC2214_ENABLE_SLEEP == TRUE)
+    ret = ketCube_fdc2214_wakeUp();    
+#elif (FDC2214_ENABLE_INT == FALSE) && (FDC2214_ENABLE_SLEEP == FALSE)
+    ret = ketCube_fdc2214_Init();
 #endif
+    return ret;
+    
 }
 
 /**
@@ -355,54 +444,39 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
 {
     uint16_t msb, lsb, status;
     uint32_t raw;
-    static uint32_t pastValue;
+    uint8_t i;
 
-    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_STATUS, &status) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read STATUS");
-    } else {
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "STATUS: 0x%04X", status);
-    }
-
-    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_DATA_CH0, &msb) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read MSB");
-    }
-    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_DATA_LSB_CH0, &lsb) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read LSB");
-    }
-    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_STATUS, &status) == KETCUBE_CFG_MODULE_ERROR) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "Unable to read STATUS");
-    } else {
-        raw = ((((uint32_t) msb) << 16) | lsb) & 0x0FFFFFFF;
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "STATUS: 0x%04X; raw: 0x%08X", status, raw);
-    }
-
-    raw = ((((uint32_t) msb) << 16) | lsb) & 0x0FFFFFFF;
-
-    buffer[0] = (uint8_t) (raw >> 24);
-    buffer[1] = (uint8_t) (raw >> 16);
-    buffer[2] = (uint8_t) (raw >> 8);
-    buffer[3] = (uint8_t) raw;
-
-    *len = 4;
-
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "RawCapacity: %d", raw);
-
-    // TODO redefine threshold
-    if (abs(pastValue - raw) > 10000) {
-#if (FDC2214_USE_LED_INDICATION == TRUE)
-        //bool tmp_LED_state = ketCube_GPIO_Read(FDC2214_LED_PORT, FDC2214_LED_PIN);
-        //ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, !tmp_LED_state);
-        if (pastValue < raw) {
-            ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
-            ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED ON.");
-        } else {
-            ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, TRUE);
-            ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED OFF.");
-        }
-#endif
-    }
+    // check status reg
+    ketCube_fdc2214_readReg(KETCUBE_FDC2214_STATUS, &status, (char *) &"StatusReg");
     
-    pastValue = raw;
+    // Loop through data registers
+    // note, that the trick for the loop condition can be found in the ketCube_fdc2214_chanSeq_t deffinition
+    for (i = (FDC2214_CHAN_SEQ & 0x0F); 
+         i <= ((FDC2214_CHAN_SEQ & 0x0F) | (FDC2214_CHAN_SEQ >> 4)); 
+         i++) {
+        
+        ketCube_fdc2214_readReg(KETCUBE_FDC2214_DATA_CH0, &msb, (char *) &"MSB");
+        ketCube_fdc2214_readReg(KETCUBE_FDC2214_DATA_LSB_CH0, &lsb, (char *) &"LSB");
+        
+        raw = ((((uint32_t) msb) << 16) | lsb) & 0x0FFFFFFF;
+        
+        buffer[4*i+0] = (uint8_t) (raw >> 24);
+        buffer[4*i+1] = (uint8_t) (raw >> 16);
+        buffer[4*i+2] = (uint8_t) (raw >> 8);
+        buffer[4*i+3] = (uint8_t) raw;
+        
+        *len += 4;
+        
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "CH%d RawCapacity: 0x%08X (%d)", i, raw, raw);
+        
+        if (FDC2214_LED_CHAN == i) {
+            // execute LED indication function
+            ketCube_fdc2214_LEDIndication(raw);
+        }
+    }   
+    
+    // check status reg
+    ketCube_fdc2214_readReg(KETCUBE_FDC2214_STATUS, &status, (char *) &"StatusReg");
     
     return KETCUBE_CFG_MODULE_ERROR;
 }
