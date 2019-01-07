@@ -63,10 +63,10 @@
  * 
  */
 typedef enum {
-    FDC2214_CH0  = 0b00,          ///< Channel 0
-    FDC2214_CH1  = 0b01,          ///< Channel 1
-    FDC2214_CH2  = 0b10,          ///< Channel 2
-    FDC2214_CH3  = 0b11           ///< Channel 3
+    FDC2214_CH0  = 0x0,          ///< Channel 0
+    FDC2214_CH1  = 0x1,          ///< Channel 1
+    FDC2214_CH2  = 0x2,          ///< Channel 2
+    FDC2214_CH3  = 0x3           ///< Channel 3
 } ketCube_fdc2214_chan_t;
 
 /**
@@ -75,23 +75,23 @@ typedef enum {
  * @note the values are used to fdc2214 register sequencing. Do not modify!
  */
 typedef enum {
-    FDC2214_SINGLE_CH0  = 0b00,          ///< Enable single channel 0
-    FDC2214_SINGLE_CH1  = 0b01,          ///< Enable single channel 1
-    FDC2214_SINGLE_CH2  = 0b10,          ///< Enable single channel 2
-    FDC2214_SINGLE_CH3  = 0b11,          ///< Enable single channel 3
-    FDC2214_SEQ_CH_01   = (0b01 << 4),   ///< Sequence channels 0 and 2
-    FDC2214_SEQ_CH_012  = (0b10 << 4),   ///< Sequence channels 0 and 1 and 2
-    FDC2214_SEQ_CH_0123 = (0b11 << 4)    ///< Sequence channels 0 and 1 and 2 and 3
+    FDC2214_SINGLE_CH0  = 0x0,          ///< Enable single channel 0
+    FDC2214_SINGLE_CH1  = 0x1,          ///< Enable single channel 1
+    FDC2214_SINGLE_CH2  = 0x2,          ///< Enable single channel 2
+    FDC2214_SINGLE_CH3  = 0x3,          ///< Enable single channel 3
+    FDC2214_SEQ_CH_01   = (0x1 << 4),   ///< Sequence channels 0 and 2
+    FDC2214_SEQ_CH_012  = (0x2 << 4),   ///< Sequence channels 0 and 1 and 2
+    FDC2214_SEQ_CH_0123 = (0x3 << 4)    ///< Sequence channels 0 and 1 and 2 and 3
 } ketCube_fdc2214_chanSeq_t;
 
 /**
  * @brief Deglitch Filter
  */
 typedef enum {
-    FDC2214_DGLF_1   = 0b001,          ///< 1 MHz
-    FDC2214_DGLF_3   = 0b100,          ///< 3.3 MHz
-    FDC2214_DGLF_10  = 0b101,          ///< 10 MHz
-    FDC2214_DGLF_33  = 0b111,          ///< 33 MHz
+    FDC2214_DGLF_1   = 0x1,          ///< 1 MHz
+    FDC2214_DGLF_3   = 0x4,          ///< 3.3 MHz
+    FDC2214_DGLF_10  = 0x5,          ///< 10 MHz
+    FDC2214_DGLF_33  = 0x7,          ///< 33 MHz
 } ketCube_fdc2214_dglFilter_t;
 
 /**

@@ -146,7 +146,7 @@ static ketCube_cfg_ModError_t ketCube_fdc2214_wakeUp(void) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
     
-    reg &= ~(0b1 << 13);
+    reg &= ~(0x1 << 13);
     
     if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CONFIG, &reg, (char *) &"ConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
         return KETCUBE_CFG_MODULE_ERROR;
@@ -171,7 +171,7 @@ static ketCube_cfg_ModError_t ketCube_fdc2214_sleep(void) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
     
-    reg |= (0b1 << 13);
+    reg |= (0x1 << 13);
     
     if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CONFIG, &reg, (char *) &"ConfigReg") == KETCUBE_CFG_MODULE_ERROR) {
         return KETCUBE_CFG_MODULE_ERROR;
@@ -311,7 +311,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
     // reserved bits configuration
     reg = 0x1c01;
 #if (FDC2214_USE_EXTERNAL_OSC == TRUE)
-    reg |= (0b1 << 9);
+    reg |= (0x1 << 9);
 #endif
     
 #if (FDC2214_ENABLE_INT == FALSE)
@@ -330,10 +330,10 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
     reg = (0x41 << 3);    
     
 #if (FDC2214_CHAN_SEQ > FDC2214_SINGLE_CH3)
-    reg |= (0b1 << 15);   
+    reg |= (0x1 << 15);   
     reg |= (((FDC2214_CHAN_SEQ >> 4) - 1) << 13); // set RR_Sequence
 #else
-    reg |= (0b10 << 13); // set RR_Sequence
+    reg |= (0x2 << 13); // set RR_Sequence
 #endif
     // set deglitch filter
     reg |= FDC2214_DGL_FILTER;
@@ -372,15 +372,15 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
         // set default value for clock divider; It MUST != 0
         reg = 0x0001;
 #if (FDC2214_SENSTYPE == FDC2214_SENSTYPE_SINGLE_ENDED)
-        reg |= 0b10 << 12;
+        reg |= 0x2 << 12;
 #else
-        reg |= 0b01 << 12;  // choose 10 for differential sensor with higher frequency
+        reg |= 0x1 << 12;  // choose 10 for differential sensor with higher frequency
 #endif
         if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_CLOCK_DIVIDERS_CH0 + i, &reg, (char *) &"ClkDivReg") == KETCUBE_CFG_MODULE_ERROR) {
             return KETCUBE_CFG_MODULE_ERROR;
         }
         
-        reg = ((0b10001) << 11);
+        reg = ((0x11) << 11);
         if (ketCube_fdc2214_writeReg(KETCUBE_FDC2214_DRIVE_CURRENT_CH0 + i, &reg, (char *) &"CurrentReg") == KETCUBE_CFG_MODULE_ERROR) {
             return KETCUBE_CFG_MODULE_ERROR;
         }
