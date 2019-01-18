@@ -46,7 +46,35 @@
 #include "ketCube_common.h"
 #include "ketCube_cfg.h"
 
-// Place module command sets here
+/* define command group - parent for other commands, needs a pointer to
+   command subtree */
+#define DEF_COMMAND_GROUP(cmd, hlp, cptr) {((char*)&(cmd)),((char*)&(hlp)),\
+    KETCUBE_TERMINAL_CMD_FLAG_GROUP, KETCUBE_TERMINAL_PARAMS_NONE,\
+    KETCUBE_TERMINAL_PARAMS_NONE,\
+    .ptr.subCmdList = (ketCube_terminal_cmd_t*)cptr}
+
+/* define tree leaf - a command, with given in/out parameters and handler;
+   by default, a command does not have any flags */
+#define DEF_COMMAND(cmd, hlp, parType, outType, fnc) {((char*)&(cmd)),\
+    ((char*)&(hlp)), KETCUBE_TERMINAL_CMD_FLAG_NONE, parType, outType,\
+    (void(*)(void))fnc}
+
+/* define tree leaf - a command, with given in/out parameters and handler;
+   in addition to DEF_COMMAND macro, this macro allows setting flags */
+#define DEF_COMMAND_WITH_FLAGS(cmd, hlp, flags, parType, outType, fnc) \
+    {((char*)&(cmd)), ((char*)&(hlp)), flags, parType, outType,\
+    (void(*)(void))fnc}
+    
+/* define subcommand list (tree level) terminator */
+#define DEF_TERMINATE() {((char*)NULL),((char*)NULL),\
+    KETCUBE_TERMINAL_CMD_FLAG_NONE, KETCUBE_TERMINAL_PARAMS_NONE,\
+    KETCUBE_TERMINAL_PARAMS_NONE, (void(*)(void))NULL}
+
+/* always include core configuration commands */
+#include "ketCube_core_cmd.c"
+
+/* conditionally include module configuration commands */
+
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
 #include "ketCube_batMeas_cmd.c"
 #endif
@@ -56,311 +84,98 @@
 #endif
 
 /**
-  *
-	*  @brief List of KETCube terminal commands
-	*
-  */
+ * @brief "show" command group
+ */
+ketCube_terminal_cmd_t ketCube_terminal_commands_show[] = {
+    DEF_COMMAND_GROUP("core",
+                      "Show KETCube Core parameters",
+                      ketCube_terminal_commands_show_core),
+    
+    DEF_COMMAND_GROUP("driver",
+                      "Show KETCube Driver(s) parameters",
+                      ketCube_terminal_commands_show_driver),
+
+#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
+    DEF_COMMAND_GROUP("batMeas",
+                      "Show batMeas parameters",
+                      ketCube_terminal_commands_show_batMeas),
+#endif /* KETCUBE_CFG_INC_MOD_BATMEAS */
+
+#ifdef KETCUBE_CFG_INC_MOD_LORA
+    DEF_COMMAND_GROUP("LoRa",
+                      "Show LoRa parameters",
+                      ketCube_terminal_commands_show_LoRa),
+#endif /* KETCUBE_CFG_INC_MOD_LORA */
+
+    DEF_TERMINATE()
+};
+
+/**
+ * @brief "set" command group
+ */
+ketCube_terminal_cmd_t ketCube_terminal_commands_set[] = {
+    DEF_COMMAND_GROUP("core",
+                      "Set KETCube Core parameters",
+                      ketCube_terminal_commands_set_core),
+    
+    DEF_COMMAND_GROUP("driver",
+                      "Set KETCube Driver(s) parameters",
+                      ketCube_terminal_commands_set_driver),
+
+#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
+    DEF_COMMAND_GROUP("batMeas",
+                      "Set batMeas parameters",
+                      ketCube_terminal_commands_set_batMeas),
+#endif /* KETCUBE_CFG_INC_MOD_BATMEAS */
+
+#ifdef KETCUBE_CFG_INC_MOD_LORA
+    DEF_COMMAND_GROUP("LoRa",
+                      "Set LoRa parameters",
+                      ketCube_terminal_commands_set_LoRa),
+#endif /* KETCUBE_CFG_INC_MOD_LORA */
+
+    DEF_TERMINATE()
+};
+
+/**
+ * @brief List of KETCube terminal commands
+ */
 ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
-    {((char *) &("about")),
-     ((char *)
-      &("Print ABOUT information: Copyright, License, ...")),
-     0,
-     0,
-     &ketCube_terminal_cmd_about},
-
-    {((char *) &("help")),
-     ((char *) &("Print HELP")),
-     0,
-     0,
-     &ketCube_terminal_cmd_help},
-
-    {((char *) &("disable")),
-     ((char *) &("Disable KETCube module")),
-     0,
-     1,
-     &ketCube_terminal_cmd_disable},
-
-    {((char *) &("enable")),
-     ((char *) &("Enable KETCube module")),
-     0,
-     1,
-     &ketCube_terminal_cmd_enable},
-
-    {((char *) &("list")),
-     ((char *) &("List available KETCube modules")),
-     0,
-     0,
-     &ketCube_terminal_cmd_list},
-
-    {((char *) &("reload")),
-     ((char *) &("Reload KETCube")),
-     0,
-     0,
-     &ketCube_terminal_cmd_reload},
-
-    {((char *) &("show")),
-     ((char *) &("Show LoRa, SigFox ... parameters")),
-     0,
-     0,
-     (void *) NULL},
-
-    {((char *) &("core")),
-     ((char *) &("Show KETCube Core parameters")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("basePeriod")),
-     ((char *) &("KETCube base period")),
-     2,
-     0,
-     &ketCube_terminal_cmd_show_core_basePeriod},
-
-    {((char *) &("startDelay")),
-     ((char *) &("First periodic action is delayed after power-up")),
-     2,
-     0,
-     &ketCube_terminal_cmd_show_core_startDelay},
-
-    {((char *) &("severity")),
-     ((char *) &("Core messages severity")),
-     2,
-     0,
-     &ketCube_terminal_cmd_show_core_severity},
-
-    {((char *) &("driver")),
-     ((char *) &("Driver(s) messages severity")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("severity")),
-     ((char *) &("Driver(s) messages severity")),
-     2,
-     0,
-     &ketCube_terminal_cmd_show_driver_severity},
-
-#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
-    {((char *) &("batMeas")),
-     ((char *) &("Show batMeas parameters")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("bat")),
-     ((char *) &("Show selected battery.")),
-     2,
-     0,
-     &ketCube_terminal_cmd_show_batMeas_bat},
-
-    {((char *) &("list")),
-     ((char *) &("Show supported batteries.")),
-     2,
-     0,
-     &ketCube_terminal_cmd_show_batMeas_list},
-
-#endif                          /* KETCUBE_CFG_INC_MOD_BATMEAS */
-
-#ifdef KETCUBE_CFG_INC_MOD_LORA
-
-    {((char *) &("LoRa")),
-     ((char *) &("Show LoRa parameters")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("ABP")),
-     ((char *) &("Is ABP enabled?")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_ABP},
-
-    {((char *) &("appEUI")),
-     ((char *) &("Show LoRa application EUI.")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_appEUI},
-
-    {((char *) &("appKey")),
-     ((char *) &("Show LoRa application key.")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_appKey},
-
-
-    {((char *) &("appSKey")),
-     ((char *) &("Show LoRa app session Key.")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_appSKey},
-
-    {((char *) &("devAddr")),
-     ((char *) &("Show LoRa device address.")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_devAddr},
-
-    {((char *) &("devEUI")),
-     ((char *) &("Show LoRa device EUI.")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_devEUI},
-
-    {((char *) &("devEUIType")),
-     ((char *)
-      &
-      ("Show LoRa device EUI type: custom (user-defined) or deviceID-based.")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_devEUIType},
-
-    {((char *) &("OTAA")),
-     ((char *) &("Is OTAA enabled?")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_OTAA},
-
-    {((char *) &("nwkSKey")),
-     ((char *) &("Show LoRa network session Key.")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_show_nwkSKey},
-
-#endif                          /* KETCUBE_CFG_INC_MOD_LORA */
-
-    {((char *) &("set")),
-     ((char *) &("Set LoRa, Sigfox ... parameters")),
-     0,
-     0,
-     (void *) NULL},
-
-
-    {((char *) &("core")),
-     ((char *) &("Set KETCube Core parameters")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("basePeriod")),
-     ((char *) &("KETCube base period")),
-     2,
-     1,
-     &ketCube_terminal_cmd_set_core_basePeriod},
-
-    {((char *) &("startDelay")),
-     ((char *) &("First periodic action is delayed after power-up")),
-     2,
-     1,
-     &ketCube_terminal_cmd_set_core_startDelay},
-
-    {((char *) &("severity")),
-     ((char *)
-      &
-      ("Core messages severity: 0 = NONE, 1 = ERROR; 2 = INFO; 3 = DEBUG")),
-     2,
-     1,
-     &ketCube_terminal_cmd_set_core_severity},
-     
-    {((char *) &("driver")),
-     ((char *) &("Set KETCube Driver(s) parameters")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("severity")),
-     ((char *) &("Driver(s) messages severity: 0 = NONE, 1 = ERROR; 2 = INFO; 3 = DEBUG")),
-     2,
-     1,
-     &ketCube_terminal_cmd_set_driver_severity},
-
-#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
-    {((char *) &("batMeas")),
-     ((char *) &("Set batMeas parameters")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("bat")),
-     ((char *) &("Select battery.")),
-     2,
-     1,
-     &ketCube_terminal_cmd_set_batMeas_bat},
-
-#endif                          /* KETCUBE_CFG_INC_MOD_BATMEAS */
-
-#ifdef KETCUBE_CFG_INC_MOD_LORA
-
-    {((char *) &("LoRa")),
-     ((char *) &("Set LoRa parameters")),
-     1,
-     0,
-     (void *) NULL},
-
-    {((char *) &("ABP")),
-     ((char *) &("Enable ABP")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_set_ABP},
-
-    {((char *) &("appEUI")),
-     ((char *) &("Set LoRa application EUI")),
-     2,
-     1,
-     &ketCube_LoRa_cmd_set_appEUI},
-
-    {((char *) &("appKey")),
-     ((char *) &("Set LoRa application key")),
-     2,
-     1,
-     &ketCube_LoRa_cmd_set_appKey},
-
-    {((char *) &("appSKey")),
-     ((char *) &("Set LoRa application session key")),
-     2,
-     1,
-     &ketCube_LoRa_cmd_set_appSKey},
-
-    {((char *) &("devAddr")),
-     ((char *) &("Set LoRa device address")),
-     2,
-     1,
-     &ketCube_LoRa_cmd_set_devAddr},
-
-    {((char *) &("devEUI")),
-     ((char *) &("Set LoRa device EUI")),
-     2,
-     1,
-     &ketCube_LoRa_cmd_set_devEUI},
-
-    {((char *) &("devEUICustom")),
-     ((char *) &("Use custom (user-defined) LoRa device EUI")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_set_devEUICustom},
-
-    {((char *) &("devEUIBoard")),
-     ((char *) &("Use board (boardID-based) LoRa device EUI")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_set_devEUIBoard},
-
-    {((char *) &("OTAA")),
-     ((char *) &("Enable OTAA")),
-     2,
-     0,
-     &ketCube_LoRa_cmd_set_OTAA},
-
-    {((char *) &("nwkSKey")),
-     ((char *) &("Set LoRa network session key")),
-     2,
-     1,
-     &ketCube_LoRa_cmd_set_nwkSKey},
-
-#endif                          /* KETCUBE_CFG_INC_MOD_LORA */
-
-    {(char *) NULL,
-     (char *) NULL,
-     0,
-     0,
-     (void *) NULL}
+    DEF_COMMAND("about",
+                "Print ABOUT information: Copyright, License, ...",
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                &ketCube_terminal_cmd_about),
+    DEF_COMMAND("help",
+                "Print HELP",
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                &ketCube_terminal_cmd_help),
+    DEF_COMMAND("disable",
+                "Disable KETCube module",
+                KETCUBE_TERMINAL_PARAMS_STRING,
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                &ketCube_terminal_cmd_disable),
+    DEF_COMMAND("enable",
+                "Enable KETCube module",
+                KETCUBE_TERMINAL_PARAMS_STRING,
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                &ketCube_terminal_cmd_enable),
+    DEF_COMMAND("list",
+                "List available KETCube modules",
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                &ketCube_terminal_cmd_list),
+    DEF_COMMAND("reload",
+                "Reload KETCube",
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                &ketCube_terminal_cmd_reload),
+    DEF_COMMAND_GROUP("show",
+                      "Show LoRa, SigFox ... parameters",
+                      ketCube_terminal_commands_show),
+    DEF_COMMAND_GROUP("set",
+                      "Set LoRa, SigFox ... parameters",
+                      ketCube_terminal_commands_set),  
+    DEF_TERMINATE()
 };

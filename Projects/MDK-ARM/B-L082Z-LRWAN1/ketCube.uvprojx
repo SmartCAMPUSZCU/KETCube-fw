@@ -10,12 +10,13 @@
       <TargetName>ketCube</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L072CZYx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.1.6.0</PackID>
+          <PackID>Keil.STM32L0xx_DFP.2.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x08000000,0x00030000) IRAM(0x20000000,0x00005000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -323,6 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
             <v6LangP>0</v6LangP>
@@ -333,7 +335,7 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--C99</MiscControls>
-              <Define>STM32L082xx,USE_B_L082Z_KETCube,USE_HAL_DRIVER, REGION_EU868,HAL_LPTIM_MODULE_ENABLED,HAL_I2S_MODULE_ENABLED</Define>
+              <Define>STM32L082xx,USE_B_L082Z_KETCube,USE_HAL_DRIVER, REGION_EU868,HAL_LPTIM_MODULE_ENABLED,LOW_POWER_DISABLE,DEBUG</Define>
               <Undefine></Undefine>
               <IncludePath>..\..\inc;..\..\..\Drivers\BSP\MLM32L07X01;..\..\..\Drivers\BSP\MLM32L07X01\Phy;..\..\..\Drivers\STM32L0xx_HAL_Driver\Inc;..\..\..\Drivers\CMSIS\Device\ST\STM32L0xx\Include;..\..\..\Drivers\CMSIS\Include;..\..\..\Middlewares\Third_Party\Lora\Crypto;..\..\..\Middlewares\Third_Party\Lora\Mac;..\..\..\Middlewares\Third_Party\Lora\Phy;..\..\..\Middlewares\Third_Party\Lora\Utilities;..\..\..\Middlewares\Third_Party\Lora\Core;..\..\..\Middlewares\Third_Party\Lora\Mac\region;..\..\..\KETCube\core;..\..\..\KETCube\modules\actuation;..\..\..\KETCube\modules\sensing;..\..\..\KETCube\modules\communication;..\..\..\Drivers\KETCube\core;..\..\..\Drivers\KETCube\modules</IncludePath>
             </VariousControls>
@@ -596,6 +598,63 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>ketCube_core_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\ketCube_core_cmd.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -651,6 +710,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -815,6 +875,11 @@
               <FilePath>..\..\..\KETCube\core\ketCube_cfg.h</FilePath>
             </File>
             <File>
+              <FileName>ketCube_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\KETCube\core\ketCube_common.c</FilePath>
+            </File>
+            <File>
               <FileName>ketCube_common.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\KETCube\core\ketCube_common.h</FilePath>
@@ -868,11 +933,6 @@
               <FileName>ketCube_asyncTx.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\KETCube\core\ketCube_asyncTx.h</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_common.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\KETCube\core\ketCube_common.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -929,6 +989,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -946,6 +1007,16 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
+            </File>
+            <File>
+              <FileName>ketCube_lora_ext.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\KETCube\modules\communication\ketCube_lora_ext.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_lora_ext.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\KETCube\modules\communication\ketCube_lora_ext.h</FilePath>
             </File>
             <File>
               <FileName>ketCube_starNet.c</FileName>
@@ -983,6 +1054,16 @@
               <FilePath>..\..\..\KETCube\modules\sensing\ketCube_adc.h</FilePath>
             </File>
             <File>
+              <FileName>ketCube_bmeX80.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_bmeX80.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_bmeX80.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_bmeX80.h</FilePath>
+            </File>
+            <File>
               <FileName>ketCube_fdc2214.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\KETCube\modules\sensing\ketCube_fdc2214.c</FilePath>
@@ -1001,6 +1082,26 @@
               <FileName>ketCube_hdc1080.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\KETCube\modules\sensing\ketCube_hdc1080.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_ics43432.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_ics43432.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_ics43432.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_ics43432.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_lis2hh12.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_lis2hh12.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_lis2hh12.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_lis2hh12.h</FilePath>
             </File>
             <File>
               <FileName>ketCube_batMeas.c</FileName>
@@ -1049,6 +1150,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -1067,36 +1169,6 @@
                 </FileArmAds>
               </FileOption>
             </File>
-            <File>
-              <FileName>ketCube_bmeX80.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_bmeX80.c</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_bmeX80.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_bmeX80.h</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_ics43432.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_ics43432.c</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_ics43432.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_ics43432.h</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_lis2hh12.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_lis2hh12.c</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_lis2hh12.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_lis2hh12.h</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -1111,6 +1183,16 @@
               <FileName>ketCube_eeprom.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Drivers\KETCube\core\ketCube_eeprom.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Drivers\KETCube\core\ketCube_gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_gpio.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\Drivers\KETCube\core\ketCube_gpio.h</FilePath>
             </File>
             <File>
               <FileName>ketCube_uart.c</FileName>
@@ -1138,6 +1220,16 @@
               <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_i2c.h</FilePath>
             </File>
             <File>
+              <FileName>ketCube_i2s.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_i2s.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_i2s.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_i2s.h</FilePath>
+            </File>
+            <File>
               <FileName>ketCube_mainBoard.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_mainBoard.h</FilePath>
@@ -1151,26 +1243,6 @@
               <FileName>ketCube_timer.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_timer.h</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_gpio.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_gpio.c</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_gpio.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_gpio.h</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_i2s.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_i2s.c</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_i2s.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_i2s.h</FilePath>
             </File>
           </Files>
         </Group>

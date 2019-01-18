@@ -75,6 +75,76 @@
 #define KETCUBE_TERMINAL_ENDL()          KETCUBE_TERMINAL_PRINTF("\n\r")
 #define KETCUBE_TERMINAL_CLR_LINE()      ketCube_terminal_ClearCmdLine()
 
+/**
+ * @brief KETCube terminal command possible error codes
+ */
+typedef enum ketCube_terminal_command_errorCode_t {
+    KETCUBE_TERMINAL_CMD_ERR_OK = 0,
+    KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS,
+    KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL,
+} ketCube_terminal_command_errorCode_t;
+
+/**
+ * @brief KETCube terminal command flags
+ */
+typedef enum ketCube_terminal_command_flags_t {
+    /* this record is command group (has subcommands, does not have handler) */
+    KETCUBE_TERMINAL_CMD_FLAG_GROUP = 1 << 0,
+    /* this command could be executed from local terminal only */
+    KETCUBE_TERMINAL_CMD_FLAG_LOCAL_ONLY = 1 << 1,
+    /* this command could be executed from remote terminal only */
+    KETCUBE_TERMINAL_CMD_FLAG_REMOTE_ONLY = 1 << 2,
+    
+    /* convenience value for "no flags at all" */
+    KETCUBE_TERMINAL_CMD_FLAG_NONE = 0,
+} ketCube_terminal_command_flags_t;
+
+/**
+ * @brief KETCube terminal command parameter type definitions
+ */
+typedef enum ketCube_terminal_paramSet_type_t {
+    KETCUBE_TERMINAL_PARAMS_NONE = 0,
+    KETCUBE_TERMINAL_PARAMS_STRING,
+    KETCUBE_TERMINAL_PARAMS_INTEGER,
+    KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR,
+} ketCube_terminal_paramSet_type_t;
+
+/* Maximum length of string returned by command */
+#define KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH 64
+
+/**
+ * @brief KETCube terminal command parameter container
+ */
+typedef union ketCube_terminal_paramSet_t {
+    /* KETCUBE_TERMINAL_PARAMS_INTEGER */
+    int as_integer;
+    /* KETCUBE_TERMINAL_PARAMS_STRING */
+    char as_string[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH];
+    /* KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR */
+    struct {
+        int first;
+        int second;
+    } as_integer_pair;
+} ketCube_terminal_paramSet_t;
+
+/**
+ * @brief Returns parameter count based on param set type
+ */
+static inline int ketCube_terminal_ParamSetTypeToCount(
+    ketCube_terminal_paramSet_type_t type)
+{
+    switch (type)
+    {
+        case KETCUBE_TERMINAL_PARAMS_NONE:
+        default:
+            return 0;
+        case KETCUBE_TERMINAL_PARAMS_STRING:
+        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+            return 1;
+        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+            return 2;
+    }
+}
 
 /**
 * @brief  KETCube terminal command definition.
@@ -82,9 +152,14 @@
 typedef struct ketCube_terminal_cmd_t {
     char *cmd;                  /*< command format */
     char *descr;                /*< Human-readable command description/help */
-    uint8_t cmdLevel;           /*< CMD level in level hierarchy */
-    uint8_t paramCnt;           /*< #of parameters */
-    void (*callback) (void);
+    ketCube_terminal_command_flags_t flags;         /*< command flags */
+    ketCube_terminal_paramSet_type_t paramSetType;  /*< parameter set type */
+    ketCube_terminal_paramSet_type_t outputSetType; /*< output set type */
+    union
+    {
+        void (*callback) (void);
+        struct ketCube_terminal_cmd_t* subCmdList;
+    } ptr;
 } ketCube_terminal_cmd_t;
 
 extern ketCube_terminal_cmd_t ketCube_terminal_commands[];

@@ -134,7 +134,7 @@ ketCube_cfg_ModError_t ketCube_bmeX80_UnInit(void)
  */
 ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t * calibration)
 {
-#ifdef KETCUBE_BMEX80_SENSOR_TYPE_BME280
+#if defined(KETCUBE_BMEX80_SENSOR_TYPE_BME280)
     //Read calibration data part 1 from chip
     uint8_t coeff_array[26] = { 0 };
     if (ketCube_I2C_ReadData(KETCUBE_BMEX80_I2C_ADDRESS,
@@ -197,9 +197,10 @@ ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t * calibration)
     calibration->dig_H6 = (int8_t) coeff_array[6];
 
     return KETCUBE_CFG_MODULE_OK;
-#endif                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME280 */
 
-#ifdef KETCUBE_BMEX80_SENSOR_TYPE_BME680
+    /* KETCUBE_BMEX80_SENSOR_TYPE_BME280 */
+#elif defined(KETCUBE_BMEX80_SENSOR_TYPE_BME680)
+
     //Read calibration data from chip
     uint8_t coeff_array[41] = { 0 };
     if (ketCube_I2C_ReadData(KETCUBE_BMEX80_I2C_ADDRESS,
@@ -276,7 +277,10 @@ ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t * calibration)
     calibration->par_gh3 = (int8_t) coeff_array[BME680_GH3_REG];
 
     return KETCUBE_CFG_MODULE_OK;
-#endif                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
+    /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
+#else
+    return KETCUBE_CFG_MODULE_ERROR;
+#endif
 }
 
 /**

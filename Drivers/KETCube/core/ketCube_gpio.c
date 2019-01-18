@@ -228,10 +228,10 @@ ketCube_cfg_DrvError_t ketCube_GPIO_ReInit(ketCube_gpio_port_t port,
  * @param port KETCube port
  * @param pin KETCube pin
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_GPIO_Release(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin)
+ketCube_cfg_DrvError_t ketCube_GPIO_Release(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin)
 {
     static GPIO_InitTypeDef GPIO_InitStruct = { 0 };
     uint8_t portIndex = getPortIndex(port);

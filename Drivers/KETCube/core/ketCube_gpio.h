@@ -109,7 +109,7 @@ extern ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
 extern ketCube_cfg_DrvError_t ketCube_GPIO_ReInit(ketCube_gpio_port_t port,
                                                   uint16_t pin,
                                                   GPIO_InitTypeDef * initStruct);
-extern ketCube_cfg_ModError_t ketCube_GPIO_Release(ketCube_gpio_port_t port,
+extern ketCube_cfg_DrvError_t ketCube_GPIO_Release(ketCube_gpio_port_t port,
                                                    ketCube_gpio_pin_t pin);
 extern ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port,
                                                   ketCube_gpio_pin_t pin,

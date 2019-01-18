@@ -75,7 +75,7 @@ ketCube_cfg_DrvError_t ketCube_UART_RegisterHandle(ketCube_UART_ChannelNo_t
                                                    * descriptor)
 {
     if (ketCube_UART_descriptors[channel] != NULL) {
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     }
     // the descriptor needs to be set in order to call appropriate callbacks
     ketCube_UART_descriptors[channel] = descriptor;
@@ -83,14 +83,14 @@ ketCube_cfg_DrvError_t ketCube_UART_RegisterHandle(ketCube_UART_ChannelNo_t
     if (HAL_UART_Init(descriptor->handle) != HAL_OK) {
         // clear descriptor in case of failure
         ketCube_UART_descriptors[channel] = NULL;
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     }
     // enable IRQ and set priority
     HAL_NVIC_SetPriority(descriptor->irqNumber, descriptor->irqPriority,
                          descriptor->irqSubPriority);
     HAL_NVIC_EnableIRQ(descriptor->irqNumber);
 
-    return KETCUBE_CFG_MODULE_OK;
+    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
@@ -103,14 +103,14 @@ ketCube_cfg_DrvError_t
 ketCube_UART_UnRegisterHandle(ketCube_UART_ChannelNo_t channel)
 {
     if (ketCube_UART_descriptors[channel] == NULL)
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
 
     // deinitialize IO pins
     ketCube_UART_IoDeInitCallback(channel);
 
     ketCube_UART_descriptors[channel] = NULL;
 
-    return KETCUBE_CFG_MODULE_OK;
+    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
