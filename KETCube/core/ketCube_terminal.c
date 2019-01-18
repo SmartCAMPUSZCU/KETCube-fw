@@ -93,14 +93,17 @@ static char usartTxBuffer[USART_BUFFER_SIZE];
 static ketCube_terminal_buffer_t
     commandHistory[KETCUBE_TERMINAL_HISTORY_LEN];
 static char *commandBuffer = (char *) &(commandHistory[0].buffer[0]);
+static ketCube_terminal_paramSet_t commandIOParams;
+static ketCube_terminal_command_errorCode_t commandErrorCode;
 static uint8_t *commandPtr = (uint8_t *) & (commandHistory[0].ptr);
 static uint8_t commandHistoryPtr = 0;
-static uint8_t commandParams;   //< Index of the first command parameter in buffer
+/* Index of the first command parameter in buffer */
+static uint8_t commandParamsPos;
 
 /* Helper function prototypes */
 static uint8_t ketCube_terminal_getNextParam(uint8_t ptr);
-static void ketCube_terminal_printCmdList(uint16_t cmdIndex,
-                                          uint8_t level);
+static void ketCube_terminal_printCmdList(ketCube_terminal_cmd_t* parent,
+                                          ketCube_terminal_cmd_t* cmdList);
 static void ketCube_terminal_saveCfgHEXStr(char *data,
                                            ketCube_cfg_moduleIDs_t id,
                                            ketCube_cfg_AllocEEPROM_t addr,
@@ -115,14 +118,6 @@ static void ketCube_terminal_cmd_reload(void);
 static void ketCube_terminal_cmd_list(void);
 static void ketCube_terminal_cmd_enable(void);
 static void ketCube_terminal_cmd_disable(void);
-
-/* Core configuration */
-static void ketCube_terminal_cmd_show_core_basePeriod(void);
-static void ketCube_terminal_cmd_show_core_startDelay(void);
-static void ketCube_terminal_cmd_show_core_severity(void);
-static void ketCube_terminal_cmd_set_core_basePeriod(void);
-static void ketCube_terminal_cmd_set_core_startDelay(void);
-static void ketCube_terminal_cmd_set_core_severity(void);
 
 // List of KETCube commands
 #include "../../Projects/src/ketCube_cmdList.c" // include a project-specific file
@@ -204,32 +199,33 @@ void ketCube_terminal_saveCfgDECStr(char *data, ketCube_cfg_moduleIDs_t id,
   * @param level level of commands to print
   *
   */
-static void ketCube_terminal_printCmdList(uint16_t cmdIndex, uint8_t level)
+static void ketCube_terminal_printCmdList(ketCube_terminal_cmd_t* parent,
+                                          ketCube_terminal_cmd_t* cmdList)
 {
+    int cmdIndex = 0;
+    
+    if (parent != NULL &&
+        (parent->flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP) == 0)
+    {
+        KETCUBE_TERMINAL_PRINTF("Description: %s", parent->descr);
+        KETCUBE_TERMINAL_ENDL();
+        return;
+    }
 
-    if (level > 0) {
+    if (parent != NULL) {
         KETCUBE_TERMINAL_PRINTF("List of sub-commands for command %s: ",
-                                ketCube_terminal_commands[cmdIndex -
-                                                          1].cmd);
+                                parent->cmd);
         KETCUBE_TERMINAL_ENDL();
     } else {
         KETCUBE_TERMINAL_PRINTF("List of commands: ");
         KETCUBE_TERMINAL_ENDL();
     }
 
-    while (ketCube_terminal_commands[cmdIndex].cmd != NULL) {
-        if (ketCube_terminal_commands[cmdIndex].cmdLevel == level) {
-            KETCUBE_TERMINAL_PRINTF("\t%s\t%s",
-                                    ketCube_terminal_commands
-                                    [cmdIndex].cmd,
-                                    ketCube_terminal_commands
-                                    [cmdIndex].descr);
-            KETCUBE_TERMINAL_ENDL();
-        }
-
-        if (ketCube_terminal_commands[cmdIndex].cmdLevel < level) {
-            return;
-        }
+    while (cmdList[cmdIndex].cmd != NULL) {
+        KETCUBE_TERMINAL_PRINTF("\t%s\t%s",
+                                cmdList[cmdIndex].cmd,
+                                cmdList[cmdIndex].descr);
+        KETCUBE_TERMINAL_ENDL();
         cmdIndex++;
     }
 }
@@ -247,7 +243,7 @@ void ketCube_terminal_cmd_help(void)
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
 
-    ketCube_terminal_printCmdList(0, 0);
+    ketCube_terminal_printCmdList(NULL, ketCube_terminal_commands);
 
     KETCUBE_TERMINAL_ENDL();
 }
@@ -447,15 +443,15 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
     for (i = 0; i < ketCube_modules_CNT; i++) {
         tmpCmdLen = strlen(&(ketCube_modules_List[i].name[0]));
         
-        if (strncmp(&(ketCube_modules_List[i].name[0]), &(commandBuffer[commandParams]), tmpCmdLen) == 0) {
+        if (strncmp(&(ketCube_modules_List[i].name[0]), &(commandBuffer[commandParamsPos]), tmpCmdLen) == 0) {
             
-            if (commandBuffer[commandParams + tmpCmdLen] == 0x00) {
+            if (commandBuffer[commandParamsPos + tmpCmdLen] == 0x00) {
                 break;
             }
             
-            if (commandBuffer[commandParams + tmpCmdLen] == ' ') {
+            if (commandBuffer[commandParamsPos + tmpCmdLen] == ' ') {
                 // get next param - severity
-                sscanf(&(commandBuffer[commandParams + tmpCmdLen + 1]), "%d", (int *) &tmpSeverity);
+                sscanf(&(commandBuffer[commandParamsPos + tmpCmdLen + 1]), "%d", (int *) &tmpSeverity);
                 severity = (ketCube_severity_t) tmpSeverity;
                 if (severity > KETCUBE_CFG_SEVERITY_DEBUG) {
                     severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
@@ -680,10 +676,154 @@ void ketCube_terminal_Init(void)
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
 
-    ketCube_terminal_printCmdList(0, 0);
+    ketCube_terminal_printCmdList(NULL, ketCube_terminal_commands);
 
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PROMPT();
+}
+
+/**
+ * @brief Parse command arguments and validate them
+ */
+static int ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command)
+{
+    uint8_t ptr = 0;
+    char *endptr;
+    
+    switch (command->paramSetType)
+    {
+        case KETCUBE_TERMINAL_PARAMS_NONE:
+            return 0;
+        case KETCUBE_TERMINAL_PARAMS_STRING:
+        {
+            strncpy(commandIOParams.as_string,
+                    &(commandBuffer[commandParamsPos]),
+                    KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH);
+            return 0;
+        }
+        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+        {
+            commandIOParams.as_integer =
+                        strtol(&(commandBuffer[commandParamsPos]), &endptr, 10);
+
+            /* no integer on input */
+            if (endptr == &(commandBuffer[commandParamsPos]))
+                return 1;
+            return 0;
+        }
+        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        {
+            commandIOParams.as_integer_pair.first
+                        = strtol(&(commandBuffer[commandParamsPos]),
+                                 &endptr, 10);
+
+            /* no integer on input */
+            if (endptr == &(commandBuffer[commandParamsPos]))
+                return 1;
+
+            ptr = ketCube_terminal_getNextParam(commandParamsPos);
+            /* no next parameter */
+            if (ptr == 0)
+                return 1;
+            commandIOParams.as_integer_pair.second
+                        = strtol(&(commandBuffer[ptr]), &endptr, 10);
+
+            /* no integer on input */
+            if (endptr == &(commandBuffer[ptr]))
+                return 1;
+            return 0;
+        }
+    }
+    
+    return 1;
+}
+
+/**
+ * @brief Parse and print command outputs
+ */
+static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
+{
+    if (command->outputSetType == KETCUBE_TERMINAL_PARAMS_NONE)
+        return;
+    
+    KETCUBE_TERMINAL_PRINTF("%s returned: ", command->cmd);
+    
+    switch (command->outputSetType)
+    {
+        case KETCUBE_TERMINAL_PARAMS_STRING:
+        {
+            KETCUBE_TERMINAL_PRINTF("%s", commandIOParams.as_string);
+            break;
+        }
+        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+        {
+            KETCUBE_TERMINAL_PRINTF("%d", commandIOParams.as_integer);
+            break;
+        }
+        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        {
+            KETCUBE_TERMINAL_PRINTF("%d, %d",
+                                    commandIOParams.as_integer_pair.first,
+                                    commandIOParams.as_integer_pair.second);
+            break;
+        }
+        default:
+        {
+            KETCUBE_TERMINAL_PRINTF("<unknown return type>");
+            break;
+        }
+    }
+    
+    KETCUBE_TERMINAL_ENDL();
+}
+
+/**
+ * @brief Processes command error code, prints the result
+ */
+static int ketCube_terminal_processCommandErrors()
+{
+    if (commandErrorCode == KETCUBE_TERMINAL_CMD_ERR_OK) {
+        KETCUBE_TERMINAL_PRINTF("Command execution OK");
+        KETCUBE_TERMINAL_ENDL();
+        return 0;
+    }
+    
+    KETCUBE_TERMINAL_PRINTF("Command returned error: ");
+    
+    switch (commandErrorCode)
+    {
+        case KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS:
+            KETCUBE_TERMINAL_PRINTF("invalid parameters");
+            break;
+        case KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL:
+            KETCUBE_TERMINAL_PRINTF("could not read/write memory");
+            break;
+        default:
+            KETCUBE_TERMINAL_PRINTF("unknown error (%d)", commandErrorCode);
+            break;
+    }
+    
+    KETCUBE_TERMINAL_ENDL();
+    return 1;
+}
+
+/**
+ * @brief Check if we can run given command
+ */
+static int ketCube_terminal_canRunCommand(ketCube_terminal_cmd_t* command)
+{
+    /* cannot execute remote-only commands in local terminal */
+    if (command->flags & KETCUBE_TERMINAL_CMD_FLAG_REMOTE_ONLY)
+    {
+        KETCUBE_TERMINAL_PRINTF("Cannot execute remote terminal-only command"
+                                " in local terminal!");
+        KETCUBE_TERMINAL_ENDL();
+        return 1;
+    }
+    
+    /* add more flag checks here in the future */
+    
+    return 0;
 }
 
 /**
@@ -694,7 +834,7 @@ void ketCube_terminal_execCMD(void)
 {
     uint16_t cmdIndex, j, cmdBuffIndex;
     bool eq;
-    uint8_t cmdLevel = 0;
+    ketCube_terminal_cmd_t* cmdList;
 
     KETCUBE_TERMINAL_ENDL();
 
@@ -705,24 +845,17 @@ void ketCube_terminal_execCMD(void)
 
     cmdIndex = 0;
     cmdBuffIndex = 0;
+    cmdList = ketCube_terminal_commands;
 
-    while (ketCube_terminal_commands[cmdIndex].cmd != NULL) {
-
-        // skip non actual levels
-        if (ketCube_terminal_commands[cmdIndex].cmdLevel > cmdLevel) {
-            cmdIndex++;
-            continue;
-        } else if (ketCube_terminal_commands[cmdIndex].cmdLevel < cmdLevel) {
-            break;
-        }
+    while (cmdList[cmdIndex].cmd != NULL) {
 
         eq = TRUE;
         j = 0;
 
-        while ((ketCube_terminal_commands[cmdIndex].cmd[j] != 0x00)
+        while ((cmdList[cmdIndex].cmd[j] != 0x00)
                && (*commandPtr > cmdBuffIndex)) {
             /* compare command characters */
-            if (ketCube_terminal_commands[cmdIndex].cmd[j] !=
+            if (cmdList[cmdIndex].cmd[j] !=
                 commandBuffer[cmdBuffIndex]) {
                 eq = FALSE;
             }
@@ -745,38 +878,55 @@ void ketCube_terminal_execCMD(void)
         }
 
         /* move to subcommand if exist */
-        if ((ketCube_terminal_commands[cmdIndex].cmd[j] == 0x00) &&
+        if ((cmdList[cmdIndex].cmd[j] == 0x00) &&
             (commandBuffer[cmdBuffIndex] != 0x00) &&
-            (ketCube_terminal_commands[cmdIndex].cmdLevel <
-             ketCube_terminal_commands[cmdIndex + 1].cmdLevel)) {
+            (cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP)) {
             cmdBuffIndex++;     // remove space character: ' '
-            cmdIndex++;
-            cmdLevel++;
+            cmdList = cmdList[cmdIndex].ptr.subCmdList;
+            cmdIndex = 0;
             continue;
         }
 
         /* execute command */
         if ((eq == TRUE)
-            && (ketCube_terminal_commands[cmdIndex].cmd[j] == 0x00)
+            && (cmdList[cmdIndex].cmd[j] == 0x00)
             && ((commandBuffer[cmdBuffIndex] == 0x00)
                 || ((commandBuffer[cmdBuffIndex] == ' ')
-                    && (ketCube_terminal_commands[cmdIndex].paramCnt !=
-                        0)))) {
-            commandParams = cmdBuffIndex + 1;
-            if (ketCube_terminal_commands[cmdIndex].callback != NULL) {
-                KETCUBE_TERMINAL_PRINTF("Executing command: %s",
-                                        ketCube_terminal_commands
-                                        [cmdIndex].cmd);
-                KETCUBE_TERMINAL_ENDL();
-                ketCube_terminal_commands[cmdIndex].callback();
+                    && (ketCube_terminal_ParamSetTypeToCount(
+                            cmdList[cmdIndex].paramSetType) != 0)))) {
+            commandParamsPos = cmdBuffIndex + 1;
+
+            /* we've reached command parsing end, now check if this is a valid
+               command or group, parse parameters and eventually execute */
+            if ((cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP) == 0
+                && cmdList[cmdIndex].ptr.callback != NULL
+                && ketCube_terminal_parseParams(&cmdList[cmdIndex]) == 0) {
+
+                /* now we are sure it is a command and have valid params;
+                   let's check, whether we can execute it or not */
+                if (ketCube_terminal_canRunCommand(&cmdList[cmdIndex]) == 0) {
+
+                    KETCUBE_TERMINAL_PRINTF("Executing command: %s",
+                                            cmdList[cmdIndex].cmd);
+                    KETCUBE_TERMINAL_ENDL();
+
+                    /* assume no error as default, commands will set error code
+                       if needed */
+                    commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_OK;
+
+                    cmdList[cmdIndex].ptr.callback();
+                    
+                    /* if the command executed OK, print outputs */
+                    if (ketCube_terminal_processCommandErrors() == 0) {
+                        ketCube_terminal_printCommandOutput(&cmdList[cmdIndex]);
+                    }
+                }
             } else {
                 KETCUBE_TERMINAL_PRINTF("Help for command: %s",
-                                        ketCube_terminal_commands
-                                        [cmdIndex].cmd);
+                                        cmdList[cmdIndex].cmd);
                 KETCUBE_TERMINAL_ENDL();
-                ketCube_terminal_printCmdList(cmdIndex + 1,
-                                              ketCube_terminal_commands
-                                              [cmdIndex].cmdLevel + 1);
+                ketCube_terminal_printCmdList(&cmdList[cmdIndex],
+                                              cmdList[cmdIndex].ptr.subCmdList);
             }
 
             KETCUBE_TERMINAL_PROMPT();
@@ -817,7 +967,7 @@ void ketCube_terminal_printCMDHelp(void)
 {
     uint16_t cmdIndex, j, cmdBuffIndex, k, l;
     bool eq;
-    uint8_t cmdLevel = 0;
+    ketCube_terminal_cmd_t* cmdList;
 
     KETCUBE_TERMINAL_ENDL();
 
@@ -826,26 +976,19 @@ void ketCube_terminal_printCMDHelp(void)
         return;
     }
 
+    cmdList = ketCube_terminal_commands;
     cmdIndex = 0;
     cmdBuffIndex = 0;
 
-    while (ketCube_terminal_commands[cmdIndex].cmd != NULL) {
-
-        // skip non actual levels
-        if (ketCube_terminal_commands[cmdIndex].cmdLevel > cmdLevel) {
-            cmdIndex++;
-            continue;
-        } else if (ketCube_terminal_commands[cmdIndex].cmdLevel < cmdLevel) {
-            break;
-        }
+    while (cmdList[cmdIndex].cmd != NULL) {
 
         eq = TRUE;
         j = 0;
 
-        while ((ketCube_terminal_commands[cmdIndex].cmd[j] != 0x00)
+        while ((cmdList[cmdIndex].cmd[j] != 0x00)
                && (*commandPtr > cmdBuffIndex)) {
             /* compare command characters */
-            if (ketCube_terminal_commands[cmdIndex].cmd[j] !=
+            if (cmdList[cmdIndex].cmd[j] !=
                 commandBuffer[cmdBuffIndex]) {
                 eq = FALSE;
             }
@@ -868,52 +1011,45 @@ void ketCube_terminal_printCMDHelp(void)
         }
 
         /* move to subcommand if exist */
-        if ((ketCube_terminal_commands[cmdIndex].cmd[j] == 0x00) &&
+        if ((cmdList[cmdIndex].cmd[j] == 0x00) &&
             (commandBuffer[cmdBuffIndex] != 0x00) &&
-            (ketCube_terminal_commands[cmdIndex].cmdLevel <
-             ketCube_terminal_commands[cmdIndex + 1].cmdLevel)) {
+            (cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP)) {
             cmdBuffIndex++;     // remove space character: ' '
-            cmdIndex++;
-            cmdLevel++;
+            cmdList = cmdList[cmdIndex].ptr.subCmdList;
+            cmdIndex = 0;
             continue;
         }
 
         if ((eq == TRUE)
-            && (ketCube_terminal_commands[cmdIndex].cmd[j] == 0x00)
+            && (cmdList[cmdIndex].cmd[j] == 0x00)
             && ((commandBuffer[cmdBuffIndex] == 0x00))) {
             KETCUBE_TERMINAL_PRINTF("Help for command %s: \t%s",
-                                    ketCube_terminal_commands
-                                    [cmdIndex].cmd,
-                                    ketCube_terminal_commands
-                                    [cmdIndex].descr);
+                                    cmdList[cmdIndex].cmd,
+                                    cmdList[cmdIndex].descr);
             KETCUBE_TERMINAL_ENDL();
-            ketCube_terminal_printCmdList(cmdIndex + 1,
-                                          ketCube_terminal_commands
-                                          [cmdIndex].cmdLevel + 1);
+            if (cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP) {
+                ketCube_terminal_printCmdList(&cmdList[cmdIndex],
+                                              cmdList[cmdIndex].ptr.subCmdList);
+            }
             break;
         } else if (eq == TRUE) {
             KETCUBE_TERMINAL_PRINTF("Available commands: ");
             KETCUBE_TERMINAL_ENDL();
 
             k = cmdIndex;
-            while ((ketCube_terminal_commands[k].cmd != NULL) &&
-                   (ketCube_terminal_commands[k].cmdLevel >=
-                    ketCube_terminal_commands[cmdIndex].cmdLevel)) {
-                if (ketCube_terminal_commands[k].cmdLevel ==
-                    ketCube_terminal_commands[cmdIndex].cmdLevel) {
-                    eq = TRUE;
-                    for (l = 0; l < j; l++) {
-                        if (ketCube_terminal_commands[cmdIndex].cmd[l] !=
-                            ketCube_terminal_commands[k].cmd[l]) {
-                            eq = FALSE;
-                        }
+            while (cmdList[k].cmd != NULL) {
+                eq = TRUE;
+                for (l = 0; l < j; l++) {
+                    if (cmdList[cmdIndex].cmd[l] !=
+                        cmdList[k].cmd[l]) {
+                        eq = FALSE;
                     }
-                    if (eq == TRUE) {
-                        KETCUBE_TERMINAL_PRINTF("\t%s",
-                                                ketCube_terminal_commands
-                                                [k].cmd);
-                        KETCUBE_TERMINAL_ENDL();
-                    }
+                }
+                if (eq == TRUE) {
+                    KETCUBE_TERMINAL_PRINTF("\t%s",
+                                            cmdList
+                                            [k].cmd);
+                    KETCUBE_TERMINAL_ENDL();
                 }
                 k++;
             }
@@ -1189,147 +1325,4 @@ void ketCube_terminal_DebugPrint(char *format, ...)
     ketCube_terminal_UsartPrintVa(format, args);
     
     va_end(args);
-}
-
-
-/* -------------------------- */
-/* --- Core configuration --- */
-
-/**
- * @brief Show KETCube base period
- * 
- */
-void ketCube_terminal_cmd_show_core_basePeriod(void)
-{
-    KETCUBE_TERMINAL_PRINTF("KETCube Core base period is: %d ms",
-                            ketCube_coreCfg_BasePeriod);
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Show KETCube start delay
- * 
- */
-void ketCube_terminal_cmd_show_core_startDelay(void)
-{
-    KETCUBE_TERMINAL_PRINTF("KETCube Start delay is: %d ms",
-                            ketCube_coreCfg_StartDelay);
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Show KETCube severity
- * 
- */
-void ketCube_terminal_cmd_show_core_severity(void)
-{
-    KETCUBE_TERMINAL_PRINTF("KETCube core severity: ");
-    
-    switch (ketCube_coreCfg_severity) {
-        case KETCUBE_CFG_SEVERITY_NONE:
-            KETCUBE_TERMINAL_PRINTF("NONE");
-            break;
-        case KETCUBE_CFG_SEVERITY_ERROR:
-            KETCUBE_TERMINAL_PRINTF("ERROR");
-            break;
-        case KETCUBE_CFG_SEVERITY_INFO:
-            KETCUBE_TERMINAL_PRINTF("INFO");
-            break;
-        case KETCUBE_CFG_SEVERITY_DEBUG:
-            KETCUBE_TERMINAL_PRINTF("DEBUG");
-            break;
-    }
-    
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Set KETCube base period
- * 
- */
-void ketCube_terminal_cmd_set_core_basePeriod(void)
-{
-    uint32_t value;
-    char *endptr;
-
-    value = strtol(&(commandBuffer[commandParams]), &endptr, 10);
-
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_BASEPERIOD,
-         (uint8_t *) & (value), 4) == KETCUBE_EEPROM_OK) {
-        KETCUBE_TERMINAL_PRINTF
-            ("KETCube Core base period is set to: %d ms", value);
-    } else {
-        KETCUBE_TERMINAL_PRINTF("KETCube Core base period write error!");
-    }
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Set KETCube start delay
- * 
- */
-void ketCube_terminal_cmd_set_core_startDelay(void)
-{
-    uint32_t value;
-    char *endptr;
-
-    value = strtol(&(commandBuffer[commandParams]), &endptr, 10);
-
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_STARTDELAY,
-         (uint8_t *) & (value), 4) == KETCUBE_EEPROM_OK) {
-        KETCUBE_TERMINAL_PRINTF("KETCube Start delay is set to: %d ms",
-                                value);
-    } else {
-        KETCUBE_TERMINAL_PRINTF("KETCube Start delay write error!");
-    }
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Set KETCube severity
- * 
- */
-void ketCube_terminal_cmd_set_core_severity(void)
-{
-    uint32_t value;
-    char *endptr;
-
-    value = strtol(&(commandBuffer[commandParams]), &endptr, 10);
-
-    KETCUBE_TERMINAL_PRINTF("Setting KETCube core severity: ");
-    switch ((ketCube_severity_t) value) {
-        case KETCUBE_CFG_SEVERITY_NONE:
-            KETCUBE_TERMINAL_PRINTF("NONE");
-            break;
-        case KETCUBE_CFG_SEVERITY_ERROR:
-            KETCUBE_TERMINAL_PRINTF("ERROR");
-            break;
-        case KETCUBE_CFG_SEVERITY_INFO:
-            KETCUBE_TERMINAL_PRINTF("INFO");
-            break;
-        case KETCUBE_CFG_SEVERITY_DEBUG:
-            KETCUBE_TERMINAL_PRINTF("DEBUG");
-            break;
-        default:
-            KETCUBE_TERMINAL_PRINTF("IVALID SEVERITY VALUE");
-            KETCUBE_TERMINAL_ENDL();
-            KETCUBE_TERMINAL_PRINTF("KETCube core severity set error!");
-            KETCUBE_TERMINAL_ENDL();
-            return;
-    }
-    
-    KETCUBE_TERMINAL_ENDL();
-    
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_SEVERITY,
-         (uint8_t *) & (value), 1) == KETCUBE_EEPROM_OK) {
-    } else {
-        KETCUBE_TERMINAL_PRINTF("error!");
-    }
-    
-    KETCUBE_TERMINAL_PRINTF("sucess!");
-    
-    KETCUBE_TERMINAL_ENDL();
 }
