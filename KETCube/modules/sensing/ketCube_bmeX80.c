@@ -277,8 +277,6 @@ ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t * calibration)
 
     return KETCUBE_CFG_MODULE_OK;
 #endif                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
-
-    return KETCUBE_CFG_MODULE_ERROR;
 }
 
 /**
