@@ -136,7 +136,8 @@ typedef ketCube_cfg_ModError_t(*ketCube_cfg_ModDataPtrFn_t) (ketCube_InterModMsg
 */
 typedef struct ketCube_cfg_ModuleCfgByte_t {
     bool enable:1;                  /*<! Module enable */
-    ketCube_severity_t severity:4;  /*<! Debug severity level */
+    ketCube_severity_t severity:2;  /*<! Debug severity level */
+    uint8_t RFU:2;                  /*<! RFU */
     uint8_t RfMC:3;                 /*<! Reserverd for Module Configuration */
 } ketCube_cfg_ModuleCfgByte_t;
 
