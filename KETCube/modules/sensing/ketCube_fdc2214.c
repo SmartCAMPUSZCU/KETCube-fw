@@ -98,7 +98,7 @@ static ketCube_cfg_ModError_t ketCube_fdc2214_writeReg(uint8_t regAddr, uint16_t
     }
     
     if (str != NULL) {
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "New %s value: 0x%04X", str, *reg);
+        ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "New %s value: 0x%04X", str, *reg);
     }
     
     return KETCUBE_CFG_MODULE_OK;
@@ -127,7 +127,7 @@ static ketCube_cfg_ModError_t ketCube_fdc2214_readReg(uint8_t regAddr, uint16_t 
     }
     
     if (str != NULL) {
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "%s: 0x%04X", str, *reg);
+        ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "%s: 0x%04X", str, *reg);
     }
     
     return KETCUBE_CFG_MODULE_OK;
@@ -199,6 +199,8 @@ static inline ketCube_cfg_ModError_t ketCube_fdc2214_reset(void) {
     return KETCUBE_CFG_MODULE_OK;
 }
 
+static uint32_t pastValue;
+
 /**
  * @brief LED indication
  *
@@ -206,9 +208,9 @@ static inline ketCube_cfg_ModError_t ketCube_fdc2214_reset(void) {
  * 
  */
 static void ketCube_fdc2214_LEDIndication(uint32_t raw) {
-    static uint32_t pastValue;
     
-    if (abs(pastValue - raw) > FDC2214_LED_THRESHOLD) {
+    if ((abs(pastValue - raw) > FDC2214_LED_THRESHOLD_LOW) &&
+        (abs(pastValue - raw) < FDC2214_LED_THRESHOLD_HIGH)){
 #if (FDC2214_LED_INDICATION == TRUE)
         if (pastValue < raw) {
             ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
@@ -296,6 +298,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_Init(ketCube_InterModMsg_t *** msg)
 #endif
 
     // Power ON
+    ketCube_fdc2214_off();
     ketCube_fdc2214_on();
     
     // Reset
@@ -447,7 +450,11 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
     uint8_t i;
 
     // check status reg
-    ketCube_fdc2214_readReg(KETCUBE_FDC2214_STATUS, &status, (char *) &"StatusReg");
+    if (ketCube_fdc2214_readReg(KETCUBE_FDC2214_STATUS, &status, (char *) &"StatusReg") == KETCUBE_CFG_MODULE_ERROR) {
+        // try re-init ... 
+        ketCube_fdc2214_SleepEnter();
+        ketCube_fdc2214_Init(NULL);
+    }
     
     // Loop through data registers
     // note, that the trick for the loop condition can be found in the ketCube_fdc2214_chanSeq_t deffinition
@@ -467,7 +474,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
         
         *len += 4;
         
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "CH%d RawCapacity: 0x%08X (%d)", i, raw, raw);
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "CH%d RawCapacity: 0x%08X (%d: %d)", i, raw, raw, (pastValue - raw));
         
         if (FDC2214_LED_CHAN == i) {
             // execute LED indication function
