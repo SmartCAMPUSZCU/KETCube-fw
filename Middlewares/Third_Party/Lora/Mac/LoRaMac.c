@@ -31,6 +31,10 @@ Maintainer: Miguel Luis ( Semtech ), Gregory Cristian ( Semtech ) and Daniel Jäc
 #include "debug.h"
 #include "LoRaMacTest.h"
 
+#include "ketCube_terminal.h"
+
+extern void RegionEU868PrintActiveChannels();
+
 /*!
  * Maximum PHY layer payload size
  */
@@ -780,6 +784,9 @@ static void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t
                 MlmeConfirm.Status = LORAMAC_EVENT_INFO_STATUS_OK;
                 IsLoRaMacNetworkJoined = true;
                 LoRaMacParams.ChannelsDatarate = LoRaMacParamsDefaults.ChannelsDatarate;
+                
+                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "OTAA Joined!");
+                RegionEU868PrintActiveChannels();
             }
             else
             {
