@@ -111,6 +111,9 @@ void ketCube_LoRa_cmd_show_OTAA(void)
     KETCUBE_TERMINAL_ENDL();
 }
 
+// Declaring extern function HW_GetUniqueId()
+extern void HW_GetUniqueId(uint8_t * id);
+
 /**
  * @brief Show devEUI command callback
  * 
@@ -120,7 +123,7 @@ void ketCube_LoRa_cmd_show_devEUI(void)
     char data[3 * KETCUBE_LORA_CFGLEN_DEVEUI];
     ketCube_lora_moduleCfg_t type;
     uint8_t i;
-    
+
     KETCUBE_TERMINAL_ENDL();
 
     if (ketCube_cfg_Load
@@ -129,16 +132,20 @@ void ketCube_LoRa_cmd_show_devEUI(void)
          (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_CFG) !=
         KETCUBE_CFG_OK) {
         KETCUBE_TERMINAL_PRINTF("Error while reading LoRa configuration!");
-    }    
-    
+    }
+
     if (type.devEUIType == KETCUBE_LORA_SELDEVEUI_BOARD) {
-        HW_GetUniqueId(&(data[0]));
+        HW_GetUniqueId((uint8_t *) & (data[0]));
         for (i = 0; i < KETCUBE_LORA_CFGLEN_DEVEUI; i++) {
-            ketCube_common_Byte2hex(data[KETCUBE_LORA_CFGLEN_DEVEUI-i-1], &(data[3*KETCUBE_LORA_CFGLEN_DEVEUI-(3*(i+1))]));
-            
-            data[3*KETCUBE_LORA_CFGLEN_DEVEUI-(3*(i+1))+2] = '-';
+            ketCube_common_Byte2hex(data
+                                    [KETCUBE_LORA_CFGLEN_DEVEUI - i - 1],
+                                    &(data
+                                      [3 * KETCUBE_LORA_CFGLEN_DEVEUI -
+                                       (3 * (i + 1))]));
+
+            data[3 * KETCUBE_LORA_CFGLEN_DEVEUI - (3 * (i + 1)) + 2] = '-';
         }
-        data[3*KETCUBE_LORA_CFGLEN_DEVEUI-1] = 0x00;
+        data[3 * KETCUBE_LORA_CFGLEN_DEVEUI - 1] = 0x00;
     } else {
         if (ketCube_cfg_LoadStr
             ((char *) &(data[0]), 3 * KETCUBE_LORA_CFGLEN_DEVEUI,
@@ -147,10 +154,11 @@ void ketCube_LoRa_cmd_show_devEUI(void)
              (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_DEVEUI) ==
             KETCUBE_CFG_OK) {
         } else {
-            KETCUBE_TERMINAL_PRINTF("Error while reading devEUI from EEPROM!");
+            KETCUBE_TERMINAL_PRINTF
+                ("Error while reading devEUI from EEPROM!");
         }
     }
-    
+
     KETCUBE_TERMINAL_PRINTF("DevEUI: %s", &(data[0]));
 
     KETCUBE_TERMINAL_ENDL();

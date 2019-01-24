@@ -40,7 +40,8 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">KETCube Common Deffinitions<div class="ingroups"><a class="el" href="group__KETCube__Core.html">KETCube Core</a></div></div>  </div>
 </div><!--header-->
@@ -52,9 +53,13 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:gaa8cecfc5c5c054d2875c03e77b7be15d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaa8cecfc5c5c054d2875c03e77b7be15d">TRUE</a>&#160;&#160;&#160;1</td></tr>
+<tr class="memdesc:gaa8cecfc5c5c054d2875c03e77b7be15d"><td class="mdescLeft">&#160;</td><td class="mdescRight">boolean TRUE  <a href="#gaa8cecfc5c5c054d2875c03e77b7be15d">More...</a><br /></td></tr>
 <tr class="separator:gaa8cecfc5c5c054d2875c03e77b7be15d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa93f0eb578d23995850d61f7d61c55c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaa93f0eb578d23995850d61f7d61c55c1">FALSE</a>&#160;&#160;&#160;0</td></tr>
+<tr class="memdesc:gaa93f0eb578d23995850d61f7d61c55c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">boolean FALSE  <a href="#gaa93f0eb578d23995850d61f7d61c55c1">More...</a><br /></td></tr>
 <tr class="separator:gaa93f0eb578d23995850d61f7d61c55c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaba537b08b9721b64580106d46002ce37"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaba537b08b9721b64580106d46002ce37">KETCUBE_COMMON_BUFFER_LEN</a>&#160;&#160;&#160;50</td></tr>
+<tr class="separator:gaba537b08b9721b64580106d46002ce37"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -76,6 +81,29 @@ Functions</h2></td></tr>
 <tr class="memitem:gab8fab24c58067726decca407ad0359ef"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gab8fab24c58067726decca407ad0359ef">ketCube_common_Dec2int</a> (int32_t *output, char *str, uint8_t len)</td></tr>
 <tr class="memdesc:gab8fab24c58067726decca407ad0359ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert DEC string to 4 byte signed integer.  <a href="#gab8fab24c58067726decca407ad0359ef">More...</a><br /></td></tr>
 <tr class="separator:gab8fab24c58067726decca407ad0359ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga67efed54a913c892120113796db06f56"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga67efed54a913c892120113796db06f56">ketCube_common_Min</a> (uint8_t a, uint8_t b)</td></tr>
+<tr class="memdesc:ga67efed54a913c892120113796db06f56"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return minimum of two bytes.  <a href="#ga67efed54a913c892120113796db06f56">More...</a><br /></td></tr>
+<tr class="separator:ga67efed54a913c892120113796db06f56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6e772d146983a4fc3a26706966441d1a"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga6e772d146983a4fc3a26706966441d1a">ketCube_common_Max</a> (uint8_t a, uint8_t b)</td></tr>
+<tr class="memdesc:ga6e772d146983a4fc3a26706966441d1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return maximum of two bytes.  <a href="#ga6e772d146983a4fc3a26706966441d1a">More...</a><br /></td></tr>
+<tr class="separator:ga6e772d146983a4fc3a26706966441d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga754345ca63fe166126b6ce7bbc506109"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga754345ca63fe166126b6ce7bbc506109">ketCube_common_Med</a> (uint16_t *values, uint16_t size)</td></tr>
+<tr class="memdesc:ga754345ca63fe166126b6ce7bbc506109"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return median from an array of shorts.  <a href="#ga754345ca63fe166126b6ce7bbc506109">More...</a><br /></td></tr>
+<tr class="separator:ga754345ca63fe166126b6ce7bbc506109"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaec28aff529bf55654f806697341d3196"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaec28aff529bf55654f806697341d3196">ketCube_common_Avg</a> (uint16_t *values, uint16_t size)</td></tr>
+<tr class="memdesc:gaec28aff529bf55654f806697341d3196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return median from an array of shorts.  <a href="#gaec28aff529bf55654f806697341d3196">More...</a><br /></td></tr>
+<tr class="separator:gaec28aff529bf55654f806697341d3196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadaaba625ebd2d5596ded5493980dd55d"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gadaaba625ebd2d5596ded5493980dd55d">ketCube_common_swapW</a> (uint16_t n)</td></tr>
+<tr class="memdesc:gadaaba625ebd2d5596ded5493980dd55d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Swap word (16-bit) values.  <a href="#gadaaba625ebd2d5596ded5493980dd55d">More...</a><br /></td></tr>
+<tr class="separator:gadaaba625ebd2d5596ded5493980dd55d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0341fd5d04057fd992d1fdb4ada8b6fb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga0341fd5d04057fd992d1fdb4ada8b6fb">ketCube_common_BasicErrorHandler</a> ()</td></tr>
+<tr class="memdesc:ga0341fd5d04057fd992d1fdb4ada8b6fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Basic Error Handler.  <a href="#ga0341fd5d04057fd992d1fdb4ada8b6fb">More...</a><br /></td></tr>
+<tr class="separator:ga0341fd5d04057fd992d1fdb4ada8b6fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga5500989178452ee501d90c699b3aebbc"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga5500989178452ee501d90c699b3aebbc">ketCube_common_buffer</a> []</td></tr>
+<tr class="separator:ga5500989178452ee501d90c699b3aebbc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>KETCube Common deffinitions nd inline functions. </p>
@@ -89,6 +117,22 @@ Functions</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">#define FALSE&#160;&#160;&#160;0</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>boolean FALSE </p>
+
+</div>
+</div>
+<a id="gaba537b08b9721b64580106d46002ce37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaba537b08b9721b64580106d46002ce37">&#9670;&nbsp;</a></span>KETCUBE_COMMON_BUFFER_LEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define KETCUBE_COMMON_BUFFER_LEN&#160;&#160;&#160;50</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -107,9 +151,89 @@ Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
+<p>boolean TRUE </p>
+
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="gaec28aff529bf55654f806697341d3196"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gaec28aff529bf55654f806697341d3196">&#9670;&nbsp;</a></span>ketCube_common_Avg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint16_t ketCube_common_Avg </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t *&#160;</td>
+          <td class="paramname"><em>values</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return median from an array of shorts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">values</td><td>shorts array </td></tr>
+    <tr><td class="paramname">size</td><td>array size</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">avg</td><td>median </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga0341fd5d04057fd992d1fdb4ada8b6fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga0341fd5d04057fd992d1fdb4ada8b6fb">&#9670;&nbsp;</a></span>ketCube_common_BasicErrorHandler()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_common_BasicErrorHandler </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Basic Error Handler. </p>
+
+</div>
+</div>
 <a id="ga6f56f946d9622923a2d33739537bc798"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6f56f946d9622923a2d33739537bc798">&#9670;&nbsp;</a></span>ketCube_common_Byte2hex()</h2>
 
@@ -412,6 +536,216 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ga6e772d146983a4fc3a26706966441d1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga6e772d146983a4fc3a26706966441d1a">&#9670;&nbsp;</a></span>ketCube_common_Max()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint8_t ketCube_common_Max </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return maximum of two bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>a number </td></tr>
+    <tr><td class="paramname">b</td><td>a number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">max</td><td>maximum </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga754345ca63fe166126b6ce7bbc506109"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga754345ca63fe166126b6ce7bbc506109">&#9670;&nbsp;</a></span>ketCube_common_Med()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint16_t ketCube_common_Med </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t *&#160;</td>
+          <td class="paramname"><em>values</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return median from an array of shorts. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">values</td><td>shorts array </td></tr>
+    <tr><td class="paramname">size</td><td>array size</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">med</td><td>median </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga67efed54a913c892120113796db06f56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga67efed54a913c892120113796db06f56">&#9670;&nbsp;</a></span>ketCube_common_Min()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint8_t ketCube_common_Min </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return minimum of two bytes. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>a number </td></tr>
+    <tr><td class="paramname">b</td><td>a number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">min</td><td>minimum </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="gadaaba625ebd2d5596ded5493980dd55d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadaaba625ebd2d5596ded5493980dd55d">&#9670;&nbsp;</a></span>ketCube_common_swapW()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static uint16_t ketCube_common_swapW </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Swap word (16-bit) values. </p>
+<p>This is intended for conversion when different Endianity is used</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">n</td><td>a 16-bit number</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">n</td><td>with swapped bytes </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga5500989178452ee501d90c699b3aebbc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga5500989178452ee501d90c699b3aebbc">&#9670;&nbsp;</a></span>ketCube_common_buffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char ketCube_common_buffer[]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Shared buffer for common usage anywhere. </p>
 
 </div>
 </div>

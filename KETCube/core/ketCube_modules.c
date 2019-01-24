@@ -49,7 +49,7 @@
 #include "ketCube_terminal.h"
 
 // List of KETCube modules
-#include "../../Projects/src/ketCube_moduleList.c" // include a project-specific file
+#include "../../Projects/src/ketCube_moduleList.c"      // include a project-specific file
 
 uint8_t SensorBuffer[KETCUBE_MODULES_SENSOR_BYTES];     //<·sensor data are stored here
 uint8_t SensorBufferSize = 0;   //<·sensor data buffer size
@@ -93,18 +93,18 @@ ketCube_cfg_Error_t ketCube_modules_Init(void)
                 KETCUBE_TERMINAL_ENDL();
                 KETCUBE_TERMINAL_PRINTF("Module severity: ");
                 switch (ketCube_modules_List[i].cfgByte.severity) {
-                    case KETCUBE_CFG_SEVERITY_NONE:
-                        KETCUBE_TERMINAL_PRINTF("NONE");
-                        break;
-                    case KETCUBE_CFG_SEVERITY_ERROR:
-                        KETCUBE_TERMINAL_PRINTF("ERROR");
-                        break;
-                    case KETCUBE_CFG_SEVERITY_INFO:
-                        KETCUBE_TERMINAL_PRINTF("INFO");
-                        break;
-                    case KETCUBE_CFG_SEVERITY_DEBUG:
-                        KETCUBE_TERMINAL_PRINTF("DEBUG");
-                        break;
+                case KETCUBE_CFG_SEVERITY_NONE:
+                    KETCUBE_TERMINAL_PRINTF("NONE");
+                    break;
+                case KETCUBE_CFG_SEVERITY_ERROR:
+                    KETCUBE_TERMINAL_PRINTF("ERROR");
+                    break;
+                case KETCUBE_CFG_SEVERITY_INFO:
+                    KETCUBE_TERMINAL_PRINTF("INFO");
+                    break;
+                case KETCUBE_CFG_SEVERITY_DEBUG:
+                    KETCUBE_TERMINAL_PRINTF("DEBUG");
+                    break;
                 }
                 KETCUBE_TERMINAL_ENDL();
                 (ketCube_modules_List[i].fnInit) (&(InterModMsgBuffer[i]));
@@ -136,7 +136,9 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
     for (i = 0; i < ketCube_modules_CNT; i++) {
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnGetSensorData != NULL) {
-                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Module \"%s\" GetSensorData()",
+                ketCube_terminal_CoreSeverityPrintln
+                    (KETCUBE_CFG_SEVERITY_DEBUG,
+                     "Module \"%s\" GetSensorData()",
                      ketCube_modules_List[i].name);
 
                 len = 0;
@@ -153,7 +155,10 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
     for (i = 0; i < ketCube_modules_CNT; i++) {
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnSendData != NULL) {
-                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Module \"%s\" SendData()", ketCube_modules_List[i].name);
+                ketCube_terminal_CoreSeverityPrintln
+                    (KETCUBE_CFG_SEVERITY_DEBUG,
+                     "Module \"%s\" SendData()",
+                     ketCube_modules_List[i].name);
 
                 (ketCube_modules_List[i].fnSendData) (&(SensorBuffer[0]),
                                                       &SensorBufferSize);
@@ -164,7 +169,10 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
     for (i = 0; i < ketCube_modules_CNT; i++) {
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnReceiveData != NULL) {
-                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Module \"%s\" ReceiveData()", ketCube_modules_List[i].name);
+                ketCube_terminal_CoreSeverityPrintln
+                    (KETCUBE_CFG_SEVERITY_DEBUG,
+                     "Module \"%s\" ReceiveData()",
+                     ketCube_modules_List[i].name);
 
                 (ketCube_modules_List[i].fnReceiveData) ();
             }
@@ -196,11 +204,15 @@ ketCube_cfg_Error_t ketCube_modules_ProcessMsgs(void)
                 while ((InterModMsgBuffer[i])[msgID] != NULL) {
                     // first byte is the target module ID (recipient)
                     if ((InterModMsgBuffer[i])[msgID]->msgLen > 0) {
-                        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Module \"%s\" ProcessData()", ketCube_modules_List[(InterModMsgBuffer[i])[msgID]->modID].name);
+                        ketCube_terminal_CoreSeverityPrintln
+                            (KETCUBE_CFG_SEVERITY_DEBUG,
+                             "Module \"%s\" ProcessData()",
+                             ketCube_modules_List[(InterModMsgBuffer[i])
+                                                  [msgID]->modID].name);
                         (ketCube_modules_List
-                         [(InterModMsgBuffer[i])[msgID]->
-                          modID].fnProcessMsg) ((InterModMsgBuffer[i])
-                                                [msgID]);
+                         [(InterModMsgBuffer[i])[msgID]->modID].
+                         fnProcessMsg) ((InterModMsgBuffer[i])
+                                        [msgID]);
                     }
                     msgID++;
                 }
@@ -226,7 +238,10 @@ ketCube_cfg_Error_t ketCube_modules_SleepEnter(void)
     for (i = 0; i < ketCube_modules_CNT; i++) {
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnSleepEnter != NULL) {
-                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Module \"%s\" SleepEnter()", ketCube_modules_List[i].name);
+                ketCube_terminal_CoreSeverityPrintln
+                    (KETCUBE_CFG_SEVERITY_DEBUG,
+                     "Module \"%s\" SleepEnter()",
+                     ketCube_modules_List[i].name);
 
                 if (((ketCube_modules_List[i].fnSleepEnter) ()) ==
                     KETCUBE_CFG_MODULE_ERROR) {
@@ -256,7 +271,10 @@ ketCube_cfg_Error_t ketCube_modules_SleepExit(void)
     for (i = 0; i < ketCube_modules_CNT; i++) {
         if ((ketCube_modules_List[i].cfgByte.enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnSleepExit != NULL) {
-                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Module \"%s\" SleepExit()", ketCube_modules_List[i].name);
+                ketCube_terminal_CoreSeverityPrintln
+                    (KETCUBE_CFG_SEVERITY_DEBUG,
+                     "Module \"%s\" SleepExit()",
+                     ketCube_modules_List[i].name);
 
                 (ketCube_modules_List[i].fnSleepExit) ();
             }

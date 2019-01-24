@@ -59,7 +59,7 @@
 * @brief  txDisplay CFG data relative addr.
 */
 typedef enum {
-    KETCUBE_TXDISPLAY_CFGADR_CFG = 0,        /*<! txDisplay cfg byte Addr */
+    KETCUBE_TXDISPLAY_CFGADR_CFG = 0,   /*<! txDisplay cfg byte Addr */
 } ketCube_txDisplay_cfgAddr_t;
 
 
@@ -67,12 +67,12 @@ typedef enum {
 * @brief  Length of txDisplay CFG data
 */
 typedef enum {
-    KETCUBE_TXDISPLAY_CFGLEN_CFG = 1,        /*<! txDisplay config len in bytes */
+    KETCUBE_TXDISPLAY_CFGLEN_CFG = 1,   /*<! txDisplay config len in bytes */
 } ketCube_txDisplay_cfgLen_t;
 
 
-extern ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t ***
-                                                     msg);
+extern ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t
+                                                     *** msg);
 extern ketCube_cfg_ModError_t ketCube_txDisplay_Send(uint8_t * buffer,
                                                      uint8_t * len);
 

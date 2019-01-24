@@ -59,17 +59,17 @@
 * @brief List of GPIO PINs
 */
 typedef enum {
-    KETCUBE_GPIO_NOPIN  = 0,
-    KETCUBE_GPIO_PIN_0  = GPIO_PIN_0,
-    KETCUBE_GPIO_PIN_1  = GPIO_PIN_1,
-    KETCUBE_GPIO_PIN_2  = GPIO_PIN_2,
-    KETCUBE_GPIO_PIN_3  = GPIO_PIN_3,
-    KETCUBE_GPIO_PIN_4  = GPIO_PIN_4,
-    KETCUBE_GPIO_PIN_5  = GPIO_PIN_5,
-    KETCUBE_GPIO_PIN_6  = GPIO_PIN_6,
-    KETCUBE_GPIO_PIN_7  = GPIO_PIN_7,
-    KETCUBE_GPIO_PIN_8  = GPIO_PIN_8,
-    KETCUBE_GPIO_PIN_9  = GPIO_PIN_9,
+    KETCUBE_GPIO_NOPIN = 0,
+    KETCUBE_GPIO_PIN_0 = GPIO_PIN_0,
+    KETCUBE_GPIO_PIN_1 = GPIO_PIN_1,
+    KETCUBE_GPIO_PIN_2 = GPIO_PIN_2,
+    KETCUBE_GPIO_PIN_3 = GPIO_PIN_3,
+    KETCUBE_GPIO_PIN_4 = GPIO_PIN_4,
+    KETCUBE_GPIO_PIN_5 = GPIO_PIN_5,
+    KETCUBE_GPIO_PIN_6 = GPIO_PIN_6,
+    KETCUBE_GPIO_PIN_7 = GPIO_PIN_7,
+    KETCUBE_GPIO_PIN_8 = GPIO_PIN_8,
+    KETCUBE_GPIO_PIN_9 = GPIO_PIN_9,
     KETCUBE_GPIO_PIN_10 = GPIO_PIN_10,
     KETCUBE_GPIO_PIN_11 = GPIO_PIN_11,
     KETCUBE_GPIO_PIN_12 = GPIO_PIN_12,
@@ -100,10 +100,19 @@ typedef void (*ketCube_GPIO_VoidFn_t) (void);
   * @{
   */
 
-extern ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port, uint16_t pin, GPIO_InitTypeDef* initStruct);
-extern ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin, uint32_t prio, ketCube_GPIO_VoidFn_t irqHandler);
-extern void ketCube_GPIO_Write(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin, bool bit);
-extern bool ketCube_GPIO_Read(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin);
+extern ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
+                                                uint16_t pin,
+                                                GPIO_InitTypeDef *
+                                                initStruct);
+extern ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port,
+                                                  ketCube_gpio_pin_t pin,
+                                                  uint32_t prio,
+                                                  ketCube_GPIO_VoidFn_t
+                                                  irqHandler);
+extern void ketCube_GPIO_Write(ketCube_gpio_port_t port,
+                               ketCube_gpio_pin_t pin, bool bit);
+extern bool ketCube_GPIO_Read(ketCube_gpio_port_t port,
+                              ketCube_gpio_pin_t pin);
 
 extern void EXTI0_1_IRQHandler(void);
 extern void EXTI2_3_IRQHandler(void);
@@ -118,4 +127,4 @@ extern void EXTI4_15_IRQHandler(void);
 * @}
 */
 
-#endif          
+#endif

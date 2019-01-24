@@ -72,17 +72,17 @@ typedef enum {
     KETCUBE_MAIN_REV_C,
     KETCUBE_MAIN_REV_D,
     KETCUBE_MAIN_REV_E,
-    
-    KETCUBE_MAIN_REV_DEV             ///< The recent "public" board revision is (KETCUBE_MAIN_REV_DEV - 1)
+
+    KETCUBE_MAIN_REV_DEV        ///< The recent "public" board revision is (KETCUBE_MAIN_REV_DEV - 1)
 } ketCube_MainBoard_revs_t;
 
 /** 
   * @brief Solder Jumper configuration options
   */
 typedef enum {
-    KETCUBE_MAIN_BOARD_SJ_OPEN = 0,   ///< Solder jumper is OPEN
-    KETCUBE_MAIN_BOARD_SJ_12,         ///< Solder jumper PADs 1 and 2 are CLOSED (this holds for all solder jumpers)
-    KETCUBE_MAIN_BOARD_SJ_23          ///< Solder jumper PADs 2 and 3 are CLOSED (this holds for 3-PAD solder jumpers)
+    KETCUBE_MAIN_BOARD_SJ_OPEN = 0,     ///< Solder jumper is OPEN
+    KETCUBE_MAIN_BOARD_SJ_12,   ///< Solder jumper PADs 1 and 2 are CLOSED (this holds for all solder jumpers)
+    KETCUBE_MAIN_BOARD_SJ_23    ///< Solder jumper PADs 2 and 3 are CLOSED (this holds for 3-PAD solder jumpers)
 } ketCube_MainBoard_SJ_t;
 
 
@@ -91,21 +91,21 @@ typedef enum {
   * @{
   */
 
-#define KETCUBE_MAIN_BOARD_REV           (KETCUBE_MAIN_REV_DEV - 1)   ///< The current board revision, @see main.c for deffinition
+#define KETCUBE_MAIN_BOARD_REV           (KETCUBE_MAIN_REV_DEV - 1)     ///< The current board revision, @see main.c for deffinition
 
-#define KETCUBE_MAIN_BOARD_OPTION_SJ1     KETCUBE_MAIN_BOARD_SJ_12    ///< Connect PA8 to IO3
-#define KETCUBE_MAIN_BOARD_OPTION_SJ7     KETCUBE_MAIN_BOARD_SJ_OPEN  ///< Connect Vref to IO3
+#define KETCUBE_MAIN_BOARD_OPTION_SJ1     KETCUBE_MAIN_BOARD_SJ_12      ///< Connect PA8 to IO3
+#define KETCUBE_MAIN_BOARD_OPTION_SJ7     KETCUBE_MAIN_BOARD_SJ_OPEN    ///< Connect Vref to IO3
 
-#define KETCUBE_MAIN_BOARD_OPTION_SJ2     KETCUBE_MAIN_BOARD_SJ_12    ///< MuRaTa radio powered
+#define KETCUBE_MAIN_BOARD_OPTION_SJ2     KETCUBE_MAIN_BOARD_SJ_12      ///< MuRaTa radio powered
 
-#define KETCUBE_MAIN_BOARD_OPTION_SJ3     KETCUBE_MAIN_BOARD_SJ_12    ///< MuRaTa sleep Mode control
-#define KETCUBE_MAIN_BOARD_OPTION_SJ8     KETCUBE_MAIN_BOARD_SJ_OPEN  ///< MuRaTa sleep Mode control
+#define KETCUBE_MAIN_BOARD_OPTION_SJ3     KETCUBE_MAIN_BOARD_SJ_12      ///< MuRaTa sleep Mode control
+#define KETCUBE_MAIN_BOARD_OPTION_SJ8     KETCUBE_MAIN_BOARD_SJ_OPEN    ///< MuRaTa sleep Mode control
 
-#define KETCUBE_MAIN_BOARD_OPTION_SJ5     KETCUBE_MAIN_BOARD_SJ_12    ///< HDC1080 connected
-#define KETCUBE_MAIN_BOARD_OPTION_SJ6     KETCUBE_MAIN_BOARD_SJ_12    ///< HDC1080 connected
+#define KETCUBE_MAIN_BOARD_OPTION_SJ5     KETCUBE_MAIN_BOARD_SJ_12      ///< HDC1080 connected
+#define KETCUBE_MAIN_BOARD_OPTION_SJ6     KETCUBE_MAIN_BOARD_SJ_12      ///< HDC1080 connected
 
-#define KETCUBE_MAIN_BOARD_OPTION_SJ9     KETCUBE_MAIN_BOARD_SJ_23    ///< 12 == NRST to IO4; 23 == PA5 to IO4
-#define KETCUBE_MAIN_BOARD_OPTION_SJ10    KETCUBE_MAIN_BOARD_SJ_12    ///< Vref to 3V3
+#define KETCUBE_MAIN_BOARD_OPTION_SJ9     KETCUBE_MAIN_BOARD_SJ_23      ///< 12 == NRST to IO4; 23 == PA5 to IO4
+#define KETCUBE_MAIN_BOARD_OPTION_SJ10    KETCUBE_MAIN_BOARD_SJ_12      ///< Vref to 3V3
 
 
 /**
@@ -121,66 +121,66 @@ typedef enum {
 
 #define KETCUBE_MAIN_BOARD_PIN_IO1_PIN       KETCUBE_GPIO_PIN_10
 #define KETCUBE_MAIN_BOARD_PIN_IO1_PORT      KETCUBE_GPIO_PA
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_IO2_PIN       KETCUBE_GPIO_PIN_9
 #define KETCUBE_MAIN_BOARD_PIN_IO2_PORT      KETCUBE_GPIO_PA
 
 #if (KETCUBE_MAIN_BOARD_OPTION_SJ1 == KETCUBE_MAIN_BOARD_SJ_12)
-  #define KETCUBE_MAIN_BOARD_PIN_IO3_PIN     KETCUBE_GPIO_PIN_8
-  #define KETCUBE_MAIN_BOARD_PIN_IO3_PORT    KETCUBE_GPIO_PA
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PIN     KETCUBE_GPIO_PIN_8
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PORT    KETCUBE_GPIO_PA
 #else
-  #define KETCUBE_MAIN_BOARD_PIN_IO3_PIN     KETCUBE_GPIO_PIN_0
-  #define KETCUBE_MAIN_BOARD_PIN_IO3_PORT    NULL
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PIN     KETCUBE_GPIO_PIN_0
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PORT    NULL
 #endif
 
 #if (KETCUBE_MAIN_BOARD_OPTION_SJ9 == KETCUBE_MAIN_BOARD_SJ_23)
-  #define KETCUBE_MAIN_BOARD_PIN_IO4_PIN     KETCUBE_GPIO_PIN_5
-  #define KETCUBE_MAIN_BOARD_PIN_IO4_PORT    KETCUBE_GPIO_PA
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PIN     KETCUBE_GPIO_PIN_5
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PORT    KETCUBE_GPIO_PA
 #else
-  #define KETCUBE_MAIN_BOARD_PIN_IO4_PIN     KETCUBE_GPIO_PIN_0
-  #define KETCUBE_MAIN_BOARD_PIN_IO4_PORT    NULL
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PIN     KETCUBE_GPIO_PIN_0
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PORT    NULL
 #endif
 
 // MicroBUS Socket part
 
 #define KETCUBE_MAIN_BOARD_PIN_AN_PIN        KETCUBE_GPIO_PIN_4
 #define KETCUBE_MAIN_BOARD_PIN_AN_PORT       KETCUBE_GPIO_PA
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_RST_PIN       KETCUBE_GPIO_PIN_0
 #define KETCUBE_MAIN_BOARD_PIN_RST_PORT      KETCUBE_GPIO_PA
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_CS_PIN        KETCUBE_GPIO_PIN_12
 #define KETCUBE_MAIN_BOARD_PIN_CS_PORT       KETCUBE_GPIO_PB
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_SCK_PIN       KETCUBE_GPIO_PIN_13
 #define KETCUBE_MAIN_BOARD_PIN_SCK_PORT      KETCUBE_GPIO_PB
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_MISO_PIN      KETCUBE_GPIO_PIN_14
 #define KETCUBE_MAIN_BOARD_PIN_MISO_PORT     KETCUBE_GPIO_PB
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_MOSI_PIN      KETCUBE_GPIO_PIN_15
 #define KETCUBE_MAIN_BOARD_PIN_MOSI_PORT     KETCUBE_GPIO_PB
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_PWM_PIN       KETCUBE_GPIO_PIN_2
 #define KETCUBE_MAIN_BOARD_PIN_PWM_PORT      KETCUBE_GPIO_PB
 
 #if (KETCUBE_MAIN_BOARD_REV < KETCUBE_MAIN_BOARD_REV_E)
-  #define KETCUBE_MAIN_BOARD_PIN_INT_PIN     KETCUBE_GPIO_PIN_7
-  #define KETCUBE_MAIN_BOARD_PIN_INT_PORT    KETCUBE_GPIO_PB
+#define KETCUBE_MAIN_BOARD_PIN_INT_PIN     KETCUBE_GPIO_PIN_7
+#define KETCUBE_MAIN_BOARD_PIN_INT_PORT    KETCUBE_GPIO_PB
 #else
-  #define KETCUBE_MAIN_BOARD_PIN_INT_PIN     KETCUBE_GPIO_PIN_5
-  #define KETCUBE_MAIN_BOARD_PIN_INT_PORT    KETCUBE_GPIO_PB
+#define KETCUBE_MAIN_BOARD_PIN_INT_PIN     KETCUBE_GPIO_PIN_5
+#define KETCUBE_MAIN_BOARD_PIN_INT_PORT    KETCUBE_GPIO_PB
 #endif
 
 #define KETCUBE_MAIN_BOARD_PIN_RX_PIN        KETCUBE_GPIO_PIN_3
 #define KETCUBE_MAIN_BOARD_PIN_RX_PORT       KETCUBE_GPIO_PA
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_TX_PIN        KETCUBE_GPIO_PIN_2
 #define KETCUBE_MAIN_BOARD_PIN_TX_PORT       KETCUBE_GPIO_PA
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_SCL_PIN       KETCUBE_GPIO_PIN_8
 #define KETCUBE_MAIN_BOARD_PIN_SCL_PORT      KETCUBE_GPIO_PB
-                                             
+
 #define KETCUBE_MAIN_BOARD_PIN_SDA_PIN       KETCUBE_GPIO_PIN_9
 #define KETCUBE_MAIN_BOARD_PIN_SDA_PORT      KETCUBE_GPIO_PB
 
@@ -195,11 +195,11 @@ typedef enum {
   */
 
 #if (KETCUBE_MAIN_BOARD_REV < KETCUBE_MAIN_BOARD_REV_E)
-  #define KETCUBE_MAIN_BOARD_LED1_PIN                           KETCUBE_GPIO_PIN_5
-  #define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     KETCUBE_GPIO_PB
+#define KETCUBE_MAIN_BOARD_LED1_PIN                           KETCUBE_GPIO_PIN_5
+#define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     KETCUBE_GPIO_PB
 #else
-  #define KETCUBE_MAIN_BOARD_LED1_PIN                           KETCUBE_GPIO_PIN_7
-  #define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     KETCUBE_GPIO_PB
+#define KETCUBE_MAIN_BOARD_LED1_PIN                           KETCUBE_GPIO_PIN_7
+#define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     KETCUBE_GPIO_PB
 #endif
 
 #define KETCUBE_MAIN_BOARD_LED2_PIN                             KETCUBE_GPIO_PIN_6

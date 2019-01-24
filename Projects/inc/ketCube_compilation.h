@@ -56,7 +56,7 @@
   */
 
 
-#define KETCUBE_CFG_DEV_NAME           "KETCube"  //< Device name
+#define KETCUBE_CFG_DEV_NAME           "KETCube"        //< Device name
 
 /** @defgroup KETCube_inc_mod Included KETCube Modules
   * Define/undefine to include/exclude KETCube modules
@@ -67,7 +67,7 @@
 #define KETCUBE_CFG_INC_MOD_DEBUGDISPLAY        //< Include SerialDisplay module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_HDC1080     //< Include HDC1080 module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_BATMEAS     //< Include batMeas module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ADC         //< Include batMeas module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ADC //< Include batMeas module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_STARNET     //< Include StarNet module(s); undef to disable module
 #define KETCUBE_CFG_INC_MOD_FDC2214     //< Include FDC2214 module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_RXDISPLAY   //< Include RxDisplay module; undef to disable module
@@ -77,7 +77,7 @@
 #define KETCUBE_CFG_INC_MOD_LIS2HH12    //< Include LIS2HH12 module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_ICS43432    //< Include ICS43432 module; undef to disable module
 
-#define KETCUBE_CFG_INC_DRV_I2C         //< Include KET's I2C driver; undef to disable driver
+#define KETCUBE_CFG_INC_DRV_I2C //< Include KET's I2C driver; undef to disable driver
 #define KETCUBE_CFG_INC_DRV_MODBUS      //< Include KET's modBUS driver; undef to disable driver
 
 /**
@@ -117,7 +117,7 @@ typedef enum {
 #ifdef KETCUBE_CFG_INC_MOD_FDC2214
     KETCUBE_LISTS_MODULEID_FDC2214,     /*<! Module FDC2214 */
 #endif
-    
+
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
     KETCUBE_LISTS_MODULEID_RXDISPLAY,   /*<! Module RxDisplay */
 #endif
@@ -125,11 +125,11 @@ typedef enum {
 #ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
     KETCUBE_LISTS_MODULEID_ASYNCTX,     /*<! Module AsyncTx */
 #endif
-    
+
 #ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
     KETCUBE_LISTS_MODULEID_TXDISPLAY,   /*<! Module TxDisplay */
 #endif
-    
+
 #ifdef KETCUBE_CFG_INC_MOD_BMEX80
     KETCUBE_LISTS_MODULEID_BMEX80,      /*<! Module BMEx80 */
 #endif

@@ -77,22 +77,30 @@ ketCube_cfg_ModError_t ketCube_rxDisplay_ProcessData(ketCube_InterModMsg_t
 
     switch (msg->msg[0]) {
     case KETCUBE_RXDISPLAY_DATATYPE_RSSI:
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "RSSI=%d; ", msg->msg[1]);
+        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
+                                       "RSSI=%d; ", msg->msg[1]);
         break;
     case KETCUBE_RXDISPLAY_DATATYPE_SNR:
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "SNR=%d; ", msg->msg[1]);
+        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
+                                       "SNR=%d; ", msg->msg[1]);
         break;
     case KETCUBE_RXDISPLAY_DATATYPE_STRING:
-        msg->msg[msg->msgLen-1] = 0x00; // to be sure ...
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "STR=%s", &(msg->msg[1]));
+        msg->msg[msg->msgLen - 1] = 0x00;       // to be sure ...
+        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
+                                       "STR=%s", &(msg->msg[1]));
         break;
     default:
     case KETCUBE_RXDISPLAY_DATATYPE_DATA:
-        for (i = 1; (i < msg->msgLen) && ((3*i) < KETCUBE_COMMON_BUFFER_LEN); i++) {
-            sprintf(&(ketCube_common_buffer[3*(i-1)]), "%02X-", msg->msg[i]);
+        for (i = 1;
+             (i < msg->msgLen) && ((3 * i) < KETCUBE_COMMON_BUFFER_LEN);
+             i++) {
+            sprintf(&(ketCube_common_buffer[3 * (i - 1)]), "%02X-",
+                    msg->msg[i]);
         }
-        ketCube_common_buffer[3*(i-1)-1] = 0x00;
-        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY, "DATA=%s", &(ketCube_common_buffer[0]));
+        ketCube_common_buffer[3 * (i - 1) - 1] = 0x00;
+        ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
+                                       "DATA=%s",
+                                       &(ketCube_common_buffer[0]));
         break;
     }
 

@@ -44,6 +44,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">ketCube_i2c.h File Reference</div>  </div>
@@ -64,12 +65,6 @@ Macros</h2></td></tr>
 <tr class="separator:ga7e93d530507ddbd3c5d5e4a73d223ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4c567b3e4031db872b9c6b7b1fec22e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga4c567b3e4031db872b9c6b7b1fec22e1">KETCUBE_I2C_TIMEOUT</a>&#160;&#160;&#160;0x5000   /*&lt;! The value of the maximal timeout for BUS waiting loops */</td></tr>
 <tr class="separator:ga4c567b3e4031db872b9c6b7b1fec22e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga683e200a4e6d9963474a248335eca4f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga683e200a4e6d9963474a248335eca4f3">KETCUBE_I2C_TIMING_100KHZ</a>&#160;&#160;&#160;0x10A13E56       /* Analog Filter ON, Rise Time 400ns, Fall Time 100ns */</td></tr>
-<tr class="separator:ga683e200a4e6d9963474a248335eca4f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga02f6bcf60b404ca7cc7e6476a9f31cb9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga02f6bcf60b404ca7cc7e6476a9f31cb9">KETCUBE_I2C_TIMING_400KHZ</a>&#160;&#160;&#160;0x00B1112E       /* Analog Filter ON, Rise Time 250ns, Fall Time 100ns */</td></tr>
-<tr class="separator:ga02f6bcf60b404ca7cc7e6476a9f31cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad09c8cda50e655e60d58a330dfbeb938"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#gad09c8cda50e655e60d58a330dfbeb938">KETCUBE_I2C_SPEED</a>&#160;&#160;&#160;100000</td></tr>
-<tr class="separator:gad09c8cda50e655e60d58a330dfbeb938"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0b0072d90bf97e164f6b88bff220cc3f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga0b0072d90bf97e164f6b88bff220cc3f">KETCUBE_I2C_CLK_ENABLE</a>()&#160;&#160;&#160;__I2C1_CLK_ENABLE()</td></tr>
 <tr class="separator:ga0b0072d90bf97e164f6b88bff220cc3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6e068dc08539d2adcd66a8a9b377c7ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga6e068dc08539d2adcd66a8a9b377c7ec">KETCUBE_I2C_SCL_SDA_GPIO_CLK_ENABLE</a>()&#160;&#160;&#160;__GPIOB_CLK_ENABLE()</td></tr>
@@ -89,6 +84,14 @@ Macros</h2></td></tr>
 <tr class="memitem:ga7f1b7cfbfd31ff35db2d55c4930d3b30"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga7f1b7cfbfd31ff35db2d55c4930d3b30">KETCUBE_I2C_EV_IRQn</a>&#160;&#160;&#160;I2C1_IRQn</td></tr>
 <tr class="separator:ga7f1b7cfbfd31ff35db2d55c4930d3b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gad697c0d45d676e2bc1e9a71844e7564c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#gad697c0d45d676e2bc1e9a71844e7564c">ketCube_I2C_SPEED_t</a> { <a class="el" href="group__KETCube__I2C__defs.html#ggad697c0d45d676e2bc1e9a71844e7564ca561ed3cfddcd3325d8426621580d4cb9">KETCUBE_I2C_SPEED_100KHZ</a> = 0x10A13E56, 
+<a class="el" href="group__KETCube__I2C__defs.html#ggad697c0d45d676e2bc1e9a71844e7564ca9f77b4bca945bcdbe4a87f6d1c6372ef">KETCUBE_I2C_SPEED_400KHZ</a> = 0x00B1112E
+ }</td></tr>
+<tr class="memdesc:gad697c0d45d676e2bc1e9a71844e7564c"><td class="mdescLeft">&#160;</td><td class="mdescRight">I2C Speed selection.  <a href="group__KETCube__I2C__defs.html#gad697c0d45d676e2bc1e9a71844e7564c">More...</a><br /></td></tr>
+<tr class="separator:gad697c0d45d676e2bc1e9a71844e7564c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
 <tr class="memitem:ga495972526c6540e967bb32a44ae79929"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga495972526c6540e967bb32a44ae79929">ketCube_I2C_Init</a> (void)</td></tr>
@@ -101,18 +104,34 @@ Functions</h2></td></tr>
 <tr class="separator:gabebbadda0b34fe6014e9f0568e850579"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga16dea146857281f3aaa9f8a11e30c414"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga16dea146857281f3aaa9f8a11e30c414">ketCube_I2C_WriteData</a> (uint8_t Addr, uint8_t Reg, uint8_t *pBuffer, uint16_t Size)</td></tr>
 <tr class="separator:ga16dea146857281f3aaa9f8a11e30c414"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga0264bd0e6ece4a70862fd4e6160fbc62"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga0264bd0e6ece4a70862fd4e6160fbc62">ketCube_I2C_WriteRawData</a> (uint8_t Addr, uint8_t *pBuffer, uint16_t Size)</td></tr>
+<tr class="separator:ga0264bd0e6ece4a70862fd4e6160fbc62"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga25035f376c56ccec21bdd5d1d6421a1d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga25035f376c56ccec21bdd5d1d6421a1d">ketCube_I2C_ReadRawData</a> (uint8_t Addr, uint8_t *pBuffer, uint16_t Size)</td></tr>
+<tr class="separator:ga25035f376c56ccec21bdd5d1d6421a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga1e2e90eb72e93f91444029bf2ecdc6f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga1e2e90eb72e93f91444029bf2ecdc6f5">ketCube_I2C_TexasWriteReg</a> (uint8_t devAddr, uint8_t regAddr, uint16_t *data)</td></tr>
 <tr class="memdesc:ga1e2e90eb72e93f91444029bf2ecdc6f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write TexasInstruments I2C periph 16-bit register.  <a href="group__KETCube__I2C__fn.html#ga1e2e90eb72e93f91444029bf2ecdc6f5">More...</a><br /></td></tr>
 <tr class="separator:ga1e2e90eb72e93f91444029bf2ecdc6f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gafa36a4fc3a198825693d37ce31a6c621"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#gafa36a4fc3a198825693d37ce31a6c621">ketCube_I2C_TexasReadReg</a> (uint8_t devAddr, uint8_t RegAddr, uint16_t *data)</td></tr>
 <tr class="memdesc:gafa36a4fc3a198825693d37ce31a6c621"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read TexasInstruments I2C periph 16-bit register.  <a href="group__KETCube__I2C__fn.html#gafa36a4fc3a198825693d37ce31a6c621">More...</a><br /></td></tr>
 <tr class="separator:gafa36a4fc3a198825693d37ce31a6c621"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga973f1a90f2f6797c6a630ea88970e565"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga973f1a90f2f6797c6a630ea88970e565">ketCube_I2C_STMWriteSingle</a> (uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint8_t try)</td></tr>
+<tr class="memdesc:ga973f1a90f2f6797c6a630ea88970e565"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write STM I2C Single 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga973f1a90f2f6797c6a630ea88970e565">More...</a><br /></td></tr>
+<tr class="separator:ga973f1a90f2f6797c6a630ea88970e565"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4a9765121168e13c5d00072b9e6ad340"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga4a9765121168e13c5d00072b9e6ad340">ketCube_I2C_STMReadSingle</a> (uint8_t devAddr, uint8_t RegAddr, uint8_t *data, uint8_t try)</td></tr>
+<tr class="memdesc:ga4a9765121168e13c5d00072b9e6ad340"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read STM I2C Single 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga4a9765121168e13c5d00072b9e6ad340">More...</a><br /></td></tr>
+<tr class="separator:ga4a9765121168e13c5d00072b9e6ad340"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga4af461f4607425c7a917e6f354dd3362"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga4af461f4607425c7a917e6f354dd3362">ketCube_I2C_STMReadBlock</a> (uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint8_t len, uint8_t try)</td></tr>
+<tr class="memdesc:ga4af461f4607425c7a917e6f354dd3362"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read STM I2C Single 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga4af461f4607425c7a917e6f354dd3362">More...</a><br /></td></tr>
+<tr class="separator:ga4af461f4607425c7a917e6f354dd3362"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga146f311a2886208cccd89062d044578c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga146f311a2886208cccd89062d044578c">ketCube_I2C_AnalogWriteReg</a> (uint8_t devAddr, uint8_t regAddr, uint8_t data)</td></tr>
+<tr class="memdesc:ga146f311a2886208cccd89062d044578c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write AnalogDevices I2C periph 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga146f311a2886208cccd89062d044578c">More...</a><br /></td></tr>
+<tr class="separator:ga146f311a2886208cccd89062d044578c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains definitions for the ketCube I2C driver. </p>
 <dl class="section author"><dt>Author</dt><dd>Jan Belohoubek </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2018-01-04 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>0.2 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2018-07-12 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd></dd></dl>
 <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen All rights reserved.</center></h2>
 <p>Developed by: The SmartCampus Team Department of Technologies and Measurement www.smartcampus.cz | www.zcu.cz</p>

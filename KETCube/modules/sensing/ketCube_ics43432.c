@@ -112,7 +112,7 @@ void SPI2_IRQHandler()
     static uint32_t U32;
     static int32_t I32;
     static bool sync = false;
-    
+
     /**
       * Synchronization flag is set false in right
       * side words and true after first word of
@@ -139,9 +139,13 @@ void SPI2_IRQHandler()
                     if (noiseCnt < UINT32_MAX) {
                         noiseCnt += 1;
                     }
-                    HAL_GPIO_WritePin(KETCUBE_ICS43432_NOISE_LED_PORT, KETCUBE_ICS43432_NOISE_LED_PIN, GPIO_PIN_RESET);
+                    HAL_GPIO_WritePin(KETCUBE_ICS43432_NOISE_LED_PORT,
+                                      KETCUBE_ICS43432_NOISE_LED_PIN,
+                                      GPIO_PIN_RESET);
                 } else {
-                    HAL_GPIO_WritePin(KETCUBE_ICS43432_NOISE_LED_PORT, KETCUBE_ICS43432_NOISE_LED_PIN, GPIO_PIN_SET);
+                    HAL_GPIO_WritePin(KETCUBE_ICS43432_NOISE_LED_PORT,
+                                      KETCUBE_ICS43432_NOISE_LED_PIN,
+                                      GPIO_PIN_SET);
                 }
             }
         }

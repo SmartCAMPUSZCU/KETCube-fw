@@ -126,11 +126,11 @@ uint8_t ketcube_batLevel_GetBattery(void)
     uint32_t batteryLevelmV;
 
     uint16_t batMax =
-        ketCube_batMeas_batList[ketCube_batMeas_selectedBattery].
-        batCharged;
+        ketCube_batMeas_batList
+        [ketCube_batMeas_selectedBattery].batCharged;
     uint16_t batMin =
-        ketCube_batMeas_batList[ketCube_batMeas_selectedBattery].
-        batDischarged;
+        ketCube_batMeas_batList
+        [ketCube_batMeas_selectedBattery].batDischarged;
 
     measuredLevel = HW_AdcReadChannel(ADC_CHANNEL_VREFINT);
 
@@ -171,7 +171,8 @@ ketCube_cfg_ModError_t ketCube_batMeas_ReadData(uint8_t * buffer,
     *len = 1;
     buffer[0] = ketcube_batLevel_GetBattery();
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "%d", buffer[0]);
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "%d",
+                                 buffer[0]);
 
     return KETCUBE_CFG_MODULE_OK;
 }

@@ -88,6 +88,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga985471f4af6f8777388d0541374735ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga985471f4af6f8777388d0541374735ed">ketCube_UART_SetupPin</a> (uint32_t pin, uint32_t alternate, GPIO_TypeDef *port)</td></tr>
 <tr class="memdesc:ga985471f4af6f8777388d0541374735ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup pin for communication.  <a href="#ga985471f4af6f8777388d0541374735ed">More...</a><br /></td></tr>
 <tr class="separator:ga985471f4af6f8777388d0541374735ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7b58c3eccba027fb12fe268b3306246"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gae7b58c3eccba027fb12fe268b3306246">ketCube_UART_ReleasePin</a> (uint32_t pin, GPIO_TypeDef *port)</td></tr>
+<tr class="memdesc:gae7b58c3eccba027fb12fe268b3306246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release pin - setup as input pin.  <a href="#gae7b58c3eccba027fb12fe268b3306246">More...</a><br /></td></tr>
+<tr class="separator:gae7b58c3eccba027fb12fe268b3306246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6c379b083a781fe08e911d60016eec77"><td class="memItemLeft" align="right" valign="top">UART_HandleTypeDef *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga6c379b083a781fe08e911d60016eec77">ketCube_UART_GetHandle</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
 <tr class="memdesc:ga6c379b083a781fe08e911d60016eec77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve UART handle for given channel.  <a href="#ga6c379b083a781fe08e911d60016eec77">More...</a><br /></td></tr>
 <tr class="separator:ga6c379b083a781fe08e911d60016eec77"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -95,6 +98,8 @@ Functions</h2></td></tr>
 <tr class="separator:ga3fa3a6ea829499abbf9a103dd105c58e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaf07cb7e6b84fabe3273124f7f682e76d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gaf07cb7e6b84fabe3273124f7f682e76d">ketCube_UART_ReceiveCallback</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
 <tr class="separator:gaf07cb7e6b84fabe3273124f7f682e76d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gad5b505253d6291548872866340f394bc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gad5b505253d6291548872866340f394bc">ketCube_UART_TransmitCallback</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
+<tr class="separator:gad5b505253d6291548872866340f394bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga563c18e4f6e3eafdd4f06f7cb70bd171"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga563c18e4f6e3eafdd4f06f7cb70bd171">ketCube_UART_ErrorCallback</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
 <tr class="separator:ga563c18e4f6e3eafdd4f06f7cb70bd171"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga03d66c990e3435ffdc597760dd99ff7d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga03d66c990e3435ffdc597760dd99ff7d">ketCube_UART_WakeupCallback</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
@@ -141,6 +146,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>UART supported channels. </p>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>rename to respect channel names: USART 1,2,4,5, LPUART </dd></dl>
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga5c5e7338ed01aac9bc5f9795a1b89f30a2e5abe4b68eb508c700cc9f9900da5b7"></a>KETCUBE_UART_CHANNEL_1&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="gga5c5e7338ed01aac9bc5f9795a1b89f30a45a601b8590b11e4e8a8bdcef5e18b6b"></a>KETCUBE_UART_CHANNEL_2&#160;</td><td class="fielddoc"></td></tr>
@@ -359,6 +365,51 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="gae7b58c3eccba027fb12fe268b3306246"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae7b58c3eccba027fb12fe268b3306246">&#9670;&nbsp;</a></span>ketCube_UART_ReleasePin()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_UART_ReleasePin </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>pin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">GPIO_TypeDef *&#160;</td>
+          <td class="paramname"><em>port</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Release pin - setup as input pin. </p>
+<p>This can help in low-power modes to avoid leakage when uart pin(s) drive(s) something.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">pin</td><td>pin number </td></tr>
+    <tr><td class="paramname">port</td><td>port in which the pin resembles</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ga985471f4af6f8777388d0541374735ed"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga985471f4af6f8777388d0541374735ed">&#9670;&nbsp;</a></span>ketCube_UART_SetupPin()</h2>
 
@@ -396,7 +447,7 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">pin</td><td>pin number </td></tr>
     <tr><td class="paramname">alternate</td><td>alternate function of given pin </td></tr>
-    <tr><td class="paramname">port</td><td>port in which the pin resembles </td></tr>
+    <tr><td class="paramname">port</td><td>port in which the pin resembles</td></tr>
   </table>
   </dd>
 </dl>
@@ -407,6 +458,24 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="gad5b505253d6291548872866340f394bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad5b505253d6291548872866340f394bc">&#9670;&nbsp;</a></span>ketCube_UART_TransmitCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ketCube_UART_TransmitCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a>&#160;</td>
+          <td class="paramname"><em>channel</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>

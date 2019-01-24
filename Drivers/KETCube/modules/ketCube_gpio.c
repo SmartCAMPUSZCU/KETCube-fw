@@ -58,7 +58,7 @@ do {                                                    \
       case GPIOD_BASE: __HAL_RCC_GPIOD_CLK_ENABLE(); break;    \
       case GPIOH_BASE: default:  __HAL_RCC_GPIOH_CLK_ENABLE(); \
     }                                                    \
-  } while(0)  
+  } while(0)
 
 #define RCC_GPIO_CLK_DISABLE( __GPIO_PORT__ )              \
 do {                                                    \
@@ -70,10 +70,10 @@ do {                                                    \
       case GPIOD_BASE: __HAL_RCC_GPIOD_CLK_DISABLE(); break;    \
       case GPIOH_BASE: default:  __HAL_RCC_GPIOH_CLK_ENABLE(); \
     }                                                    \
-  } while(0) 
+  } while(0)
 
-  
-extern IRQn_Type MSP_GetIRQn( uint16_t GPIO_Pin);
+
+extern IRQn_Type MSP_GetIRQn(uint16_t GPIO_Pin);
 static ketCube_GPIO_VoidFn_t ketCube_GPIO_IrqHandlers[16] = { NULL };
 
 /**
@@ -84,14 +84,22 @@ static ketCube_GPIO_VoidFn_t ketCube_GPIO_IrqHandlers[16] = { NULL };
  */
 static inline uint8_t ketCube_GPIO_GetBitPos(uint16_t pin)
 {
-  uint8_t pos = 0;
-  
-  if ((pin & 0xFF00) != 0) { pos |= 0x8; }
-  if ((pin & 0xF0F0) != 0) { pos |= 0x4; }
-  if ((pin & 0xCCCC) != 0) { pos |= 0x2; }
-  if ((pin & 0xAAAA) != 0) { pos |= 0x1; }
-  
-  return pos;
+    uint8_t pos = 0;
+
+    if ((pin & 0xFF00) != 0) {
+        pos |= 0x8;
+    }
+    if ((pin & 0xF0F0) != 0) {
+        pos |= 0x4;
+    }
+    if ((pin & 0xCCCC) != 0) {
+        pos |= 0x2;
+    }
+    if ((pin & 0xAAAA) != 0) {
+        pos |= 0x1;
+    }
+
+    return pos;
 }
 
 /**
@@ -113,41 +121,44 @@ void ketCube_GPIO_noneIrqHandler()
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port, uint16_t pin, GPIO_InitTypeDef* initStruct)
+ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
+                                         uint16_t pin,
+                                         GPIO_InitTypeDef * initStruct)
 {
     static ketCube_gpio_pin_t portA_usage = KETCUBE_GPIO_NOPIN;
     static ketCube_gpio_pin_t portB_usage = KETCUBE_GPIO_NOPIN;
     static ketCube_gpio_pin_t portC_usage = KETCUBE_GPIO_NOPIN;
-    
-    switch(port) {
-         case KETCUBE_GPIO_PA:
-             if ((portA_usage & pin) != 0) {
-                //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
-             }
-             portA_usage |= pin;
-             break;
-         case KETCUBE_GPIO_PB:
-             if ((portB_usage & pin) != 0) {
-                //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
-             }
-             portB_usage |= pin;
-             break;
-         case KETCUBE_GPIO_PC:
-             if ((portC_usage & pin) != 0) {
-                //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
-             }
-             portC_usage |= pin;
-             break;
-         default:
-             ketCube_terminal_DebugPrintln("GPIO :: The declared port cannot be used!");
-             return KETCUBE_CFG_DRV_ERROR;
+
+    switch (port) {
+    case KETCUBE_GPIO_PA:
+        if ((portA_usage & pin) != 0) {
+            //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
+        }
+        portA_usage |= pin;
+        break;
+    case KETCUBE_GPIO_PB:
+        if ((portB_usage & pin) != 0) {
+            //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
+        }
+        portB_usage |= pin;
+        break;
+    case KETCUBE_GPIO_PC:
+        if ((portC_usage & pin) != 0) {
+            //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
+        }
+        portC_usage |= pin;
+        break;
+    default:
+        ketCube_terminal_DebugPrintln
+            ("GPIO :: The declared port cannot be used!");
+        return KETCUBE_CFG_DRV_ERROR;
     }
-    
-  RCC_GPIO_CLK_ENABLE((uint32_t) port);
-  initStruct->Pin = pin;
-  HAL_GPIO_Init((GPIO_TypeDef *) port, initStruct);
-  
-  return KETCUBE_CFG_DRV_OK;
+
+    RCC_GPIO_CLK_ENABLE((uint32_t) port);
+    initStruct->Pin = pin;
+    HAL_GPIO_Init((GPIO_TypeDef *) port, initStruct);
+
+    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
@@ -161,31 +172,39 @@ ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port, uint16_t pin,
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin, uint32_t prio, ketCube_GPIO_VoidFn_t irqHandler )
+ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port,
+                                           ketCube_gpio_pin_t pin,
+                                           uint32_t prio,
+                                           ketCube_GPIO_VoidFn_t
+                                           irqHandler)
 {
-  IRQn_Type IRQnb;
-  uint8_t index = ketCube_GPIO_GetBitPos(pin) ;
-  
-  if (ketCube_GPIO_IrqHandlers[index] != NULL) {
-      ketCube_terminal_DebugPrintln("GPIO :: EXTI line %d already used!", index);
-      return KETCUBE_CFG_DRV_ERROR;
-  } else {
-      ketCube_terminal_DebugPrintln("GPIO :: Registering EXTI line %d", index);
-  }
-  
-  if (irqHandler != NULL) {
-    ketCube_GPIO_IrqHandlers[index] = (ketCube_GPIO_VoidFn_t) irqHandler;
-  } else {
-    // this means interrupt is used, but has no specific handler
-    // this can be useful for wake-up ...  
-    ketCube_GPIO_IrqHandlers[index] = (ketCube_GPIO_VoidFn_t) &ketCube_GPIO_noneIrqHandler;
-  }
-  
-  IRQnb = MSP_GetIRQn(pin);
-  HAL_NVIC_SetPriority(IRQnb, prio, 0);
-  HAL_NVIC_EnableIRQ(IRQnb);
-  
-  return KETCUBE_CFG_DRV_OK;
+    IRQn_Type IRQnb;
+    uint8_t index = ketCube_GPIO_GetBitPos(pin);
+
+    if (ketCube_GPIO_IrqHandlers[index] != NULL) {
+        ketCube_terminal_DebugPrintln("GPIO :: EXTI line %d already used!",
+                                      index);
+        return KETCUBE_CFG_DRV_ERROR;
+    } else {
+        ketCube_terminal_DebugPrintln("GPIO :: Registering EXTI line %d",
+                                      index);
+    }
+
+    if (irqHandler != NULL) {
+        ketCube_GPIO_IrqHandlers[index] =
+            (ketCube_GPIO_VoidFn_t) irqHandler;
+    } else {
+        // this means interrupt is used, but has no specific handler
+        // this can be useful for wake-up ...  
+        ketCube_GPIO_IrqHandlers[index] =
+            (ketCube_GPIO_VoidFn_t) & ketCube_GPIO_noneIrqHandler;
+    }
+
+    IRQnb = MSP_GetIRQn(pin);
+    HAL_NVIC_SetPriority(IRQnb, prio, 0);
+    HAL_NVIC_EnableIRQ(IRQnb);
+
+    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
@@ -196,9 +215,10 @@ ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port, ketCube_gpi
  * @param bit TRUE if PIN value is '1', else return FALSE
  * 
  */
-void ketCube_GPIO_Write(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin, bool bit)
+void ketCube_GPIO_Write(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin,
+                        bool bit)
 {
-  HAL_GPIO_WritePin((GPIO_TypeDef *) port, pin, (GPIO_PinState) bit);
+    HAL_GPIO_WritePin((GPIO_TypeDef *) port, pin, (GPIO_PinState) bit);
 }
 
 /**
@@ -211,7 +231,7 @@ void ketCube_GPIO_Write(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin, bool b
  */
 bool ketCube_GPIO_Read(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin)
 {
-  return (bool) HAL_GPIO_ReadPin((GPIO_TypeDef *) port, pin);
+    return (bool) HAL_GPIO_ReadPin((GPIO_TypeDef *) port, pin);
 }
 
 /**
@@ -223,51 +243,51 @@ bool ketCube_GPIO_Read(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin)
  */
 void HAL_GPIO_EXTI_Callback(ketCube_gpio_pin_t pin)
 {
-  uint8_t index = ketCube_GPIO_GetBitPos(pin);
-  
-  if (ketCube_GPIO_IrqHandlers[index] != NULL) {
-      ketCube_GPIO_IrqHandlers[index]();
-  }
+    uint8_t index = ketCube_GPIO_GetBitPos(pin);
+
+    if (ketCube_GPIO_IrqHandlers[index] != NULL) {
+        ketCube_GPIO_IrqHandlers[index] ();
+    }
 }
 
 void EXTI0_1_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
 }
 
 void EXTI2_3_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
 }
 
 
 void EXTI4_15_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
-  
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
-  
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_6);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
-  
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
-  
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_7);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_8);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_9);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_10);
 
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_11);
+
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_12);
+
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
+
+    HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
 }

@@ -93,7 +93,6 @@ ketCube_cfg_ModError_t ketCube_lis2hh12_Init(ketCube_InterModMsg_t *** msg)
                               KETCUBE_LIS2HH12_CTRL_REG1, &i2cByte, 1)) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
-
     //Testing!-----------------------------------------------------------------
     i2cByte = 153;
     if (ketCube_I2C_WriteData(KETCUBE_LIS2HH12_I2C_ADDRESS,
@@ -108,7 +107,6 @@ ketCube_cfg_ModError_t ketCube_lis2hh12_Init(ketCube_InterModMsg_t *** msg)
                               KETCUBE_LIS2HH12_INT1_TSH_Z1, &i2cByte, 1)) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
-
     //Iterrupt source config
     i2cByte = 0
         | KETCUBE_LIS2HH12_AOI_DIS
@@ -122,7 +120,6 @@ ketCube_cfg_ModError_t ketCube_lis2hh12_Init(ketCube_InterModMsg_t *** msg)
                               KETCUBE_LIS2HH12_INT1_CFG, &i2cByte, 1)) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
-
     //Interrupt output config
     i2cByte = 0
         | KETCUBE_LIS2HH12_FIFO_DIS
@@ -169,7 +166,9 @@ ketCube_cfg_ModError_t ketCube_lis2hh12_ReadData(uint8_t * buffer,
                          KETCUBE_LIS2HH12_OUT_X_L, (uint8_t *) & data, 6);
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LIS2HH12,
                                  "X = %6.4f; Y = %6.4f; Z = %6.4f",
-                                 (float) (data[0] / 16383.5), (float) (data[1] / 16383.5), (float) (data[2] / 16383.5));
+                                 (float) (data[0] / 16383.5),
+                                 (float) (data[1] / 16383.5),
+                                 (float) (data[2] / 16383.5));
 
     if (data[2] > 11000) {      //Up-facing
         buffer[0] = 1;

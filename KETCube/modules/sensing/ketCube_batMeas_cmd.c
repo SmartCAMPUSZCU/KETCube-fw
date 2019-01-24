@@ -69,7 +69,8 @@ void ketCube_terminal_cmd_show_batMeas_bat(void)
 
     ketCube_cfg_Load((uint8_t *) & selected,
                      KETCUBE_LISTS_MODULEID_BATMEAS,
-                     (ketCube_cfg_AllocEEPROM_t) KETCUBE_BATMEAS_CFGADR_BAT,
+                     (ketCube_cfg_AllocEEPROM_t)
+                     KETCUBE_BATMEAS_CFGADR_BAT,
                      (ketCube_cfg_LenEEPROM_t) KETCUBE_BATMEAS_CFGLEN_BAT);
 
     if (selected >= KETCUBE_BATMEAS_BATLIST_LAST) {

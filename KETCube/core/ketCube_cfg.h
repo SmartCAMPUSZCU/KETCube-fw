@@ -115,9 +115,9 @@ typedef struct ketCube_InterModMsg_t {
 * @brief  KETCube debug severity definition.
 */
 typedef enum ketCube_severity_t {
-    KETCUBE_CFG_SEVERITY_NONE  = 0x0,
+    KETCUBE_CFG_SEVERITY_NONE = 0x0,
     KETCUBE_CFG_SEVERITY_ERROR = 0x1,
-    KETCUBE_CFG_SEVERITY_INFO  = 0x2,
+    KETCUBE_CFG_SEVERITY_INFO = 0x2,
     KETCUBE_CFG_SEVERITY_DEBUG = 0x3
 } ketCube_severity_t;
 
@@ -135,10 +135,10 @@ typedef ketCube_cfg_ModError_t(*ketCube_cfg_ModDataPtrFn_t) (ketCube_InterModMsg
 * @brief  KETCube module configuration byte.
 */
 typedef struct ketCube_cfg_ModuleCfgByte_t {
-    bool enable:1;                  /*<! Module enable */
-    ketCube_severity_t severity:2;  /*<! Debug severity level */
-    uint8_t RFU:2;                  /*<! RFU */
-    uint8_t RfMC:3;                 /*<! Reserverd for Module Configuration */
+    bool enable:1;              /*<! Module enable */
+    ketCube_severity_t severity:2;      /*<! Debug severity level */
+    uint8_t RFU:2;              /*<! RFU */
+    uint8_t RfMC:3;             /*<! Reserverd for Module Configuration */
 } ketCube_cfg_ModuleCfgByte_t;
 
 /**

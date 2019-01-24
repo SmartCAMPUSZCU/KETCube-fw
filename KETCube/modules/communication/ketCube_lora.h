@@ -86,9 +86,9 @@ typedef enum {
   * Derived from @see ketCube_cfg_ModuleCfgByte_t
   */
 typedef struct ketCube_lora_moduleCfg_t {
-    bool enable:1;                   /*<! Module enable */
-    ketCube_severity_t severity:2;   /*<! Module severity level as defined in KETCube core */
-    uint8_t RFU:3;                   /*<! Reserverd for Future Use */
+    bool enable:1;              /*<! Module enable */
+    ketCube_severity_t severity:2;      /*<! Module severity level as defined in KETCube core */
+    uint8_t RFU:3;              /*<! Reserverd for Future Use */
     ketCube_lora_selConnMethod_t connectionType:1;
     ketCube_lora_selDeveui_t devEUIType:1;
 } ketCube_lora_moduleCfg_t;
