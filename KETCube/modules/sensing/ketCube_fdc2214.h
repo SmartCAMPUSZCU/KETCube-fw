@@ -181,9 +181,12 @@ typedef enum {
 #define FDC2214_ENABLE_SLEEP                TRUE        ///< Enter sleep mode instead of shut-down when KETCube goes low-power mode
 
 #define FDC2214_LED_INDICATION              TRUE        ///< Enable LED indication
-#define FDC2214_LED_THRESHOLD_LOW           1000        ///< FDC2214 raw value difference used to indicate significant capacity difference by using LED
-#define FDC2214_LED_THRESHOLD_HIGH          10000       ///< FDC2214 raw value difference used to indicate significant capacity difference by using LED
+#define FDC2214_LED_THRESHOLD_LOW           20000        ///< FDC2214 raw value difference used to indicate significant capacity difference by using LED
+#define FDC2214_LED_THRESHOLD_HIGH          30000       ///< FDC2214 raw value difference used to indicate significant capacity difference by using LED
 #define FDC2214_LED_CHAN                    FDC2214_CH0 ///< FDC2214 channel used for LED indication, @see ketCube_fdc2214_chan_t
+#define FDC2214_SAMPLE_CNT                  10          ///< Number of samples used to get mean value
+#define FDC2214_LED_HYST                     3          ///< LED hysteresis
+
 
 #define FDC2214_RCOUNT                      0xFFFF      //0x0080                   ///< RCount - to set the meas time
 #define FDC2214_SETTLECOUNT                 0x0400      ///< SettleCount - to stabilize oscilaltions

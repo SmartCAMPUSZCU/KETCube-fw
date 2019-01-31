@@ -323,6 +323,81 @@ static inline uint16_t ketCube_common_Med(uint16_t * values, uint16_t size)
   * @param values shorts array
   * @param size array size
   * 
+  * @retval med median
+  *
+  */
+static inline uint32_t ketCube_common_Med32(uint32_t * values, uint32_t size)
+{
+    uint32_t i, j, tmp;
+
+    // bubble-sort -- it's efficient for small arrays
+    for (i = 0; i < size - 1; i++) {
+        for (j = 0; j < size - 1 - i; j++) {
+            if (values[j] < values[j + 1]) {
+                tmp = values[j];
+                values[j] = values[j + 1];
+                values[j + 1] = tmp;
+            }
+        }
+    }
+
+    return (uint32_t) values[size / 2];
+}
+
+/**
+  * @brief Return max from an array of ints
+  *
+  * @param values shorts array
+  * @param size array size
+  * 
+  * @retval max maximum
+  *
+  */
+static inline uint32_t ketCube_common_Max32(uint32_t * values, uint32_t size)
+{
+    uint32_t i, max;
+    
+    max = values[0];
+
+    for (i = 0; i < size; i++) {
+        if (values[i] > max) {
+            max = values[i];
+        }
+    }
+
+    return max;
+}
+
+/**
+  * @brief Return max from an array of ints
+  *
+  * @param values shorts array
+  * @param size array size
+  * 
+  * @retval max maximum
+  *
+  */
+static inline uint32_t ketCube_common_Min32(uint32_t * values, uint32_t size)
+{
+    uint32_t i, min;
+    
+    min = values[0];
+
+    for (i = 0; i < size; i++) {
+        if (values[i] < min) {
+            min = values[i];
+        }
+    }
+
+    return min;
+}
+
+/**
+  * @brief Return median from an array of shorts
+  *
+  * @param values shorts array
+  * @param size array size
+  * 
   * @retval avg median
   *
   */

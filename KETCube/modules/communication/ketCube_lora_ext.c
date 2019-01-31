@@ -81,7 +81,7 @@ void ketCube_lora_PrintCFList(ApplyCFListParams_t * applyCFList)
 
         if(freq != 0) {
             // print freq
-            ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CfList :: New Freq: %d Hz", freq);
+            ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFList :: New Freq: %d Hz", freq);
         }
     }
 }
