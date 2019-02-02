@@ -48,6 +48,8 @@
 #include "ketCube_gpio.h"
 #include "ketCube_terminal.h"
 
+static ketCube_gpio_pin_t pinUsage[3] = {KETCUBE_GPIO_NOPIN, KETCUBE_GPIO_NOPIN, KETCUBE_GPIO_NOPIN,};  ///< PIN usage for ports A, B and C
+
 #define RCC_GPIO_CLK_ENABLE( __GPIO_PORT__ )              \
 do {                                                    \
     switch( __GPIO_PORT__)                                \
@@ -103,6 +105,44 @@ static inline uint8_t ketCube_GPIO_GetBitPos(uint16_t pin)
 }
 
 /**
+ * @brief Get the PORT index
+ * @param  port @see ketCube_gpio_port_t
+ * 
+ * @retval index port index; 0xFF in case of invalid port
+ */
+static inline uint8_t getPortIndex(ketCube_gpio_port_t port) {
+    switch (port) {
+        case KETCUBE_GPIO_PA:
+            return 0;
+        case KETCUBE_GPIO_PB:
+            return 1;
+        case KETCUBE_GPIO_PC:
+            return 2;
+        default:
+            return 0xFF;
+    }
+}
+
+/**
+ * @brief Get the PORT index
+ * @param  port @see ketCube_gpio_port_t
+ * 
+ * @retval name port name (A, B or C; 0xFF in case of invalid port
+ */
+static inline char getPortName(ketCube_gpio_port_t port) {
+    switch (port) {
+        case KETCUBE_GPIO_PA:
+            return 'A';
+        case KETCUBE_GPIO_PB:
+            return 'B';
+        case KETCUBE_GPIO_PC:
+            return 'C';
+        default:
+            return 0xFF;
+    }
+}
+
+/**
  * @brief Dummy irq handler
  */
 void ketCube_GPIO_noneIrqHandler()
@@ -125,37 +165,97 @@ ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
                                          uint16_t pin,
                                          GPIO_InitTypeDef * initStruct)
 {
-    static ketCube_gpio_pin_t portA_usage = KETCUBE_GPIO_NOPIN;
-    static ketCube_gpio_pin_t portB_usage = KETCUBE_GPIO_NOPIN;
-    static ketCube_gpio_pin_t portC_usage = KETCUBE_GPIO_NOPIN;
-
-    switch (port) {
-    case KETCUBE_GPIO_PA:
-        if ((portA_usage & pin) != 0) {
-            //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
-        }
-        portA_usage |= pin;
-        break;
-    case KETCUBE_GPIO_PB:
-        if ((portB_usage & pin) != 0) {
-            //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
-        }
-        portB_usage |= pin;
-        break;
-    case KETCUBE_GPIO_PC:
-        if ((portC_usage & pin) != 0) {
-            //ketCube_terminal_DebugPrintln("GPIO :: The declared pin is already in use!");
-        }
-        portC_usage |= pin;
-        break;
-    default:
+    uint8_t portIndex = getPortIndex(port);
+    char portName = getPortName(port);
+    
+    if (portIndex == 0xFF) {
         ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "The declared port cannot be used!");
         return KETCUBE_CFG_DRV_ERROR;
     }
-
+    
+    if ((pinUsage[portIndex] & pin) != 0) {
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "P%c%d is already in use!", portName, ketCube_GPIO_GetBitPos(pin));
+        return KETCUBE_CFG_DRV_ERROR;
+    }
+    
     RCC_GPIO_CLK_ENABLE((uint32_t) port);
     initStruct->Pin = pin;
     HAL_GPIO_Init((GPIO_TypeDef *) port, initStruct);
+
+    ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_INFO, "P%c%d set-up", portName, ketCube_GPIO_GetBitPos(pin));
+    pinUsage[portIndex] |= pin;
+    
+    return KETCUBE_CFG_DRV_OK;
+}
+
+/**
+ * @brief Initializes the GPIO PIN(s) without usage checking
+ *
+ * @param  port GPIO port 
+ * @param  pin GPIO PIN
+ * @param  initStruct  GPIO_InitTypeDef intit structure
+ * 
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ */
+ketCube_cfg_DrvError_t ketCube_GPIO_ReInit(ketCube_gpio_port_t port,
+                                           uint16_t pin,
+                                           GPIO_InitTypeDef * initStruct)
+{
+    uint8_t portIndex = getPortIndex(port);
+    char portName = getPortName(port);
+    
+    if (portIndex == 0xFF) {
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "The declared port cannot be used!");
+        return KETCUBE_CFG_DRV_ERROR;
+    }
+    
+    RCC_GPIO_CLK_ENABLE((uint32_t) port);
+    initStruct->Pin = pin;
+    HAL_GPIO_Init((GPIO_TypeDef *) port, initStruct);
+
+    ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_DEBUG, "P%c%d re-init", portName, ketCube_GPIO_GetBitPos(pin));
+    pinUsage[portIndex] |= pin;
+    
+    return KETCUBE_CFG_DRV_OK;
+}
+
+/**
+ * @brief Release KETCube PIN - setup as input pin
+ * 
+ * This can help in low-power modes to avoid leakage when uart pin(s) drive(s) something.
+ * 
+ * @param port KETCube port
+ * @param pin KETCube pin
+ * 
+ * @retval KETCUBE_CFG_MODULE_OK in case of success
+ * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ */
+ketCube_cfg_ModError_t ketCube_GPIO_Release(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin)
+{
+    static GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    uint8_t portIndex = getPortIndex(port);
+    char portName = getPortName(port);
+    
+    if (portIndex == 0xFF) {
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "The declared port cannot be used!");
+        return KETCUBE_CFG_DRV_ERROR;
+    }
+    
+    if ((pinUsage[portIndex] & pin) == 0) {
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_DEBUG, "P%c%d already released", portName, ketCube_GPIO_GetBitPos(pin));
+    }
+    
+    ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_INFO, "P%c%d released", portName, ketCube_GPIO_GetBitPos(pin));
+    
+    pinUsage[portIndex] &= ~(pin);
+
+    GPIO_InitStruct.Pin = pin;
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_LOW;
+
+    HAL_GPIO_Init((GPIO_TypeDef *) port, &GPIO_InitStruct);
 
     return KETCUBE_CFG_DRV_OK;
 }

@@ -54,7 +54,7 @@
 typedef void( GpioIrqHandler )( void );
 
 static inline void HW_GPIO_Init( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_InitTypeDef* initStruct) {
-     ketCube_GPIO_Init((ketCube_gpio_port_t) GPIOx, (ketCube_gpio_pin_t) GPIO_Pin, initStruct);
+     ketCube_GPIO_ReInit((ketCube_gpio_port_t) GPIOx, (ketCube_gpio_pin_t) GPIO_Pin, initStruct);
 }
 
 static inline void HW_GPIO_SetIrq( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t prio,  GpioIrqHandler *irqHandler ) {

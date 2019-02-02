@@ -48,6 +48,7 @@
 #include "stm32l0xx_hal_uart.h"
 
 #include "ketCube_uart.h"
+#include "ketCube_gpio.h"
 
 /**
 * @brief Array of registered descriptors
@@ -65,10 +66,10 @@ static ketCube_UART_descriptor_t
  * @brief Register UART channel for exclusive access
  * @param channel		UART channel to be registered
  * @param descriptor	descriptor with filled information
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_UART_RegisterHandle(ketCube_UART_ChannelNo_t
+ketCube_cfg_DrvError_t ketCube_UART_RegisterHandle(ketCube_UART_ChannelNo_t
                                                    channel,
                                                    ketCube_UART_descriptor_t
                                                    * descriptor)
@@ -95,10 +96,10 @@ ketCube_cfg_ModError_t ketCube_UART_RegisterHandle(ketCube_UART_ChannelNo_t
 /**
  * @brief Unregister UART channel
  * @param channel		UART channel to be unregistered
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFGDRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t
+ketCube_cfg_DrvError_t
 ketCube_UART_UnRegisterHandle(ketCube_UART_ChannelNo_t channel)
 {
     if (ketCube_UART_descriptors[channel] == NULL)
@@ -197,18 +198,19 @@ void ketCube_UART_IoDeInitAll(void)
 }
 
 /**
- * @brief Setup pin for communication
+ * @brief Setup UART PIN(s)
  * 
- * @param pin pin number
- * @param alternate alternate function of given pin
- * @param port	port in which the pin resembles
+ * @param pin KETCube PIN
+ * @param port KETCube PORT
+ * @param af alternate function for selected UART peripheral and PIN
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_UART_SetupPin(uint32_t pin,
-                                             uint32_t alternate,
-                                             GPIO_TypeDef * port)
+ketCube_cfg_DrvError_t ketCube_UART_SetupPin(ketCube_gpio_pin_t pin,
+                                             ketCube_gpio_port_t port,
+                                             uint8_t af
+                                            )
 {
     static GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
@@ -216,35 +218,7 @@ ketCube_cfg_ModError_t ketCube_UART_SetupPin(uint32_t pin,
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-    GPIO_InitStruct.Alternate = alternate;
+    GPIO_InitStruct.Alternate = af;
 
-    HAL_GPIO_Init(port, &GPIO_InitStruct);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-/**
- * @brief Release pin - setup as input pin
- * 
- * This can help in low-power modes to avoid leakage when uart pin(s) drive(s) something.
- * 
- * @param pin pin number
- * @param port	port in which the pin resembles
- * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
- */
-ketCube_cfg_ModError_t ketCube_UART_ReleasePin(uint32_t pin,
-                                               GPIO_TypeDef * port)
-{
-    static GPIO_InitTypeDef GPIO_InitStruct = { 0 };
-
-    GPIO_InitStruct.Pin = pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-
-    HAL_GPIO_Init(port, &GPIO_InitStruct);
-
-    return KETCUBE_CFG_MODULE_OK;
+    return ketCube_GPIO_Init(port, pin, &GPIO_InitStruct);
 }

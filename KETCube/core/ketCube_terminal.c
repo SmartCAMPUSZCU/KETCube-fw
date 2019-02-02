@@ -51,6 +51,7 @@
 #include "utilities.h"
 
 #include "ketCube_terminal.h"
+#include "ketCube_mainBoard.h"
 #include "ketCube_common.h"
 #include "ketCube_cfg.h"
 #include "ketCube_coreCfg.h"
@@ -63,6 +64,8 @@
 #define KETCUBE_TERMINAL_USART_IRQn                      USART1_IRQn
 #define KETCUBE_TERMINAL_USART_BR                        9600
 #define KETCUBE_TERMINAL_USART_CHANNEL                   KETCUBE_UART_CHANNEL_1
+#define KETCUBE_TERMINAL_USART_TX_AF                     GPIO_AF4_USART1
+#define KETCUBE_TERMINAL_USART_RX_AF                     GPIO_AF4_USART1
 
 #define KETCUBE_TERMINAL_USART_CLK_ENABLE()              __USART1_CLK_ENABLE();
 #define KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE()
@@ -70,12 +73,10 @@
 #define KETCUBE_TERMINAL_USART_FORCE_RESET()             __USART1_FORCE_RESET()
 #define KETCUBE_TERMINAL_USART_RELEASE_RESET()           __USART1_RELEASE_RESET()
 
-#define KETCUBE_TERMINAL_USART_TX_PIN                    GPIO_PIN_9
-#define KETCUBE_TERMINAL_USART_TX_GPIO_PORT              GPIOA
-#define KETCUBE_TERMINAL_USART_TX_AF                     GPIO_AF4_USART1
-#define KETCUBE_TERMINAL_USART_RX_PIN                    GPIO_PIN_10
-#define KETCUBE_TERMINAL_USART_RX_GPIO_PORT              GPIOA
-#define KETCUBE_TERMINAL_USART_RX_AF                     GPIO_AF4_USART1
+#define KETCUBE_TERMINAL_USART_TX_PIN                    KETCUBE_MAIN_BOARD_PIN_IO2_PIN
+#define KETCUBE_TERMINAL_USART_TX_GPIO_PORT              KETCUBE_MAIN_BOARD_PIN_IO2_PORT
+#define KETCUBE_TERMINAL_USART_RX_PIN                    KETCUBE_MAIN_BOARD_PIN_IO1_PIN
+#define KETCUBE_TERMINAL_USART_RX_GPIO_PORT              KETCUBE_MAIN_BOARD_PIN_IO1_PORT
 
 static UART_HandleTypeDef ketCube_terminal_UsartHandle;
 static ketCube_UART_descriptor_t ketCube_terminal_UsartDescriptor;
@@ -525,32 +526,19 @@ void ketCube_terminal_usartIoInit(void)
     /* Enable USART1 clock */
     KETCUBE_TERMINAL_USART_CLK_ENABLE();
 
-    /* Enable RX/TX port clocks */
-    KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE();
-    KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE();
-
     /* UART TX GPIO pin configuration  */
     ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN,
-                          KETCUBE_TERMINAL_USART_TX_AF,
-                          KETCUBE_TERMINAL_USART_TX_GPIO_PORT);
-    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_RX_PIN,
-                          KETCUBE_TERMINAL_USART_RX_AF,
-                          KETCUBE_TERMINAL_USART_RX_GPIO_PORT);
+                          KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_TX_AF
+                         );
 }
 
 void ketCube_terminal_usartIoDeInit(void)
 {
-    GPIO_InitTypeDef GPIO_InitStructure = { 0 };
-
-    KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE();
     KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE();
 
-    GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStructure.Pull = GPIO_NOPULL;
-
-    GPIO_InitStructure.Pin = KETCUBE_TERMINAL_USART_TX_PIN;
-    HAL_GPIO_Init(KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
-                  &GPIO_InitStructure);
+    ketCube_GPIO_Release(KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                         KETCUBE_TERMINAL_USART_TX_PIN);
 
     __HAL_UART_ENABLE_IT(&ketCube_terminal_UsartHandle, UART_IT_WUF);
     HAL_UARTEx_EnableStopMode(&ketCube_terminal_UsartHandle);
@@ -685,9 +673,19 @@ void ketCube_terminal_Init(void)
     ketCube_terminal_UsartDescriptor.fnWakeupCallback =
         &ketCube_terminal_usartWakeupCallback;
 
+    /* Initial GPIO configuration for UART */
+    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_RX_PIN,
+                          KETCUBE_TERMINAL_USART_RX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_RX_AF
+                         );
+     ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN,
+                          KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_TX_AF
+                         );
+        
     if (ketCube_UART_RegisterHandle
         (KETCUBE_TERMINAL_USART_CHANNEL,
-         &ketCube_terminal_UsartDescriptor) != KETCUBE_CFG_MODULE_OK) {
+         &ketCube_terminal_UsartDescriptor) != KETCUBE_CFG_DRV_OK) {
         ketCube_common_BasicErrorHandler();
     }
 

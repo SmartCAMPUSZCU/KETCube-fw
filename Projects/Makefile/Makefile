@@ -180,9 +180,9 @@ SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_lis2hh12.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_ics43432.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_eeprom.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_uart.c
+SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_gpio.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2c.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2s.c
-SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_gpio.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_timer.c
 
 ASSRCS  = ./startup_stm32l082xx.s
