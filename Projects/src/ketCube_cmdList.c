@@ -128,6 +128,18 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
      0,
      &ketCube_terminal_cmd_show_core_severity},
 
+    {((char *) &("driver")),
+     ((char *) &("Driver(s) messages severity")),
+     1,
+     0,
+     (void *) NULL},
+
+    {((char *) &("severity")),
+     ((char *) &("Driver(s) messages severity")),
+     2,
+     0,
+     &ketCube_terminal_cmd_show_driver_severity},
+
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     {((char *) &("batMeas")),
      ((char *) &("Show batMeas parameters")),
@@ -248,6 +260,18 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
      2,
      1,
      &ketCube_terminal_cmd_set_core_severity},
+     
+    {((char *) &("driver")),
+     ((char *) &("Set KETCube Driver(s) parameters")),
+     1,
+     0,
+     (void *) NULL},
+
+    {((char *) &("severity")),
+     ((char *) &("Driver(s) messages severity: 0 = NONE, 1 = ERROR; 2 = INFO; 3 = DEBUG")),
+     2,
+     1,
+     &ketCube_terminal_cmd_set_driver_severity},
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     {((char *) &("batMeas")),

@@ -120,9 +120,11 @@ static void ketCube_terminal_cmd_disable(void);
 static void ketCube_terminal_cmd_show_core_basePeriod(void);
 static void ketCube_terminal_cmd_show_core_startDelay(void);
 static void ketCube_terminal_cmd_show_core_severity(void);
+static void ketCube_terminal_cmd_show_driver_severity(void);
 static void ketCube_terminal_cmd_set_core_basePeriod(void);
 static void ketCube_terminal_cmd_set_core_startDelay(void);
 static void ketCube_terminal_cmd_set_core_severity(void);
+static void ketCube_terminal_cmd_set_driver_severity(void);
 
 // List of KETCube commands
 #include "../../Projects/src/ketCube_cmdList.c" // include a project-specific file
@@ -1141,6 +1143,7 @@ void ketCube_terminal_Print(char *format, ...)
   * @param format printf-style format string
   * @param args 
   * 
+  * @note ketCube_terminal_CoreSeverityPrintln() does not introduce any formatting in contrast with ketCube_terminal_ModSeverityPrintln(), where the produced string is prefixed by originator module Name
   * 
   */
 void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
@@ -1151,7 +1154,6 @@ void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
     }
 
     KETCUBE_TERMINAL_CLR_LINE();
-    KETCUBE_TERMINAL_PRINTF("Core :: ");
     va_list args;
     va_start(args, format);
     ketCube_terminal_UsartPrintVa(format, args);
@@ -1169,7 +1171,7 @@ void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
   */
 void ketCube_terminal_DriverSeverityPrintln(const char * drvName, ketCube_severity_t msgSeverity, char *format, ...)
 {
-    if (ketCube_coreCfg_severity < msgSeverity) {
+    if (ketCube_coreCfg_driverSeverity < msgSeverity) {
         return;
     }
 
@@ -1334,7 +1336,7 @@ void ketCube_terminal_cmd_show_driver_severity(void)
  * @brief Set KETCube driver(s) severity
  * 
  */
-void ketCube_terminal_cmd_see_driver_severity(void)
+void ketCube_terminal_cmd_set_driver_severity(void)
 {
     uint32_t value;
     char *endptr;

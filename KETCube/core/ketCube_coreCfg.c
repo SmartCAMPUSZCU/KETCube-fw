@@ -128,6 +128,25 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
                                              "KETCube core severity: DEBUG");
         break;
     }
+    
+    switch (ketCube_coreCfg_driverSeverity) {
+    case KETCUBE_CFG_SEVERITY_NONE:
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "KETCube driver severity: NONE");
+        break;
+    case KETCUBE_CFG_SEVERITY_ERROR:
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "KETCube driver severity: ERROR");
+        break;
+    case KETCUBE_CFG_SEVERITY_INFO:
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "KETCube driver severity: INFO");
+        break;
+    case KETCUBE_CFG_SEVERITY_DEBUG:
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "KETCube driver severity: DEBUG");
+        break;
+    }
 
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD == TRUE)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
