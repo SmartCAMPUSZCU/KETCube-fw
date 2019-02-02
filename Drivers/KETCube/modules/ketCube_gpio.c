@@ -149,8 +149,7 @@ ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
         portC_usage |= pin;
         break;
     default:
-        ketCube_terminal_DebugPrintln
-            ("GPIO :: The declared port cannot be used!");
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "The declared port cannot be used!");
         return KETCUBE_CFG_DRV_ERROR;
     }
 
@@ -182,12 +181,10 @@ ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port,
     uint8_t index = ketCube_GPIO_GetBitPos(pin);
 
     if (ketCube_GPIO_IrqHandlers[index] != NULL) {
-        ketCube_terminal_DebugPrintln("GPIO :: EXTI line %d already used!",
-                                      index);
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "EXTI line %d already used!", index);
         return KETCUBE_CFG_DRV_ERROR;
     } else {
-        ketCube_terminal_DebugPrintln("GPIO :: Registering EXTI line %d",
-                                      index);
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_GPIO_NAME, KETCUBE_CFG_SEVERITY_INFO, "Registering EXTI line %d", index);
     }
 
     if (irqHandler != NULL) {

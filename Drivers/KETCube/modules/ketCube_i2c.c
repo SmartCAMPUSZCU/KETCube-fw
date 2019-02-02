@@ -231,7 +231,7 @@ static void ketCube_I2C_Error()
     uint8_t i;
     uint8_t tmpInitRuns = initRuns;
 
-    ketCube_terminal_DebugPrintln("I2C :: Re-Initialize()");
+    ketCube_terminal_DriverSeverityPrintln(KETCUBE_I2C_NAME, KETCUBE_CFG_SEVERITY_DEBUG, "Re-Initialize()");
 
     /* De-initialize the I2C comunication bus */
     for (i = tmpInitRuns; i > 0; i--) {

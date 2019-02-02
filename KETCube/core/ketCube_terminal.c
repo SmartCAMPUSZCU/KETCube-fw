@@ -1141,7 +1141,6 @@ void ketCube_terminal_Print(char *format, ...)
   * @param format printf-style format string
   * @param args 
   * 
-  * @note ketCube_terminal_CoreSeverityPrintln() does not introduce any formatting in contrast with ketCube_terminal_ModSeverityPrintln(), where the produced string is prefixed by originator module Name
   * 
   */
 void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
@@ -1152,6 +1151,30 @@ void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
     }
 
     KETCUBE_TERMINAL_CLR_LINE();
+    KETCUBE_TERMINAL_PRINTF("Core :: ");
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_UsartPrintVa(format, args);
+    va_end(args);
+    ketCube_terminal_UpdateCmdLine();
+}
+
+/**
+  * @brief Print Debug info to serial line + newline
+  *
+  * @param msgSeverity mesage severity
+  * @param format printf-style format string
+  * @param args 
+  * 
+  */
+void ketCube_terminal_DriverSeverityPrintln(const char * drvName, ketCube_severity_t msgSeverity, char *format, ...)
+{
+    if (ketCube_coreCfg_severity < msgSeverity) {
+        return;
+    }
+
+    KETCUBE_TERMINAL_CLR_LINE();
+    KETCUBE_TERMINAL_PRINTF("Driver :: %s :: ", drvName);
     va_list args;
     va_start(args, format);
     ketCube_terminal_UsartPrintVa(format, args);
@@ -1277,6 +1300,79 @@ void ketCube_terminal_cmd_show_core_severity(void)
         KETCUBE_TERMINAL_PRINTF("DEBUG");
         break;
     }
+
+    KETCUBE_TERMINAL_ENDL();
+}
+
+/**
+ * @brief Show KETCube driver(s) severity
+ * 
+ */
+void ketCube_terminal_cmd_show_driver_severity(void)
+{
+    KETCUBE_TERMINAL_PRINTF("KETCube driver(s) severity: ");
+
+    switch (ketCube_coreCfg_driverSeverity) {
+    case KETCUBE_CFG_SEVERITY_NONE:
+        KETCUBE_TERMINAL_PRINTF("NONE");
+        break;
+    case KETCUBE_CFG_SEVERITY_ERROR:
+        KETCUBE_TERMINAL_PRINTF("ERROR");
+        break;
+    case KETCUBE_CFG_SEVERITY_INFO:
+        KETCUBE_TERMINAL_PRINTF("INFO");
+        break;
+    case KETCUBE_CFG_SEVERITY_DEBUG:
+        KETCUBE_TERMINAL_PRINTF("DEBUG");
+        break;
+    }
+
+    KETCUBE_TERMINAL_ENDL();
+}
+
+/**
+ * @brief Set KETCube driver(s) severity
+ * 
+ */
+void ketCube_terminal_cmd_see_driver_severity(void)
+{
+    uint32_t value;
+    char *endptr;
+
+    value = strtol(&(commandBuffer[commandParams]), &endptr, 10);
+
+    KETCUBE_TERMINAL_PRINTF("Setting KETCube driver(s) severity: ");
+    switch ((ketCube_severity_t) value) {
+    case KETCUBE_CFG_SEVERITY_NONE:
+        KETCUBE_TERMINAL_PRINTF("NONE");
+        break;
+    case KETCUBE_CFG_SEVERITY_ERROR:
+        KETCUBE_TERMINAL_PRINTF("ERROR");
+        break;
+    case KETCUBE_CFG_SEVERITY_INFO:
+        KETCUBE_TERMINAL_PRINTF("INFO");
+        break;
+    case KETCUBE_CFG_SEVERITY_DEBUG:
+        KETCUBE_TERMINAL_PRINTF("DEBUG");
+        break;
+    default:
+        KETCUBE_TERMINAL_PRINTF("IVALID SEVERITY VALUE");
+        KETCUBE_TERMINAL_ENDL();
+        KETCUBE_TERMINAL_PRINTF("KETCube core severity set error!");
+        KETCUBE_TERMINAL_ENDL();
+        return;
+    }
+
+    KETCUBE_TERMINAL_ENDL();
+
+    if (ketCube_EEPROM_WriteBuffer
+        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_DRIVER_SEVERITY,
+         (uint8_t *) & (value), 1) == KETCUBE_EEPROM_OK) {
+    } else {
+        KETCUBE_TERMINAL_PRINTF("error!");
+    }
+
+    KETCUBE_TERMINAL_PRINTF("sucess!");
 
     KETCUBE_TERMINAL_ENDL();
 }

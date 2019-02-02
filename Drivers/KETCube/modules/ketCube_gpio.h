@@ -55,6 +55,8 @@
   * @{
   */
 
+#define KETCUBE_GPIO_NAME               "gpio_drv"         ///< GPIO driver name
+
 /**
 * @brief List of GPIO PINs
 */

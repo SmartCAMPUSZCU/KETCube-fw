@@ -59,9 +59,10 @@
   * @{
   */
 
-#define KETCUBE_I2C_ADDRESS                   (uint8_t)0x33     /*<! KETCube I2C address */
+#define KETCUBE_I2C_NAME                      "i2c_drv"         ///< I2C driver name
+#define KETCUBE_I2C_ADDRESS                   (uint8_t)0x33     ///< KETCube I2C address
 #define KETCUBE_I2C_HANDLE                     I2C1
-#define KETCUBE_I2C_TIMEOUT                    0x5000   /*<! The value of the maximal timeout for BUS waiting loops */
+#define KETCUBE_I2C_TIMEOUT                    0x5000           ///< The value of the maximal timeout for BUS waiting loops
 
 /**
 * @brief I2C Speed selection

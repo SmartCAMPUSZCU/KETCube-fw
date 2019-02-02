@@ -48,6 +48,7 @@
 uint32_t ketCube_coreCfg_BasePeriod;
 uint32_t ketCube_coreCfg_StartDelay;
 ketCube_severity_t ketCube_coreCfg_severity;
+ketCube_severity_t ketCube_coreCfg_driverSeverity;
 
 
 /**
@@ -79,6 +80,13 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
     if (ketCube_EEPROM_ReadBuffer
         (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_SEVERITY,
          (uint8_t *) & (ketCube_coreCfg_severity),
+         1) != KETCUBE_EEPROM_OK) {
+        return ketCube_cfg_Load_ERROR;
+    }
+    
+    if (ketCube_EEPROM_ReadBuffer
+        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_DRIVER_SEVERITY,
+         (uint8_t *) & (ketCube_coreCfg_driverSeverity),
          1) != KETCUBE_EEPROM_OK) {
         return ketCube_cfg_Load_ERROR;
     }

@@ -55,6 +55,8 @@
   * @{
   */
 
+#define KETCUBE_UART_NAME               "uart_drv"        ///< UART driver name
+
 /**
 * @brief UART supported channels
 * 

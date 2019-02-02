@@ -111,6 +111,8 @@ extern void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t
                                                  msgSeverity, char *format,
                                                  ...);
 
+extern void ketCube_terminal_DriverSeverityPrintln(const char * drvName, ketCube_severity_t msgSeverity, char *format, ...);
+
 extern void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t
                                                 msgSeverity,
                                                 ketCube_cfg_moduleIDs_t

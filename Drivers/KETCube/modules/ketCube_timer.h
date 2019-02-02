@@ -54,6 +54,8 @@
   * @{
   */
 
+#define KETCUBE_TIMER_NAME                      "timer_drv"         ///< TIMER driver name
+
 /**
 * @brief List of available timers
 */
