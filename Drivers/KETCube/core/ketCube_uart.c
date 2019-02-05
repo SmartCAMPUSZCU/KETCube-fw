@@ -207,10 +207,9 @@ void ketCube_UART_IoDeInitAll(void)
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_DrvError_t ketCube_UART_SetupPin(ketCube_gpio_pin_t pin,
-                                             ketCube_gpio_port_t port,
-                                             uint8_t af
-                                            )
+ketCube_cfg_DrvError_t ketCube_UART_SetupPin(ketCube_gpio_port_t port,
+                                             ketCube_gpio_pin_t pin,
+                                             uint8_t af)
 {
     static GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 

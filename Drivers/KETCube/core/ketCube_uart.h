@@ -97,10 +97,9 @@ ketCube_UART_RegisterHandle(ketCube_UART_ChannelNo_t channel,
                             ketCube_UART_descriptor_t * descriptor);
 extern ketCube_cfg_DrvError_t
 ketCube_UART_UnRegisterHandle(ketCube_UART_ChannelNo_t channel);
-extern ketCube_cfg_DrvError_t ketCube_UART_SetupPin(ketCube_gpio_pin_t pin,
-                                             ketCube_gpio_port_t port,
-                                             uint8_t af
-                                            );
+extern ketCube_cfg_DrvError_t ketCube_UART_SetupPin(ketCube_gpio_port_t port,
+                                                    ketCube_gpio_pin_t pin,
+                                                    uint8_t af);
 
 extern UART_HandleTypeDef *ketCube_UART_GetHandle(ketCube_UART_ChannelNo_t
                                                   channel);

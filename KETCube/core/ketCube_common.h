@@ -44,8 +44,8 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __COMMON_H
-#define __COMMON_H
+#ifndef __KETCUBE_COMMON_H
+#define __KETCUBE_COMMON_H
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32l0xx_hal.h"
@@ -443,9 +443,12 @@ static inline void ketCube_common_BasicErrorHandler()
 }
 
 
+// Include project-specific common here
+#include "ketCube_projectCommon.h"
+
 
 /**
   * @}
   */
 
-#endif                          /* __COMMON_H */
+#endif                          /* __KETCUBE_COMMON_H */

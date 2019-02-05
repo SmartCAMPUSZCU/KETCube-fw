@@ -527,8 +527,8 @@ void ketCube_terminal_usartIoInit(void)
     KETCUBE_TERMINAL_USART_CLK_ENABLE();
 
     /* UART TX GPIO pin configuration  */
-    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN,
-                          KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_TX_PIN,
                           KETCUBE_TERMINAL_USART_TX_AF
                          );
 }
@@ -674,12 +674,12 @@ void ketCube_terminal_Init(void)
         &ketCube_terminal_usartWakeupCallback;
 
     /* Initial GPIO configuration for UART */
-    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_RX_PIN,
-                          KETCUBE_TERMINAL_USART_RX_GPIO_PORT,
+    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_RX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_RX_PIN,
                           KETCUBE_TERMINAL_USART_RX_AF
                          );
-     ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN,
-                          KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+     ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                           KETCUBE_TERMINAL_USART_TX_PIN,
                           KETCUBE_TERMINAL_USART_TX_AF
                          );
         
