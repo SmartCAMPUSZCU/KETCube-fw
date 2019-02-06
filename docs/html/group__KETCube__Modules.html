@@ -52,9 +52,10 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:ga236cd6f3dae9b742f27f0648c6a88858"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Modules.html#ga236cd6f3dae9b742f27f0648c6a88858">KETCUBE_MODULES_SENSOR_BYTES</a>&#160;&#160;&#160;64</td></tr>
+<tr class="memitem:ga236cd6f3dae9b742f27f0648c6a88858"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Modules.html#ga236cd6f3dae9b742f27f0648c6a88858">KETCUBE_MODULES_SENSOR_BYTES</a>&#160;&#160;&#160;512</td></tr>
+<tr class="memdesc:ga236cd6f3dae9b742f27f0648c6a88858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Max number of bytes which can be read from all sensors.  <a href="#ga236cd6f3dae9b742f27f0648c6a88858">More...</a><br /></td></tr>
 <tr class="separator:ga236cd6f3dae9b742f27f0648c6a88858"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga6db6941d075cec2a747bb77d282ec4de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Modules.html#ga6db6941d075cec2a747bb77d282ec4de">ketCube_modules_CNT</a>&#160;&#160;&#160;(<a class="el" href="group__KETCube__cfg.html#gga2c6d71f0fe8a74ceb57850e766ac48c3a9cea3abb0dcf6b2a7cb9be04cd586e88">KETCUBE_LISTS_MODULEID_LAST</a>)</td></tr>
+<tr class="memitem:ga6db6941d075cec2a747bb77d282ec4de"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Modules.html#ga6db6941d075cec2a747bb77d282ec4de">ketCube_modules_CNT</a>&#160;&#160;&#160;(KETCUBE_LISTS_MODULEID_LAST)</td></tr>
 <tr class="separator:ga6db6941d075cec2a747bb77d282ec4de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
@@ -78,7 +79,6 @@ Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ga79d584c0d023021180ba400c9475c14b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__cfg__Module__t.html">ketCube_cfg_Module_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Modules.html#ga79d584c0d023021180ba400c9475c14b">ketCube_modules_List</a> [<a class="el" href="group__KETCube__Modules.html#ga6db6941d075cec2a747bb77d282ec4de">ketCube_modules_CNT</a>]</td></tr>
-<tr class="memdesc:ga79d584c0d023021180ba400c9475c14b"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of KETCube modules.  <a href="#ga79d584c0d023021180ba400c9475c14b">More...</a><br /></td></tr>
 <tr class="separator:ga79d584c0d023021180ba400c9475c14b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -92,7 +92,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define ketCube_modules_CNT&#160;&#160;&#160;(<a class="el" href="group__KETCube__cfg.html#gga2c6d71f0fe8a74ceb57850e766ac48c3a9cea3abb0dcf6b2a7cb9be04cd586e88">KETCUBE_LISTS_MODULEID_LAST</a>)</td>
+          <td class="memname">#define ketCube_modules_CNT&#160;&#160;&#160;(KETCUBE_LISTS_MODULEID_LAST)</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -106,10 +106,12 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_MODULES_SENSOR_BYTES&#160;&#160;&#160;64</td>
+          <td class="memname">#define KETCUBE_MODULES_SENSOR_BYTES&#160;&#160;&#160;512</td>
         </tr>
       </table>
 </div><div class="memdoc">
+
+<p>Max number of bytes which can be read from all sensors. </p>
 
 </div>
 </div>
@@ -261,8 +263,6 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>List of KETCube modules. </p>
 
 </div>
 </div>

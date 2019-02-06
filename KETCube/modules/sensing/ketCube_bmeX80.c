@@ -375,7 +375,7 @@ ketCube_cfg_ModError_t getHumidity(uint32_t * value,
 
     *value = (uint32_t) calc_hum;
     return KETCUBE_CFG_MODULE_OK;
-#else                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
+#else                           /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
     return KETCUBE_CFG_MODULE_ERROR;
 #endif
 }
@@ -441,7 +441,7 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value,
 
     *value = calc_temp;
     return KETCUBE_CFG_MODULE_OK;
-#else                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
+#else                           /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
     return KETCUBE_CFG_MODULE_ERROR;
 #endif
 }
@@ -553,7 +553,7 @@ ketCube_cfg_ModError_t getPressure(uint32_t * value,
 
     *value = (uint32_t) (pressure_comp);
     return KETCUBE_CFG_MODULE_OK;
-#else                         /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
+#else                           /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
     return KETCUBE_CFG_MODULE_ERROR;
 #endif
 }
@@ -594,19 +594,18 @@ ketCube_cfg_ModError_t ketCube_bmeX80_ReadData(uint8_t * buffer,
         //bench_StoreData_BME280(INT16_MAX,UINT16_MAX,UINT16_MAX);
         return KETCUBE_CFG_MODULE_ERROR;
     }
-
     //Read measurement configuration
     uint8_t tempData = 0;
     if (ketCube_I2C_ReadData(KETCUBE_BMEX80_I2C_ADDRESS,
                              KETCUBE_BMEX80_CTRL_MEAS_REG, &tempData, 1)) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
-    
     //Switch mode to Forced - one shot measurement
     tempData |= 1;
     //Write back configuration data
     if (ketCube_I2C_WriteData(KETCUBE_BMEX80_I2C_ADDRESS,
-                              KETCUBE_BMEX80_CTRL_MEAS_REG, &tempData, 1)) {
+                              KETCUBE_BMEX80_CTRL_MEAS_REG, &tempData,
+                              1)) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -648,7 +647,7 @@ ketCube_cfg_ModError_t ketCube_bmeX80_ReadData(uint8_t * buffer,
                                  temperature / 100.0, humidity / 1000.0,
                                  pressure / 100.0);
 #endif                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
-    
+
     return KETCUBE_CFG_MODULE_OK;
 
 }

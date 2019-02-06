@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_mainBoard.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-01-04
+ * @version 0.2
+ * @date    2018-12-14
  * @brief   Definitions for KETCube main board
  *
  * @attention
@@ -51,6 +51,8 @@
 #include "stm32l0xx_hal_gpio.h"
 #include "stdlib.h"
 
+#include "ketCube_gpio.h"
+
 
 /** @defgroup  KETCube_mainBoard KETCube Main Board
   * @brief KETCube Configuration Manager
@@ -61,58 +63,152 @@
   * @{
   */
 
-#define KETCUBE_MAIN_BOARD_LED1_PIN                           GPIO_PIN_7
-#define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     GPIOB
-#define KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_ENABLE()             __HAL_RCC_GPIOB_CLK_ENABLE()
-#define KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_DISABLE()            __HAL_RCC_GPIOB_CLK_DISABLE()
-#define KETCUBE_MAIN_BOARD_LED1_On()                          HAL_GPIO_WritePin(KETCUBE_MAIN_BOARD_LED1_GPIO_PORT, KETCUBE_MAIN_BOARD_LED1_PIN, GPIO_PIN_SET)
-#define KETCUBE_MAIN_BOARD_LED1_Off()                         HAL_GPIO_WritePin(KETCUBE_MAIN_BOARD_LED1_GPIO_PORT, KETCUBE_MAIN_BOARD_LED1_PIN, GPIO_PIN_RESET)
-#define KETCUBE_MAIN_BOARD_LED1_Toggle()                      HAL_GPIO_TogglePin(KETCUBE_MAIN_BOARD_LED1_GPIO_PORT, KETCUBE_MAIN_BOARD_LED1_PIN)
+/** 
+  * @brief Main Board revisions
+  */
+typedef enum {
+    KETCUBE_MAIN_REV_A = 0,
+    KETCUBE_MAIN_REV_B,
+    KETCUBE_MAIN_REV_C,
+    KETCUBE_MAIN_REV_D,
+    KETCUBE_MAIN_REV_E,
 
-#define KETCUBE_MAIN_BOARD_LED2_PIN                           GPIO_PIN_6
-#define KETCUBE_MAIN_BOARD_LED2_GPIO_PORT                     GPIOB
-#define KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_ENABLE()             __HAL_RCC_GPIOB_CLK_ENABLE()
-#define KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_DISABLE()            __HAL_RCC_GPIOB_CLK_DISABLE()
-#define KETCUBE_MAIN_BOARD_LED2_On()                          HAL_GPIO_WritePin(KETCUBE_MAIN_BOARD_LED2_GPIO_PORT, KETCUBE_MAIN_BOARD_LED2_PIN, GPIO_PIN_SET)
-#define KETCUBE_MAIN_BOARD_LED2_Off()                         HAL_GPIO_WritePin(KETCUBE_MAIN_BOARD_LED2_GPIO_PORT, KETCUBE_MAIN_BOARD_LED2_PIN, GPIO_PIN_RESET)
-#define KETCUBE_MAIN_BOARD_LED2_Toggle()                      HAL_GPIO_TogglePin(KETCUBE_MAIN_BOARD_LED2_GPIO_PORT, KETCUBE_MAIN_BOARD_LED2_PIN)
+    KETCUBE_MAIN_REV_DEV        ///< The recent "public" board revision is (KETCUBE_MAIN_REV_DEV - 1)
+} ketCube_MainBoard_revs_t;
+
+/** 
+  * @brief Solder Jumper configuration options
+  */
+typedef enum {
+    KETCUBE_MAIN_BOARD_SJ_OPEN = 0,     ///< Solder jumper is OPEN
+    KETCUBE_MAIN_BOARD_SJ_12,   ///< Solder jumper PADs 1 and 2 are CLOSED (this holds for all solder jumpers)
+    KETCUBE_MAIN_BOARD_SJ_23    ///< Solder jumper PADs 2 and 3 are CLOSED (this holds for 3-PAD solder jumpers)
+} ketCube_MainBoard_SJ_t;
 
 
-static inline void ketCube_MainBoard_LED1_Init()
-{
-    GPIO_InitTypeDef GPIO_InitStruct;
+/** @defgroup KETCube_mainBoard_Options KETCube options
+  * @brief KETCube mainBoard Solder Jumpers and optional parts
+  * @{
+  */
 
-    /* Enable the GPIO_LED Clock */
-    KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_ENABLE();
+#define KETCUBE_MAIN_BOARD_REV           (KETCUBE_MAIN_REV_DEV - 1)     ///< The current board revision, @see main.c for deffinition
 
-    /* Configure the GPIO_LED pin */
-    GPIO_InitStruct.Pin = KETCUBE_MAIN_BOARD_LED1_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+#define KETCUBE_MAIN_BOARD_OPTION_SJ1     KETCUBE_MAIN_BOARD_SJ_12      ///< Connect PA8 to IO3
+#define KETCUBE_MAIN_BOARD_OPTION_SJ7     KETCUBE_MAIN_BOARD_SJ_OPEN    ///< Connect Vref to IO3
 
-    HAL_GPIO_Init(KETCUBE_MAIN_BOARD_LED1_GPIO_PORT, &GPIO_InitStruct);
+#define KETCUBE_MAIN_BOARD_OPTION_SJ2     KETCUBE_MAIN_BOARD_SJ_12      ///< MuRaTa radio powered
 
-    KETCUBE_MAIN_BOARD_LED1_Off();
-}
+#define KETCUBE_MAIN_BOARD_OPTION_SJ3     KETCUBE_MAIN_BOARD_SJ_12      ///< MuRaTa sleep Mode control
+#define KETCUBE_MAIN_BOARD_OPTION_SJ8     KETCUBE_MAIN_BOARD_SJ_OPEN    ///< MuRaTa sleep Mode control
 
-static inline void ketCube_MainBoard_LED2_Init()
-{
-    GPIO_InitTypeDef GPIO_InitStruct;
+#define KETCUBE_MAIN_BOARD_OPTION_SJ5     KETCUBE_MAIN_BOARD_SJ_12      ///< HDC1080 connected
+#define KETCUBE_MAIN_BOARD_OPTION_SJ6     KETCUBE_MAIN_BOARD_SJ_12      ///< HDC1080 connected
 
-    /* Enable the GPIO_LED Clock */
-    KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_ENABLE();
+#define KETCUBE_MAIN_BOARD_OPTION_SJ9     KETCUBE_MAIN_BOARD_SJ_23      ///< 12 == NRST to IO4; 23 == PA5 to IO4
+#define KETCUBE_MAIN_BOARD_OPTION_SJ10    KETCUBE_MAIN_BOARD_SJ_12      ///< Vref to 3V3
 
-    /* Configure the GPIO_LED pin */
-    GPIO_InitStruct.Pin = KETCUBE_MAIN_BOARD_LED2_PIN;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
 
-    HAL_GPIO_Init(KETCUBE_MAIN_BOARD_LED2_GPIO_PORT, &GPIO_InitStruct);
+/**
+  * @}
+  */
 
-    KETCUBE_MAIN_BOARD_LED2_Off();
-}
+/** @defgroup KETCube_mainBoard_Socket Socket PINs
+  * @brief KETCube mainBoard SOCKET PINs
+  * @{
+  */
+
+// Configurable Socket part
+
+#define KETCUBE_MAIN_BOARD_PIN_IO1_PIN       KETCUBE_GPIO_PIN_10
+#define KETCUBE_MAIN_BOARD_PIN_IO1_PORT      KETCUBE_GPIO_PA
+
+#define KETCUBE_MAIN_BOARD_PIN_IO2_PIN       KETCUBE_GPIO_PIN_9
+#define KETCUBE_MAIN_BOARD_PIN_IO2_PORT      KETCUBE_GPIO_PA
+
+#if (KETCUBE_MAIN_BOARD_OPTION_SJ1 == KETCUBE_MAIN_BOARD_SJ_12)
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PIN     KETCUBE_GPIO_PIN_8
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PORT    KETCUBE_GPIO_PA
+#else
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PIN     KETCUBE_GPIO_PIN_0
+#define KETCUBE_MAIN_BOARD_PIN_IO3_PORT    NULL
+#endif
+
+#if (KETCUBE_MAIN_BOARD_OPTION_SJ9 == KETCUBE_MAIN_BOARD_SJ_23)
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PIN     KETCUBE_GPIO_PIN_5
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PORT    KETCUBE_GPIO_PA
+#else
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PIN     KETCUBE_GPIO_PIN_0
+#define KETCUBE_MAIN_BOARD_PIN_IO4_PORT    NULL
+#endif
+
+// MicroBUS Socket part
+
+#define KETCUBE_MAIN_BOARD_PIN_AN_PIN        KETCUBE_GPIO_PIN_4
+#define KETCUBE_MAIN_BOARD_PIN_AN_PORT       KETCUBE_GPIO_PA
+
+#define KETCUBE_MAIN_BOARD_PIN_RST_PIN       KETCUBE_GPIO_PIN_0
+#define KETCUBE_MAIN_BOARD_PIN_RST_PORT      KETCUBE_GPIO_PA
+
+#define KETCUBE_MAIN_BOARD_PIN_CS_PIN        KETCUBE_GPIO_PIN_12
+#define KETCUBE_MAIN_BOARD_PIN_CS_PORT       KETCUBE_GPIO_PB
+
+#define KETCUBE_MAIN_BOARD_PIN_SCK_PIN       KETCUBE_GPIO_PIN_13
+#define KETCUBE_MAIN_BOARD_PIN_SCK_PORT      KETCUBE_GPIO_PB
+
+#define KETCUBE_MAIN_BOARD_PIN_MISO_PIN      KETCUBE_GPIO_PIN_14
+#define KETCUBE_MAIN_BOARD_PIN_MISO_PORT     KETCUBE_GPIO_PB
+
+#define KETCUBE_MAIN_BOARD_PIN_MOSI_PIN      KETCUBE_GPIO_PIN_15
+#define KETCUBE_MAIN_BOARD_PIN_MOSI_PORT     KETCUBE_GPIO_PB
+
+#define KETCUBE_MAIN_BOARD_PIN_PWM_PIN       KETCUBE_GPIO_PIN_2
+#define KETCUBE_MAIN_BOARD_PIN_PWM_PORT      KETCUBE_GPIO_PB
+
+#if (KETCUBE_MAIN_BOARD_REV < KETCUBE_MAIN_BOARD_REV_E)
+#define KETCUBE_MAIN_BOARD_PIN_INT_PIN     KETCUBE_GPIO_PIN_7
+#define KETCUBE_MAIN_BOARD_PIN_INT_PORT    KETCUBE_GPIO_PB
+#else
+#define KETCUBE_MAIN_BOARD_PIN_INT_PIN     KETCUBE_GPIO_PIN_5
+#define KETCUBE_MAIN_BOARD_PIN_INT_PORT    KETCUBE_GPIO_PB
+#endif
+
+#define KETCUBE_MAIN_BOARD_PIN_RX_PIN        KETCUBE_GPIO_PIN_3
+#define KETCUBE_MAIN_BOARD_PIN_RX_PORT       KETCUBE_GPIO_PA
+
+#define KETCUBE_MAIN_BOARD_PIN_TX_PIN        KETCUBE_GPIO_PIN_2
+#define KETCUBE_MAIN_BOARD_PIN_TX_PORT       KETCUBE_GPIO_PA
+
+#define KETCUBE_MAIN_BOARD_PIN_SCL_PIN       KETCUBE_GPIO_PIN_8
+#define KETCUBE_MAIN_BOARD_PIN_SCL_PORT      KETCUBE_GPIO_PB
+
+#define KETCUBE_MAIN_BOARD_PIN_SDA_PIN       KETCUBE_GPIO_PIN_9
+#define KETCUBE_MAIN_BOARD_PIN_SDA_PORT      KETCUBE_GPIO_PB
+
+/**
+  * @}
+  */
+
+
+/** @defgroup KETCube_mainBoard_LEDs Debug LEDs
+  * @brief KETCube mainBoard Debug LEDs
+  * @{
+  */
+
+#if (KETCUBE_MAIN_BOARD_REV < KETCUBE_MAIN_BOARD_REV_E)
+#define KETCUBE_MAIN_BOARD_LED1_PIN                           KETCUBE_GPIO_PIN_5
+#define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     KETCUBE_GPIO_PB
+#else
+#define KETCUBE_MAIN_BOARD_LED1_PIN                           KETCUBE_GPIO_PIN_7
+#define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT                     KETCUBE_GPIO_PB
+#endif
+
+#define KETCUBE_MAIN_BOARD_LED2_PIN                             KETCUBE_GPIO_PIN_6
+#define KETCUBE_MAIN_BOARD_LED2_GPIO_PORT                       KETCUBE_GPIO_PB
+
+/**
+  * @}
+  */
+
 
 /**
   * @}

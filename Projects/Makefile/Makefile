@@ -98,7 +98,7 @@ INCLUDE = $(addprefix -I, $(INC_DIRS))
 
 CFLAGS   = -Wall  -Wno-missing-braces -g -mthumb -mcpu=cortex-m0plus -fdiagnostics-color=auto $(OPTIMIZE)
 CFLAGS  += -march=armv6-m -mlittle-endian -Wl,--gc-sections -TSTM32L072CZYx_FLASH.ld $(DEBUG)
-CFLAGS  += -DSTM32L082xx -DUSE_B_L082Z_KETCube -DUSE_HAL_DRIVER -DREGION_EU868 -DHAL_LPTIM_MODULE_ENABLED -DHAL_I2S_MODULE_ENABLED
+CFLAGS  += -DSTM32L082xx -DUSE_B_L082Z_KETCube -DUSE_HAL_DRIVER -DREGION_EU868
 
 ASFLAGS = -mcpu=cortex-m0plus -march=armv6-m -mthumb -mthumb-interwork
 
@@ -169,6 +169,7 @@ SRCS += $(COREDIR)KETCube/core/ketCube_asyncTx.c
 SRCS += $(COREDIR)KETCube/core/ketCube_txDisplay.c
 SRCS += $(COREDIR)KETCube/core/ketCube_coreCfg.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora.c
+SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora_ext.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_starNet.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_adc.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_fdc2214.c
@@ -179,9 +180,9 @@ SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_lis2hh12.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_ics43432.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_eeprom.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_uart.c
+SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_gpio.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2c.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2s.c
-SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_gpio.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_timer.c
 
 ASSRCS  = ./startup_stm32l082xx.s
@@ -240,11 +241,18 @@ clean:
 chipinfo:
 	st-info --chipid
 
-flash: $(OUTDIR)$(TARGET).bin
+stflash: $(OUTDIR)$(TARGET).bin
 	-$(STLINK) write $(OUTDIR)$(TARGET).bin 0x8000000
 	$(STLINK) reset
 	$(MAKE) sigdone
 
+ocd: erase
+	openocd -f ketcube-openocd.cfg
+
+flash: $(OUTDIR)$(TARGET).elf
+	$(GDB) -x gdb_flash $(OUTDIR)$(TARGET).elf
+	$(MAKE) sigdone
+	
 erase:
 	$(STLINK) erase
 	$(MAKE) sigdone

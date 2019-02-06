@@ -125,9 +125,15 @@ Functions</h2></td></tr>
 <tr class="memitem:ga0c656dfa22c2429c16b37b51b2b74b63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#ga0c656dfa22c2429c16b37b51b2b74b63">ketCube_lora_Send</a> (uint8_t *buffer, uint8_t *len)</td></tr>
 <tr class="memdesc:ga0c656dfa22c2429c16b37b51b2b74b63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process lora state and prepare data...  <a href="#ga0c656dfa22c2429c16b37b51b2b74b63">More...</a><br /></td></tr>
 <tr class="separator:ga0c656dfa22c2429c16b37b51b2b74b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab64f898e7bf0a1feeace8359c8a676c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#gab64f898e7bf0a1feeace8359c8a676c3">ketCube_lora_AsyncSend</a> (uint8_t *buffer, uint8_t *len)</td></tr>
+<tr class="memdesc:gab64f898e7bf0a1feeace8359c8a676c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process lora state and prepare data (for asynchronous send)...  <a href="#gab64f898e7bf0a1feeace8359c8a676c3">More...</a><br /></td></tr>
+<tr class="separator:gab64f898e7bf0a1feeace8359c8a676c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga290e3e7929ea86d64a3614a3b6be293e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#ga290e3e7929ea86d64a3614a3b6be293e">ketCube_lora_SleepEnter</a> (void)</td></tr>
 <tr class="memdesc:ga290e3e7929ea86d64a3614a3b6be293e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare sleep mode.  <a href="#ga290e3e7929ea86d64a3614a3b6be293e">More...</a><br /></td></tr>
 <tr class="separator:ga290e3e7929ea86d64a3614a3b6be293e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga93068e0bfbc6176269a5b1e10c2e7ba9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#ga93068e0bfbc6176269a5b1e10c2e7ba9">ketCube_lora_processCustomData</a> (uint8_t *buffer, uint8_t len)</td></tr>
+<tr class="memdesc:ga93068e0bfbc6176269a5b1e10c2e7ba9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process custom data.  <a href="#ga93068e0bfbc6176269a5b1e10c2e7ba9">More...</a><br /></td></tr>
+<tr class="separator:ga93068e0bfbc6176269a5b1e10c2e7ba9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>KETCube LoRa module. </p>
@@ -292,6 +298,36 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="gab64f898e7bf0a1feeace8359c8a676c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab64f898e7bf0a1feeace8359c8a676c3">&#9670;&nbsp;</a></span>ketCube_lora_AsyncSend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_lora_AsyncSend </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Process lora state and prepare data (for asynchronous send)... </p>
+
+</div>
+</div>
 <a id="ga305c26bb98612c142aba6a8e41819464"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga305c26bb98612c142aba6a8e41819464">&#9670;&nbsp;</a></span>ketCube_lora_Init()</h2>
 
@@ -316,6 +352,43 @@ Functions</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ga93068e0bfbc6176269a5b1e10c2e7ba9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga93068e0bfbc6176269a5b1e10c2e7ba9">&#9670;&nbsp;</a></span>ketCube_lora_processCustomData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void ketCube_lora_processCustomData </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Process custom data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>received data</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>Redefine this function if you would like to process data received on port 12 </dd></dl>
 
 </div>
 </div>

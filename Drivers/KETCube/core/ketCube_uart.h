@@ -47,6 +47,7 @@
 #define __KETCUBE_UART_H
 
 #include "ketCube_cfg.h"
+#include "ketCube_gpio.h"
 
 /** @defgroup KETCube_UART KETCube UART driver
   * @brief KETCube UART driver for STM32L0
@@ -54,6 +55,8 @@
   * @ingroup KETCube_CoreDrivers
   * @{
   */
+
+#define KETCUBE_UART_NAME               "uart_drv"        ///< UART driver name
 
 /**
 * @brief UART supported channels
@@ -89,16 +92,15 @@ typedef struct {
     ketCube_UART_SimpleCbFn_t fnWakeupCallback;
 } ketCube_UART_descriptor_t;
 
-extern ketCube_cfg_ModError_t
+extern ketCube_cfg_DrvError_t
 ketCube_UART_RegisterHandle(ketCube_UART_ChannelNo_t channel,
                             ketCube_UART_descriptor_t * descriptor);
-extern ketCube_cfg_ModError_t
+extern ketCube_cfg_DrvError_t
 ketCube_UART_UnRegisterHandle(ketCube_UART_ChannelNo_t channel);
-extern ketCube_cfg_ModError_t ketCube_UART_SetupPin(uint32_t pin,
-                                                    uint32_t alternate,
-                                                    GPIO_TypeDef * port);
-extern ketCube_cfg_ModError_t ketCube_UART_ReleasePin(uint32_t pin,
-                                                      GPIO_TypeDef * port);
+extern ketCube_cfg_DrvError_t ketCube_UART_SetupPin(ketCube_gpio_pin_t pin,
+                                             ketCube_gpio_port_t port,
+                                             uint8_t af
+                                            );
 
 extern UART_HandleTypeDef *ketCube_UART_GetHandle(ketCube_UART_ChannelNo_t
                                                   channel);

@@ -177,6 +177,73 @@ void ketCube_terminal_cmd_set_core_severity(void)
     KETCUBE_TERMINAL_ENDL();
 }
 
+/**
+ * @brief Show KETCube driver(s) severity
+ * 
+ */
+void ketCube_terminal_cmd_show_driver_severity(void)
+{
+    const char* severity = "UNKNOWN";
+    
+    switch (ketCube_coreCfg_driverSeverity) {
+        case KETCUBE_CFG_SEVERITY_NONE:
+            severity = "NONE";
+            break;
+        case KETCUBE_CFG_SEVERITY_ERROR:
+            severity = "ERROR";
+            break;
+        case KETCUBE_CFG_SEVERITY_INFO:
+            severity = "INFO";
+            break;
+        case KETCUBE_CFG_SEVERITY_DEBUG:
+            severity = "DEBUG";
+            break;
+    }
+    
+    snprintf(commandIOParams.as_string,
+             KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
+             "%s",
+             severity);
+}
+
+/**
+ * @brief Set KETCube driver(s) severity
+ * 
+ */
+void ketCube_terminal_cmd_set_driver_severity(void)
+{
+    KETCUBE_TERMINAL_PRINTF("Setting KETCube driver(s) severity: ");
+    switch ((ketCube_severity_t) commandIOParams.as_integer) {
+        case KETCUBE_CFG_SEVERITY_NONE:
+            KETCUBE_TERMINAL_PRINTF("NONE");
+            break;
+        case KETCUBE_CFG_SEVERITY_ERROR:
+            KETCUBE_TERMINAL_PRINTF("ERROR");
+            break;
+        case KETCUBE_CFG_SEVERITY_INFO:
+            KETCUBE_TERMINAL_PRINTF("INFO");
+            break;
+        case KETCUBE_CFG_SEVERITY_DEBUG:
+            KETCUBE_TERMINAL_PRINTF("DEBUG");
+            break;
+        default:
+            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
+            return;
+    }
+    
+    KETCUBE_TERMINAL_ENDL();
+    
+    if (ketCube_EEPROM_WriteBuffer
+        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_DRIVER_SEVERITY,
+         (uint8_t *)&(commandIOParams.as_integer), 1)
+            == KETCUBE_EEPROM_OK) {
+    } else {
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+    }
+    
+    KETCUBE_TERMINAL_ENDL();
+}
+
 /* Terminal command definitions */
 
 ketCube_terminal_cmd_t ketCube_terminal_commands_show_core[] = {
@@ -217,6 +284,29 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_set_core[] = {
                 &ketCube_terminal_cmd_set_core_severity),
     DEF_TERMINATE()
 };
+
+
+/* Terminal command definitions for driver subgroup */
+
+ketCube_terminal_cmd_t ketCube_terminal_commands_show_driver[] = {
+    DEF_COMMAND("severity",
+                "Driver(s) messages severity",
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_STRING,
+                &ketCube_terminal_cmd_show_driver_severity),
+    DEF_TERMINATE()
+};
+
+ketCube_terminal_cmd_t ketCube_terminal_commands_set_driver[] = {
+    DEF_COMMAND("severity",
+                "Driver(s) messages severity: 0 = NONE, 1 = ERROR; 2 = INFO;"
+                " 3 = DEBUG",
+                KETCUBE_TERMINAL_PARAMS_INTEGER,
+                KETCUBE_TERMINAL_PARAMS_NONE,
+                &ketCube_terminal_cmd_set_driver_severity),
+    DEF_TERMINATE()
+};
+
 
 /**
 * @}

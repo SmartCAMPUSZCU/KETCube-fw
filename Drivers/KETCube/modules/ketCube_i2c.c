@@ -182,10 +182,11 @@ uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
 }
 
 
-uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer, uint16_t Size)
+uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
+                                 uint16_t Size)
 {
     HAL_StatusTypeDef status = HAL_OK;
-    
+
     status =
         HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, Addr, pBuffer, Size,
                                 KETCUBE_I2C_TIMEOUT);
@@ -201,10 +202,11 @@ uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer, uint16_t Size)
     }
 }
 
-uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer, uint16_t Size)
+uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
+                                uint16_t Size)
 {
     HAL_StatusTypeDef status = HAL_OK;
-    
+
     status =
         HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, Addr, pBuffer, Size,
                                KETCUBE_I2C_TIMEOUT);
@@ -228,19 +230,19 @@ static void ketCube_I2C_Error()
 {
     uint8_t i;
     uint8_t tmpInitRuns = initRuns;
-    
-    ketCube_terminal_DebugPrintln("I2C :: Re-Initialize()");
-    
+
+    ketCube_terminal_DriverSeverityPrintln(KETCUBE_I2C_NAME, KETCUBE_CFG_SEVERITY_DEBUG, "Re-Initialize()");
+
     /* De-initialize the I2C comunication bus */
     for (i = tmpInitRuns; i > 0; i--) {
-        ketCube_I2C_UnInit(); 
+        ketCube_I2C_UnInit();
     }
     /* De-initialize the I2C comunication bus */
     // HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
 
     /* Re-Initiaize the I2C comunication bus */
     for (i = tmpInitRuns; i > 0; i--) {
-        ketCube_I2C_Init(); 
+        ketCube_I2C_Init();
     }
 }
 

@@ -113,7 +113,8 @@ ketCube_cfg_ModError_t ketCube_ADC_ReadData(uint8_t * buffer,
     buffer[0] = ((uint8_t) ((mv >> 8) & 0xFF));
     buffer[1] = ((uint8_t) (mv & 0xFF));
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ADC, "Voltage@PA4: %d", mv);
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ADC,
+                                 "Voltage@PA4: %d", mv);
 
     return KETCUBE_CFG_MODULE_OK;
 }

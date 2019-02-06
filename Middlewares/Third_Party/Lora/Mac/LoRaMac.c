@@ -31,6 +31,8 @@ Maintainer: Miguel Luis ( Semtech ), Gregory Cristian ( Semtech ) and Daniel Jäc
 #include "debug.h"
 #include "LoRaMacTest.h"
 
+#include "ketCube_lora_ext.h"
+
 /*!
  * Maximum PHY layer payload size
  */
@@ -774,12 +776,14 @@ static void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t
                 applyCFList.Payload = &LoRaMacRxPayload[13];
                 // Size of the regular payload is 12. Plus 1 byte MHDR and 4 bytes MIC
                 applyCFList.Size = size - 17;
-
+                
                 RegionApplyCFList( LoRaMacRegion, &applyCFList );
 
                 MlmeConfirm.Status = LORAMAC_EVENT_INFO_STATUS_OK;
                 IsLoRaMacNetworkJoined = true;
                 LoRaMacParams.ChannelsDatarate = LoRaMacParamsDefaults.ChannelsDatarate;
+                
+                ketCube_lora_OTAAJoin(&applyCFList);
             }
             else
             {

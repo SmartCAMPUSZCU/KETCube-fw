@@ -61,9 +61,10 @@
   * @{
   */
 
+#define KETCUBE_I2S_NAME                      "i2s_drv"              ///< I2S driver name
 #define KETCUBE_I2S_HANDLE                     SPI2
 
-#define KETCUBE_I2S_SAMPLE_RATE				   I2S_AUDIOFREQ_32K    /* Available: 8,11,16,22,32,44,48 kHz */
+#define KETCUBE_I2S_SAMPLE_RATE				   I2S_AUDIOFREQ_32K     ///< Available: 8,11,16,22,32,44,48 kHz
 
 
 #define KETCUBE_I2S_CLK_ENABLE()               __SPI2_CLK_ENABLE()

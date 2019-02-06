@@ -84,9 +84,9 @@ typedef enum {
 #define KETCUBE_LIS2HH12_WHO_AM_I_REG      0x0FU
 #define KETCUBE_LIS2HH12_ACT_TSH           0x1EU
 #define KETCUBE_LIS2HH12_ACT_DUR           0x1FU
-#define KETCUBE_LIS2HH12_CTRL_REG1         0x20U        //< Main CTRL Register
+#define KETCUBE_LIS2HH12_CTRL_REG1         0x20U        ///< Main CTRL Register
 #define KETCUBE_LIS2HH12_CTRL_REG2         0x21U
-#define KETCUBE_LIS2HH12_CTRL_REG3         0x22U        //< Interrupt control
+#define KETCUBE_LIS2HH12_CTRL_REG3         0x22U        ///< Interrupt control
 #define KETCUBE_LIS2HH12_CTRL_REG4         0x23U
 #define KETCUBE_LIS2HH12_CTRL_REG5         0x24U
 #define KETCUBE_LIS2HH12_CTRL_REG6         0x25U

@@ -39,7 +39,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a>  </div>
+<a href="#define-members">Macros</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
 <div class="title">Public Deffinitions<div class="ingroups"><a class="el" href="group__KETCube__Drivers.html">KETCube Drivers</a> &raquo; <a class="el" href="group__KETCube__ModuleDrivers.html">KETCube Module Drivers</a> &raquo; <a class="el" href="group__KETCube__I2C.html">KETCube I2C</a></div></div>  </div>
 </div><!--header-->
@@ -56,12 +57,6 @@ Macros</h2></td></tr>
 <tr class="separator:ga7e93d530507ddbd3c5d5e4a73d223ee0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4c567b3e4031db872b9c6b7b1fec22e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga4c567b3e4031db872b9c6b7b1fec22e1">KETCUBE_I2C_TIMEOUT</a>&#160;&#160;&#160;0x5000   /*&lt;! The value of the maximal timeout for BUS waiting loops */</td></tr>
 <tr class="separator:ga4c567b3e4031db872b9c6b7b1fec22e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga683e200a4e6d9963474a248335eca4f3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga683e200a4e6d9963474a248335eca4f3">KETCUBE_I2C_TIMING_100KHZ</a>&#160;&#160;&#160;0x10A13E56       /* Analog Filter ON, Rise Time 400ns, Fall Time 100ns */</td></tr>
-<tr class="separator:ga683e200a4e6d9963474a248335eca4f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga02f6bcf60b404ca7cc7e6476a9f31cb9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga02f6bcf60b404ca7cc7e6476a9f31cb9">KETCUBE_I2C_TIMING_400KHZ</a>&#160;&#160;&#160;0x00B1112E       /* Analog Filter ON, Rise Time 250ns, Fall Time 100ns */</td></tr>
-<tr class="separator:ga02f6bcf60b404ca7cc7e6476a9f31cb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad09c8cda50e655e60d58a330dfbeb938"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#gad09c8cda50e655e60d58a330dfbeb938">KETCUBE_I2C_SPEED</a>&#160;&#160;&#160;100000</td></tr>
-<tr class="separator:gad09c8cda50e655e60d58a330dfbeb938"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0b0072d90bf97e164f6b88bff220cc3f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga0b0072d90bf97e164f6b88bff220cc3f">KETCUBE_I2C_CLK_ENABLE</a>()&#160;&#160;&#160;__I2C1_CLK_ENABLE()</td></tr>
 <tr class="separator:ga0b0072d90bf97e164f6b88bff220cc3f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6e068dc08539d2adcd66a8a9b377c7ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga6e068dc08539d2adcd66a8a9b377c7ec">KETCUBE_I2C_SCL_SDA_GPIO_CLK_ENABLE</a>()&#160;&#160;&#160;__GPIOB_CLK_ENABLE()</td></tr>
@@ -80,6 +75,14 @@ Macros</h2></td></tr>
 <tr class="separator:gab6bf8994a94210acc1709ff6f4685dd1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga7f1b7cfbfd31ff35db2d55c4930d3b30"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#ga7f1b7cfbfd31ff35db2d55c4930d3b30">KETCUBE_I2C_EV_IRQn</a>&#160;&#160;&#160;I2C1_IRQn</td></tr>
 <tr class="separator:ga7f1b7cfbfd31ff35db2d55c4930d3b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:gad697c0d45d676e2bc1e9a71844e7564c"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__defs.html#gad697c0d45d676e2bc1e9a71844e7564c">ketCube_I2C_SPEED_t</a> { <a class="el" href="group__KETCube__I2C__defs.html#ggad697c0d45d676e2bc1e9a71844e7564ca561ed3cfddcd3325d8426621580d4cb9">KETCUBE_I2C_SPEED_100KHZ</a> = 0x10A13E56, 
+<a class="el" href="group__KETCube__I2C__defs.html#ggad697c0d45d676e2bc1e9a71844e7564ca9f77b4bca945bcdbe4a87f6d1c6372ef">KETCUBE_I2C_SPEED_400KHZ</a> = 0x00B1112E
+ }</td></tr>
+<tr class="memdesc:gad697c0d45d676e2bc1e9a71844e7564c"><td class="mdescLeft">&#160;</td><td class="mdescRight">I2C Speed selection.  <a href="group__KETCube__I2C__defs.html#gad697c0d45d676e2bc1e9a71844e7564c">More...</a><br /></td></tr>
+<tr class="separator:gad697c0d45d676e2bc1e9a71844e7564c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>Public defines. </p>
@@ -250,20 +253,6 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="gad09c8cda50e655e60d58a330dfbeb938"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad09c8cda50e655e60d58a330dfbeb938">&#9670;&nbsp;</a></span>KETCUBE_I2C_SPEED</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_I2C_SPEED&#160;&#160;&#160;100000</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="ga4c567b3e4031db872b9c6b7b1fec22e1"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga4c567b3e4031db872b9c6b7b1fec22e1">&#9670;&nbsp;</a></span>KETCUBE_I2C_TIMEOUT</h2>
 
@@ -278,31 +267,24 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="ga683e200a4e6d9963474a248335eca4f3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga683e200a4e6d9963474a248335eca4f3">&#9670;&nbsp;</a></span>KETCUBE_I2C_TIMING_100KHZ</h2>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="gad697c0d45d676e2bc1e9a71844e7564c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gad697c0d45d676e2bc1e9a71844e7564c">&#9670;&nbsp;</a></span>ketCube_I2C_SPEED_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_I2C_TIMING_100KHZ&#160;&#160;&#160;0x10A13E56       /* Analog Filter ON, Rise Time 400ns, Fall Time 100ns */</td>
+          <td class="memname">enum <a class="el" href="group__KETCube__I2C__defs.html#gad697c0d45d676e2bc1e9a71844e7564c">ketCube_I2C_SPEED_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="ga02f6bcf60b404ca7cc7e6476a9f31cb9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga02f6bcf60b404ca7cc7e6476a9f31cb9">&#9670;&nbsp;</a></span>KETCUBE_I2C_TIMING_400KHZ</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_I2C_TIMING_400KHZ&#160;&#160;&#160;0x00B1112E       /* Analog Filter ON, Rise Time 250ns, Fall Time 100ns */</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>I2C Speed selection. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggad697c0d45d676e2bc1e9a71844e7564ca561ed3cfddcd3325d8426621580d4cb9"></a>KETCUBE_I2C_SPEED_100KHZ&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="ggad697c0d45d676e2bc1e9a71844e7564ca9f77b4bca945bcdbe4a87f6d1c6372ef"></a>KETCUBE_I2C_SPEED_400KHZ&#160;</td><td class="fielddoc"></td></tr>
+</table>
 
 </div>
 </div>

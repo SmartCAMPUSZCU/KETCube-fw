@@ -90,6 +90,10 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_show[] = {
     DEF_COMMAND_GROUP("core",
                       "Show KETCube Core parameters",
                       ketCube_terminal_commands_show_core),
+    
+    DEF_COMMAND_GROUP("driver",
+                      "Show KETCube Driver(s) parameters",
+                      ketCube_terminal_commands_show_driver),
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     DEF_COMMAND_GROUP("batMeas",
@@ -113,6 +117,10 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_set[] = {
     DEF_COMMAND_GROUP("core",
                       "Set KETCube Core parameters",
                       ketCube_terminal_commands_set_core),
+    
+    DEF_COMMAND_GROUP("driver",
+                      "Set KETCube Driver(s) parameters",
+                      ketCube_terminal_commands_set_driver),
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     DEF_COMMAND_GROUP("batMeas",

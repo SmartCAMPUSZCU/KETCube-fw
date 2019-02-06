@@ -53,24 +53,20 @@
    
 typedef void( GpioIrqHandler )( void );
 
-static inline  void HW_GPIO_Init( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_InitTypeDef* initStruct) {
-     ketCube_GPIO_Init((ketCube_gpio_port_t)GPIOx,
-                       (ketCube_gpio_pin_t)GPIO_Pin, initStruct);
+static inline void HW_GPIO_Init( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_InitTypeDef* initStruct) {
+     ketCube_GPIO_ReInit((ketCube_gpio_port_t) GPIOx, (ketCube_gpio_pin_t) GPIO_Pin, initStruct);
 }
 
 static inline void HW_GPIO_SetIrq( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, uint32_t prio,  GpioIrqHandler *irqHandler ) {
-    ketCube_GPIO_SetIrq((ketCube_gpio_port_t)GPIOx,
-                        (ketCube_gpio_pin_t)GPIO_Pin, prio, irqHandler);
+    ketCube_GPIO_SetIrq((ketCube_gpio_port_t) GPIOx, (ketCube_gpio_pin_t) GPIO_Pin, prio, irqHandler);
 }
 
 static inline void HW_GPIO_Write( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin,  uint32_t value ) {
-    ketCube_GPIO_Write((ketCube_gpio_port_t)GPIOx,
-                       (ketCube_gpio_pin_t)GPIO_Pin, (bool) value);
+    ketCube_GPIO_Write((ketCube_gpio_port_t) GPIOx, (ketCube_gpio_pin_t) GPIO_Pin, (bool) value);
 }
 
 static inline uint32_t HW_GPIO_Read( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin ) {
-    return (uint32_t) ketCube_GPIO_Read((ketCube_gpio_port_t)GPIOx,
-                                        (ketCube_gpio_pin_t)GPIO_Pin);
+    return (uint32_t) ketCube_GPIO_Read((ketCube_gpio_port_t) GPIOx, (ketCube_gpio_pin_t) GPIO_Pin);
 }
 
 

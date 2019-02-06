@@ -39,8 +39,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#groups">Modules</a> &#124;
+<a href="#enum-members">Enumerations</a>  </div>
   <div class="headertitle">
 <div class="title">KETCube Main Board<div class="ingroups"><a class="el" href="group__KETCube__Drivers.html">KETCube Drivers</a> &raquo; <a class="el" href="group__KETCube__ModuleDrivers.html">KETCube Module Drivers</a></div></div>  </div>
 </div><!--header-->
@@ -49,322 +49,89 @@ $(function() {
 <p>KETCube Configuration Manager.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:ga707bf5985273940eb3131edd389b344e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga707bf5985273940eb3131edd389b344e">KETCUBE_MAIN_BOARD_LED1_PIN</a>&#160;&#160;&#160;GPIO_PIN_5</td></tr>
-<tr class="separator:ga707bf5985273940eb3131edd389b344e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga2ef1c126a5fb5b614a33ecaa68c412a6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga2ef1c126a5fb5b614a33ecaa68c412a6">KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</a>&#160;&#160;&#160;GPIOB</td></tr>
-<tr class="separator:ga2ef1c126a5fb5b614a33ecaa68c412a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga748a8b587e08e9ffb89ca2fdf8bb7ee3"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga748a8b587e08e9ffb89ca2fdf8bb7ee3">KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_ENABLE</a>()&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_ENABLE()</td></tr>
-<tr class="separator:ga748a8b587e08e9ffb89ca2fdf8bb7ee3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gad8f5eb0e94ae8a96f89f6fe0770ed243"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#gad8f5eb0e94ae8a96f89f6fe0770ed243">KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_DISABLE</a>()&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_DISABLE()</td></tr>
-<tr class="separator:gad8f5eb0e94ae8a96f89f6fe0770ed243"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1fe68df443c566078830238c76ad7bb1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga1fe68df443c566078830238c76ad7bb1">KETCUBE_MAIN_BOARD_LED1_On</a>()&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga2ef1c126a5fb5b614a33ecaa68c412a6">KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga707bf5985273940eb3131edd389b344e">KETCUBE_MAIN_BOARD_LED1_PIN</a>, GPIO_PIN_SET)</td></tr>
-<tr class="separator:ga1fe68df443c566078830238c76ad7bb1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga988a595a68f4ec5a99441ad03130f600"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga988a595a68f4ec5a99441ad03130f600">KETCUBE_MAIN_BOARD_LED1_Off</a>()&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga2ef1c126a5fb5b614a33ecaa68c412a6">KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga707bf5985273940eb3131edd389b344e">KETCUBE_MAIN_BOARD_LED1_PIN</a>, GPIO_PIN_RESET)</td></tr>
-<tr class="separator:ga988a595a68f4ec5a99441ad03130f600"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7b97320237f751f2e41cf47eb61c319d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga7b97320237f751f2e41cf47eb61c319d">KETCUBE_MAIN_BOARD_LED1_Toggle</a>()&#160;&#160;&#160;HAL_GPIO_TogglePin(<a class="el" href="group__KETCube__mainBoard.html#ga2ef1c126a5fb5b614a33ecaa68c412a6">KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga707bf5985273940eb3131edd389b344e">KETCUBE_MAIN_BOARD_LED1_PIN</a>)</td></tr>
-<tr class="separator:ga7b97320237f751f2e41cf47eb61c319d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga13cde1984eb9a03944691af0e7acfd6f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga13cde1984eb9a03944691af0e7acfd6f">KETCUBE_MAIN_BOARD_LED2_PIN</a>&#160;&#160;&#160;GPIO_PIN_6</td></tr>
-<tr class="separator:ga13cde1984eb9a03944691af0e7acfd6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga34cb18730ebd22a9da143fc624db57ef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga34cb18730ebd22a9da143fc624db57ef">KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</a>&#160;&#160;&#160;GPIOB</td></tr>
-<tr class="separator:ga34cb18730ebd22a9da143fc624db57ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabf297e500aa93ee3d9f2b0f12133429a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#gabf297e500aa93ee3d9f2b0f12133429a">KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_ENABLE</a>()&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_ENABLE()</td></tr>
-<tr class="separator:gabf297e500aa93ee3d9f2b0f12133429a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae1ec1d819069b3dc931ad16fe49f5834"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#gae1ec1d819069b3dc931ad16fe49f5834">KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_DISABLE</a>()&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_DISABLE()</td></tr>
-<tr class="separator:gae1ec1d819069b3dc931ad16fe49f5834"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga530a8bbe6bece9a7d4b7601a8dc6d5a7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga530a8bbe6bece9a7d4b7601a8dc6d5a7">KETCUBE_MAIN_BOARD_LED2_On</a>()&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga34cb18730ebd22a9da143fc624db57ef">KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga13cde1984eb9a03944691af0e7acfd6f">KETCUBE_MAIN_BOARD_LED2_PIN</a>, GPIO_PIN_SET)</td></tr>
-<tr class="separator:ga530a8bbe6bece9a7d4b7601a8dc6d5a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1de260d1b48ea988d644f3bc7c6334f9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga1de260d1b48ea988d644f3bc7c6334f9">KETCUBE_MAIN_BOARD_LED2_Off</a>()&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga34cb18730ebd22a9da143fc624db57ef">KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga13cde1984eb9a03944691af0e7acfd6f">KETCUBE_MAIN_BOARD_LED2_PIN</a>, GPIO_PIN_RESET)</td></tr>
-<tr class="separator:ga1de260d1b48ea988d644f3bc7c6334f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7a56b8ae46b1e420dc29a0cee73fcedd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga7a56b8ae46b1e420dc29a0cee73fcedd">KETCUBE_MAIN_BOARD_LED2_Toggle</a>()&#160;&#160;&#160;HAL_GPIO_TogglePin(<a class="el" href="group__KETCube__mainBoard.html#ga34cb18730ebd22a9da143fc624db57ef">KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga13cde1984eb9a03944691af0e7acfd6f">KETCUBE_MAIN_BOARD_LED2_PIN</a>)</td></tr>
-<tr class="separator:ga7a56b8ae46b1e420dc29a0cee73fcedd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="groups"></a>
+Modules</h2></td></tr>
+<tr class="memitem:group__KETCube__mainBoard__Options"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard__Options.html">KETCube options</a></td></tr>
+<tr class="memdesc:group__KETCube__mainBoard__Options"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube mainBoard Solder Jumpers and optional parts. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__KETCube__mainBoard__Socket"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard__Socket.html">Socket PINs</a></td></tr>
+<tr class="memdesc:group__KETCube__mainBoard__Socket"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube mainBoard SOCKET PINs. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:group__KETCube__mainBoard__LEDs"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard__LEDs.html">Debug LEDs</a></td></tr>
+<tr class="memdesc:group__KETCube__mainBoard__LEDs"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube mainBoard Debug LEDs. <br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:ga08b98f74389a6ebf4d356971e16745cb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga08b98f74389a6ebf4d356971e16745cb">ketCube_MainBoard_LED1_Init</a> ()</td></tr>
-<tr class="separator:ga08b98f74389a6ebf4d356971e16745cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabe80ea54cb3b58a010a627a0a79613d9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#gabe80ea54cb3b58a010a627a0a79613d9">ketCube_MainBoard_LED2_Init</a> ()</td></tr>
-<tr class="separator:gabe80ea54cb3b58a010a627a0a79613d9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:ga7efd2a701e8aed7e925c44389d262d6e"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#ga7efd2a701e8aed7e925c44389d262d6e">ketCube_MainBoard_revs_t</a> { <br />
+&#160;&#160;<a class="el" href="group__KETCube__mainBoard.html#gga7efd2a701e8aed7e925c44389d262d6ea8e53f3b6823f489b89d0af14a5410ac7">KETCUBE_MAIN_REV_A</a> = 0, 
+<a class="el" href="group__KETCube__mainBoard.html#gga7efd2a701e8aed7e925c44389d262d6ea910e684a97428e6389cd63ed6fcb4690">KETCUBE_MAIN_REV_B</a>, 
+<a class="el" href="group__KETCube__mainBoard.html#gga7efd2a701e8aed7e925c44389d262d6ea9ebb5e06ebbe3da61ec9253d60dd53ca">KETCUBE_MAIN_REV_C</a>, 
+<a class="el" href="group__KETCube__mainBoard.html#gga7efd2a701e8aed7e925c44389d262d6ea54761bda6a61e352a0d26b9a5d0831b3">KETCUBE_MAIN_REV_D</a>, 
+<br />
+&#160;&#160;<a class="el" href="group__KETCube__mainBoard.html#gga7efd2a701e8aed7e925c44389d262d6ead345be24eeed3499e086fe61383f4d74">KETCUBE_MAIN_REV_E</a>, 
+<a class="el" href="group__KETCube__mainBoard.html#gga7efd2a701e8aed7e925c44389d262d6eaa2d4607f890922f555b2e7f46c7bf659">KETCUBE_MAIN_REV_DEV</a>
+<br />
+ }</td></tr>
+<tr class="memdesc:ga7efd2a701e8aed7e925c44389d262d6e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main Board revisions.  <a href="group__KETCube__mainBoard.html#ga7efd2a701e8aed7e925c44389d262d6e">More...</a><br /></td></tr>
+<tr class="separator:ga7efd2a701e8aed7e925c44389d262d6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae5d946453452a3ca69f124f4d8537459"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__mainBoard.html#gae5d946453452a3ca69f124f4d8537459">ketCube_MainBoard_SJ_t</a> { <a class="el" href="group__KETCube__mainBoard.html#ggae5d946453452a3ca69f124f4d8537459a7929665a597cab116a09abb0bd4c76ae">KETCUBE_MAIN_BOARD_SJ_OPEN</a> = 0, 
+<a class="el" href="group__KETCube__mainBoard.html#ggae5d946453452a3ca69f124f4d8537459a13d380f9566b0c66186c68471e64a5dd">KETCUBE_MAIN_BOARD_SJ_12</a>, 
+<a class="el" href="group__KETCube__mainBoard.html#ggae5d946453452a3ca69f124f4d8537459afbc814db1177668ad80fe6e8a497c3f1">KETCUBE_MAIN_BOARD_SJ_23</a>
+ }</td></tr>
+<tr class="memdesc:gae5d946453452a3ca69f124f4d8537459"><td class="mdescLeft">&#160;</td><td class="mdescRight">Solder Jumper configuration options.  <a href="group__KETCube__mainBoard.html#gae5d946453452a3ca69f124f4d8537459">More...</a><br /></td></tr>
+<tr class="separator:gae5d946453452a3ca69f124f4d8537459"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>KETCube Configuration Manager. </p>
 <p>This KETCube module incorporates the static in-code and NVM (EEPROM) configuration management </p>
-<h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="gad8f5eb0e94ae8a96f89f6fe0770ed243"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gad8f5eb0e94ae8a96f89f6fe0770ed243">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_DISABLE</h2>
+<h2 class="groupheader">Enumeration Type Documentation</h2>
+<a id="ga7efd2a701e8aed7e925c44389d262d6e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7efd2a701e8aed7e925c44389d262d6e">&#9670;&nbsp;</a></span>ketCube_MainBoard_revs_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_DISABLE</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_DISABLE()</td>
+          <td class="memname">enum <a class="el" href="group__KETCube__mainBoard.html#ga7efd2a701e8aed7e925c44389d262d6e">ketCube_MainBoard_revs_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-</div>
-</div>
-<a id="ga748a8b587e08e9ffb89ca2fdf8bb7ee3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga748a8b587e08e9ffb89ca2fdf8bb7ee3">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_ENABLE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED1_GPIO_CLK_ENABLE</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_ENABLE()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga2ef1c126a5fb5b614a33ecaa68c412a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2ef1c126a5fb5b614a33ecaa68c412a6">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED1_GPIO_PORT&#160;&#160;&#160;GPIOB</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga988a595a68f4ec5a99441ad03130f600"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga988a595a68f4ec5a99441ad03130f600">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED1_Off</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED1_Off</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga2ef1c126a5fb5b614a33ecaa68c412a6">KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga707bf5985273940eb3131edd389b344e">KETCUBE_MAIN_BOARD_LED1_PIN</a>, GPIO_PIN_RESET)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga1fe68df443c566078830238c76ad7bb1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1fe68df443c566078830238c76ad7bb1">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED1_On</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED1_On</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga2ef1c126a5fb5b614a33ecaa68c412a6">KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga707bf5985273940eb3131edd389b344e">KETCUBE_MAIN_BOARD_LED1_PIN</a>, GPIO_PIN_SET)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga707bf5985273940eb3131edd389b344e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga707bf5985273940eb3131edd389b344e">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED1_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED1_PIN&#160;&#160;&#160;GPIO_PIN_5</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga7b97320237f751f2e41cf47eb61c319d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7b97320237f751f2e41cf47eb61c319d">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED1_Toggle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED1_Toggle</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_TogglePin(<a class="el" href="group__KETCube__mainBoard.html#ga2ef1c126a5fb5b614a33ecaa68c412a6">KETCUBE_MAIN_BOARD_LED1_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga707bf5985273940eb3131edd389b344e">KETCUBE_MAIN_BOARD_LED1_PIN</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gae1ec1d819069b3dc931ad16fe49f5834"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gae1ec1d819069b3dc931ad16fe49f5834">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_DISABLE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_DISABLE</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_DISABLE()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="gabf297e500aa93ee3d9f2b0f12133429a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabf297e500aa93ee3d9f2b0f12133429a">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_ENABLE</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED2_GPIO_CLK_ENABLE</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_ENABLE()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga34cb18730ebd22a9da143fc624db57ef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga34cb18730ebd22a9da143fc624db57ef">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED2_GPIO_PORT&#160;&#160;&#160;GPIOB</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga1de260d1b48ea988d644f3bc7c6334f9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga1de260d1b48ea988d644f3bc7c6334f9">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED2_Off</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED2_Off</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga34cb18730ebd22a9da143fc624db57ef">KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga13cde1984eb9a03944691af0e7acfd6f">KETCUBE_MAIN_BOARD_LED2_PIN</a>, GPIO_PIN_RESET)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga530a8bbe6bece9a7d4b7601a8dc6d5a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga530a8bbe6bece9a7d4b7601a8dc6d5a7">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED2_On</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED2_On</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="group__KETCube__mainBoard.html#ga34cb18730ebd22a9da143fc624db57ef">KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga13cde1984eb9a03944691af0e7acfd6f">KETCUBE_MAIN_BOARD_LED2_PIN</a>, GPIO_PIN_SET)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga13cde1984eb9a03944691af0e7acfd6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga13cde1984eb9a03944691af0e7acfd6f">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED2_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED2_PIN&#160;&#160;&#160;GPIO_PIN_6</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ga7a56b8ae46b1e420dc29a0cee73fcedd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7a56b8ae46b1e420dc29a0cee73fcedd">&#9670;&nbsp;</a></span>KETCUBE_MAIN_BOARD_LED2_Toggle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define KETCUBE_MAIN_BOARD_LED2_Toggle</td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_TogglePin(<a class="el" href="group__KETCube__mainBoard.html#ga34cb18730ebd22a9da143fc624db57ef">KETCUBE_MAIN_BOARD_LED2_GPIO_PORT</a>, <a class="el" href="group__KETCube__mainBoard.html#ga13cde1984eb9a03944691af0e7acfd6f">KETCUBE_MAIN_BOARD_LED2_PIN</a>)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ga08b98f74389a6ebf4d356971e16745cb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga08b98f74389a6ebf4d356971e16745cb">&#9670;&nbsp;</a></span>ketCube_MainBoard_LED1_Init()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void ketCube_MainBoard_LED1_Init </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
+<p>Main Board revisions. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga7efd2a701e8aed7e925c44389d262d6ea8e53f3b6823f489b89d0af14a5410ac7"></a>KETCUBE_MAIN_REV_A&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="gga7efd2a701e8aed7e925c44389d262d6ea910e684a97428e6389cd63ed6fcb4690"></a>KETCUBE_MAIN_REV_B&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="gga7efd2a701e8aed7e925c44389d262d6ea9ebb5e06ebbe3da61ec9253d60dd53ca"></a>KETCUBE_MAIN_REV_C&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="gga7efd2a701e8aed7e925c44389d262d6ea54761bda6a61e352a0d26b9a5d0831b3"></a>KETCUBE_MAIN_REV_D&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="gga7efd2a701e8aed7e925c44389d262d6ead345be24eeed3499e086fe61383f4d74"></a>KETCUBE_MAIN_REV_E&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="gga7efd2a701e8aed7e925c44389d262d6eaa2d4607f890922f555b2e7f46c7bf659"></a>KETCUBE_MAIN_REV_DEV&#160;</td><td class="fielddoc"><p>The recent "public" board revision is (KETCUBE_MAIN_REV_DEV - 1) </p>
+</td></tr>
 </table>
-</div><div class="memdoc">
 
 </div>
 </div>
-<a id="gabe80ea54cb3b58a010a627a0a79613d9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gabe80ea54cb3b58a010a627a0a79613d9">&#9670;&nbsp;</a></span>ketCube_MainBoard_LED2_Init()</h2>
+<a id="gae5d946453452a3ca69f124f4d8537459"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gae5d946453452a3ca69f124f4d8537459">&#9670;&nbsp;</a></span>ketCube_MainBoard_SJ_t</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void ketCube_MainBoard_LED2_Init </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
+          <td class="memname">enum <a class="el" href="group__KETCube__mainBoard.html#gae5d946453452a3ca69f124f4d8537459">ketCube_MainBoard_SJ_t</a></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
+
+<p>Solder Jumper configuration options. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggae5d946453452a3ca69f124f4d8537459a7929665a597cab116a09abb0bd4c76ae"></a>KETCUBE_MAIN_BOARD_SJ_OPEN&#160;</td><td class="fielddoc"><p>Solder jumper is OPEN. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggae5d946453452a3ca69f124f4d8537459a13d380f9566b0c66186c68471e64a5dd"></a>KETCUBE_MAIN_BOARD_SJ_12&#160;</td><td class="fielddoc"><p>Solder jumper PADs 1 and 2 are CLOSED (this holds for all solder jumpers) </p>
+</td></tr>
+<tr><td class="fieldname"><a id="ggae5d946453452a3ca69f124f4d8537459afbc814db1177668ad80fe6e8a497c3f1"></a>KETCUBE_MAIN_BOARD_SJ_23&#160;</td><td class="fielddoc"><p>Solder jumper PADs 2 and 3 are CLOSED (this holds for 3-PAD solder jumpers) </p>
+</td></tr>
+</table>
 
 </div>
 </div>

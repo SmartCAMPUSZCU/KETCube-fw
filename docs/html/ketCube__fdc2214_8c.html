@@ -43,8 +43,8 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#define-members">Macros</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ketCube_fdc2214.c File Reference</div>  </div>
 </div><!--header-->
@@ -60,40 +60,57 @@ $(function() {
 <code>#include &quot;<a class="el" href="ketCube__i2c_8h_source.html">ketCube_i2c.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__fdc2214_8h_source.html">ketCube_fdc2214.h</a>&quot;</code><br />
 </div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
-Macros</h2></td></tr>
-<tr class="memitem:a30a17f4a94566803905b225620bdafef"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a30a17f4a94566803905b225620bdafef">FDC2214_GPIO_PORT</a>&#160;&#160;&#160;GPIOB</td></tr>
-<tr class="separator:a30a17f4a94566803905b225620bdafef"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0efec3dcaa387d3140e386a9a7466db9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a0efec3dcaa387d3140e386a9a7466db9">FDC2214_SD_PIN</a>&#160;&#160;&#160;GPIO_PIN_2</td></tr>
-<tr class="separator:a0efec3dcaa387d3140e386a9a7466db9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a35c2ed30933d3545ab51ba691511defe"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a35c2ed30933d3545ab51ba691511defe">FDC2214_INT_PIN</a>&#160;&#160;&#160;GPIO_PIN_7</td></tr>
-<tr class="separator:a35c2ed30933d3545ab51ba691511defe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5ef71a3d2248da76554e0b1eb7d09a6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#af5ef71a3d2248da76554e0b1eb7d09a6">FDC2214_SD_CLK_ENABLE</a>()&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_ENABLE()</td></tr>
-<tr class="separator:af5ef71a3d2248da76554e0b1eb7d09a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab6ae0f9feb2459be591a5b56bf0713c9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#ab6ae0f9feb2459be591a5b56bf0713c9">FDC2214_SD_CLK_DISABLE</a>()&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_DISABLE()</td></tr>
-<tr class="separator:ab6ae0f9feb2459be591a5b56bf0713c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ccdb42ea1382860779e2a0635839e2f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a7ccdb42ea1382860779e2a0635839e2f">FDC2214_ON</a>()&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="ketCube__fdc2214_8c.html#a30a17f4a94566803905b225620bdafef">FDC2214_GPIO_PORT</a>, <a class="el" href="ketCube__fdc2214_8c.html#a0efec3dcaa387d3140e386a9a7466db9">FDC2214_SD_PIN</a>, GPIO_PIN_RESET)</td></tr>
-<tr class="separator:a7ccdb42ea1382860779e2a0635839e2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae9199dc06a813eb94474ee73a1fa261d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#ae9199dc06a813eb94474ee73a1fa261d">FDC2214_OFF</a>()&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="ketCube__fdc2214_8c.html#a30a17f4a94566803905b225620bdafef">FDC2214_GPIO_PORT</a>, <a class="el" href="ketCube__fdc2214_8c.html#a0efec3dcaa387d3140e386a9a7466db9">FDC2214_SD_PIN</a>, GPIO_PIN_SET)</td></tr>
-<tr class="separator:ae9199dc06a813eb94474ee73a1fa261d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a63aaf6952c6bbed3ad25f9d5c7db1de3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a63aaf6952c6bbed3ad25f9d5c7db1de3">ketCube_fdc2214_on</a> (void)</td></tr>
+<tr class="memdesc:a63aaf6952c6bbed3ad25f9d5c7db1de3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exit the FDC2214 shut-down mode.  <a href="#a63aaf6952c6bbed3ad25f9d5c7db1de3">More...</a><br /></td></tr>
+<tr class="separator:a63aaf6952c6bbed3ad25f9d5c7db1de3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af137f48d07f1e339e54da3eb6add5236"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#af137f48d07f1e339e54da3eb6add5236">ketCube_fdc2214_off</a> (void)</td></tr>
+<tr class="memdesc:af137f48d07f1e339e54da3eb6add5236"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enter the FDC2214 shut-down mode.  <a href="#af137f48d07f1e339e54da3eb6add5236">More...</a><br /></td></tr>
+<tr class="separator:af137f48d07f1e339e54da3eb6add5236"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f30e200087ae5fab97d02ab3fb1968d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a8f30e200087ae5fab97d02ab3fb1968d">ketCube_fdc2214_writeReg</a> (uint8_t regAddr, uint16_t *reg, const char *str)</td></tr>
+<tr class="memdesc:a8f30e200087ae5fab97d02ab3fb1968d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic function to write the FDC2214 register.  <a href="#a8f30e200087ae5fab97d02ab3fb1968d">More...</a><br /></td></tr>
+<tr class="separator:a8f30e200087ae5fab97d02ab3fb1968d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a236c6ea4b9d8eae67cc584795b32fc98"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a236c6ea4b9d8eae67cc584795b32fc98">ketCube_fdc2214_readReg</a> (uint8_t regAddr, uint16_t *reg, const char *str)</td></tr>
+<tr class="memdesc:a236c6ea4b9d8eae67cc584795b32fc98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic function to read the FDC2214 register.  <a href="#a236c6ea4b9d8eae67cc584795b32fc98">More...</a><br /></td></tr>
+<tr class="separator:a236c6ea4b9d8eae67cc584795b32fc98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abbebb26e5af507c53dc732c8085bee3d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#abbebb26e5af507c53dc732c8085bee3d">ketCube_fdc2214_wakeUp</a> (void)</td></tr>
+<tr class="memdesc:abbebb26e5af507c53dc732c8085bee3d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exit the FDC2214 sleep-down mode.  <a href="#abbebb26e5af507c53dc732c8085bee3d">More...</a><br /></td></tr>
+<tr class="separator:abbebb26e5af507c53dc732c8085bee3d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abff5f127a45a4e38aa047f2b29058734"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#abff5f127a45a4e38aa047f2b29058734">ketCube_fdc2214_sleep</a> (void)</td></tr>
+<tr class="memdesc:abff5f127a45a4e38aa047f2b29058734"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enter the FDC2214 sleep-down mode.  <a href="#abff5f127a45a4e38aa047f2b29058734">More...</a><br /></td></tr>
+<tr class="separator:abff5f127a45a4e38aa047f2b29058734"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aba2d1a49c70f7fb577bcef06030af8a6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#aba2d1a49c70f7fb577bcef06030af8a6">ketCube_fdc2214_reset</a> (void)</td></tr>
+<tr class="memdesc:aba2d1a49c70f7fb577bcef06030af8a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Soft-reset the FDC2214 sensor.  <a href="#aba2d1a49c70f7fb577bcef06030af8a6">More...</a><br /></td></tr>
+<tr class="separator:aba2d1a49c70f7fb577bcef06030af8a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af434257251339d125179309163013430"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#af434257251339d125179309163013430">ketCube_fdc2214_LEDIndication</a> (uint32_t raw)</td></tr>
+<tr class="memdesc:af434257251339d125179309163013430"><td class="mdescLeft">&#160;</td><td class="mdescRight">LED indication.  <a href="#af434257251339d125179309163013430">More...</a><br /></td></tr>
+<tr class="separator:af434257251339d125179309163013430"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a932ccf16d3fedaa7f39d54f11dde82d3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#a932ccf16d3fedaa7f39d54f11dde82d3">ketCube_fdc2214_irqStatusUpdated</a> ()</td></tr>
+<tr class="separator:a932ccf16d3fedaa7f39d54f11dde82d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga35d3e6432d4192066877ff32448d555e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__fn.html#ga35d3e6432d4192066877ff32448d555e">ketCube_fdc2214_Init</a> (<a class="el" href="structketCube__InterModMsg__t.html">ketCube_InterModMsg_t</a> ***msg)</td></tr>
 <tr class="memdesc:ga35d3e6432d4192066877ff32448d555e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the FDC2214 sensor.  <a href="group__KETCUBE__FDC2214__fn.html#ga35d3e6432d4192066877ff32448d555e">More...</a><br /></td></tr>
 <tr class="separator:ga35d3e6432d4192066877ff32448d555e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4a6f6f807df1ccde9632c10710ffea72"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__fn.html#ga4a6f6f807df1ccde9632c10710ffea72">ketCube_fdc2214_UnInit</a> (void)</td></tr>
-<tr class="memdesc:ga4a6f6f807df1ccde9632c10710ffea72"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the FDC2214 sensor.  <a href="group__KETCUBE__FDC2214__fn.html#ga4a6f6f807df1ccde9632c10710ffea72">More...</a><br /></td></tr>
-<tr class="separator:ga4a6f6f807df1ccde9632c10710ffea72"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gac07d0dbd69b7e0be05c16fefa54f1456"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__fn.html#gac07d0dbd69b7e0be05c16fefa54f1456">ketCube_fdc2214_SleepEnter</a> (void)</td></tr>
+<tr class="memdesc:gac07d0dbd69b7e0be05c16fefa54f1456"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uninitialize the FDC2214 sensor.  <a href="group__KETCUBE__FDC2214__fn.html#gac07d0dbd69b7e0be05c16fefa54f1456">More...</a><br /></td></tr>
+<tr class="separator:gac07d0dbd69b7e0be05c16fefa54f1456"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga20cb0e70d97cf3ab4ce92cd1a97f647f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__fn.html#ga20cb0e70d97cf3ab4ce92cd1a97f647f">ketCube_fdc2214_SleepExit</a> (void)</td></tr>
+<tr class="memdesc:ga20cb0e70d97cf3ab4ce92cd1a97f647f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize the FDC2214 sensor.  <a href="group__KETCUBE__FDC2214__fn.html#ga20cb0e70d97cf3ab4ce92cd1a97f647f">More...</a><br /></td></tr>
+<tr class="separator:ga20cb0e70d97cf3ab4ce92cd1a97f647f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gaa0b375ba03ca081fa969fd051f5c2157"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__fn.html#gaa0b375ba03ca081fa969fd051f5c2157">ketCube_fdc2214_ReadData</a> (uint8_t *buffer, uint8_t *len)</td></tr>
 <tr class="memdesc:gaa0b375ba03ca081fa969fd051f5c2157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from FDC2214 sensor.  <a href="group__KETCUBE__FDC2214__fn.html#gaa0b375ba03ca081fa969fd051f5c2157">More...</a><br /></td></tr>
 <tr class="separator:gaa0b375ba03ca081fa969fd051f5c2157"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ac7be7cf227d105fca672aa92238beaaf"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__fdc2214_8c.html#ac7be7cf227d105fca672aa92238beaaf">pastValue</a></td></tr>
+<tr class="separator:ac7be7cf227d105fca672aa92238beaaf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains the FDC2214 driver. </p>
 <dl class="section author"><dt>Author</dt><dd>Jan Belohoubek </dd></dl>
-<dl class="section version"><dt>Version</dt><dd>pre-alpha </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2018-03-18 </dd></dl>
+<dl class="section version"><dt>Version</dt><dd>alpha </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2019-01-01 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd></dd></dl>
 <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen All rights reserved.</center></h2>
 <p>Developed by: The SmartCampus Team Department of Technologies and Measurement www.smartcampus.cz | www.zcu.cz</p>
@@ -104,113 +121,355 @@ Functions</h2></td></tr>
 <li>Neither the names of The SmartCampus Team, Department of Technologies and Measurement and Faculty of Electrical Engineering University of West Bohemia in Pilsen, nor the names of its contributors may be used to endorse or promote products derived from this Software without specific prior written permission.</li>
 </ul>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. </p>
-</div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a30a17f4a94566803905b225620bdafef"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a30a17f4a94566803905b225620bdafef">&#9670;&nbsp;</a></span>FDC2214_GPIO_PORT</h2>
+</div><h2 class="groupheader">Function Documentation</h2>
+<a id="a932ccf16d3fedaa7f39d54f11dde82d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a932ccf16d3fedaa7f39d54f11dde82d3">&#9670;&nbsp;</a></span>ketCube_fdc2214_irqStatusUpdated()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define FDC2214_GPIO_PORT&#160;&#160;&#160;GPIOB</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a35c2ed30933d3545ab51ba691511defe"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a35c2ed30933d3545ab51ba691511defe">&#9670;&nbsp;</a></span>FDC2214_INT_PIN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define FDC2214_INT_PIN&#160;&#160;&#160;GPIO_PIN_7</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="ae9199dc06a813eb94474ee73a1fa261d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae9199dc06a813eb94474ee73a1fa261d">&#9670;&nbsp;</a></span>FDC2214_OFF</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define FDC2214_OFF</td>
+          <td class="memname">void ketCube_fdc2214_irqStatusUpdated </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="ketCube__fdc2214_8c.html#a30a17f4a94566803905b225620bdafef">FDC2214_GPIO_PORT</a>, <a class="el" href="ketCube__fdc2214_8c.html#a0efec3dcaa387d3140e386a9a7466db9">FDC2214_SD_PIN</a>, GPIO_PIN_SET)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 </div>
 </div>
-<a id="a7ccdb42ea1382860779e2a0635839e2f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ccdb42ea1382860779e2a0635839e2f">&#9670;&nbsp;</a></span>FDC2214_ON</h2>
+<a id="af434257251339d125179309163013430"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af434257251339d125179309163013430">&#9670;&nbsp;</a></span>ketCube_fdc2214_LEDIndication()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define FDC2214_ON</td>
+          <td class="memname">static void ketCube_fdc2214_LEDIndication </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;HAL_GPIO_WritePin(<a class="el" href="ketCube__fdc2214_8c.html#a30a17f4a94566803905b225620bdafef">FDC2214_GPIO_PORT</a>, <a class="el" href="ketCube__fdc2214_8c.html#a0efec3dcaa387d3140e386a9a7466db9">FDC2214_SD_PIN</a>, GPIO_PIN_RESET)</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>raw</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>LED indication. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">raw</td><td>fdc2214 current raw value produced by fdc2214 sensor </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ab6ae0f9feb2459be591a5b56bf0713c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab6ae0f9feb2459be591a5b56bf0713c9">&#9670;&nbsp;</a></span>FDC2214_SD_CLK_DISABLE</h2>
+<a id="af137f48d07f1e339e54da3eb6add5236"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af137f48d07f1e339e54da3eb6add5236">&#9670;&nbsp;</a></span>ketCube_fdc2214_off()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define FDC2214_SD_CLK_DISABLE</td>
+          <td class="memname">static void ketCube_fdc2214_off </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_DISABLE()</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Enter the FDC2214 shut-down mode. </p>
+<dl class="section note"><dt>Note</dt><dd>Entering shut-down mode will reset all registers to their default states</dd></dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="af5ef71a3d2248da76554e0b1eb7d09a6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5ef71a3d2248da76554e0b1eb7d09a6">&#9670;&nbsp;</a></span>FDC2214_SD_CLK_ENABLE</h2>
+<a id="a63aaf6952c6bbed3ad25f9d5c7db1de3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a63aaf6952c6bbed3ad25f9d5c7db1de3">&#9670;&nbsp;</a></span>ketCube_fdc2214_on()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define FDC2214_SD_CLK_ENABLE</td>
+          <td class="memname">static void ketCube_fdc2214_on </td>
           <td>(</td>
+          <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td>&#160;&#160;&#160;__HAL_RCC_GPIOB_CLK_ENABLE()</td>
+          <td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
+
+<p>Exit the FDC2214 shut-down mode. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="a0efec3dcaa387d3140e386a9a7466db9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0efec3dcaa387d3140e386a9a7466db9">&#9670;&nbsp;</a></span>FDC2214_SD_PIN</h2>
+<a id="a236c6ea4b9d8eae67cc584795b32fc98"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a236c6ea4b9d8eae67cc584795b32fc98">&#9670;&nbsp;</a></span>ketCube_fdc2214_readReg()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">#define FDC2214_SD_PIN&#160;&#160;&#160;GPIO_PIN_2</td>
+          <td class="memname">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_fdc2214_readReg </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>regAddr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t *&#160;</td>
+          <td class="paramname"><em>reg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generic function to read the FDC2214 register. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aba2d1a49c70f7fb577bcef06030af8a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aba2d1a49c70f7fb577bcef06030af8a6">&#9670;&nbsp;</a></span>ketCube_fdc2214_reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_fdc2214_reset </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Soft-reset the FDC2214 sensor. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abff5f127a45a4e38aa047f2b29058734"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abff5f127a45a4e38aa047f2b29058734">&#9670;&nbsp;</a></span>ketCube_fdc2214_sleep()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_fdc2214_sleep </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Enter the FDC2214 sleep-down mode. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abbebb26e5af507c53dc732c8085bee3d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abbebb26e5af507c53dc732c8085bee3d">&#9670;&nbsp;</a></span>ketCube_fdc2214_wakeUp()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_fdc2214_wakeUp </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Exit the FDC2214 sleep-down mode. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8f30e200087ae5fab97d02ab3fb1968d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f30e200087ae5fab97d02ab3fb1968d">&#9670;&nbsp;</a></span>ketCube_fdc2214_writeReg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_fdc2214_writeReg </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>regAddr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint16_t *&#160;</td>
+          <td class="paramname"><em>reg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generic function to write the FDC2214 register. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">KETCUBE_CFG_MODULE_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ac7be7cf227d105fca672aa92238beaaf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac7be7cf227d105fca672aa92238beaaf">&#9670;&nbsp;</a></span>pastValue</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint32_t pastValue</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>

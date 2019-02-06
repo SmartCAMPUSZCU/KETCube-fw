@@ -58,7 +58,8 @@
   * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
-ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t *** msg)
+ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t ***
+                                              msg)
 {
     return KETCUBE_CFG_MODULE_OK;
 }
@@ -66,18 +67,21 @@ ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t *** msg)
 /**
  * @brief Just print ready to send data
  */
-ketCube_cfg_ModError_t ketCube_txDisplay_Send(uint8_t * buffer, uint8_t * len)
+ketCube_cfg_ModError_t ketCube_txDisplay_Send(uint8_t * buffer,
+                                              uint8_t * len)
 {
     uint8_t i;
-    
+
     // just print data from th Tx buffer ... 
-    
-    for (i = 0; (i < *len) && ((3*(i+1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
-        sprintf(&(ketCube_common_buffer[3*i]), "%02X-", buffer[i]);
+
+    for (i = 0; (i < *len) && ((3 * (i + 1)) < KETCUBE_COMMON_BUFFER_LEN);
+         i++) {
+        sprintf(&(ketCube_common_buffer[3 * i]), "%02X-", buffer[i]);
     }
-    ketCube_common_buffer[(3*i)-1] = 0x00;  // remove last -
-    ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_TXDISPLAY, "DATA=%s", &(ketCube_common_buffer[0]));
-    
+    ketCube_common_buffer[(3 * i) - 1] = 0x00;  // remove last -
+    ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_TXDISPLAY,
+                                   "DATA=%s", &(ketCube_common_buffer[0]));
+
     return KETCUBE_CFG_MODULE_OK;
 }
 

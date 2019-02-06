@@ -72,7 +72,8 @@ ketCube_cfg_ModError_t ketCube_hdc1080_Init(ketCube_InterModMsg_t *** msg)
 
     // Init drivers
     if (ketCube_I2C_Init() != KETCUBE_CFG_MODULE_OK) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080, "I2C initialization failed!");
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "I2C initialization failed!");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -84,7 +85,8 @@ ketCube_cfg_ModError_t ketCube_hdc1080_Init(ketCube_InterModMsg_t *** msg)
     if (ketCube_I2C_TexasWriteReg
         (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_CONFIGURATION_REG,
          (uint16_t *) & pxInit)) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080, "HDC1080 initialization failed");
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "HDC1080 initialization failed");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -117,7 +119,8 @@ ketCube_cfg_ModError_t getHumidity(uint16_t * value)
     if (ketCube_I2C_TexasReadReg
         (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_HUMIDITY_REG,
          &rawH)) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080, "Read humidity failed!");
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "Read humidity failed!");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -140,7 +143,8 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
     if (ketCube_I2C_TexasReadReg
         (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_TEMPERATURE_REG,
          &rawT)) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080, "Read temperature failed!");
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "Read temperature failed!");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -165,7 +169,8 @@ ketCube_cfg_ModError_t setHeaterState(ketCube_hdc1080_Htr_t status)
     if (ketCube_I2C_TexasWriteReg
         (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_CONFIGURATION_REG,
          (uint16_t *) & reg)) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080, "Set heater failed!");
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "Set heater failed!");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -186,7 +191,8 @@ ketCube_cfg_ModError_t getHeaterState(ketCube_hdc1080_Htr_t * status)
     if (ketCube_I2C_TexasReadReg
         (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_CONFIGURATION_REG,
          (uint16_t *) & reg)) {
-        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080, "Get heater failed!");
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "Get heater failed!");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -231,9 +237,10 @@ ketCube_cfg_ModError_t ketCube_hdc1080_ReadData(uint8_t * buffer,
 
     *len = i;
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_HDC1080, "Temperature: %d °C, RH: %d",
-                                  (((int) temperature - 10000) / 10),
-                                  (humidity / 10));
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                 "Temperature: %d °C, RH: %d",
+                                 (((int) temperature - 10000) / 10),
+                                 (humidity / 10));
 
     return KETCUBE_CFG_MODULE_OK;
 }

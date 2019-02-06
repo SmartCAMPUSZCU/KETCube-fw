@@ -51,6 +51,7 @@
 #include "utilities.h"
 
 #include "ketCube_terminal.h"
+#include "ketCube_mainBoard.h"
 #include "ketCube_common.h"
 #include "ketCube_cfg.h"
 #include "ketCube_coreCfg.h"
@@ -63,24 +64,24 @@
 #define KETCUBE_TERMINAL_USART_IRQn                      USART1_IRQn
 #define KETCUBE_TERMINAL_USART_BR                        9600
 #define KETCUBE_TERMINAL_USART_CHANNEL                   KETCUBE_UART_CHANNEL_1
+#define KETCUBE_TERMINAL_USART_TX_AF                     GPIO_AF4_USART1
+#define KETCUBE_TERMINAL_USART_RX_AF                     GPIO_AF4_USART1
 
 #define KETCUBE_TERMINAL_USART_CLK_ENABLE()              __USART1_CLK_ENABLE();
 #define KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE()
-#define KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE() 
+#define KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE()      __GPIOA_CLK_ENABLE()
 #define KETCUBE_TERMINAL_USART_FORCE_RESET()             __USART1_FORCE_RESET()
 #define KETCUBE_TERMINAL_USART_RELEASE_RESET()           __USART1_RELEASE_RESET()
 
-#define KETCUBE_TERMINAL_USART_TX_PIN                    GPIO_PIN_9
-#define KETCUBE_TERMINAL_USART_TX_GPIO_PORT              GPIOA  
-#define KETCUBE_TERMINAL_USART_TX_AF                     GPIO_AF4_USART1
-#define KETCUBE_TERMINAL_USART_RX_PIN                    GPIO_PIN_10
-#define KETCUBE_TERMINAL_USART_RX_GPIO_PORT              GPIOA 
-#define KETCUBE_TERMINAL_USART_RX_AF                     GPIO_AF4_USART1
+#define KETCUBE_TERMINAL_USART_TX_PIN                    KETCUBE_MAIN_BOARD_PIN_IO2_PIN
+#define KETCUBE_TERMINAL_USART_TX_GPIO_PORT              KETCUBE_MAIN_BOARD_PIN_IO2_PORT
+#define KETCUBE_TERMINAL_USART_RX_PIN                    KETCUBE_MAIN_BOARD_PIN_IO1_PIN
+#define KETCUBE_TERMINAL_USART_RX_GPIO_PORT              KETCUBE_MAIN_BOARD_PIN_IO1_PORT
 
 static UART_HandleTypeDef ketCube_terminal_UsartHandle;
 static ketCube_UART_descriptor_t ketCube_terminal_UsartDescriptor;
 
-#define USART_BUFFER_SIZE                                256 // It must be 256, because overflows control circular buffer properties
+#define USART_BUFFER_SIZE                                256    // It must be 256, because overflows control circular buffer properties
 
 static volatile uint8_t usartRxWrite = 0;
 static volatile uint8_t usartRxRead = 0;
@@ -237,7 +238,8 @@ static void ketCube_terminal_printCmdList(ketCube_terminal_cmd_t* parent,
 void ketCube_terminal_cmd_help(void)
 {
     KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("%s Command-line Interface HELP", KETCUBE_CFG_DEV_NAME);
+    KETCUBE_TERMINAL_PRINTF("%s Command-line Interface HELP",
+                            KETCUBE_CFG_DEV_NAME);
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF("-----------------------------------");
     KETCUBE_TERMINAL_ENDL();
@@ -256,11 +258,12 @@ void ketCube_terminal_cmd_about(void)
     KETCUBE_TERMINAL_PRINTF("-------------");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
-    
+
     KETCUBE_TERMINAL_PRINTF
         ("KETCube was created on University of West Bohemia in Pilsen.");
     KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF ("KETCube home: https://github.com/SmartCAMPUSZCU/KETCube-docs");
+    KETCUBE_TERMINAL_PRINTF
+        ("KETCube home: https://github.com/SmartCAMPUSZCU/KETCube-docs");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF
         ("KETCube is provided under NCSA Open Source License - see LICENSE.txt.");
@@ -321,7 +324,8 @@ void ketCube_terminal_cmd_reload(void)
     KETCUBE_TERMINAL_ENDL();
 
     KETCUBE_TERMINAL_PRINTF
-        ("Performing system reset and reloading %s configuration ...", KETCUBE_CFG_DEV_NAME);
+        ("Performing system reset and reloading %s configuration ...",
+         KETCUBE_CFG_DEV_NAME);
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
 
@@ -338,11 +342,10 @@ void ketCube_terminal_cmd_list(void)
     ketCube_cfg_ModuleCfgByte_t data;
     char severityEEPROM = 'N';
     char severity = 'N';
-    
+
     KETCUBE_TERMINAL_ENDL();
 
-    KETCUBE_TERMINAL_PRINTF
-        ("Available modules:");
+    KETCUBE_TERMINAL_PRINTF("Available modules:");
     KETCUBE_TERMINAL_ENDL();
 
     for (i = 0; i < ketCube_modules_CNT; i++) {
@@ -350,43 +353,44 @@ void ketCube_terminal_cmd_list(void)
             (((uint8_t *) & data), (ketCube_cfg_moduleIDs_t) i,
              (ketCube_cfg_AllocEEPROM_t) 0,
              (ketCube_cfg_LenEEPROM_t) 1) == KETCUBE_CFG_OK) {
-        
+
             switch (data.severity) {
-                case KETCUBE_CFG_SEVERITY_NONE:
-                    severity = 'N';
-                    break;
-                case KETCUBE_CFG_SEVERITY_ERROR:
-                    severity = 'R';
-                    break;
-                case KETCUBE_CFG_SEVERITY_INFO:
-                    severity = 'I';
-                    break;
-                case KETCUBE_CFG_SEVERITY_DEBUG:
-                    severity = 'D';
-                    break;
+            case KETCUBE_CFG_SEVERITY_NONE:
+                severity = 'N';
+                break;
+            case KETCUBE_CFG_SEVERITY_ERROR:
+                severity = 'R';
+                break;
+            case KETCUBE_CFG_SEVERITY_INFO:
+                severity = 'I';
+                break;
+            case KETCUBE_CFG_SEVERITY_DEBUG:
+                severity = 'D';
+                break;
             }
-            
+
             switch (ketCube_modules_List[i].cfgByte.severity) {
-                case KETCUBE_CFG_SEVERITY_NONE:
-                    severityEEPROM = 'N';
-                    break;
-                case KETCUBE_CFG_SEVERITY_ERROR:
-                    severityEEPROM = 'R';
-                    break;
-                case KETCUBE_CFG_SEVERITY_INFO:
-                    severityEEPROM = 'I';
-                    break;
-                case KETCUBE_CFG_SEVERITY_DEBUG:
-                    severityEEPROM = 'D';
-                    break;
+            case KETCUBE_CFG_SEVERITY_NONE:
+                severityEEPROM = 'N';
+                break;
+            case KETCUBE_CFG_SEVERITY_ERROR:
+                severityEEPROM = 'R';
+                break;
+            case KETCUBE_CFG_SEVERITY_INFO:
+                severityEEPROM = 'I';
+                break;
+            case KETCUBE_CFG_SEVERITY_DEBUG:
+                severityEEPROM = 'D';
+                break;
             }
-            
+
             if (severityEEPROM != severity) {
-                KETCUBE_TERMINAL_PRINTF("%c -> %c\t", severityEEPROM, severity);   
+                KETCUBE_TERMINAL_PRINTF("%c -> %c\t", severityEEPROM,
+                                        severity);
             } else {
-                KETCUBE_TERMINAL_PRINTF("  %c\t", severity);   
+                KETCUBE_TERMINAL_PRINTF("  %c\t", severity);
             }
-        
+
             if (data.enable != ketCube_modules_List[i].cfgByte.enable) {
                 if (ketCube_modules_List[i].cfgByte.enable == TRUE) {
                     KETCUBE_TERMINAL_PRINTF("E -> ");
@@ -412,16 +416,16 @@ void ketCube_terminal_cmd_list(void)
 
     }
 
-    
+
     KETCUBE_TERMINAL_ENDL();
-    
+
     KETCUBE_TERMINAL_PRINTF
         ("Module State: E == Module Enabled; D == Module Disabled");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF
         ("Module severity: N = NONE, R = ERROR; I = INFO; D = DEBUG");
-    
-    
+
+
     KETCUBE_TERMINAL_ENDL();
 }
 
@@ -438,7 +442,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
     uint8_t tmpCmdLen;
     ketCube_severity_t severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
     int32_t tmpSeverity;
-    
+
 
     for (i = 0; i < ketCube_modules_CNT; i++) {
         tmpCmdLen = strlen(&(ketCube_modules_List[i].name[0]));
@@ -472,7 +476,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
     //do not enable/disable now but when reload ...
     tmpCfgByte = ketCube_modules_List[i].cfgByte;
     tmpCfgByte.enable = enable; // enable/disable
-    tmpCfgByte.severity = severity; // set severity
+    tmpCfgByte.severity = severity;     // set severity
 
     if (ketCube_cfg_Save
         (((uint8_t *) & (tmpCfgByte)), (ketCube_cfg_moduleIDs_t) i,
@@ -510,77 +514,74 @@ void ketCube_terminal_cmd_disable(void)
 
 void ketCube_terminal_usartIoInit(void)
 {
-      /* Enable USART1 clock */
-      KETCUBE_TERMINAL_USART_CLK_ENABLE(); 
-      
-      /* Enable RX/TX port clocks */
-      KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE();
-      KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE();
-      
-      /* UART TX GPIO pin configuration  */
-      ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN, KETCUBE_TERMINAL_USART_TX_AF, KETCUBE_TERMINAL_USART_TX_GPIO_PORT);
-      ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_RX_PIN, KETCUBE_TERMINAL_USART_RX_AF, KETCUBE_TERMINAL_USART_RX_GPIO_PORT);
+    /* Enable USART1 clock */
+    KETCUBE_TERMINAL_USART_CLK_ENABLE();
+
+    /* UART TX GPIO pin configuration  */
+    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN,
+                          KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_TX_AF
+                         );
 }
 
 void ketCube_terminal_usartIoDeInit(void)
 {
-    GPIO_InitTypeDef GPIO_InitStructure={0};
-      
-    KETCUBE_TERMINAL_USART_TX_GPIO_CLK_ENABLE();
     KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE();
-    
-    GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
-    GPIO_InitStructure.Pull = GPIO_NOPULL;
-      
-    GPIO_InitStructure.Pin =  KETCUBE_TERMINAL_USART_TX_PIN ;
-    HAL_GPIO_Init(KETCUBE_TERMINAL_USART_TX_GPIO_PORT, &GPIO_InitStructure );
-    
+
+    ketCube_GPIO_Release(KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                         KETCUBE_TERMINAL_USART_TX_PIN);
+
     __HAL_UART_ENABLE_IT(&ketCube_terminal_UsartHandle, UART_IT_WUF);
-    HAL_UARTEx_EnableStopMode(&ketCube_terminal_UsartHandle); 
+    HAL_UARTEx_EnableStopMode(&ketCube_terminal_UsartHandle);
 }
 
 void ketCube_terminal_usartRx(void)
 {
 #if (USART_BUFFER_SIZE == 256)
-  // buffer is sized to be 256 bytes long; usartRxWrite automatically overflows at the end of buffer ...
-  usartRxWrite = (usartRxWrite + 1) & 0xFF; 
+    // buffer is sized to be 256 bytes long; usartRxWrite automatically overflows at the end of buffer ...
+    usartRxWrite = (usartRxWrite + 1) & 0xFF;
 #else
-  usartRxWrite = (usartRxWrite + 1) % USART_BUFFER_SIZE; 
+    usartRxWrite = (usartRxWrite + 1) % USART_BUFFER_SIZE;
 #endif
-  HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle,
+                        (uint8_t *) & usartRxBuffer[usartRxWrite], 1);
 }
 
 void ketCube_terminal_usartTx(void)
 {
-     HAL_NVIC_ClearPendingIRQ(KETCUBE_TERMINAL_USART_IRQn);
-     HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+    HAL_NVIC_ClearPendingIRQ(KETCUBE_TERMINAL_USART_IRQn);
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle,
+                        (uint8_t *) & usartRxBuffer[usartRxWrite], 1);
 }
 
 void ketCube_terminal_usartErrorCallback(void)
 {
-    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle,
+                        (uint8_t *) & usartRxBuffer[usartRxWrite], 1);
 }
 
 void ketCube_terminal_usartWakeupCallback(void)
 {
-    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle,
+                        (uint8_t *) & usartRxBuffer[usartRxWrite], 1);
 }
 
 void ketCube_terminal_UsartPrintVa(char *format, va_list args)
 {
     uint8_t len, i;
-    
+
     len = vsprintf(&(usartTxBuffer[0]), format, args);
-    
+
     for (i = 0; i < len; i++) {
-        HAL_UART_Transmit(&ketCube_terminal_UsartHandle,(uint8_t *) &(usartTxBuffer[i]), 1, 300);    
+        HAL_UART_Transmit(&ketCube_terminal_UsartHandle,
+                          (uint8_t *) & (usartTxBuffer[i]), 1, 300);
     }
-    
+
     if (ketCube_terminal_UsartHandle.RxState == HAL_UART_STATE_READY) {
         // TODO This should never happen, but "(sh)it happens" !! Why?
         // resolved by adding HAL_UART_Receive_IT to vcom_Print()
         //ketCube_terminal_Println("VCOM UART :: %d ", usartRxWrite);
-        
+
         // This causes, that ketCube_terminal_usartTx will restore IRQ ...
         HAL_NVIC_SetPendingIRQ(KETCUBE_TERMINAL_USART_IRQn);
     }
@@ -606,17 +607,17 @@ bool IsNewCharReceived(void)
     return FALSE;
 }
 
-char GetNewChar ( void)
+char GetNewChar(void)
 {
     char byte;
-    
+
     if (usartRxWrite != usartRxRead) {
         byte = usartRxBuffer[usartRxRead];
 #if (USART_BUFFER_SIZE == 256)
         // buffer is sized to be 256 bytes long; usartRxRead automatically overflows at the end of buffer ...
-        usartRxRead = (usartRxRead + 1) & 0xFF; 
+        usartRxRead = (usartRxRead + 1) & 0xFF;
 #else
-        usartRxRead = (usartRxRead + 1) % USART_BUFFER_SIZE; 
+        usartRxRead = (usartRxRead + 1) % USART_BUFFER_SIZE;
 #endif
         return byte;
     }
@@ -630,39 +631,63 @@ char GetNewChar ( void)
 void ketCube_terminal_Init(void)
 {
     /* Put the USART peripheral in the Asynchronous mode (UART Mode) */
-    ketCube_terminal_UsartHandle.Instance        = KETCUBE_TERMINAL_USART_INSTANCE;
-    ketCube_terminal_UsartHandle.Init.BaudRate   = KETCUBE_TERMINAL_USART_BR;
+    ketCube_terminal_UsartHandle.Instance =
+        KETCUBE_TERMINAL_USART_INSTANCE;
+    ketCube_terminal_UsartHandle.Init.BaudRate = KETCUBE_TERMINAL_USART_BR;
     ketCube_terminal_UsartHandle.Init.WordLength = UART_WORDLENGTH_8B;
-    ketCube_terminal_UsartHandle.Init.StopBits   = UART_STOPBITS_1;
-    ketCube_terminal_UsartHandle.Init.Parity     = UART_PARITY_NONE;
-    ketCube_terminal_UsartHandle.Init.HwFlowCtl  = UART_HWCONTROL_NONE;
-    ketCube_terminal_UsartHandle.Init.Mode       = UART_MODE_TX_RX;
-    
+    ketCube_terminal_UsartHandle.Init.StopBits = UART_STOPBITS_1;
+    ketCube_terminal_UsartHandle.Init.Parity = UART_PARITY_NONE;
+    ketCube_terminal_UsartHandle.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+    ketCube_terminal_UsartHandle.Init.Mode = UART_MODE_TX_RX;
+
     __HAL_RCC_USART1_CONFIG(RCC_USART1CLKSOURCE_HSI);
-    
+
     /* register callbacks in generic UART manager */
-    ketCube_terminal_UsartDescriptor.handle = &ketCube_terminal_UsartHandle;
-    ketCube_terminal_UsartDescriptor.irqNumber = KETCUBE_TERMINAL_USART_IRQn;
+    ketCube_terminal_UsartDescriptor.handle =
+        &ketCube_terminal_UsartHandle;
+    ketCube_terminal_UsartDescriptor.irqNumber =
+        KETCUBE_TERMINAL_USART_IRQn;
     ketCube_terminal_UsartDescriptor.irqPriority = 0x1;
     ketCube_terminal_UsartDescriptor.irqSubPriority = 0;
-    ketCube_terminal_UsartDescriptor.fnIoInit = &ketCube_terminal_usartIoInit;
-    ketCube_terminal_UsartDescriptor.fnIoDeInit = &ketCube_terminal_usartIoDeInit;
-    ketCube_terminal_UsartDescriptor.fnIRQCallback = &ketCube_terminal_usartTx;
-    ketCube_terminal_UsartDescriptor.fnReceiveCallback = &ketCube_terminal_usartRx;
-    ketCube_terminal_UsartDescriptor.fnTransmitCallback = &ketCube_terminal_usartTx;
-    ketCube_terminal_UsartDescriptor.fnErrorCallback = &ketCube_terminal_usartErrorCallback;
-    ketCube_terminal_UsartDescriptor.fnWakeupCallback = &ketCube_terminal_usartWakeupCallback;
-    
-    if (ketCube_UART_RegisterHandle(KETCUBE_TERMINAL_USART_CHANNEL, &ketCube_terminal_UsartDescriptor) != KETCUBE_CFG_MODULE_OK) {
+    ketCube_terminal_UsartDescriptor.fnIoInit =
+        &ketCube_terminal_usartIoInit;
+    ketCube_terminal_UsartDescriptor.fnIoDeInit =
+        &ketCube_terminal_usartIoDeInit;
+    ketCube_terminal_UsartDescriptor.fnIRQCallback =
+        &ketCube_terminal_usartTx;
+    ketCube_terminal_UsartDescriptor.fnReceiveCallback =
+        &ketCube_terminal_usartRx;
+    ketCube_terminal_UsartDescriptor.fnTransmitCallback =
+        &ketCube_terminal_usartTx;
+    ketCube_terminal_UsartDescriptor.fnErrorCallback =
+        &ketCube_terminal_usartErrorCallback;
+    ketCube_terminal_UsartDescriptor.fnWakeupCallback =
+        &ketCube_terminal_usartWakeupCallback;
+
+    /* Initial GPIO configuration for UART */
+    ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_RX_PIN,
+                          KETCUBE_TERMINAL_USART_RX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_RX_AF
+                         );
+     ketCube_UART_SetupPin(KETCUBE_TERMINAL_USART_TX_PIN,
+                          KETCUBE_TERMINAL_USART_TX_GPIO_PORT,
+                          KETCUBE_TERMINAL_USART_TX_AF
+                         );
+        
+    if (ketCube_UART_RegisterHandle
+        (KETCUBE_TERMINAL_USART_CHANNEL,
+         &ketCube_terminal_UsartDescriptor) != KETCUBE_CFG_DRV_OK) {
         ketCube_common_BasicErrorHandler();
     }
-    
-    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle, (uint8_t *)&usartRxBuffer[usartRxWrite], 1);
-    
+
+    HAL_UART_Receive_IT(&ketCube_terminal_UsartHandle,
+                        (uint8_t *) & usartRxBuffer[usartRxWrite], 1);
+
     commandBuffer[0] = 0x00;
 
     KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("Welcome to %s Command-line Interface", KETCUBE_CFG_DEV_NAME);
+    KETCUBE_TERMINAL_PRINTF("Welcome to %s Command-line Interface",
+                            KETCUBE_CFG_DEV_NAME);
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF("-----------------------------------------");
     KETCUBE_TERMINAL_ENDL();
@@ -1083,7 +1108,7 @@ void ketCube_terminal_UpdateCmdLine(void)
 void ketCube_terminal_ClearCmdLine(void)
 {
     uint8_t i;
-    
+
     KETCUBE_TERMINAL_PRINTF("\r");
     // clear command + prompt
     for (i = 0; i < (*commandPtr + 3); i++) {
@@ -1096,6 +1121,9 @@ void ketCube_terminal_ClearCmdLine(void)
 /**
   * @brief Return next command parameter index
   *
+  * @note This function is deprecated and will be removed in the next release(s)
+  * @todo This is a deprecated function
+  * 
   * @param ptr index where to start parameter search
   * 
   * @retval index next parameter index
@@ -1118,7 +1146,7 @@ uint8_t ketCube_terminal_getNextParam(uint8_t ptr)
             return 0;
         }
     }
-    
+
     return ptr;
 }
 
@@ -1136,7 +1164,7 @@ void ketCube_terminal_ProcessCMD(void)
         tmpchar = GetNewChar();
 
         if (((tmpchar >= 'a') && (tmpchar <= 'z'))
-            || ((tmpchar >= 'A') && (tmpchar <= 'Z')) 
+            || ((tmpchar >= 'A') && (tmpchar <= 'Z'))
             || ((tmpchar >= '0') && (tmpchar <= '9'))
             || (tmpchar == ' ')
             || (tmpchar == ',')) {
@@ -1218,7 +1246,7 @@ void ketCube_terminal_Println(char *format, ...)
 
     ketCube_terminal_UsartPrintVa(format, args);
     ketCube_terminal_UpdateCmdLine();
-    
+
     va_end(args);
 }
 
@@ -1233,7 +1261,7 @@ void ketCube_terminal_Print(char *format, ...)
     va_start(args, format);
 
     ketCube_terminal_UsartPrintVa(format, args);
-    
+
     va_end(args);
 }
 
@@ -1247,13 +1275,37 @@ void ketCube_terminal_Print(char *format, ...)
   * @note ketCube_terminal_CoreSeverityPrintln() does not introduce any formatting in contrast with ketCube_terminal_ModSeverityPrintln(), where the produced string is prefixed by originator module Name
   * 
   */
-void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity, char *format, ...)
+void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
+                                          char *format, ...)
 {
     if (ketCube_coreCfg_severity < msgSeverity) {
         return;
     }
-    
+
     KETCUBE_TERMINAL_CLR_LINE();
+    va_list args;
+    va_start(args, format);
+    ketCube_terminal_UsartPrintVa(format, args);
+    va_end(args);
+    ketCube_terminal_UpdateCmdLine();
+}
+
+/**
+  * @brief Print Debug info to serial line + newline
+  *
+  * @param msgSeverity mesage severity
+  * @param format printf-style format string
+  * @param args 
+  * 
+  */
+void ketCube_terminal_DriverSeverityPrintln(const char * drvName, ketCube_severity_t msgSeverity, char *format, ...)
+{
+    if (ketCube_coreCfg_driverSeverity < msgSeverity) {
+        return;
+    }
+
+    KETCUBE_TERMINAL_CLR_LINE();
+    KETCUBE_TERMINAL_PRINTF("Driver :: %s :: ", drvName);
     va_list args;
     va_start(args, format);
     ketCube_terminal_UsartPrintVa(format, args);
@@ -1270,15 +1322,17 @@ void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity, char *
   * @param args va_list
   * 
   */
-void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)
+void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity,
+                                         ketCube_cfg_moduleIDs_t modId,
+                                         char *format, va_list args)
 {
-    if (ketCube_modules_List[modId].cfgByte.
-        severity < msgSeverity) {
+    if (ketCube_modules_List[modId].cfgByte.severity < msgSeverity) {
         return;
     }
 
     KETCUBE_TERMINAL_CLR_LINE();
-    KETCUBE_TERMINAL_PRINTF("%s :: ", &(ketCube_modules_List[modId].name[0]));
+    KETCUBE_TERMINAL_PRINTF("%s :: ",
+                            &(ketCube_modules_List[modId].name[0]));
     ketCube_terminal_UsartPrintVa(format, args);
     ketCube_terminal_UpdateCmdLine();
 }
@@ -1286,43 +1340,45 @@ void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity, ketCube
 /**
   * @brief Print Debug info to serial line + newline
   *
-  * @note this function is deprecated and it will be removed in the next release
+  * @note This function is deprecated and will be removed in the next release(s)
+  * @todo This is a deprecated function
   * 
   */
 void ketCube_terminal_DebugPrintln(char *format, ...)
 {
-    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
-        enable != TRUE) {
+    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
+        cfgByte.enable != TRUE) {
         return;
     }
-    
+
     KETCUBE_TERMINAL_CLR_LINE();
     va_list args;
     va_start(args, format);
 
     ketCube_terminal_UsartPrintVa(format, args);
     ketCube_terminal_UpdateCmdLine();
-    
+
     va_end(args);
 }
 
 /**
   * @brief Print Debug info to serial line
   *
-  * @note this function is deprecated and it will be removed in the next release
+  * @note This function is deprecated and will be removed in the next release(s)
+  * @todo This is a deprecated function
   * 
   */
 void ketCube_terminal_DebugPrint(char *format, ...)
 {
-    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].cfgByte.
-        enable != TRUE) {
+    if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
+        cfgByte.enable != TRUE) {
         return;
     }
-    
+
     va_list args;
     va_start(args, format);
 
     ketCube_terminal_UsartPrintVa(format, args);
-    
+
     va_end(args);
 }

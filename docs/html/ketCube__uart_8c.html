@@ -79,6 +79,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a07fcad88717d607e9c740b0ef6c86e46"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__uart_8c.html#a07fcad88717d607e9c740b0ef6c86e46">DEFINE_CALLBACK_FNC</a> (ReceiveCallback, fnReceiveCallback)</td></tr>
 <tr class="memdesc:a07fcad88717d607e9c740b0ef6c86e46"><td class="mdescLeft">&#160;</td><td class="mdescRight">IRQ callback for given channel.  <a href="#a07fcad88717d607e9c740b0ef6c86e46">More...</a><br /></td></tr>
 <tr class="separator:a07fcad88717d607e9c740b0ef6c86e46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0b24967838fb051befb53da3ff2af3a"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__uart_8c.html#ad0b24967838fb051befb53da3ff2af3a">DEFINE_CALLBACK_FNC</a> (TransmitCallback, fnTransmitCallback)</td></tr>
+<tr class="memdesc:ad0b24967838fb051befb53da3ff2af3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">TX complete callback for given channel.  <a href="#ad0b24967838fb051befb53da3ff2af3a">More...</a><br /></td></tr>
+<tr class="separator:ad0b24967838fb051befb53da3ff2af3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aea29d868c9121c4df9ab7a284bbf1450"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__uart_8c.html#aea29d868c9121c4df9ab7a284bbf1450">DEFINE_CALLBACK_FNC</a> (ErrorCallback, fnErrorCallback)</td></tr>
 <tr class="memdesc:aea29d868c9121c4df9ab7a284bbf1450"><td class="mdescLeft">&#160;</td><td class="mdescRight">Error callback for given channel.  <a href="#aea29d868c9121c4df9ab7a284bbf1450">More...</a><br /></td></tr>
 <tr class="separator:aea29d868c9121c4df9ab7a284bbf1450"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -100,6 +103,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga985471f4af6f8777388d0541374735ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga985471f4af6f8777388d0541374735ed">ketCube_UART_SetupPin</a> (uint32_t pin, uint32_t alternate, GPIO_TypeDef *port)</td></tr>
 <tr class="memdesc:ga985471f4af6f8777388d0541374735ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup pin for communication.  <a href="group__KETCube__UART.html#ga985471f4af6f8777388d0541374735ed">More...</a><br /></td></tr>
 <tr class="separator:ga985471f4af6f8777388d0541374735ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gae7b58c3eccba027fb12fe268b3306246"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gae7b58c3eccba027fb12fe268b3306246">ketCube_UART_ReleasePin</a> (uint32_t pin, GPIO_TypeDef *port)</td></tr>
+<tr class="memdesc:gae7b58c3eccba027fb12fe268b3306246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release pin - setup as input pin.  <a href="group__KETCube__UART.html#gae7b58c3eccba027fb12fe268b3306246">More...</a><br /></td></tr>
+<tr class="separator:gae7b58c3eccba027fb12fe268b3306246"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -148,14 +154,14 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">void</span> ketCube_UART_##cbname(<a class="code" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)\</div><div class="line">{\</div><div class="line">        if (<a class="code" href="ketCube__uart_8c.html#af328c8162d7ddf82e93ac6a639fb5996">ketCube_UART_descriptors</a>[channel] == NULL || <a class="code" href="ketCube__uart_8c.html#af328c8162d7ddf82e93ac6a639fb5996">ketCube_UART_descriptors</a>[channel]-&gt;cbfnc == NULL){\</div><div class="line">                return;\</div><div class="line">        }\</div><div class="line">        (<a class="code" href="ketCube__uart_8c.html#af328c8162d7ddf82e93ac6a639fb5996">ketCube_UART_descriptors</a>[channel]-&gt;cbfnc )();\</div><div class="line">}</div><div class="ttc" id="group__KETCube__UART_html_ga5c5e7338ed01aac9bc5f9795a1b89f30"><div class="ttname"><a href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a></div><div class="ttdeci">ketCube_UART_ChannelNo_t</div><div class="ttdoc">UART supported channels. </div><div class="ttdef"><b>Definition:</b> ketCube_uart.h:61</div></div>
+<b>Value:</b><div class="fragment"><div class="line"><span class="keywordtype">void</span> ketCube_UART_##cbname(<a class="code" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)\</div><div class="line">{\</div><div class="line">        if (<a class="code" href="ketCube__uart_8c.html#af328c8162d7ddf82e93ac6a639fb5996">ketCube_UART_descriptors</a>[channel] == NULL || <a class="code" href="ketCube__uart_8c.html#af328c8162d7ddf82e93ac6a639fb5996">ketCube_UART_descriptors</a>[channel]-&gt;cbfnc == NULL){\</div><div class="line">                return;\</div><div class="line">        }\</div><div class="line">        (<a class="code" href="ketCube__uart_8c.html#af328c8162d7ddf82e93ac6a639fb5996">ketCube_UART_descriptors</a>[channel]-&gt;cbfnc )();\</div><div class="line">}</div><div class="ttc" id="group__KETCube__UART_html_ga5c5e7338ed01aac9bc5f9795a1b89f30"><div class="ttname"><a href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a></div><div class="ttdeci">ketCube_UART_ChannelNo_t</div><div class="ttdoc">UART supported channels. </div><div class="ttdef"><b>Definition:</b> ketCube_uart.h:63</div></div>
 <div class="ttc" id="ketCube__uart_8c_html_af328c8162d7ddf82e93ac6a639fb5996"><div class="ttname"><a href="ketCube__uart_8c.html#af328c8162d7ddf82e93ac6a639fb5996">ketCube_UART_descriptors</a></div><div class="ttdeci">static ketCube_UART_descriptor_t * ketCube_UART_descriptors[KETCUBE_UART_CHANNEL_COUNT]</div><div class="ttdoc">Array of registered descriptors. </div><div class="ttdef"><b>Definition:</b> ketCube_uart.c:56</div></div>
 </div><!-- fragment -->
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
 <a id="aa6fdb1824b98aab61a9649c04aa40509"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa6fdb1824b98aab61a9649c04aa40509">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[1/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa6fdb1824b98aab61a9649c04aa40509">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[1/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -185,7 +191,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a07fcad88717d607e9c740b0ef6c86e46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a07fcad88717d607e9c740b0ef6c86e46">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[2/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a07fcad88717d607e9c740b0ef6c86e46">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[2/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -214,8 +220,44 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="ad0b24967838fb051befb53da3ff2af3a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0b24967838fb051befb53da3ff2af3a">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[3/7]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">DEFINE_CALLBACK_FNC </td>
+          <td>(</td>
+          <td class="paramtype">TransmitCallback&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">fnTransmitCallback&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>TX complete callback for given channel. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">channel</td><td>UART channel </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="aea29d868c9121c4df9ab7a284bbf1450"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea29d868c9121c4df9ab7a284bbf1450">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[3/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aea29d868c9121c4df9ab7a284bbf1450">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[4/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -245,7 +287,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="aa097390dc51ced451f2ce4869edea15a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa097390dc51ced451f2ce4869edea15a">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[4/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aa097390dc51ced451f2ce4869edea15a">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[5/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -275,7 +317,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="af5a4076fa26d6ac45043e468c2742680"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af5a4076fa26d6ac45043e468c2742680">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[5/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#af5a4076fa26d6ac45043e468c2742680">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[6/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -305,7 +347,7 @@ Variables</h2></td></tr>
 </div>
 </div>
 <a id="a8a4f70f3eb38313df162f05017c832c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a4f70f3eb38313df162f05017c832c6">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[6/6]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a4f70f3eb38313df162f05017c832c6">&#9670;&nbsp;</a></span>DEFINE_CALLBACK_FNC() <span class="overload">[7/7]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

@@ -59,16 +59,17 @@
   * @{
   */
 
-#define KETCUBE_I2C_ADDRESS                   (uint8_t)0x33     /*<! KETCube I2C address */
+#define KETCUBE_I2C_NAME                      "i2c_drv"         ///< I2C driver name
+#define KETCUBE_I2C_ADDRESS                   (uint8_t)0x33     ///< KETCube I2C address
 #define KETCUBE_I2C_HANDLE                     I2C1
-#define KETCUBE_I2C_TIMEOUT                    0x5000   /*<! The value of the maximal timeout for BUS waiting loops */
+#define KETCUBE_I2C_TIMEOUT                    0x5000           ///< The value of the maximal timeout for BUS waiting loops
 
 /**
 * @brief I2C Speed selection
 */
 typedef enum {
-    KETCUBE_I2C_SPEED_100KHZ = 0x10A13E56,      /* Analog Filter ON, Rise Time 400ns, Fall Time 100ns */
-    KETCUBE_I2C_SPEED_400KHZ = 0x00B1112E       /* Analog Filter ON, Rise Time 250ns, Fall Time 100ns */
+    KETCUBE_I2C_SPEED_100KHZ = 0x10A13E56,      /*<! Analog Filter ON, Rise Time 400ns, Fall Time 100ns */
+    KETCUBE_I2C_SPEED_400KHZ = 0x00B1112E       /*<! Analog Filter ON, Rise Time 250ns, Fall Time 100ns */
 } ketCube_I2C_SPEED_t;
 
 #define KETCUBE_I2C_CLK_ENABLE()               __I2C1_CLK_ENABLE()
@@ -96,9 +97,9 @@ extern uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg,
                                     uint8_t * pBuffer, uint16_t Size);
 extern uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg,
                                      uint8_t * pBuffer, uint16_t Size);
-extern uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer, 
+extern uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
                                         uint16_t Size);
-extern uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer, 
+extern uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
                                        uint16_t Size);
 
 extern ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,

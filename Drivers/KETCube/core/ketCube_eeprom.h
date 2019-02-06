@@ -48,6 +48,8 @@
 
 #include "stdint.h"
 
+#define KETCUBE_EEPROM_NAME               "eeprom_drv"      ///< EEPROM driver name
+
 /** @defgroup  KETCube_EEPROM KETCube EEPROM driver
   * @brief KETCube EEPROM driver for STM32L082
   *

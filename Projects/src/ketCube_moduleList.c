@@ -175,8 +175,8 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
     {((char *) &("FDC2214")),
      ((char *) &("TI\'s FDC2214 capacity to digital converter.")),
      &ketCube_fdc2214_Init,     /*·Module Init() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     &ketCube_fdc2214_SleepEnter,       /*·SleepEnter() */
+     &ketCube_fdc2214_SleepExit,        /*·SleepExit() */
      &ketCube_fdc2214_ReadData, /*·GetSensorData() */
      (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
@@ -219,11 +219,11 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
     {((char *) &("TxDisplay")),
      ((char *) &("Display Tx KETCube data.")),
-     &ketCube_txDisplay_Init,     /*·Module Init() */
+     &ketCube_txDisplay_Init,   /*·Module Init() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
      (ketCube_cfg_ModDataFn_t) NULL,    /*·GetSensorData() */
-     &ketCube_txDisplay_Send,           /*·SendData() */
+     &ketCube_txDisplay_Send,   /*·SendData() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
      (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
      0,                         /*·CFG base addr -- set dynamicaly */
@@ -233,44 +233,45 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_BMEX80
     {((char *) &("BMEx80")),
-     ((char *) &("On-board environmental sensor based on Bosch BME family.")),
-     &ketCube_bmeX80_Init,              /* Module Init() */
+     ((char *)
+      &("On-board environmental sensor based on Bosch BME family.")),
+     &ketCube_bmeX80_Init,      /* Module Init() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /* SleepEnter() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /* SleepExit() */
-     &ketCube_bmeX80_ReadData,          /* GetSensorData() */
+     &ketCube_bmeX80_ReadData,  /* GetSensorData() */
      (ketCube_cfg_ModDataFn_t) NULL,    /* SendData() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /* ReceiveData() */
      (ketCube_cfg_ModDataPtrFn_t) NULL, /* ProcessData() */
-     0,                                 /* CFG base addr -- set dynamicaly */
-     1,                                 /* CFG len in bytes */
-     TRUE                               /* module CFG byte -- set dynamically */
+     0,                         /* CFG base addr -- set dynamicaly */
+     1,                         /* CFG len in bytes */
+     TRUE                       /* module CFG byte -- set dynamically */
      },
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_LIS2HH12
     {((char *) &("LIS2HH12")),
      ((char *) &("3 axis accelerometer")),
-     &ketCube_lis2hh12_Init,            /* Module Init() */
+     &ketCube_lis2hh12_Init,    /* Module Init() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /* SleepEnter() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /* SleepExit() */
      &ketCube_lis2hh12_ReadData,        /* GetSensorData() */
      (ketCube_cfg_ModDataFn_t) NULL,    /* SendData() */
      (ketCube_cfg_ModVoidFn_t) NULL,    /* ReceiveData() */
      (ketCube_cfg_ModDataPtrFn_t) NULL, /* ProcessData() */
-     0,                                 /* CFG base addr -- set dynamicaly */
-     1,                                 /* CFG len in bytes */
-     TRUE                               /* module CFG byte -- set dynamically */
+     0,                         /* CFG base addr -- set dynamicaly */
+     1,                         /* CFG len in bytes */
+     TRUE                       /* module CFG byte -- set dynamically */
      },
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_ICS43432
     {((char *) &("ICS43432")),
      ((char *) &("MEMS microphone")),
-     &ketCube_ics43432_Init,           /*Module Init() */
-     (ketCube_cfg_ModVoidFn_t) NULL,   /*SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,   /*SleepExit() */
-     &ketCube_ics43432_ReadData,       /*GetSensorData() */
-     (ketCube_cfg_ModDataFn_t) NULL,   /*SendData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,   /*ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL,/*ProcessData() */
+     &ketCube_ics43432_Init,    /*Module Init() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*SleepExit() */
+     &ketCube_ics43432_ReadData,        /*GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL, /*ProcessData() */
      0,                         /* CFG base addr -- set dynamicaly */
      1,                         /* CFG len in bytes */
      TRUE                       /* module CFG byte -- set dynamically */

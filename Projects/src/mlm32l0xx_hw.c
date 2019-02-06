@@ -183,11 +183,6 @@ void HW_Init( void )
     HW_SPI_Init( );
 
     HW_RTC_Init( );
-		
-#ifdef USE_B_L082Z_KETCube
-		ketCube_MainBoard_LED1_Init();
-		ketCube_MainBoard_LED2_Init();
-#endif
 
     McuInitialized = true;
   }

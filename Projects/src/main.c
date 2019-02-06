@@ -60,6 +60,16 @@ static TimerEvent_t KETCube_PeriodTimer;
 static bool KETCube_PeriodTimerElapsed = FALSE;
 
 
+bool KETCube_wasResetPOR;
+void KETCube_getResetFlags(void)
+{
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) == TRUE) {
+        KETCube_wasResetPOR = TRUE;
+    } else {
+        KETCube_wasResetPOR = FALSE;
+    }
+    __HAL_RCC_CLEAR_RESET_FLAGS();
+}
 
 /*!
  * @brief Function executed on TxNextPacket Timeout event
@@ -95,22 +105,22 @@ void KETCube_ErrorHandler(void)
  * 
  * @note This overwrites the weak function defined in ketCube_lora.c
  */
-void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len) {
+void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len)
+{
     if (len < 1) {
         return;
     }
-    
     // decode commands
-    switch(buffer[0]) {
-        case 0x01:
-            // do something ...
-            break;
-        case 0x02:
-            // do something else ...
-            break;
-        default:
-            // command not found
-            return;
+    switch (buffer[0]) {
+    case 0x01:
+        // do something ...
+        break;
+    case 0x02:
+        // do something else ...
+        break;
+    default:
+        // command not found
+        return;
     }
 }
 
@@ -138,6 +148,15 @@ int main(void)
     /* Init Terminal */
     ketCube_terminal_Init();
 
+    // A hot fix for non-operational RTC after POR - this should be removed in the future
+    if (KETCube_wasResetPOR == TRUE) {
+        //perform SW reset
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "POR detected - reseting!");
+
+        NVIC_SystemReset();
+    }
+
     /* Init KETCube core config */
     if (ketCube_coreCfg_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();
@@ -158,8 +177,7 @@ int main(void)
 #endif                          /*  */
 
     /* main loop */
-    while (TRUE)
-    {
+    while (TRUE) {
         /* process pendig commands */
         ketCube_terminal_ProcessCMD();
 
@@ -170,7 +188,9 @@ int main(void)
 
             KETCube_PeriodTimerElapsed = FALSE;
 
-            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "--- KETCube base period # %d ---", basePeriodCnt++);
+            ketCube_terminal_CoreSeverityPrintln
+                (KETCUBE_CFG_SEVERITY_DEBUG,
+                 "--- KETCube base period # %d ---", basePeriodCnt++);
 
             ketCube_modules_ExecutePeriodic();
 
