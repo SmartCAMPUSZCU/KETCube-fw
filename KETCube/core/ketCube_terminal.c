@@ -798,8 +798,9 @@ static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
 {
     uint16_t i;
     
-    if (command->outputSetType == KETCUBE_TERMINAL_PARAMS_NONE)
+    if (command->outputSetType == KETCUBE_TERMINAL_PARAMS_NONE) {
         return;
+    }
     
     KETCUBE_TERMINAL_PRINTF("%s returned: ", command->cmd);
     
@@ -827,7 +828,7 @@ static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
             for (i = 0; i < commandIOParams.as_byte_array.length; i++) {
                 KETCUBE_TERMINAL_PRINTF("%02X-",commandIOParams.as_byte_array.data[i]);
             }
-            KETCUBE_TERMINAL_PRINTF("\b");
+            KETCUBE_TERMINAL_PRINTF("\b \b");
             break;
         }
         default:
@@ -939,7 +940,7 @@ void ketCube_terminal_execCMD(void)
             cmdIndex++;
             continue;
         }
-
+        
         /* move to subcommand if exist */
         if ((cmdList[cmdIndex].cmd[j] == 0x00) &&
             (commandBuffer[cmdBuffIndex] != 0x00) &&
@@ -1316,7 +1317,7 @@ void ketCube_terminal_Print(char *format, ...)
 void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
                                           char *format, ...)
 {
-    if (ketCube_coreCfg_severity < msgSeverity) {
+    if (ketCube_coreCfg.severity < msgSeverity) {
         return;
     }
 
@@ -1338,7 +1339,7 @@ void ketCube_terminal_CoreSeverityPrintln(ketCube_severity_t msgSeverity,
   */
 void ketCube_terminal_DriverSeverityPrintln(const char * drvName, ketCube_severity_t msgSeverity, char *format, ...)
 {
-    if (ketCube_coreCfg_driverSeverity < msgSeverity) {
+    if (ketCube_coreCfg.driverSeverity < msgSeverity) {
         return;
     }
 

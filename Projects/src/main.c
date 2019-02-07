@@ -80,7 +80,7 @@ static void KETCube_PeriodElapsed(void)
 
     KETCube_PeriodTimerElapsed = TRUE;
 
-    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg_BasePeriod);
+    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg.basePeriod);
 
     TimerStart(&KETCube_PeriodTimer);
 }
@@ -171,7 +171,7 @@ int main(void)
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
     TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
 
-    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg_StartDelay);
+    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg.startDelay);
 
     TimerStart(&KETCube_PeriodTimer);
 #endif                          /*  */

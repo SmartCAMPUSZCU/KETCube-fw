@@ -52,7 +52,7 @@
 
 /** @defgroup KETCube_LoRa_CMD KETCube LoRa CMD
   * @brief KETCube LoRa module commandline deffinition
-	* @ingroup KETCube_Terminal
+  * @ingroup KETCube_Terminal
   * @{
   */
 
@@ -320,10 +320,9 @@ void ketCube_LoRa_cmd_set_appEUI(void)
         return;
     }
     
-    memcpy(&(commandIOParams.as_byte_array.data[0]), 
-           &(ketCube_lora_EEPROMCfgImage->appEUI[0]), 
+    memcpy(&(ketCube_lora_EEPROMCfgImage->appEUI[0]), 
+           &(commandIOParams.as_byte_array.data[0]),
            KETCUBE_LORA_CFGLEN_APPEUI);
-    
     
     if (!ketCube_LoRa_cmd_saveEEPROM()) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
@@ -341,10 +340,9 @@ void ketCube_LoRa_cmd_set_appKey(void)
         return;
     }
     
-    memcpy(&(commandIOParams.as_byte_array.data[0]), 
-           &(ketCube_lora_EEPROMCfgImage->appKey[0]), 
+    memcpy(&(ketCube_lora_EEPROMCfgImage->appKey[0]),
+           &(commandIOParams.as_byte_array.data[0]), 
            KETCUBE_LORA_CFGLEN_APPKEY);
-    
     
     if (!ketCube_LoRa_cmd_saveEEPROM()) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
@@ -362,10 +360,9 @@ void ketCube_LoRa_cmd_set_devEUI(void)
         return;
     }
     
-    memcpy(&(commandIOParams.as_byte_array.data[0]), 
-           &(ketCube_lora_EEPROMCfgImage->devEUI[0]), 
+    memcpy(&(ketCube_lora_EEPROMCfgImage->devEUI[0]), 
+           &(commandIOParams.as_byte_array.data[0]), 
            KETCUBE_LORA_CFGLEN_DEVEUI);
-    
     
     if (!ketCube_LoRa_cmd_saveEEPROM()) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
@@ -419,10 +416,9 @@ void ketCube_LoRa_cmd_set_devAddr(void)
         return;
     }
     
-    memcpy(&(commandIOParams.as_byte_array.data[0]), 
-           &(ketCube_lora_EEPROMCfgImage->devAddr[0]), 
+    memcpy(&(ketCube_lora_EEPROMCfgImage->devAddr[0]), 
+           &(commandIOParams.as_byte_array.data[0]), 
            KETCUBE_LORA_CFGLEN_DEVADDR);
-    
     
     if (!ketCube_LoRa_cmd_saveEEPROM()) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
@@ -440,10 +436,9 @@ void ketCube_LoRa_cmd_set_appSKey(void)
         return;
     }
     
-    memcpy(&(commandIOParams.as_byte_array.data[0]), 
-           &(ketCube_lora_EEPROMCfgImage->appSKey[0]), 
+    memcpy(&(ketCube_lora_EEPROMCfgImage->appSKey[0]), 
+           &(commandIOParams.as_byte_array.data[0]), 
            KETCUBE_LORA_CFGLEN_APPSKEY);
-    
     
     if (!ketCube_LoRa_cmd_saveEEPROM()) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
@@ -461,10 +456,9 @@ void ketCube_LoRa_cmd_set_nwkSKey(void)
         return;
     }
     
-    memcpy(&(commandIOParams.as_byte_array.data[0]), 
-           &(ketCube_lora_EEPROMCfgImage->nwkSKey[0]), 
+    memcpy(&(ketCube_lora_EEPROMCfgImage->nwkSKey[0]), 
+           &(commandIOParams.as_byte_array.data[0]), 
            KETCUBE_LORA_CFGLEN_NWKSKEY);
-    
     
     if (!ketCube_LoRa_cmd_saveEEPROM()) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;

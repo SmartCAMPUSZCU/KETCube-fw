@@ -45,11 +45,10 @@
 #include "ketCube_coreCfg.h"
 #include "ketCube_terminal.h"
 
-uint32_t ketCube_coreCfg_BasePeriod;
-uint32_t ketCube_coreCfg_StartDelay;
-ketCube_severity_t ketCube_coreCfg_severity;
-ketCube_severity_t ketCube_coreCfg_driverSeverity;
-
+/**
+ * KETCube core configuration
+ */
+ketCube_coreCfg_t ketCube_coreCfg;
 
 /**
   * @brief Initialize rxDisplay module
@@ -64,53 +63,31 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, "");
 
     if (ketCube_EEPROM_ReadBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_BASEPERIOD,
-         (uint8_t *) & (ketCube_coreCfg_BasePeriod),
-         4) != KETCUBE_EEPROM_OK) {
+        (KETCUBE_EEPROM_ALLOC_CORE, (uint8_t *) &(ketCube_coreCfg),
+         sizeof(ketCube_coreCfg_t)) != KETCUBE_EEPROM_OK) {
         return ketCube_cfg_Load_ERROR;
     }
 
-    if (ketCube_EEPROM_ReadBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_STARTDELAY,
-         (uint8_t *) & (ketCube_coreCfg_StartDelay),
-         4) != KETCUBE_EEPROM_OK) {
-        return ketCube_cfg_Load_ERROR;
+    if (ketCube_coreCfg.basePeriod < KETCUBE_CORECFG_MIN_BASEPERIOD) {
+        ketCube_coreCfg.basePeriod = KETCUBE_CORECFG_MIN_BASEPERIOD;
     }
 
-    if (ketCube_EEPROM_ReadBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_SEVERITY,
-         (uint8_t *) & (ketCube_coreCfg_severity),
-         1) != KETCUBE_EEPROM_OK) {
-        return ketCube_cfg_Load_ERROR;
-    }
-    
-    if (ketCube_EEPROM_ReadBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_DRIVER_SEVERITY,
-         (uint8_t *) & (ketCube_coreCfg_driverSeverity),
-         1) != KETCUBE_EEPROM_OK) {
-        return ketCube_cfg_Load_ERROR;
+    if (ketCube_coreCfg.startDelay < KETCUBE_CORECFG_MIN_STARTDELAY) {
+        ketCube_coreCfg.startDelay = KETCUBE_CORECFG_MIN_STARTDELAY;
     }
 
-    if (ketCube_coreCfg_BasePeriod < KETCUBE_CORECFG_MIN_BASEPERIOD) {
-        ketCube_coreCfg_BasePeriod = KETCUBE_CORECFG_MIN_BASEPERIOD;
-    }
-
-    if (ketCube_coreCfg_StartDelay < KETCUBE_CORECFG_MIN_STARTDELAY) {
-        ketCube_coreCfg_StartDelay = KETCUBE_CORECFG_MIN_STARTDELAY;
-    }
-
-    if (ketCube_coreCfg_severity > KETCUBE_CFG_SEVERITY_DEBUG) {
-        ketCube_coreCfg_severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
+    if (ketCube_coreCfg.severity > KETCUBE_CFG_SEVERITY_DEBUG) {
+        ketCube_coreCfg.severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
     }
 
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                          "KETCube Core base period set to: %d ms",
-                                         ketCube_coreCfg_BasePeriod);
+                                         ketCube_coreCfg.basePeriod);
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                          "KETCube Start delay set to: %d ms",
-                                         ketCube_coreCfg_StartDelay);
+                                         ketCube_coreCfg.startDelay);
 
-    switch (ketCube_coreCfg_severity) {
+    switch (ketCube_coreCfg.severity) {
     case KETCUBE_CFG_SEVERITY_NONE:
         ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                              "KETCube core severity: NONE");
@@ -129,7 +106,7 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
         break;
     }
     
-    switch (ketCube_coreCfg_driverSeverity) {
+    switch (ketCube_coreCfg.driverSeverity) {
     case KETCUBE_CFG_SEVERITY_NONE:
         ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                              "KETCube driver severity: NONE");

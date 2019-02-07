@@ -61,7 +61,16 @@
  */
 void ketCube_terminal_cmd_show_core_basePeriod(void)
 {
-    commandIOParams.as_integer = ketCube_coreCfg_BasePeriod;
+    uint32_t basePeriod;
+    
+    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
+        basePeriod), (uint8_t *) &basePeriod, sizeof(uint32_t)) != KETCUBE_EEPROM_OK) {
+        
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        return;
+    }
+    
+    commandIOParams.as_integer = basePeriod;
 }
 
 /**
@@ -70,7 +79,16 @@ void ketCube_terminal_cmd_show_core_basePeriod(void)
  */
 void ketCube_terminal_cmd_show_core_startDelay(void)
 {
-    commandIOParams.as_integer = ketCube_coreCfg_StartDelay;
+    uint32_t startDelay;
+    
+    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
+        startDelay), (uint8_t *) &startDelay, sizeof(uint32_t)) != KETCUBE_EEPROM_OK) {
+        
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        return;
+    }
+    
+    commandIOParams.as_integer = startDelay;
 }
 
 /**
@@ -80,8 +98,16 @@ void ketCube_terminal_cmd_show_core_startDelay(void)
 void ketCube_terminal_cmd_show_core_severity(void)
 {
     const char* severity = "UNKNOWN";
+    ketCube_severity_t EEPROMSeverity;
     
-    switch (ketCube_coreCfg_severity) {
+    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
+        severity), (uint8_t *) &EEPROMSeverity, sizeof(ketCube_severity_t)) != KETCUBE_EEPROM_OK) {
+        
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        return;
+    }
+    
+    switch (EEPROMSeverity) {
         case KETCUBE_CFG_SEVERITY_NONE:
             severity = "NONE";
             break;
@@ -109,16 +135,17 @@ void ketCube_terminal_cmd_show_core_severity(void)
 void ketCube_terminal_cmd_set_core_basePeriod(void)
 {
     if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_BASEPERIOD,
-         (uint8_t *)&(commandIOParams.as_integer), 4)
+        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, basePeriod),
+         (uint8_t *)&(commandIOParams.as_integer), sizeof(uint32_t))
             == KETCUBE_EEPROM_OK) {
-        KETCUBE_TERMINAL_PRINTF
-            ("KETCube Core base period is set to: %d ms",
-                commandIOParams.as_integer);
+        
+        snprintf(commandIOParams.as_string,
+                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
+                 "%d",
+                 commandIOParams.as_integer);
     } else {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
-    KETCUBE_TERMINAL_ENDL();
 }
 
 /**
@@ -128,15 +155,17 @@ void ketCube_terminal_cmd_set_core_basePeriod(void)
 void ketCube_terminal_cmd_set_core_startDelay(void)
 {
     if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_STARTDELAY,
-         (uint8_t *)&(commandIOParams.as_integer), 4)
+        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, startDelay),
+         (uint8_t *)&(commandIOParams.as_integer), sizeof(uint32_t))
             == KETCUBE_EEPROM_OK) {
-        KETCUBE_TERMINAL_PRINTF("KETCube Start delay is set to: %d ms",
-                                commandIOParams.as_integer);
+        
+        snprintf(commandIOParams.as_string,
+                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
+                 "%d",
+                 commandIOParams.as_integer);
     } else {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
-    KETCUBE_TERMINAL_ENDL();
 }
 
 /**
@@ -145,47 +174,9 @@ void ketCube_terminal_cmd_set_core_startDelay(void)
  */
 void ketCube_terminal_cmd_set_core_severity(void)
 {
-    KETCUBE_TERMINAL_PRINTF("Setting KETCube core severity: ");
-    switch ((ketCube_severity_t) commandIOParams.as_integer) {
-        case KETCUBE_CFG_SEVERITY_NONE:
-            KETCUBE_TERMINAL_PRINTF("NONE");
-            break;
-        case KETCUBE_CFG_SEVERITY_ERROR:
-            KETCUBE_TERMINAL_PRINTF("ERROR");
-            break;
-        case KETCUBE_CFG_SEVERITY_INFO:
-            KETCUBE_TERMINAL_PRINTF("INFO");
-            break;
-        case KETCUBE_CFG_SEVERITY_DEBUG:
-            KETCUBE_TERMINAL_PRINTF("DEBUG");
-            break;
-        default:
-            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
-            return;
-    }
-    
-    KETCUBE_TERMINAL_ENDL();
-    
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_SEVERITY,
-         (uint8_t *)&(commandIOParams.as_integer), 1)
-            == KETCUBE_EEPROM_OK) {
-    } else {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-    }
-    
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Show KETCube driver(s) severity
- * 
- */
-void ketCube_terminal_cmd_show_driver_severity(void)
-{
     const char* severity = "UNKNOWN";
     
-    switch (ketCube_coreCfg_driverSeverity) {
+    switch (commandIOParams.as_integer) {
         case KETCUBE_CFG_SEVERITY_NONE:
             severity = "NONE";
             break;
@@ -198,6 +189,57 @@ void ketCube_terminal_cmd_show_driver_severity(void)
         case KETCUBE_CFG_SEVERITY_DEBUG:
             severity = "DEBUG";
             break;
+        default:
+            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
+            return;
+    }
+    
+    if (ketCube_EEPROM_WriteBuffer
+        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, severity),
+         (uint8_t *)&(commandIOParams.as_integer), sizeof(ketCube_severity_t))
+            == KETCUBE_EEPROM_OK) {
+        
+        snprintf(commandIOParams.as_string,
+                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
+                 "%s",
+                 severity);
+    } else {
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+    }
+}
+
+/**
+ * @brief Show KETCube driver(s) severity
+ * 
+ */
+void ketCube_terminal_cmd_show_driver_severity(void)
+{
+    const char* severity = "UNKNOWN";
+    ketCube_severity_t EEPROMSeverity;
+    
+    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
+        driverSeverity), (uint8_t *) &EEPROMSeverity, sizeof(ketCube_severity_t)) != KETCUBE_EEPROM_OK) {
+        
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        return;
+    }
+    
+    switch (EEPROMSeverity) {
+        case KETCUBE_CFG_SEVERITY_NONE:
+            severity = "NONE";
+            break;
+        case KETCUBE_CFG_SEVERITY_ERROR:
+            severity = "ERROR";
+            break;
+        case KETCUBE_CFG_SEVERITY_INFO:
+            severity = "INFO";
+            break;
+        case KETCUBE_CFG_SEVERITY_DEBUG:
+            severity = "DEBUG";
+            break;
+        default:
+            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
+            return;
     }
     
     snprintf(commandIOParams.as_string,
@@ -212,36 +254,34 @@ void ketCube_terminal_cmd_show_driver_severity(void)
  */
 void ketCube_terminal_cmd_set_driver_severity(void)
 {
-    KETCUBE_TERMINAL_PRINTF("Setting KETCube driver(s) severity: ");
-    switch ((ketCube_severity_t) commandIOParams.as_integer) {
+    const char* severity = "UNKNOWN";
+    
+    switch (commandIOParams.as_integer) {
         case KETCUBE_CFG_SEVERITY_NONE:
-            KETCUBE_TERMINAL_PRINTF("NONE");
+            severity = "NONE";
             break;
         case KETCUBE_CFG_SEVERITY_ERROR:
-            KETCUBE_TERMINAL_PRINTF("ERROR");
+            severity = "ERROR";
             break;
         case KETCUBE_CFG_SEVERITY_INFO:
-            KETCUBE_TERMINAL_PRINTF("INFO");
+            severity = "INFO";
             break;
         case KETCUBE_CFG_SEVERITY_DEBUG:
-            KETCUBE_TERMINAL_PRINTF("DEBUG");
+            severity = "DEBUG";
             break;
-        default:
-            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
-            return;
     }
     
-    KETCUBE_TERMINAL_ENDL();
-    
     if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + KETCUBE_CORECFG_ADR_DRIVER_SEVERITY,
-         (uint8_t *)&(commandIOParams.as_integer), 1)
+        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, driverSeverity),
+         (uint8_t *)&(commandIOParams.as_integer), sizeof(ketCube_severity_t))
             == KETCUBE_EEPROM_OK) {
+        snprintf(commandIOParams.as_string,
+                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
+                 "%s",
+                 severity);
     } else {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
-    
-    KETCUBE_TERMINAL_ENDL();
 }
 
 /* Terminal command definitions */
@@ -269,18 +309,18 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_set_core[] = {
     DEF_COMMAND("basePeriod",
                 "KETCube base period",
                 KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_STRING,
                 &ketCube_terminal_cmd_set_core_basePeriod),
     DEF_COMMAND("startDelay",
                 "First periodic action is delayed after power-up",
                 KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_STRING,
                 &ketCube_terminal_cmd_set_core_startDelay),
     DEF_COMMAND("severity",
                 "Core messages severity: 0 = NONE, 1 = ERROR; 2 = INFO;"
                 " 3 = DEBUG",
                 KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_STRING,
                 &ketCube_terminal_cmd_set_core_severity),
     DEF_TERMINATE()
 };
@@ -302,7 +342,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_set_driver[] = {
                 "Driver(s) messages severity: 0 = NONE, 1 = ERROR; 2 = INFO;"
                 " 3 = DEBUG",
                 KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_STRING,
                 &ketCube_terminal_cmd_set_driver_severity),
     DEF_TERMINATE()
 };

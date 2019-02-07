@@ -107,11 +107,12 @@ typedef enum ketCube_terminal_paramSet_type_t {
     KETCUBE_TERMINAL_PARAMS_STRING,
     KETCUBE_TERMINAL_PARAMS_INTEGER,
     KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR,
-    KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+    KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY
 } ketCube_terminal_paramSet_type_t;
 
 /* Maximum length of string returned by command */
 #define KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH 64
+#define KETCUBE_TERMINAL_PARAM_BYTE_ARRAY_MAX_LENGTH 32
 
 /**
  * @brief KETCube terminal command parameter container
@@ -128,7 +129,7 @@ typedef union ketCube_terminal_paramSet_t {
     } as_integer_pair;
     struct {
         uint16_t length;
-        byte data[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH/3];;
+        byte data[KETCUBE_TERMINAL_PARAM_BYTE_ARRAY_MAX_LENGTH];
     } as_byte_array;
 } ketCube_terminal_paramSet_t;
 
@@ -148,6 +149,8 @@ static inline int ketCube_terminal_ParamSetTypeToCount(
             return 1;
         case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
             return 2;
+        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
+            return 1;
     }
 }
 

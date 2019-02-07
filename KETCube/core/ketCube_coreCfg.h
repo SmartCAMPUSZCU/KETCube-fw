@@ -69,10 +69,28 @@ typedef enum {
     KETCUBE_CORECFG_ADR_DRIVER_SEVERITY = 9,   /*<! Core severity, see @ketCube_severity_t */
 } ketCube_coreCfg_Addr_t;
 
-extern uint32_t ketCube_coreCfg_BasePeriod;     ///< This period is used by KETCube core to run periodic events
-extern uint32_t ketCube_coreCfg_StartDelay;     ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
-extern ketCube_severity_t ketCube_coreCfg_severity;     ///< Core messages severity
-extern ketCube_severity_t ketCube_coreCfg_driverSeverity;     ///< Driver(s) messages severity
+
+/**
+* @brief  Length of LoRa CFG data
+*/
+typedef enum {
+    KETCUBE_CORECFG_LEN_BASEPERIOD = 4,        /*<! Base period configuration address (in ms) */
+    KETCUBE_CORECFG_LEN_STARTDELAY = 4,        /*<! Start delay configuration address (in ms) */
+    KETCUBE_CORECFG_LEN_SEVERITY = 1,          /*<! Core severity, see @ketCube_severity_t */
+    KETCUBE_CORECFG_LEN_DRIVER_SEVERITY = 1    /*<! Core severity, see @ketCube_severity_t */
+} ketCube_coreCfg_Len_t;
+
+/**
+* @brief  KETCube core configuration
+*/
+typedef struct ketCube_coreCfg_t {
+    uint32_t basePeriod;      ///< This period is used by KETCube core to run periodic events
+    uint32_t startDelay;     ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
+    ketCube_severity_t severity;           ///< Core messages severity
+    ketCube_severity_t driverSeverity;     ///< Driver(s) messages severity
+} ketCube_coreCfg_t;
+
+extern ketCube_coreCfg_t ketCube_coreCfg;
 
 /** @defgroup KETCube_coreCfg_fn Public Functions
 * @{
