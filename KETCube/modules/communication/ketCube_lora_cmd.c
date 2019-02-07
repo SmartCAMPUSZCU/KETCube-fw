@@ -57,22 +57,21 @@
   */
 
 /**
- * Temporary image of the LoRa EEPROM configuration
- */
-ketCube_lora_moduleCfg_t * ketCube_lora_EEPROMCfgImage = (ketCube_lora_moduleCfg_t *) &(ketCube_common_buffer[0]);
-
-/**
  * @brief Load current EEPROM Settings
+ * 
+ * @param data buffer
+ * @param offset offset in the configuration struct
+ * @param size size of data
  * 
  * @retval err TRUE if no error, else return FALSE
  * 
  */
-bool ketCube_LoRa_cmd_loadEEPROM(void)
+bool ketCube_LoRa_cmd_loadEEPROM(uint8_t *data, uint8_t offset, uint8_t size)
 {
-    if (ketCube_cfg_Load((uint8_t *) &(ketCube_lora_EEPROMCfgImage[0]),
+    if (ketCube_cfg_Load((uint8_t *) &(data[0]),
                          KETCUBE_LISTS_MODULEID_LORA,
-                         (ketCube_cfg_AllocEEPROM_t) 0,
-                         ketCube_modules_List[KETCUBE_LISTS_MODULEID_LORA].cfgLen) == KETCUBE_CFG_OK) {
+                         (ketCube_cfg_AllocEEPROM_t) offset,
+                         (ketCube_cfg_LenEEPROM_t) size) == KETCUBE_CFG_OK) {
         return TRUE;
     } 
     
@@ -82,21 +81,19 @@ bool ketCube_LoRa_cmd_loadEEPROM(void)
 /**
  * @brief Save new EEPROM Settings for LoRa module
  * 
+ * @param data buffer
+ * @param offset offset in the configuration struct
+ * @param size size of data
+ * 
  * @retval err TRUE if no error, else return FALSE
  * 
  */
-bool ketCube_LoRa_cmd_saveEEPROM(void)
+bool ketCube_LoRa_cmd_saveEEPROM(uint8_t *data, uint8_t offset, uint8_t size)
 {
-    // We can store all buffer when saving single configuration variable,
-    // as there is the read-before-write check in the EEPROM driver
-    // This excludes unnecessary EEPROM writes
-    // The disadvantage is the longer execution time,
-    // but this approach keeps code very readable
-
-    if (ketCube_cfg_Save((uint8_t *) &(ketCube_lora_EEPROMCfgImage[0]),
+    if (ketCube_cfg_Save((uint8_t *) &(data[0]),
                          KETCUBE_LISTS_MODULEID_LORA,
-                         (ketCube_cfg_AllocEEPROM_t) 0,
-                         ketCube_modules_List[KETCUBE_LISTS_MODULEID_LORA].cfgLen) == KETCUBE_CFG_OK) {
+                         (ketCube_cfg_AllocEEPROM_t) offset,
+                         (ketCube_cfg_LenEEPROM_t) size) == KETCUBE_CFG_OK) {
         return TRUE;
     } 
     
@@ -110,8 +107,12 @@ bool ketCube_LoRa_cmd_saveEEPROM(void)
  */
 void ketCube_LoRa_cmd_show_ABP(void)
 {
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        if (ketCube_lora_EEPROMCfgImage->connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {
+    ketCube_lora_bitCfg_t bitCfg;
+    
+    if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
+        if (bitCfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {
             commandIOParams.as_integer = 1;
         } else {
             commandIOParams.as_integer = 0;
@@ -127,8 +128,12 @@ void ketCube_LoRa_cmd_show_ABP(void)
  */
 void ketCube_LoRa_cmd_show_OTAA(void)
 {
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        if (ketCube_lora_EEPROMCfgImage->connectionType == KETCUBE_LORA_SELCONNMETHOD_OTAA) {
+    ketCube_lora_bitCfg_t bitCfg;
+    
+    if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))){
+        if (bitCfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_OTAA) {
             commandIOParams.as_integer = 1;
         } else {
             commandIOParams.as_integer = 0;
@@ -147,20 +152,27 @@ extern void HW_GetUniqueId(uint8_t * id);
  */
 void ketCube_LoRa_cmd_show_devEUI(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
+    ketCube_lora_bitCfg_t bitCfg;
+    
+    if (!ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
         return;
     }
 
-    if (ketCube_lora_EEPROMCfgImage->devEUIType == KETCUBE_LORA_SELDEVEUI_BOARD) {
+    if (bitCfg.devEUIType == KETCUBE_LORA_SELDEVEUI_BOARD) {
         HW_GetUniqueId((uint8_t *) &(commandIOParams.as_byte_array.data[0]));
+        commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_DEVEUI;
     } else {
-        memcpy(&(commandIOParams.as_byte_array.data[0]), 
-               &(ketCube_lora_EEPROMCfgImage->devEUI[0]), 
-               KETCUBE_LORA_CFGLEN_DEVEUI);
+        if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, devEUI),
+        KETCUBE_LORA_CFGLEN_DEVEUI)) {
+            commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_DEVEUI;
+        } else {
+            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        }
     }
-    
-    commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_DEVEUI;
 }
 
 
@@ -171,9 +183,12 @@ void ketCube_LoRa_cmd_show_devEUI(void)
 void ketCube_LoRa_cmd_show_devEUIType(void)
 {
     const char* type = "Unknown";
+    ketCube_lora_bitCfg_t bitCfg;
     
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        if (ketCube_lora_EEPROMCfgImage->devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
+    if (!ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
+        if (bitCfg.devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
             type = "Custom";
         } else {
             type = "Board";
@@ -192,10 +207,9 @@ void ketCube_LoRa_cmd_show_devEUIType(void)
  */
 void ketCube_LoRa_cmd_show_appEUI(void)
 {
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        memcpy(&(commandIOParams.as_byte_array.data[0]), 
-               &(ketCube_lora_EEPROMCfgImage->appEUI[0]), 
-               KETCUBE_LORA_CFGLEN_APPEUI);
+    if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, appEUI),
+        KETCUBE_LORA_CFGLEN_APPEUI)) {
         
         commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_APPEUI;
     } else {
@@ -209,10 +223,9 @@ void ketCube_LoRa_cmd_show_appEUI(void)
  */
 void ketCube_LoRa_cmd_show_appKey(void)
 {
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        memcpy(&(commandIOParams.as_byte_array.data[0]), 
-               &(ketCube_lora_EEPROMCfgImage->appKey[0]), 
-               KETCUBE_LORA_CFGLEN_APPKEY);
+    if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, appKey),
+        KETCUBE_LORA_CFGLEN_APPKEY)) {
         
         commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_APPKEY;
     } else {
@@ -227,10 +240,9 @@ void ketCube_LoRa_cmd_show_appKey(void)
  */
 void ketCube_LoRa_cmd_show_devAddr(void)
 {
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        memcpy(&(commandIOParams.as_byte_array.data[0]), 
-               &(ketCube_lora_EEPROMCfgImage->devAddr[0]), 
-               KETCUBE_LORA_CFGLEN_DEVADDR);
+    if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, devAddr),
+        KETCUBE_LORA_CFGLEN_DEVADDR)) {
         
         commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_DEVADDR;
     } else {
@@ -244,10 +256,9 @@ void ketCube_LoRa_cmd_show_devAddr(void)
  */
 void ketCube_LoRa_cmd_show_appSKey(void)
 {
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        memcpy(&(commandIOParams.as_byte_array.data[0]), 
-               &(ketCube_lora_EEPROMCfgImage->appSKey[0]), 
-               KETCUBE_LORA_CFGLEN_APPSKEY);
+    if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, appSKey),
+        KETCUBE_LORA_CFGLEN_APPSKEY)) {
         
         commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_APPSKEY;
     } else {
@@ -261,10 +272,9 @@ void ketCube_LoRa_cmd_show_appSKey(void)
  */
 void ketCube_LoRa_cmd_show_nwkSKey(void)
 {
-    if (ketCube_LoRa_cmd_loadEEPROM()) {
-        memcpy(&(commandIOParams.as_byte_array.data[0]), 
-               &(ketCube_lora_EEPROMCfgImage->nwkSKey[0]), 
-               KETCUBE_LORA_CFGLEN_NWKSKEY);
+    if (ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, nwkSKey),
+        KETCUBE_LORA_CFGLEN_NWKSKEY)) {
         
         commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_NWKSKEY;
     } else {
@@ -279,14 +289,20 @@ void ketCube_LoRa_cmd_show_nwkSKey(void)
  */
 void ketCube_LoRa_cmd_set_ABP(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
+    ketCube_lora_bitCfg_t bitCfg;
+    
+    if (!ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
         return;
     }
     
-    ketCube_lora_EEPROMCfgImage->connectionType = KETCUBE_LORA_SELCONNMETHOD_ABP;
+    bitCfg.connectionType = KETCUBE_LORA_SELCONNMETHOD_ABP;
     
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+    if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -297,14 +313,20 @@ void ketCube_LoRa_cmd_set_ABP(void)
  */
 void ketCube_LoRa_cmd_set_OTAA(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
+    ketCube_lora_bitCfg_t bitCfg;
+    
+    if (!ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
         return;
     }
     
-    ketCube_lora_EEPROMCfgImage->connectionType = KETCUBE_LORA_SELCONNMETHOD_OTAA;
+    bitCfg.connectionType = KETCUBE_LORA_SELCONNMETHOD_OTAA;
     
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+    if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -315,16 +337,9 @@ void ketCube_LoRa_cmd_set_OTAA(void)
  */
 void ketCube_LoRa_cmd_set_appEUI(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    memcpy(&(ketCube_lora_EEPROMCfgImage->appEUI[0]), 
-           &(commandIOParams.as_byte_array.data[0]),
-           KETCUBE_LORA_CFGLEN_APPEUI);
-    
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+    if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, appEUI),
+        KETCUBE_LORA_CFGLEN_APPEUI)) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -335,16 +350,9 @@ void ketCube_LoRa_cmd_set_appEUI(void)
  */
 void ketCube_LoRa_cmd_set_appKey(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    memcpy(&(ketCube_lora_EEPROMCfgImage->appKey[0]),
-           &(commandIOParams.as_byte_array.data[0]), 
-           KETCUBE_LORA_CFGLEN_APPKEY);
-    
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+    if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, appKey),
+        KETCUBE_LORA_CFGLEN_APPKEY)) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -355,16 +363,9 @@ void ketCube_LoRa_cmd_set_appKey(void)
  */
 void ketCube_LoRa_cmd_set_devEUI(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    memcpy(&(ketCube_lora_EEPROMCfgImage->devEUI[0]), 
-           &(commandIOParams.as_byte_array.data[0]), 
-           KETCUBE_LORA_CFGLEN_DEVEUI);
-    
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+    if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, devEUI),
+        KETCUBE_LORA_CFGLEN_DEVEUI)) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -375,14 +376,20 @@ void ketCube_LoRa_cmd_set_devEUI(void)
  */
 void ketCube_LoRa_cmd_set_devEUICustom(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
+    ketCube_lora_bitCfg_t bitCfg;
+    
+    if (!ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
         return;
     }
     
-    ketCube_lora_EEPROMCfgImage->devEUIType = KETCUBE_LORA_SELDEVEUI_CUSTOM;
+    bitCfg.devEUIType = KETCUBE_LORA_SELDEVEUI_CUSTOM;
     
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+    if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -393,14 +400,20 @@ void ketCube_LoRa_cmd_set_devEUICustom(void)
  */
 void ketCube_LoRa_cmd_set_devEUIBoard(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
+    ketCube_lora_bitCfg_t bitCfg;
+    
+    if (!ketCube_LoRa_cmd_loadEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
         return;
     }
     
-    ketCube_lora_EEPROMCfgImage->devEUIType = KETCUBE_LORA_SELDEVEUI_BOARD;
+    bitCfg.devEUIType = KETCUBE_LORA_SELDEVEUI_BOARD;
     
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+    if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &bitCfg, 
+        offsetof(ketCube_lora_moduleCfg_t, bitCfg),
+        sizeof(bitCfg))) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -411,16 +424,9 @@ void ketCube_LoRa_cmd_set_devEUIBoard(void)
  */
 void ketCube_LoRa_cmd_set_devAddr(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    memcpy(&(ketCube_lora_EEPROMCfgImage->devAddr[0]), 
-           &(commandIOParams.as_byte_array.data[0]), 
-           KETCUBE_LORA_CFGLEN_DEVADDR);
-    
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+     if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, devAddr),
+        KETCUBE_LORA_CFGLEN_DEVADDR)) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -431,16 +437,9 @@ void ketCube_LoRa_cmd_set_devAddr(void)
  */
 void ketCube_LoRa_cmd_set_appSKey(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    memcpy(&(ketCube_lora_EEPROMCfgImage->appSKey[0]), 
-           &(commandIOParams.as_byte_array.data[0]), 
-           KETCUBE_LORA_CFGLEN_APPSKEY);
-    
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+     if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, appSKey),
+        KETCUBE_LORA_CFGLEN_APPSKEY)) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -451,16 +450,9 @@ void ketCube_LoRa_cmd_set_appSKey(void)
  */
 void ketCube_LoRa_cmd_set_nwkSKey(void)
 {
-    if (!ketCube_LoRa_cmd_loadEEPROM()) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    memcpy(&(ketCube_lora_EEPROMCfgImage->nwkSKey[0]), 
-           &(commandIOParams.as_byte_array.data[0]), 
-           KETCUBE_LORA_CFGLEN_NWKSKEY);
-    
-    if (!ketCube_LoRa_cmd_saveEEPROM()) {
+     if (!ketCube_LoRa_cmd_saveEEPROM((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+        offsetof(ketCube_lora_moduleCfg_t, nwkSKey),
+        KETCUBE_LORA_CFGLEN_NWKSKEY)) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }
 }
@@ -527,27 +519,27 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_set_LoRa[] = {
     DEF_COMMAND("appEUI",
                 "Set LoRa application EUI",
                 KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
                 &ketCube_LoRa_cmd_set_appEUI),
     DEF_COMMAND("appKey",
                 "Set LoRa application key",
                 KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
                 &ketCube_LoRa_cmd_set_appKey),
     DEF_COMMAND("appSKey",
                 "Set LoRa application session key",
                 KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
                 &ketCube_LoRa_cmd_set_appSKey),
     DEF_COMMAND("devAddr",
                 "Set LoRa device address",
                 KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
                 &ketCube_LoRa_cmd_set_devAddr),
     DEF_COMMAND("devEUI",
                 "Set LoRa device EUI",
                 KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
                 &ketCube_LoRa_cmd_set_devEUI),
     DEF_COMMAND("devEUICustom",
                 "Use custom (user-defined) LoRa device EUI",
@@ -567,7 +559,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_set_LoRa[] = {
     DEF_COMMAND("nwkSKey",
                 "Set LoRa network session key",
                 KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
                 &ketCube_LoRa_cmd_set_nwkSKey),
     DEF_TERMINATE()
 };

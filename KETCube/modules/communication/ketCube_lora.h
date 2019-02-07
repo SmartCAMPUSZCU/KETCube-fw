@@ -94,14 +94,20 @@ typedef enum {
     KETCUBE_LORA_CFGLEN_APPSKEY = 16,   /*<! Application session KEY len in bytes */
 } ketCube_lora_cfgLen_t;
 
+typedef struct ketCube_lora_bitCfg_t {
+    ketCube_lora_selConnMethod_t connectionType:1; /*<! Connection type OTAA/ABP */
+    ketCube_lora_selDeveui_t devEUIType:1;         /*<! devEUI from device or custom devEUI */
+    uint8_t RFU: 6;                                /*<! reserved for future use */
+} ketCube_lora_bitCfg_t;
+
 /**
 * @brief  KETCube lora module configuration
 */
 typedef struct ketCube_lora_moduleCfg_t {
     ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
     
-    ketCube_lora_selConnMethod_t connectionType:1; /*<! Connection type OTAA/ABP */
-    ketCube_lora_selDeveui_t devEUIType:1;         /*<! devEUI from device or custom devEUI */
+    ketCube_lora_bitCfg_t bitCfg;                  /*<! bitwise settings */
+    
     byte devEUI[KETCUBE_LORA_CFGLEN_DEVEUI];       /*<! LoRaWAN devEUI */
     byte appEUI[KETCUBE_LORA_CFGLEN_APPEUI];       /*<! LoRaWAN appEUI */
     byte appKey[KETCUBE_LORA_CFGLEN_APPKEY];       /*<! LoRaWAN appKey */

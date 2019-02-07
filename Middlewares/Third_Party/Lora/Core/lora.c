@@ -615,7 +615,7 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
  */
 ketCube_cfg_Error_t lora_ketCubeInit(void) 
 {
-    if (ketCube_lora_moduleCfg.devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
+    if (ketCube_lora_moduleCfg.bitCfg.devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
         // devEUI
         memcpy(&(DevEui[0]), &(ketCube_lora_moduleCfg.devEUI[0]), 8);
         lora_ketCube_staticDevEUI = 1;
@@ -623,7 +623,7 @@ ketCube_cfg_Error_t lora_ketCubeInit(void)
         lora_ketCube_staticDevEUI = 0;
     }
 	
-    if (ketCube_lora_moduleCfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {
+    if (ketCube_lora_moduleCfg.bitCfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {
         // appSKey
         memcpy(&(AppSKey[0]), &(ketCube_lora_moduleCfg.appSKey[0]), 16);
         memcpy(&(NwkSKey[0]), &(ketCube_lora_moduleCfg.nwkSKey[0]), 16);
