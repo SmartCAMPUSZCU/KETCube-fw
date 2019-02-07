@@ -62,24 +62,45 @@
 #include "ketCube_bmeX80.h"
 #include "ketCube_lis2hh12.h"
 
+
+/**
+ * Define a KETCube module 
+ */
+#define DEF_MODULE(name, descr, initFn, sleepEnter, sleepExit, \
+                   getSensData, sendData, recvData, processData, cfgStruct) \
+                  { \
+                      ((char*) &(name)),\
+                      ((char*) &(descr)), \
+                      (ketCube_cfg_ModInitFn_t) (initFn), \
+                      (ketCube_cfg_ModVoidFn_t) (sleepEnter), \
+                      (ketCube_cfg_ModVoidFn_t) (sleepExit), \
+                      (ketCube_cfg_ModDataFn_t) (getSensData), \
+                      (ketCube_cfg_ModDataFn_t) (sendData), \
+                      (ketCube_cfg_ModVoidFn_t) (recvData), \
+                      (ketCube_cfg_ModDataPtrFn_t) (processData), \
+                      (ketCube_cfg_ModuleCfgByte_t *) &(cfgStruct), \
+                      sizeof(cfgStruct), \
+                      0 \
+                   }
+
+
 /**
 * @brief List of KETCube modules
 */
 ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
+
 #ifdef KETCUBE_CFG_INC_MOD_LORA
-    {((char *) &("LoRa")),
-     ((char *) &("LoRa radio.")),
-     &ketCube_lora_Init,        /*·Module Init() */
-     &ketCube_lora_SleepEnter,  /*·SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*·GetSensorData() */
-     &ketCube_lora_Send,        /*·SendData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
-     0,                         /*·CFG base addr -- set dynamicaly */
-     72,                        /*·CFG len in bytes */
-     TRUE                       /*·module CFG byte -- set dynamically */
-     },
+    DEF_MODULE("LoRa",
+               "LoRa radio.",
+               &ketCube_lora_Init,        /* Init() */
+               &ketCube_lora_SleepEnter,  /* SleepEnter() */
+               NULL,                      /* SleepExit() */
+               NULL,                      /* GetSensorData() */
+               &ketCube_lora_Send,        /* SendData() */
+               NULL,                      /* ReceiveData() */
+               NULL,                      /* ProcessData() */
+               ketCube_lora_moduleCfg     /* Module cfg struct */
+              ),
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
     {((char *) &("DebugDisplay")),

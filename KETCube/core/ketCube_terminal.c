@@ -130,6 +130,9 @@ static void ketCube_terminal_cmd_disable(void);
  * @brief A wrapper to ketCube_cfg_SaveStr function 
  *
  * Provides textual output to terminal is provided
+ * 
+ * @note This function is deprecated and it will be removed in the next release
+ * 
  */
 void ketCube_terminal_saveCfgHEXStr(char *data, ketCube_cfg_moduleIDs_t id,
                                     ketCube_cfg_AllocEEPROM_t addr,
@@ -159,6 +162,9 @@ void ketCube_terminal_saveCfgHEXStr(char *data, ketCube_cfg_moduleIDs_t id,
  * @brief A wrapper to ketCube_cfg_saveStr function 
  *
  * Provides textual output to terminal
+ * 
+ * @note This function is deprecated and it will be removed in the next release
+ * 
  */
 void ketCube_terminal_saveCfgDECStr(char *data, ketCube_cfg_moduleIDs_t id,
                                     ketCube_cfg_AllocEEPROM_t addr,
@@ -369,7 +375,7 @@ void ketCube_terminal_cmd_list(void)
                 break;
             }
 
-            switch (ketCube_modules_List[i].cfgByte.severity) {
+            switch (ketCube_modules_List[i].cfgPtr->severity) {
             case KETCUBE_CFG_SEVERITY_NONE:
                 severityEEPROM = 'N';
                 break;
@@ -391,8 +397,8 @@ void ketCube_terminal_cmd_list(void)
                 KETCUBE_TERMINAL_PRINTF("  %c\t", severity);
             }
 
-            if (data.enable != ketCube_modules_List[i].cfgByte.enable) {
-                if (ketCube_modules_List[i].cfgByte.enable == TRUE) {
+            if (data.enable != ketCube_modules_List[i].cfgPtr->enable) {
+                if (ketCube_modules_List[i].cfgPtr->enable == TRUE) {
                     KETCUBE_TERMINAL_PRINTF("E -> ");
                 } else {
                     KETCUBE_TERMINAL_PRINTF("D -> ");
@@ -474,7 +480,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
                             ketCube_modules_List[i].name);
 
     //do not enable/disable now but when reload ...
-    tmpCfgByte = ketCube_modules_List[i].cfgByte;
+    tmpCfgByte = *(ketCube_modules_List[i].cfgPtr);
     tmpCfgByte.enable = enable; // enable/disable
     tmpCfgByte.severity = severity;     // set severity
 
@@ -709,14 +715,17 @@ void ketCube_terminal_Init(void)
 
 /**
  * @brief Parse command arguments and validate them
+ * 
  */
 static int ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command)
 {
     uint8_t ptr = 0;
+    uint8_t len = 0;
     char *endptr;
     
     switch (command->paramSetType)
     {
+        default:
         case KETCUBE_TERMINAL_PARAMS_NONE:
             return 0;
         case KETCUBE_TERMINAL_PARAMS_STRING:
@@ -732,8 +741,9 @@ static int ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command)
                         strtol(&(commandBuffer[commandParamsPos]), &endptr, 10);
 
             /* no integer on input */
-            if (endptr == &(commandBuffer[commandParamsPos]))
+            if (endptr == &(commandBuffer[commandParamsPos])) {
                 return 1;
+            }
             return 0;
         }
         case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
@@ -743,19 +753,36 @@ static int ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command)
                                  &endptr, 10);
 
             /* no integer on input */
-            if (endptr == &(commandBuffer[commandParamsPos]))
+            if (endptr == &(commandBuffer[commandParamsPos])) {
                 return 1;
+            }
 
             ptr = ketCube_terminal_getNextParam(commandParamsPos);
             /* no next parameter */
-            if (ptr == 0)
+            if (ptr == 0) {
                 return 1;
+            }
             commandIOParams.as_integer_pair.second
                         = strtol(&(commandBuffer[ptr]), &endptr, 10);
 
             /* no integer on input */
-            if (endptr == &(commandBuffer[ptr]))
+            if (endptr == &(commandBuffer[ptr])) {
                 return 1;
+            }
+            return 0;
+        }
+        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
+        {
+            len = ketCube_common_Min(strlen(&(commandBuffer[commandParamsPos])), KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH);
+            
+            if (ketCube_common_IsHexString(&(commandBuffer[commandParamsPos]), len) == FALSE) {
+                return 1;
+            }
+            
+            ketCube_common_Hex2Bytes((uint8_t *) &(commandIOParams.as_byte_array.data[0]), &(commandBuffer[commandParamsPos]), len);
+            
+            commandIOParams.as_byte_array.length = len/2;
+            
             return 0;
         }
     }
@@ -765,9 +792,12 @@ static int ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command)
 
 /**
  * @brief Parse and print command outputs
+ * 
  */
 static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
 {
+    uint16_t i;
+    
     if (command->outputSetType == KETCUBE_TERMINAL_PARAMS_NONE)
         return;
     
@@ -790,6 +820,14 @@ static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
             KETCUBE_TERMINAL_PRINTF("%d, %d",
                                     commandIOParams.as_integer_pair.first,
                                     commandIOParams.as_integer_pair.second);
+            break;
+        }
+        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
+        {
+            for (i = 0; i < commandIOParams.as_byte_array.length; i++) {
+                KETCUBE_TERMINAL_PRINTF("%02X-",commandIOParams.as_byte_array.data[i]);
+            }
+            KETCUBE_TERMINAL_PRINTF("\b");
             break;
         }
         default:
@@ -1326,7 +1364,7 @@ void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity,
                                          ketCube_cfg_moduleIDs_t modId,
                                          char *format, va_list args)
 {
-    if (ketCube_modules_List[modId].cfgByte.severity < msgSeverity) {
+    if (ketCube_modules_List[modId].cfgPtr->severity < msgSeverity) {
         return;
     }
 
@@ -1346,6 +1384,7 @@ void ketCube_terminal_ModSeverityPrintln(ketCube_severity_t msgSeverity,
   */
 void ketCube_terminal_DebugPrintln(char *format, ...)
 {
+#ifdef KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
     if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
         cfgByte.enable != TRUE) {
         return;
@@ -1359,6 +1398,7 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
     ketCube_terminal_UpdateCmdLine();
 
     va_end(args);
+#endif // KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
 }
 
 /**
@@ -1370,6 +1410,7 @@ void ketCube_terminal_DebugPrintln(char *format, ...)
   */
 void ketCube_terminal_DebugPrint(char *format, ...)
 {
+#ifdef KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
     if (ketCube_modules_List[KETCUBE_LISTS_MODULEID_DEBUGDISPLAY].
         cfgByte.enable != TRUE) {
         return;
@@ -1381,4 +1422,5 @@ void ketCube_terminal_DebugPrint(char *format, ...)
     ketCube_terminal_UsartPrintVa(format, args);
 
     va_end(args);
+#endif // KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
 }

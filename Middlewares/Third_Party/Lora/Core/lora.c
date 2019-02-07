@@ -615,57 +615,30 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
  */
 ketCube_cfg_Error_t lora_ketCubeInit(void) 
 {
-	ketCube_lora_moduleCfg_t loraCfg;
+    if (ketCube_lora_moduleCfg.devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
+        // devEUI
+        memcpy(&(DevEui[0]), &(ketCube_lora_moduleCfg.devEUI[0]), 8);
+        lora_ketCube_staticDevEUI = 1;
+    } else {
+        lora_ketCube_staticDevEUI = 0;
+    }
 	
-	// CFG
-	if (ketCube_cfg_Load((uint8_t *) &(loraCfg), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_CFG, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_CFG) != KETCUBE_CFG_OK) {
-	  return ketCube_cfg_Load_ERROR;
-	}
-	
-	if (loraCfg.devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
-	  // devEUI
-	  if (ketCube_cfg_Load((uint8_t *) &(DevEui[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_DEVEUI, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_DEVEUI) != KETCUBE_CFG_OK) {
-	    return ketCube_cfg_Load_ERROR;
-	  }
-		lora_ketCube_staticDevEUI = 1;
-	} else {
-		lora_ketCube_staticDevEUI = 0;
-	}
-	
-	if (loraCfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {
-	  // appSKey
-	  if (ketCube_cfg_Load((uint8_t *) &(AppSKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPSKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPSKEY) != KETCUBE_CFG_OK) {
-	    return ketCube_cfg_Load_ERROR;
-   	}
-	  // nwkSKey
-	  if (ketCube_cfg_Load((uint8_t *) &(NwkSKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_NWKSKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_NWKSKEY) != KETCUBE_CFG_OK) {
-	    return ketCube_cfg_Load_ERROR;
-	  }
-	  // devAddr
-  	if (ketCube_cfg_Load((uint8_t *) &(DevAddr), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_DEVADDR, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_DEVADDR) != KETCUBE_CFG_OK) {
-	    return ketCube_cfg_Load_ERROR;
-	  }
-		// NwkID
-  	if (ketCube_cfg_Load((uint8_t *) &(NwkID), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_NETID, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_NETID) != KETCUBE_CFG_OK) {
-	    return ketCube_cfg_Load_ERROR;
-	  }
-		lora_ketCube_otaa = 0;
-		lora_ketCube_staticDevAddr = 1;
-	} else {
-		lora_ketCube_otaa = 1;
-		lora_ketCube_staticDevAddr = 0;
-	}
-	
-	// appEUI
-	if (ketCube_cfg_Load((uint8_t *) &(AppEui[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPEUI, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPEUI) != KETCUBE_CFG_OK) {
-	  return ketCube_cfg_Load_ERROR;
-	}
-	// appKey
-	if (ketCube_cfg_Load((uint8_t *) &(AppKey[0]), KETCUBE_LISTS_MODULEID_LORA, (ketCube_cfg_AllocEEPROM_t) KETCUBE_LORA_CFGADR_APPKEY, (ketCube_cfg_LenEEPROM_t) KETCUBE_LORA_CFGLEN_APPKEY) != KETCUBE_CFG_OK) {
-	  return ketCube_cfg_Load_ERROR;
-	}
-	
-	return KETCUBE_CFG_OK;
+    if (ketCube_lora_moduleCfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {
+        // appSKey
+        memcpy(&(AppSKey[0]), &(ketCube_lora_moduleCfg.appSKey[0]), 16);
+        memcpy(&(NwkSKey[0]), &(ketCube_lora_moduleCfg.nwkSKey[0]), 16);
+        memcpy(&(DevAddr), &(ketCube_lora_moduleCfg.devAddr[0]), 4);
+        memcpy(&(NwkID), &(ketCube_lora_moduleCfg.netID[0]), 4);
+        lora_ketCube_otaa = 0;
+        lora_ketCube_staticDevAddr = 1;
+    } else {
+        memcpy(&(AppEui[0]), &(ketCube_lora_moduleCfg.appEUI[0]), 8);
+        memcpy(&(AppKey[0]), &(ketCube_lora_moduleCfg.appKey[0]), 16);
+        lora_ketCube_otaa = 1;
+        lora_ketCube_staticDevAddr = 0;
+    }
+    
+    return KETCUBE_CFG_OK;
 }
 
 /**

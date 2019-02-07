@@ -84,7 +84,12 @@
  */
 #define LORAWAN_ASYNCAPP_PORT                       3
 
-/* call back when LoRa will transmit a frame*/
+/**
+ *  LoRa module configuration storage
+ */
+ketCube_lora_moduleCfg_t ketCube_lora_moduleCfg;
+
+/* call back when LoRa will transmit a frame */
 static void ketCube_lora_TxData(lora_AppData_t * AppData,
                                 FunctionalState * IsTxConfirmed);
 
@@ -130,6 +135,7 @@ static ketCube_InterModMsg_t *modMsgQueue[2];
  */
 ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
 {
+#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
     ketCube_lora_rxData.msg = &(ketCube_lora_rxDataBuff[0]);
     ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
     ketCube_lora_rxData.msgLen = 0;
@@ -137,7 +143,10 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
 
     modMsgQueue[0] = &ketCube_lora_rxData;
     modMsgQueue[1] = NULL;
-
+#else
+    modMsgQueue[0] = NULL;
+#endif //KETCUBE_CFG_INC_MOD_RXDISPLAY
+    
     *msg = &(modMsgQueue[0]);
 
 #if (KETCUBE_LORA_SELCFG_SELECTED == KETCUBE_LORA_SELCFG_KETCube)

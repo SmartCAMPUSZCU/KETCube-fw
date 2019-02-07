@@ -64,18 +64,18 @@
   */
 
 #define KETCUBE_CFG_INC_MOD_LORA        //< Include LoRa module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_DEBUGDISPLAY        //< Include SerialDisplay module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_HDC1080     //< Include HDC1080 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_BATMEAS     //< Include batMeas module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ADC //< Include batMeas module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_STARNET     //< Include StarNet module(s); undef to disable module
-#define KETCUBE_CFG_INC_MOD_FDC2214     //< Include FDC2214 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_RXDISPLAY   //< Include RxDisplay module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ASYNCTX     //< Include AsyncTx module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_TXDISPLAY   //< Include TxDisplay module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_BMEX80      //< Include BMEx80 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_LIS2HH12    //< Include LIS2HH12 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ICS43432    //< Include ICS43432 module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_DEBUGDISPLAY        //< Include SerialDisplay module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_HDC1080     //< Include HDC1080 module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_BATMEAS     //< Include batMeas module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_ADC //< Include batMeas module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_STARNET     //< Include StarNet module(s); undef to disable module
+//#define KETCUBE_CFG_INC_MOD_FDC2214     //< Include FDC2214 module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_RXDISPLAY   //< Include RxDisplay module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_ASYNCTX     //< Include AsyncTx module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_TXDISPLAY   //< Include TxDisplay module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_BMEX80      //< Include BMEx80 module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_LIS2HH12    //< Include LIS2HH12 module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_ICS43432    //< Include ICS43432 module; undef to disable module
 
 #define KETCUBE_CFG_INC_DRV_I2C //< Include KET's I2C driver; undef to disable driver
 #define KETCUBE_CFG_INC_DRV_MODBUS      //< Include KET's modBUS driver; undef to disable driver

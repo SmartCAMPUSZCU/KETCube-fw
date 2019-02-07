@@ -63,7 +63,7 @@ ketCube_cfg_Error_t ketCube_cfg_Load(uint8_t * data,
                                      ketCube_cfg_LenEEPROM_t len)
 {
     if (ketCube_EEPROM_ReadBuffer
-        (ketCube_modules_List[id].cfgBase + addr, &(data[0]),
+        (ketCube_modules_List[id].EEpromBase + addr, &(data[0]),
          len) == KETCUBE_EEPROM_OK) {
         return KETCUBE_CFG_OK;
     } else {
@@ -131,7 +131,7 @@ ketCube_cfg_Error_t ketCube_cfg_SaveStr(char *data,
     ketCube_common_Hex2Bytes((uint8_t *) & (data[0]), &(data[0]), 2 * len);
 
     if (ketCube_EEPROM_WriteBuffer
-        (ketCube_modules_List[id].cfgBase + addr, (uint8_t *) & (data[0]),
+        (ketCube_modules_List[id].EEpromBase + addr, (uint8_t *) & (data[0]),
          len) == KETCUBE_EEPROM_OK) {
         return KETCUBE_CFG_OK;
     } else {
@@ -155,7 +155,7 @@ ketCube_cfg_Error_t ketCube_cfg_Save(uint8_t * data,
                                      ketCube_cfg_LenEEPROM_t len)
 {
     if (ketCube_EEPROM_WriteBuffer
-        (ketCube_modules_List[id].cfgBase + addr, &(data[0]),
+        (ketCube_modules_List[id].EEpromBase + addr, &(data[0]),
          len) == KETCUBE_EEPROM_OK) {
         return KETCUBE_CFG_OK;
     } else {

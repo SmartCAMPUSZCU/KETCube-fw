@@ -107,6 +107,7 @@ typedef enum ketCube_terminal_paramSet_type_t {
     KETCUBE_TERMINAL_PARAMS_STRING,
     KETCUBE_TERMINAL_PARAMS_INTEGER,
     KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR,
+    KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
 } ketCube_terminal_paramSet_type_t;
 
 /* Maximum length of string returned by command */
@@ -125,6 +126,10 @@ typedef union ketCube_terminal_paramSet_t {
         int first;
         int second;
     } as_integer_pair;
+    struct {
+        uint16_t length;
+        byte data[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH/3];;
+    } as_byte_array;
 } ketCube_terminal_paramSet_t;
 
 /**
@@ -150,8 +155,8 @@ static inline int ketCube_terminal_ParamSetTypeToCount(
 * @brief  KETCube terminal command definition.
 */
 typedef struct ketCube_terminal_cmd_t {
-    char *cmd;                  /*< command format */
-    char *descr;                /*< Human-readable command description/help */
+    char *cmd;                       /*< command format */
+    char *descr;                     /*< Human-readable command description/help */
     ketCube_terminal_command_flags_t flags;         /*< command flags */
     ketCube_terminal_paramSet_type_t paramSetType;  /*< parameter set type */
     ketCube_terminal_paramSet_type_t outputSetType; /*< output set type */
@@ -204,7 +209,7 @@ extern void ketCube_terminal_DebugPrintln(char *format, ...);
   *
   * The following functions enable severity-configurable printing
   * 
-  * @note Inline functions were used instead of variadic macros to achieve inter-compiler portability, while avoiding extrea ifdefs. The ##__VA_ARGS__ construct is only awailable in gnuc compiler
+  * @note Inline functions were used instead of variadic macros to achieve inter-compiler portability, while avoiding extrea ifdefs. The ##__VA_ARGS__ construct is only awailable in GNU C compiler
   *
   * @ingroup KETCube_Terminal 
   * @{
