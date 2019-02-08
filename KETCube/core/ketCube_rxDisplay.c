@@ -52,6 +52,8 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
 
+ketCube_rxDisplay_moduleCfg_t ketCube_rxDisplay_moduleCfg;   /*<! Module configuration storage */
+
 /**
   * @brief Initialize rxDisplay module
 	*

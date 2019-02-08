@@ -60,6 +60,8 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_STARNET
 
+ketCube_starNet_moduleCfg_t ketCube_starNet_moduleCfg;   /*<! Module configuration storage */
+
 // Node Type
 ketCube_starNet_NodeType_t nodeType;
 
@@ -169,6 +171,7 @@ ketCube_starNet_ConcentratorInit(ketCube_InterModMsg_t *** msg)
 {
     nodeType = KETCUBE_STARNET_CONCENTRATOR;
 
+#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
     ketCube_starNet_rssi.msg = &(ketCube_starNet_rssiMsgBuff[0]);
     ketCube_starNet_rssi.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_RSSI;
     ketCube_starNet_rssi.msgLen = 0;
@@ -188,7 +191,10 @@ ketCube_starNet_ConcentratorInit(ketCube_InterModMsg_t *** msg)
     modMsgQueue[1] = &ketCube_starNet_snr;
     modMsgQueue[2] = &ketCube_starNet_rxData;
     modMsgQueue[3] = NULL;
-
+#else
+    modMsgQueue[0] = NULL;
+#endif
+    
     *msg = &(modMsgQueue[0]);
 
     return ketCube_starNet_Init(KETCUBE_STARNET_CONCENTRATOR);

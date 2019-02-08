@@ -56,20 +56,13 @@
   */
 
 /**
-* @brief  txDisplay CFG data relative addr.
+* @brief  KETCube module configuration
 */
-typedef enum {
-    KETCUBE_TXDISPLAY_CFGADR_CFG = 0,   /*<! txDisplay cfg byte Addr */
-} ketCube_txDisplay_cfgAddr_t;
+typedef struct ketCube_txDisplay_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+} ketCube_txDisplay_moduleCfg_t;
 
-
-/**
-* @brief  Length of txDisplay CFG data
-*/
-typedef enum {
-    KETCUBE_TXDISPLAY_CFGLEN_CFG = 1,   /*<! txDisplay config len in bytes */
-} ketCube_txDisplay_cfgLen_t;
-
+extern ketCube_txDisplay_moduleCfg_t ketCube_txDisplay_moduleCfg;
 
 extern ketCube_cfg_ModError_t ketCube_txDisplay_Init(ketCube_InterModMsg_t
                                                      *** msg);

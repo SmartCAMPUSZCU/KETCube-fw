@@ -47,6 +47,15 @@
 
 #include "ketCube_coreCfg.h"
 
+/**
+* @brief  KETCube module configuration
+*/
+typedef struct ketCube_ics43432_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+} ketCube_ics43432_moduleCfg_t;
+
+extern ketCube_ics43432_moduleCfg_t ketCube_ics43432_moduleCfg;
+
 #define KETCUBE_ICS43432_10_dBSPL        27U
 #define KETCUBE_ICS43432_20_dBSPL        84U
 #define KETCUBE_ICS43432_30_dBSPL       265U

@@ -42,10 +42,13 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
+#include "ketCube_cfg.h"
+
+#ifdef KETCUBE_CFG_INC_DRV_I2C
+
 #include "stm32l0xx_hal.h"
 #include "stm32l0xx_hal_i2c.h"
 
-#include "ketCube_cfg.h"
 #include "ketCube_i2c.h"
 #include "ketCube_terminal.h"
 
@@ -427,3 +430,5 @@ ketCube_cfg_ModError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
     }
     return KETCUBE_CFG_MODULE_ERROR;
 }
+
+#endif // KETCUBE_CFG_INC_DRV_I2C

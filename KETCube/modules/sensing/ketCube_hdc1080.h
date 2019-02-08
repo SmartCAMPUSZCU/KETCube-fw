@@ -132,6 +132,15 @@ typedef enum {
 #define IS_KETCUBE_HDC1080_DrdyLevelType(MODE) ((MODE == KETCUBE_HDC1080_HIGH_LVL) || (MODE == KETCUBE_HDC1080_LOW_LVL))
 
 /**
+* @brief  KETCube module configuration
+*/
+typedef struct ketCube_hdc1080_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+} ketCube_hdc1080_moduleCfg_t;
+
+extern ketCube_hdc1080_moduleCfg_t ketCube_hdc1080_moduleCfg;
+
+/**
 * @brief  HDC1080 Init structure definition.
 */
 #ifdef __ARMCC_VERSION

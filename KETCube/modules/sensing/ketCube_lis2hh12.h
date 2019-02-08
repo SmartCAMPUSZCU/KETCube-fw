@@ -54,6 +54,15 @@
   */
 
 /**
+* @brief  KETCube module configuration
+*/
+typedef struct ketCube_lis2hh12_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+} ketCube_lis2hh12_moduleCfg_t;
+
+extern ketCube_lis2hh12_moduleCfg_t ketCube_lis2hh12_moduleCfg;
+
+/**
 * @brief  I2C slave (LIS2HH12) address.
 * @note See LIS2HH12 datasheet for I2C address options
 */

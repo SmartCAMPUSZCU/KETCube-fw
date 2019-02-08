@@ -90,6 +90,17 @@ typedef struct ketCube_batMeas_battery_t {
     uint16_t batDischarged;     /*< Battery discharged [mV] */
 } ketCube_batMeas_battery_t;
 
+/**
+* @brief  KETCube batMeas module configuration
+*/
+typedef struct ketCube_batMeas_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    
+    ketCube_batMeas_battList_t selectedBattery;
+} ketCube_batMeas_moduleCfg_t;
+
+extern ketCube_batMeas_moduleCfg_t ketCube_batMeas_moduleCfg;
+
 extern ketCube_batMeas_battery_t ketCube_batMeas_batList[];
 extern uint8_t ketCube_batMeas_selectedBattery;
 

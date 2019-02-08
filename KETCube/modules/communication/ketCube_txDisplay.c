@@ -53,6 +53,8 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
 
+ketCube_txDisplay_moduleCfg_t ketCube_txDisplay_moduleCfg;   /*<! Module configuration storage */
+
 /**
   * @brief Initialize starNet module
   * @retval KETCUBE_CFG_MODULE_OK in case of success

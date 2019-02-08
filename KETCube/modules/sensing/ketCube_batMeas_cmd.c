@@ -54,35 +54,35 @@
 
 void ketCube_terminal_cmd_set_batMeas_bat(void)
 {
-    ketCube_terminal_saveCfgDECStr(commandIOParams.as_string,
-                                   KETCUBE_LISTS_MODULEID_BATMEAS,
-                                   (ketCube_cfg_AllocEEPROM_t)
-                                   KETCUBE_BATMEAS_CFGADR_BAT,
-                                   (ketCube_cfg_LenEEPROM_t)
-                                   KETCUBE_BATMEAS_CFGLEN_BAT);
+    if (ketCube_cfg_Save((uint8_t *) &commandIOParams.as_integer,
+                         KETCUBE_LISTS_MODULEID_BATMEAS,
+                         (ketCube_cfg_AllocEEPROM_t) offsetof(ketCube_batMeas_moduleCfg_t, selectedBattery),
+                         (ketCube_cfg_LenEEPROM_t) sizeof(ketCube_batMeas_battList_t)) != KETCUBE_CFG_OK) {
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+    }
 }
 
 
 void ketCube_terminal_cmd_show_batMeas_bat(void)
 {
-    ketCube_batMeas_battList_t selected;
+    ketCube_batMeas_battList_t bat;
+    
+    if (ketCube_cfg_Load((uint8_t *) &bat,
+                         KETCUBE_LISTS_MODULEID_BATMEAS,
+                         (ketCube_cfg_AllocEEPROM_t) offsetof(ketCube_batMeas_moduleCfg_t, selectedBattery),
+                         (ketCube_cfg_LenEEPROM_t) sizeof(ketCube_batMeas_battList_t)) != KETCUBE_CFG_OK) {
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        return;
+    }
 
-    ketCube_cfg_Load((uint8_t *) & selected,
-                     (ketCube_cfg_moduleIDs_t)
-                     KETCUBE_LISTS_MODULEID_BATMEAS,
-                     (ketCube_cfg_AllocEEPROM_t)
-                     KETCUBE_BATMEAS_CFGADR_BAT,
-                     (ketCube_cfg_LenEEPROM_t)
-                     KETCUBE_BATMEAS_CFGLEN_BAT);
-
-    if (selected >= KETCUBE_BATMEAS_BATLIST_LAST) {
-        selected = KETCUBE_BATMEAS_BATLIST_CR2032;
+    if (bat >= KETCUBE_BATMEAS_BATLIST_LAST) {
+        bat = KETCUBE_BATMEAS_BATLIST_CR2032;
     }
 
     snprintf(commandIOParams.as_string, KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
                             "%s (%s)",
-                            ketCube_batMeas_batList[selected].batName,
-                            ketCube_batMeas_batList[selected].batDescr);
+                            ketCube_batMeas_batList[bat].batName,
+                            ketCube_batMeas_batList[bat].batDescr);
 }
 
 void ketCube_terminal_cmd_show_batMeas_list(void)
@@ -133,8 +133,8 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_show_batMeas[] = {
 ketCube_terminal_cmd_t ketCube_terminal_commands_set_batMeas[] = {
     DEF_COMMAND("bat",
                 "Select battery.",
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                KETCUBE_TERMINAL_PARAMS_NONE,
+                KETCUBE_TERMINAL_PARAMS_INTEGER,
+                KETCUBE_TERMINAL_PARAMS_INTEGER,
                 &ketCube_terminal_cmd_set_batMeas_bat),
     DEF_TERMINATE()
 };

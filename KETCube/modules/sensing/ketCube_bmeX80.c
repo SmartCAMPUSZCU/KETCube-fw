@@ -50,10 +50,12 @@
 #include "ketCube_i2c.h"
 #include "ketCube_bmeX80.h"
 
+#ifdef KETCUBE_CFG_INC_MOD_BMEX80
+
+ketCube_bmeX80_moduleCfg_t ketCube_bmeX80_moduleCfg; /*<! Module configuration storage */
+
 extern void bench_StoreData_BME280(int16_t temperature, uint16_t humidity,
                                    uint16_t pressure);
-
-#ifdef KETCUBE_CFG_INC_MOD_BMEX80
 
 static ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t *
                                              calibration);

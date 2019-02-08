@@ -56,6 +56,8 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_HDC1080
 
+ketCube_hdc1080_moduleCfg_t ketCube_hdc1080_moduleCfg; /*<! Module configuration storage */
+
 ketCube_cfg_ModError_t getHumidity(uint16_t * value);
 ketCube_cfg_ModError_t getTemperature(int16_t * value);
 ketCube_cfg_ModError_t setHeaterState(ketCube_hdc1080_Htr_t status);
