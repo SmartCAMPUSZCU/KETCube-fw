@@ -57,8 +57,8 @@
 static TimerEvent_t KETCube_PeriodTimer;
 
 
-static bool KETCube_PeriodTimerElapsed = FALSE;
-
+volatile static bool KETCube_PeriodTimerElapsed = FALSE;
+volatile static bool KETCube_Initialized = FALSE;
 
 bool KETCube_wasResetPOR;
 void KETCube_getResetFlags(void)
@@ -167,10 +167,14 @@ int main(void)
         KETCube_ErrorHandler();
     }
 
+    // Initialize periodic timer
+    TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
+    
+    // KETCube is initialized
+    KETCube_Initialized = TRUE;
+
     /* Configure the periodic timer */
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
-    TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
-
     TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg.startDelay);
 
     TimerStart(&KETCube_PeriodTimer);

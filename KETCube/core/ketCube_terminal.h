@@ -87,16 +87,19 @@ typedef enum ketCube_terminal_command_errorCode_t {
 /**
  * @brief KETCube terminal command flags
  */
-typedef enum ketCube_terminal_command_flags_t {
-    /* this record is command group (has subcommands, does not have handler) */
-    KETCUBE_TERMINAL_CMD_FLAG_GROUP = 1 << 0,
-    /* this command could be executed from local terminal only */
-    KETCUBE_TERMINAL_CMD_FLAG_LOCAL_ONLY = 1 << 1,
-    /* this command could be executed from remote terminal only */
-    KETCUBE_TERMINAL_CMD_FLAG_REMOTE_ONLY = 1 << 2,
+typedef struct ketCube_terminal_command_flags_t {
+    bool isGroup:1;           ///< this record is command group (has subcommands, does not have handler)
     
-    /* convenience value for "no flags at all" */
-    KETCUBE_TERMINAL_CMD_FLAG_NONE = 0,
+    bool isLocal:1;           ///< this command can be executed from local terminal
+    bool isRemote:1;          ///< this command can be executed from remote terminal
+    
+    bool isEEPROM:1;          ///< this command modifies EEPROM variables
+    bool isRAM:1;             ///< this command modifies RAM variables
+    
+    bool isSetCmd:1;          ///< this command is a generic SET command
+    bool isShowCmd:1;         ///< this command is a generic SHOW command
+    
+    uint8_t RFU:1;            ///< Reserved for future use
 } ketCube_terminal_command_flags_t;
 
 /**
@@ -104,6 +107,7 @@ typedef enum ketCube_terminal_command_flags_t {
  */
 typedef enum ketCube_terminal_paramSet_type_t {
     KETCUBE_TERMINAL_PARAMS_NONE = 0,
+    KETCUBE_TERMINAL_PARAMS_BOOLEAN,
     KETCUBE_TERMINAL_PARAMS_STRING,
     KETCUBE_TERMINAL_PARAMS_INTEGER,
     KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR,
@@ -118,6 +122,8 @@ typedef enum ketCube_terminal_paramSet_type_t {
  * @brief KETCube terminal command parameter container
  */
 typedef union ketCube_terminal_paramSet_t {
+    /* KETCUBE_TERMINAL_PARAMS_BOOLEAN */
+    bool as_bool;
     /* KETCUBE_TERMINAL_PARAMS_INTEGER */
     int as_integer;
     /* KETCUBE_TERMINAL_PARAMS_STRING */
@@ -144,13 +150,13 @@ static inline int ketCube_terminal_ParamSetTypeToCount(
         case KETCUBE_TERMINAL_PARAMS_NONE:
         default:
             return 0;
+        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
         case KETCUBE_TERMINAL_PARAMS_STRING:
         case KETCUBE_TERMINAL_PARAMS_INTEGER:
+        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
             return 1;
         case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
             return 2;
-        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
-            return 1;
     }
 }
 
@@ -158,16 +164,17 @@ static inline int ketCube_terminal_ParamSetTypeToCount(
 * @brief  KETCube terminal command definition.
 */
 typedef struct ketCube_terminal_cmd_t {
-    char *cmd;                       /*< command format */
-    char *descr;                     /*< Human-readable command description/help */
+    char * cmd;                       /*< command format */
+    char * descr;                     /*< Human-readable command description/help */
     ketCube_terminal_command_flags_t flags;         /*< command flags */
     ketCube_terminal_paramSet_type_t paramSetType;  /*< parameter set type */
     ketCube_terminal_paramSet_type_t outputSetType; /*< output set type */
     union
     {
-        void (*callback) (void);
-        struct ketCube_terminal_cmd_t* subCmdList;
-    } ptr;
+        void (*callback) (void);                      /*< Ptr to a custom callback */
+        struct ketCube_terminal_cmd_t * subCmdList;   /*< Ptr to a subcommand list (if this is root command) */
+        struct ketCube_cfg_varDescr_t * cfgVarPtr;    /*< The configuration variable in RAM/EEPROM (if this is a generic command) */ 
+    } settingsPtr;
 } ketCube_terminal_cmd_t;
 
 extern ketCube_terminal_cmd_t ketCube_terminal_commands[];

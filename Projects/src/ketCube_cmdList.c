@@ -49,14 +49,14 @@
 /* define command group - parent for other commands, needs a pointer to
    command subtree */
 #define DEF_COMMAND_GROUP(cmd, hlp, cptr) {((char*)&(cmd)),((char*)&(hlp)),\
-    KETCUBE_TERMINAL_CMD_FLAG_GROUP, KETCUBE_TERMINAL_PARAMS_NONE,\
+    {.isGroup = TRUE}, KETCUBE_TERMINAL_PARAMS_NONE,\
     KETCUBE_TERMINAL_PARAMS_NONE,\
-    .ptr.subCmdList = (ketCube_terminal_cmd_t*)cptr}
+    .settingsPtr.subCmdList = (ketCube_terminal_cmd_t*)cptr}
 
 /* define tree leaf - a command, with given in/out parameters and handler;
    by default, a command does not have any flags */
 #define DEF_COMMAND(cmd, hlp, parType, outType, fnc) {((char*)&(cmd)),\
-    ((char*)&(hlp)), KETCUBE_TERMINAL_CMD_FLAG_NONE, parType, outType,\
+    ((char*)&(hlp)), {.isLocal = TRUE, .isEEPROM = TRUE}, parType, outType,\
     (void(*)(void))fnc}
 
 /* define tree leaf - a command, with given in/out parameters and handler;
@@ -67,7 +67,7 @@
     
 /* define subcommand list (tree level) terminator */
 #define DEF_TERMINATE() {((char*)NULL),((char*)NULL),\
-    KETCUBE_TERMINAL_CMD_FLAG_NONE, KETCUBE_TERMINAL_PARAMS_NONE,\
+    {0} , KETCUBE_TERMINAL_PARAMS_NONE,\
     KETCUBE_TERMINAL_PARAMS_NONE, (void(*)(void))NULL}
 
 /* always include core configuration commands */

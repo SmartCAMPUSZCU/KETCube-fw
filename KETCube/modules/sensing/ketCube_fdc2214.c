@@ -248,24 +248,34 @@ static uint8_t wait = 0;
 static void ketCube_fdc2214_LEDIndication(uint32_t raw)
 {
 #if (FDC2214_LED_INDICATION == TRUE)
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214,"%d; %d", (mean - raw), (pastValue - raw));
+        //ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214,"%d; %d", (mean - raw), (pastValue - raw));
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214,"%d", (pastValue - raw));
         
         wait = (wait + 1) % FDC2214_LED_HYST;
         
-        if ( (mean < raw) && (abs(mean - raw) > FDC2214_LED_THRESHOLD_LOW) ) {
+//         if ( (mean < raw) && (abs(mean - raw) > FDC2214_LED_THRESHOLD_LOW) ) {
+//             ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
+//             ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED ON.");
+//             pastValue = raw;
+//             wait = 0;
+//         } else if ((wait == 0) && (pastValue > raw) && (abs(pastValue - raw) > FDC2214_LED_THRESHOLD_HIGH)) {
+//             ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, TRUE);
+//             ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED OFF.");
+//             pastValue = raw;
+//         }
+        
+        if ( (pastValue > raw) && (abs(pastValue - raw) > FDC2214_LED_THRESHOLD_HIGH) ) {
             ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
             ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED ON.");
-            pastValue = raw;
-            wait = 0;
-        } else if ((wait == 0) && (pastValue > raw) && (abs(pastValue - raw) > FDC2214_LED_THRESHOLD_HIGH)) {
+        } else if ((pastValue < raw) && (abs(pastValue - raw) > FDC2214_LED_THRESHOLD_LOW)) {
             ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, TRUE);
             ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_FDC2214, "LED OFF.");
-            pastValue = raw;
         }
+        pastValue = raw;
         
-        values[valuePtr] = raw;
-        valuePtr = (valuePtr + 1) % FDC2214_SAMPLE_CNT;
-        mean = ketCube_common_Med32(&(values[0]), FDC2214_SAMPLE_CNT);
+        //values[valuePtr] = raw;
+        //valuePtr = (valuePtr + 1) % FDC2214_SAMPLE_CNT;
+        //mean = ketCube_common_Med32(&(values[0]), FDC2214_SAMPLE_CNT);
 #endif
 }
 
@@ -521,7 +531,17 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
          (char *) &"StatusReg") == KETCUBE_CFG_MODULE_ERROR) {
         // try re-init ... 
         ketCube_fdc2214_SleepEnter();
-        ketCube_fdc2214_Init(NULL);
+        ketCube_fdc2214_off();
+        if (ketCube_fdc2214_Init(NULL) == KETCUBE_CFG_MODULE_ERROR) {
+            while(1) {
+                ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
+                HAL_Delay(500);
+                ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, TRUE);
+                HAL_Delay(500);
+            }
+            //NVIC_SystemReset();
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
     }
     // Loop through data registers
     // note, that the trick for the loop condition can be found in the ketCube_fdc2214_chanSeq_t deffinition
@@ -556,7 +576,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
     ketCube_fdc2214_readReg(KETCUBE_FDC2214_STATUS, &status,
                             (char *) &"StatusReg");
 
-    return KETCUBE_CFG_MODULE_ERROR;
+    return KETCUBE_CFG_MODULE_OK;
 }
 
 #endif                          /* KETCUBE_CFG_INC_MOD_FDC2214 */

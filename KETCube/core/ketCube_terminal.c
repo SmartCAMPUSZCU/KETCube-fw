@@ -212,7 +212,7 @@ static void ketCube_terminal_printCmdList(ketCube_terminal_cmd_t* parent,
     int cmdIndex = 0;
     
     if (parent != NULL &&
-        (parent->flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP) == 0)
+        (parent->flags.isGroup == FALSE))
     {
         KETCUBE_TERMINAL_PRINTF("Description: %s", parent->descr);
         KETCUBE_TERMINAL_ENDL();
@@ -235,6 +235,157 @@ static void ketCube_terminal_printCmdList(ketCube_terminal_cmd_t* parent,
         KETCUBE_TERMINAL_ENDL();
         cmdIndex++;
     }
+}
+
+/**
+ * @brief Returns parameter length in bytes
+ */
+static inline int ketCube_terminal_GetIOParamsLength(
+    ketCube_terminal_paramSet_type_t type)
+{
+    switch (type)
+    {
+        case KETCUBE_TERMINAL_PARAMS_NONE:
+        default:
+            return 0;
+        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
+            return sizeof(bool);
+        case KETCUBE_TERMINAL_PARAMS_STRING:
+            return strlen(commandIOParams.as_string);
+        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+            return sizeof(int);
+        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+            return (2 * sizeof(int));
+        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
+            return commandIOParams.as_byte_array.length;
+    }
+}
+
+/**
+ * @brief Generic GET EEPROM cfg data
+ *
+ * @param cmdDescrPtr pointer to a command descriptor
+ * 
+ */
+static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
+{
+    uint8_t i;
+    bool boolRetVal = FALSE;
+    
+    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
+        return;
+    }
+    
+    // load data from EEPROM as byte array
+    if (ketCube_cfg_Load((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
+                         (ketCube_cfg_moduleIDs_t) cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID,
+                         (ketCube_cfg_AllocEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->offset,
+                         (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        return;
+    }
+    
+    if ((cmdDescrPtr->settingsPtr.cfgVarPtr->bitSet == TRUE) || (cmdDescrPtr->settingsPtr.cfgVarPtr->bitReset == TRUE)) {
+        for (i = 0; i < cmdDescrPtr->settingsPtr.cfgVarPtr->size; i++) {
+            commandIOParams.as_byte_array.data[i] &= cmdDescrPtr->settingsPtr.cfgVarPtr->bitMask[i];
+            
+            if ((commandIOParams.as_byte_array.data[i] == 0) && (cmdDescrPtr->settingsPtr.cfgVarPtr->bitReset == TRUE)) {
+                boolRetVal = TRUE;
+            }
+            
+            if ((commandIOParams.as_byte_array.data[i] != 0) && (cmdDescrPtr->settingsPtr.cfgVarPtr->bitSet == TRUE)) {
+                boolRetVal = TRUE;
+            }
+        }
+    }
+    
+    // convert to output data type
+    switch(cmdDescrPtr->outputSetType)
+    {
+        case KETCUBE_TERMINAL_PARAMS_NONE:
+        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        default:
+            // do nothing ...
+            break;
+        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
+            commandIOParams.as_bool = boolRetVal;
+            break;
+        case KETCUBE_TERMINAL_PARAMS_STRING:
+            commandIOParams.as_string[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH - 1] = '\0';
+            break;
+        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
+            commandIOParams.as_byte_array.length = cmdDescrPtr->settingsPtr.cfgVarPtr->size;
+            break;
+    }
+}
+
+/**
+ * @brief Generic SET EEPROM data
+ *
+ * @param cmdDescrPtr pointer to a command descriptor
+ * 
+ */
+static void ketCube_terminal_setEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
+{
+    uint8_t i;
+    
+    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
+        return;
+    }
+    
+    // load data from EEPROM as byte array when modifying bits
+    if ((cmdDescrPtr->settingsPtr.cfgVarPtr->bitSet == TRUE) || (cmdDescrPtr->settingsPtr.cfgVarPtr->bitReset == TRUE)) {
+        if (ketCube_cfg_Load((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
+                             (ketCube_cfg_moduleIDs_t) cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID,
+                             (ketCube_cfg_AllocEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->offset,
+                             (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
+            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+            return;
+        }
+    }
+    
+    // modify data
+    if (cmdDescrPtr->settingsPtr.cfgVarPtr->bitSet == TRUE) {
+        for (i = 0; i < cmdDescrPtr->settingsPtr.cfgVarPtr->size; i++) {
+            commandIOParams.as_byte_array.data[i] |= cmdDescrPtr->settingsPtr.cfgVarPtr->bitMask[i];
+        }
+    } else if (cmdDescrPtr->settingsPtr.cfgVarPtr->bitReset == TRUE) {
+        for (i = 0; i < cmdDescrPtr->settingsPtr.cfgVarPtr->size; i++) {
+            commandIOParams.as_byte_array.data[i] &= ~(cmdDescrPtr->settingsPtr.cfgVarPtr->bitMask[i]);
+        }
+    }
+        
+    if (ketCube_cfg_Save((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
+                         (ketCube_cfg_moduleIDs_t) cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID,
+                         (ketCube_cfg_AllocEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->offset,
+                         (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
+        return;
+    }
+}
+
+
+/**
+ * @brief Generic GET RAM cfg data
+ *
+ * @param cmdDescrPtr pointer to a command descriptor
+ * 
+ */
+static void ketCube_terminal_getRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
+{
+    
+}
+
+/**
+ * @brief Generic SET RAM data
+ *
+ * @param cmdDescrPtr pointer to a command descriptor
+ * 
+ */
+static void ketCube_terminal_setRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
+{
+    
 }
 
 /* ------------------------------ */
@@ -806,6 +957,15 @@ static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
     
     switch (command->outputSetType)
     {
+        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
+        {
+            if (commandIOParams.as_bool == TRUE) {
+                KETCUBE_TERMINAL_PRINTF("TRUE");
+            } else {
+                KETCUBE_TERMINAL_PRINTF("FALSE");
+            }
+            break;
+        }
         case KETCUBE_TERMINAL_PARAMS_STRING:
         {
             KETCUBE_TERMINAL_PRINTF("%s", commandIOParams.as_string);
@@ -877,9 +1037,9 @@ static int ketCube_terminal_processCommandErrors()
 static int ketCube_terminal_canRunCommand(ketCube_terminal_cmd_t* command)
 {
     /* cannot execute remote-only commands in local terminal */
-    if (command->flags & KETCUBE_TERMINAL_CMD_FLAG_REMOTE_ONLY)
+    if (command->flags.isLocal == FALSE)
     {
-        KETCUBE_TERMINAL_PRINTF("Cannot execute remote terminal-only command"
+        KETCUBE_TERMINAL_PRINTF("Cannot execute non-local command"
                                 " in local terminal!");
         KETCUBE_TERMINAL_ENDL();
         return 1;
@@ -944,9 +1104,9 @@ void ketCube_terminal_execCMD(void)
         /* move to subcommand if exist */
         if ((cmdList[cmdIndex].cmd[j] == 0x00) &&
             (commandBuffer[cmdBuffIndex] != 0x00) &&
-            (cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP)) {
+            (cmdList[cmdIndex].flags.isGroup == TRUE)) {
             cmdBuffIndex++;     // remove space character: ' '
-            cmdList = cmdList[cmdIndex].ptr.subCmdList;
+            cmdList = cmdList[cmdIndex].settingsPtr.subCmdList;
             cmdIndex = 0;
             continue;
         }
@@ -962,8 +1122,8 @@ void ketCube_terminal_execCMD(void)
 
             /* we've reached command parsing end, now check if this is a valid
                command or group, parse parameters and eventually execute */
-            if ((cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP) == 0
-                && cmdList[cmdIndex].ptr.callback != NULL
+            if ((cmdList[cmdIndex].flags.isGroup == FALSE)
+                && cmdList[cmdIndex].settingsPtr.callback != NULL
                 && ketCube_terminal_parseParams(&cmdList[cmdIndex]) == 0) {
 
                 /* now we are sure it is a command and have valid params;
@@ -978,7 +1138,27 @@ void ketCube_terminal_execCMD(void)
                        if needed */
                     commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_OK;
 
-                    cmdList[cmdIndex].ptr.callback();
+                    /* Execute specific command callback 
+                       or generic callback */
+                    if (cmdList[cmdIndex].flags.isSetCmd == TRUE) {
+                        // run generic SET
+                        if (cmdList[cmdIndex].flags.isEEPROM == TRUE) {
+                            ketCube_terminal_setEEPROMCfg(&(cmdList[cmdIndex]));
+                        }
+                        if (cmdList[cmdIndex].flags.isRAM == TRUE) {
+                            ketCube_terminal_setRAMCfg(&(cmdList[cmdIndex]));
+                        }
+                    } else if (cmdList[cmdIndex].flags.isShowCmd == TRUE) {
+                        // run generic SET
+                        if (cmdList[cmdIndex].flags.isEEPROM == TRUE) {
+                            ketCube_terminal_getEEPROMCfg(&(cmdList[cmdIndex]));
+                        }
+                        if (cmdList[cmdIndex].flags.isRAM == TRUE) {
+                            ketCube_terminal_getRAMCfg(&(cmdList[cmdIndex]));
+                        }
+                    } else {
+                        cmdList[cmdIndex].settingsPtr.callback();
+                    }
                     
                     /* if the command executed OK, print outputs */
                     if (ketCube_terminal_processCommandErrors() == 0) {
@@ -990,7 +1170,7 @@ void ketCube_terminal_execCMD(void)
                                         cmdList[cmdIndex].cmd);
                 KETCUBE_TERMINAL_ENDL();
                 ketCube_terminal_printCmdList(&cmdList[cmdIndex],
-                                              cmdList[cmdIndex].ptr.subCmdList);
+                                              cmdList[cmdIndex].settingsPtr.subCmdList);
             }
 
             KETCUBE_TERMINAL_PROMPT();
@@ -1077,9 +1257,9 @@ void ketCube_terminal_printCMDHelp(void)
         /* move to subcommand if exist */
         if ((cmdList[cmdIndex].cmd[j] == 0x00) &&
             (commandBuffer[cmdBuffIndex] != 0x00) &&
-            (cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP)) {
+            (cmdList[cmdIndex].flags.isGroup == TRUE)) {
             cmdBuffIndex++;     // remove space character: ' '
-            cmdList = cmdList[cmdIndex].ptr.subCmdList;
+            cmdList = cmdList[cmdIndex].settingsPtr.subCmdList;
             cmdIndex = 0;
             continue;
         }
@@ -1091,9 +1271,9 @@ void ketCube_terminal_printCMDHelp(void)
                                     cmdList[cmdIndex].cmd,
                                     cmdList[cmdIndex].descr);
             KETCUBE_TERMINAL_ENDL();
-            if (cmdList[cmdIndex].flags & KETCUBE_TERMINAL_CMD_FLAG_GROUP) {
+            if (cmdList[cmdIndex].flags.isGroup) {
                 ketCube_terminal_printCmdList(&cmdList[cmdIndex],
-                                              cmdList[cmdIndex].ptr.subCmdList);
+                                              cmdList[cmdIndex].settingsPtr.subCmdList);
             }
             break;
         } else if (eq == TRUE) {

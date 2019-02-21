@@ -141,6 +141,18 @@ typedef struct ketCube_cfg_ModuleCfgByte_t {
 } ketCube_cfg_ModuleCfgByte_t;
 
 /**
+* @brief  KETCube configuration variable descriptor
+*/
+typedef struct ketCube_cfg_varDescr_t {
+    uint16_t moduleID;     ///< Module Index
+    uint8_t offset;        ///< Variable offset in module configuration memory
+    uint8_t size;          ///< Variable size in bytes
+    bool bitSet:1;         ///< for SET: set bits as defined by bit mask; for GET: expect bit 1
+    bool bitReset:1;       ///< for SET: reset bits as defined by bit mask; for GET: expect bit 0
+    uint8_t * bitMask;     ///< Bit mask for bit set/reset and GET
+} ketCube_cfg_varDescr_t;
+
+/**
 * @brief  KETCube module definition.
 */
 typedef struct ketCube_cfg_Module_t {

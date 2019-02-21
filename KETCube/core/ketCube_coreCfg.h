@@ -55,7 +55,7 @@
   */
 
 #define KETCUBE_CORECFG_SKIP_SLEEP_PERIOD          FALSE        ///< Skip sleep period (perform sensing at maximum speed)
-#define KETCUBE_CORECFG_MIN_BASEPERIOD             5000 ///< Minimal period for periodic events
+#define KETCUBE_CORECFG_MIN_BASEPERIOD             500 ///< Minimal period for periodic events
 #define KETCUBE_CORECFG_MIN_STARTDELAY             1000 ///< Minimal delay - the first periodic action is run at this time after power-on
 #define KETCUBE_CORECFG_DEFAULT_SEVERITY           KETCUBE_CFG_SEVERITY_ERROR   ///< Default KETCube core severity
 

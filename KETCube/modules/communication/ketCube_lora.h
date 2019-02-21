@@ -77,8 +77,8 @@ typedef enum {
 * @brief LoRa connection type
 */
 typedef enum {
-    KETCUBE_LORA_SELCONNMETHOD_ABP = 0, /*<! LoRa ABP */
-    KETCUBE_LORA_SELCONNMETHOD_OTAA = 1 /*<! LoRa OTAA */
+    KETCUBE_LORA_SELCONNMETHOD_ABP = 0,    /*<! LoRa ABP */
+    KETCUBE_LORA_SELCONNMETHOD_OTAA = 1    /*<! LoRa OTAA */
 } ketCube_lora_selConnMethod_t;
 
 /**
