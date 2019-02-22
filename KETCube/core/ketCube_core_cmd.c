@@ -214,7 +214,6 @@ void ketCube_terminal_cmd_set_core_severity(void)
  */
 void ketCube_terminal_cmd_show_driver_severity(void)
 {
-    const char* severity = "UNKNOWN";
     ketCube_severity_t EEPROMSeverity;
     
     if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
@@ -224,28 +223,9 @@ void ketCube_terminal_cmd_show_driver_severity(void)
         return;
     }
     
-    switch (EEPROMSeverity) {
-        case KETCUBE_CFG_SEVERITY_NONE:
-            severity = "NONE";
-            break;
-        case KETCUBE_CFG_SEVERITY_ERROR:
-            severity = "ERROR";
-            break;
-        case KETCUBE_CFG_SEVERITY_INFO:
-            severity = "INFO";
-            break;
-        case KETCUBE_CFG_SEVERITY_DEBUG:
-            severity = "DEBUG";
-            break;
-        default:
-            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
-            return;
-    }
-    
     snprintf(commandIOParams.as_string,
              KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-             "%s",
-             severity);
+             "%s", ketCube_severity_strAlias[EEPROMSeverity]);
 }
 
 /**
@@ -254,31 +234,13 @@ void ketCube_terminal_cmd_show_driver_severity(void)
  */
 void ketCube_terminal_cmd_set_driver_severity(void)
 {
-    const char* severity = "UNKNOWN";
-    
-    switch (commandIOParams.as_integer) {
-        case KETCUBE_CFG_SEVERITY_NONE:
-            severity = "NONE";
-            break;
-        case KETCUBE_CFG_SEVERITY_ERROR:
-            severity = "ERROR";
-            break;
-        case KETCUBE_CFG_SEVERITY_INFO:
-            severity = "INFO";
-            break;
-        case KETCUBE_CFG_SEVERITY_DEBUG:
-            severity = "DEBUG";
-            break;
-    }
-    
     if (ketCube_EEPROM_WriteBuffer
         (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, driverSeverity),
          (uint8_t *)&(commandIOParams.as_integer), sizeof(ketCube_severity_t))
             == KETCUBE_EEPROM_OK) {
         snprintf(commandIOParams.as_string,
                  KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-                 "%s",
-                 severity);
+                 "%s", ketCube_severity_strAlias[commandIOParams.as_integer]);
     } else {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
     }

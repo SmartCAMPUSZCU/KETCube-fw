@@ -58,16 +58,6 @@ ketCube_coreCfg_t ketCube_coreCfg;
   */
 ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
 {
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE,
-                                         "--- Core configuration load START ---");
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, "");
-
-    if (ketCube_EEPROM_ReadBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE, (uint8_t *) &(ketCube_coreCfg),
-         sizeof(ketCube_coreCfg_t)) != KETCUBE_EEPROM_OK) {
-        return ketCube_cfg_Load_ERROR;
-    }
-
     if (ketCube_coreCfg.basePeriod < KETCUBE_CORECFG_MIN_BASEPERIOD) {
         ketCube_coreCfg.basePeriod = KETCUBE_CORECFG_MIN_BASEPERIOD;
     }
@@ -81,58 +71,23 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
     }
 
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                         "KETCube Core base period set to: %d ms",
+                                         "KETCube core base period set to: %d ms",
                                          ketCube_coreCfg.basePeriod);
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                         "KETCube Start delay set to: %d ms",
+                                         "KETCube start delay set to: %d ms",
                                          ketCube_coreCfg.startDelay);
 
-    switch (ketCube_coreCfg.severity) {
-    case KETCUBE_CFG_SEVERITY_NONE:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube core severity: NONE");
-        break;
-    case KETCUBE_CFG_SEVERITY_ERROR:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube core severity: ERROR");
-        break;
-    case KETCUBE_CFG_SEVERITY_INFO:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube core severity: INFO");
-        break;
-    case KETCUBE_CFG_SEVERITY_DEBUG:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube core severity: DEBUG");
-        break;
-    }
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "KETCube core severity level: %s", ketCube_severity_strAlias[ketCube_coreCfg.severity]);
     
-    switch (ketCube_coreCfg.driverSeverity) {
-    case KETCUBE_CFG_SEVERITY_NONE:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube driver severity: NONE");
-        break;
-    case KETCUBE_CFG_SEVERITY_ERROR:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube driver severity: ERROR");
-        break;
-    case KETCUBE_CFG_SEVERITY_INFO:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube driver severity: INFO");
-        break;
-    case KETCUBE_CFG_SEVERITY_DEBUG:
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                             "KETCube driver severity: DEBUG");
-        break;
-    }
+
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "KETCube driver severity level: %s", ketCube_severity_strAlias[ketCube_coreCfg.driverSeverity]);
 
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD == TRUE)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
-                                         "KETCube Sleep period disabled!");
+                                         "KETCube sleep period disabled!");
 #endif
-
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE, "");
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_NONE,
-                                         "--- Core configuration load END ---");
 
     return KETCUBE_CFG_OK;
 }

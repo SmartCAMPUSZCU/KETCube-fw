@@ -505,7 +505,7 @@ void ketCube_terminal_cmd_list(void)
     KETCUBE_TERMINAL_PRINTF("Available modules:");
     KETCUBE_TERMINAL_ENDL();
 
-    for (i = 0; i < ketCube_modules_CNT; i++) {
+    for (i = KETCUBE_LISTS_MODULEID_FIRST; i < ketCube_modules_CNT; i++) {
         if (ketCube_cfg_Load
             (((uint8_t *) & data), (ketCube_cfg_moduleIDs_t) i,
              (ketCube_cfg_AllocEEPROM_t) 0,
@@ -580,7 +580,11 @@ void ketCube_terminal_cmd_list(void)
         ("Module State: E == Module Enabled; D == Module Disabled");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF
-        ("Module severity: N = NONE, R = ERROR; I = INFO; D = DEBUG");
+        ("Module severity: N = %s, R = %s; I = %s; D = %s",
+            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_NONE],
+            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_ERROR],
+            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_INFO],
+            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_DEBUG]);
 
 
     KETCUBE_TERMINAL_ENDL();
@@ -601,7 +605,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
     int32_t tmpSeverity;
 
 
-    for (i = 0; i < ketCube_modules_CNT; i++) {
+    for (i = KETCUBE_LISTS_MODULEID_FIRST; i < ketCube_modules_CNT; i++) {
         tmpCmdLen = strlen(&(ketCube_modules_List[i].name[0]));
         
         if (strncmp(&(ketCube_modules_List[i].name[0]), &(commandBuffer[commandParamsPos]), tmpCmdLen) == 0) {

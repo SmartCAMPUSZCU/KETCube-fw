@@ -43,6 +43,7 @@
  */
 
 #include "ketCube_cfg.h"
+#include "ketCube_coreCfg.h"
 #include "ketCube_common.h"
 
 #include "hw_msp.h"
@@ -65,6 +66,7 @@
 
 /**
  * Define a KETCube module 
+ * 
  */
 #define DEF_MODULE(name, descr, initFn, sleepEnter, sleepExit, \
                    getSensData, sendData, recvData, processData, cfgStruct) \
@@ -88,7 +90,18 @@
 * @brief List of KETCube modules
 */
 ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
-
+    DEF_MODULE("KETCube core",
+               "Note: core is always enabled",
+               &ketCube_coreCfg_Init,     /* Init() */
+               NULL,                      /* SleepEnter() */
+               NULL,                      /* SleepExit() */
+               NULL,                      /* GetSensorData() */
+               NULL,                      /* SendData() */
+               NULL,                      /* ReceiveData() */
+               NULL,                      /* ProcessData() */
+               ketCube_coreCfg            /* KETCube core cfg struct */
+              ),
+              
 #ifdef KETCUBE_CFG_INC_MOD_LORA
     DEF_MODULE("LoRa",
                "LoRa radio",

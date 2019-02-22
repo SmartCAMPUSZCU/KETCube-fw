@@ -157,11 +157,6 @@ int main(void)
         NVIC_SystemReset();
     }
 
-    /* Init KETCube core config */
-    if (ketCube_coreCfg_Init() != KETCUBE_CFG_OK) {
-        KETCube_ErrorHandler();
-    }
-
     /* Init KETCube modules */
     if (ketCube_modules_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();

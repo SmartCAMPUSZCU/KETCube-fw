@@ -47,6 +47,8 @@
 #include "ketCube_common.h"
 #include "ketCube_modules.h"
 
+const char * ketCube_severity_strAlias[4] = {"NONE", "ERROR", "INFO", "DEBUG"}; ///< String representatzion of KETCube severity levels
+
 /**
  * @brief Load configuration data from EEPROM
  * @param data pointer to an array of bytes

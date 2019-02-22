@@ -84,36 +84,26 @@ ketCube_cfg_Error_t ketCube_modules_Init(void)
         // Init msg array
         InterModMsgBuffer[i] = (ketCube_InterModMsg_t **) NULL;
     }
+    
+    // Always enable KETCube core
+    ketCube_modules_List[KETCUBE_LISTS_ID_CORE].cfgPtr->enable = TRUE;
 
     // Run module init functions
     for (i = 0; i < ketCube_modules_CNT; i++) {
         if ((ketCube_modules_List[i].cfgPtr->enable & 0x01) == TRUE) {
             if (ketCube_modules_List[i].fnInit != NULL) {
-                KETCUBE_TERMINAL_ENDL();
-                KETCUBE_TERMINAL_PRINTF
-                    ("--- Module \"%s\" Init() START ---",
-                     ketCube_modules_List[i].name);
-                KETCUBE_TERMINAL_ENDL();
-                KETCUBE_TERMINAL_PRINTF("Module severity: ");
-                switch (ketCube_modules_List[i].cfgPtr->severity) {
-                case KETCUBE_CFG_SEVERITY_NONE:
-                    KETCUBE_TERMINAL_PRINTF("NONE");
-                    break;
-                case KETCUBE_CFG_SEVERITY_ERROR:
-                    KETCUBE_TERMINAL_PRINTF("ERROR");
-                    break;
-                case KETCUBE_CFG_SEVERITY_INFO:
-                    KETCUBE_TERMINAL_PRINTF("INFO");
-                    break;
-                case KETCUBE_CFG_SEVERITY_DEBUG:
-                    KETCUBE_TERMINAL_PRINTF("DEBUG");
-                    break;
+                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "--- \"%s\" Init() START ---", ketCube_modules_List[i].name);
+                
+                // report severity for modules only
+                if (i > KETCUBE_LISTS_ID_CORE) {
+                    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Module severity level: %s", ketCube_severity_strAlias[ketCube_modules_List[i].cfgPtr->severity]);
                 }
-                KETCUBE_TERMINAL_ENDL();
+                
+                // Execute Init()
                 (ketCube_modules_List[i].fnInit) (&(InterModMsgBuffer[i]));
-                KETCUBE_TERMINAL_PRINTF("--- Module \"%s\" Init() END ---",
-                                        ketCube_modules_List[i].name);
-                KETCUBE_TERMINAL_ENDL();
+                
+                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "--- \"%s\" Init() END ---", ketCube_modules_List[i].name);
+                ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "");
             }
         }
     }

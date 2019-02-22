@@ -63,14 +63,15 @@
 * @brief  Allocated CFG EEPROM addreses
 */
 typedef enum {
-    KETCUBE_EEPROM_ALLOC_CORE = 0,      /*<! KETCube core configuration base address -- 64 bytes is reseved for core */
-    KETCUBE_EEPROM_ALLOC_MODULES = 64,  /*<! Module configuration base address */
+    KETCUBE_EEPROM_ALLOC_CORE = 0,      /*<! KETCube core configuration base address -- core configuration is located in module configuration area */
+    KETCUBE_EEPROM_ALLOC_MODULES = 0,   /*<! Module configuration base address */
 } ketCube_cfg_AllocEEPROM_t;
 
 /**
 * @brief  Length of CFG EEPROM data
 */
 typedef enum {
+    KETCUBE_EEPROM_LEN_CORE    = 64,    /*<! Core max configuration len in bytes */
     KETCUBE_EEPROM_LEN_MODULES = 1024,  /*<! Modules max configuration len in bytes */
 } ketCube_cfg_LenEEPROM_t;
 
@@ -115,11 +116,13 @@ typedef struct ketCube_InterModMsg_t {
 * @brief  KETCube debug severity definition.
 */
 typedef enum ketCube_severity_t {
-    KETCUBE_CFG_SEVERITY_NONE = 0x0,
+    KETCUBE_CFG_SEVERITY_NONE  = 0x0,
     KETCUBE_CFG_SEVERITY_ERROR = 0x1,
-    KETCUBE_CFG_SEVERITY_INFO = 0x2,
+    KETCUBE_CFG_SEVERITY_INFO  = 0x2,
     KETCUBE_CFG_SEVERITY_DEBUG = 0x3
 } ketCube_severity_t;
+
+extern const char * ketCube_severity_strAlias[4];
 
 /**
 * @brief Pointer to function returning ketCube_cfg_ModError_t
