@@ -150,9 +150,9 @@ typedef struct ketCube_cfg_varDescr_t {
     uint16_t moduleID;     ///< Module Index
     uint8_t offset;        ///< Variable offset in module configuration memory
     uint8_t size;          ///< Variable size in bytes
-    bool bitSet:1;         ///< for SET: set bits as defined by bit mask; for GET: expect bit 1
-    bool bitReset:1;       ///< for SET: reset bits as defined by bit mask; for GET: expect bit 0
-    uint8_t * bitMask;     ///< Bit mask for bit set/reset and GET
+    uint8_t bitShift;      ///< Left bit shift in bits for shifted variables
+    uint8_t * bitMask;     ///< Use the bitMask to extract bit variable
+    bool isBitVariable;    ///< The variable is bit variable (potentially packed togenther with other bit variables)
 } ketCube_cfg_varDescr_t;
 
 /**

@@ -73,30 +73,6 @@ void ketCube_LoRa_cmd_show_devEUI(void)
 
 ketCube_terminal_cmd_t ketCube_lora_commands[] = {
     {
-        .cmd   = "ABP",
-        .descr = "Enable ABP",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, bitCfg),
-            .size     = sizeof(ketCube_lora_bitCfg_t),
-            .bitSet   = KETCUBE_LORA_SELCONNMETHOD_ABP,
-            .bitReset = ~(KETCUBE_LORA_SELCONNMETHOD_ABP),
-            .bitMask  = (uint8_t *) & (ketCube_lora_bitCfg_t) {
-                .connectionType = (KETCUBE_LORA_SELCONNMETHOD_ABP | ~(KETCUBE_LORA_SELCONNMETHOD_ABP))
-            }
-        }
-    },
-                
-    {
         .cmd   = "appEUI",
         .descr = "LoRa application EUI.",
         .flags = {
@@ -205,8 +181,8 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
     },
     
     {
-        .cmd   = "devEUIDisableCustom",
-        .descr = "Custom (user-defined) LoRa device EUI",
+        .cmd   = "enableABP",
+        .descr = "Enable ABP",
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
@@ -220,16 +196,18 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
             .moduleID = KETCUBE_LISTS_MODULEID_LORA,
             .offset   = offsetof(ketCube_lora_moduleCfg_t, bitCfg),
             .size     = sizeof(ketCube_lora_bitCfg_t),
-            .bitSet   = KETCUBE_LORA_SELDEVEUI_BOARD,
-            .bitReset = ~(KETCUBE_LORA_SELDEVEUI_BOARD),
+            .bitShift = ffs( (int) (ketCube_lora_bitCfg_t) {
+                .connectionType = (KETCUBE_LORA_SELCONNMETHOD_ABP | (KETCUBE_LORA_SELCONNMETHOD_OTAA))
+            }) - 1,
             .bitMask  = (uint8_t *) & (ketCube_lora_bitCfg_t) {
-                .connectionType = (KETCUBE_LORA_SELDEVEUI_BOARD | ~(KETCUBE_LORA_SELDEVEUI_BOARD))
-            }
+                .connectionType = (KETCUBE_LORA_SELCONNMETHOD_ABP | (KETCUBE_LORA_SELCONNMETHOD_OTAA))
+            },
+            .isBitVariable = TRUE,
         }
     },
     
     {
-        .cmd   = "devEUIEnableCustom",
+        .cmd   = "enableCustomDevEUI",
         .descr = "Custom (user-defined) LoRa device EUI",
         .flags = {
             .isLocal   = TRUE,
@@ -244,35 +222,13 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
             .moduleID = KETCUBE_LISTS_MODULEID_LORA,
             .offset   = offsetof(ketCube_lora_moduleCfg_t, bitCfg),
             .size     = sizeof(ketCube_lora_bitCfg_t),
-            .bitSet   = KETCUBE_LORA_SELDEVEUI_CUSTOM,
-            .bitReset = ~(KETCUBE_LORA_SELDEVEUI_CUSTOM),
+            .bitShift = ffs( (int) (ketCube_lora_bitCfg_t) {
+                .ketCube_lora_selDeveui_t = (KETCUBE_LORA_SELDEVEUI_BOARD | (KETCUBE_LORA_SELDEVEUI_CUSTOM))
+            }) - 1,
             .bitMask  = (uint8_t *) & (ketCube_lora_bitCfg_t) {
-                .connectionType = (KETCUBE_LORA_SELDEVEUI_CUSTOM | ~(KETCUBE_LORA_SELDEVEUI_CUSTOM))
-            }
-        }
-    },
-                
-    {
-        .cmd   = "OTAA",
-        .descr = "Enable OTAA",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, bitCfg),
-            .size     = sizeof(ketCube_lora_bitCfg_t),
-            .bitSet   = KETCUBE_LORA_SELCONNMETHOD_OTAA,
-            .bitReset = ~(KETCUBE_LORA_SELCONNMETHOD_OTAA),
-            .bitMask  = (uint8_t *) & (ketCube_lora_bitCfg_t) {
-                .connectionType = (KETCUBE_LORA_SELCONNMETHOD_OTAA | ~(KETCUBE_LORA_SELCONNMETHOD_OTAA))
-            }
+                .ketCube_lora_selDeveui_t = (KETCUBE_LORA_SELDEVEUI_BOARD | (KETCUBE_LORA_SELDEVEUI_CUSTOM))
+            },
+            .isBitVariable = TRUE,
         }
     },
                 
