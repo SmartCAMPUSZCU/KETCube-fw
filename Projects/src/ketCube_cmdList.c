@@ -236,6 +236,20 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
             .isLocal   = TRUE,
             .isRemote  = TRUE,
             .isEEPROM  = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_terminal_commands_setShow,
+    },
+    
+    {
+        .cmd   = "showr",
+        .descr = "Show LoRa, SigFox ... RUNNING parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
             .isRAM     = TRUE,
             .isGeneric = TRUE,
             .isShowCmd = TRUE,

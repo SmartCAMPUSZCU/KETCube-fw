@@ -282,15 +282,9 @@ static inline int ketCube_terminal_GetIOParamsLength(
  *
  * @param cmdDescrPtr pointer to a command descriptor
  * 
- * @note bit shifts were not exercised!
- * 
  */
 static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
 {
-    uint8_t i, j;
-    uint8_t byteShift = 0;
-    uint8_t bitShift = 0;
-    
     if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
         return;
     }
@@ -302,37 +296,6 @@ static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
                          (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
         return;
-    }
-    
-    
-    /* Handle bit variables */
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->isBitVariable == TRUE) {
-        for (i = 0; i < cmdDescrPtr->settingsPtr.cfgVarPtr->size; i++) {
-            commandIOParams.as_byte_array.data[i] &= cmdDescrPtr->settingsPtr.cfgVarPtr->bitMask[i];
-        }
-    }
-    
-    /* Handle bit shifts */
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift != 0) {
-        if (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift >= 8) {
-            byteShift = (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift) / 8;
-            bitShift = (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift) % 8;
-        } else {
-            bitShift = cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift;
-        }
-            
-        /* Shift bytes */
-        for (i = 0, j = byteShift; j < cmdDescrPtr->settingsPtr.cfgVarPtr->size; i++, j++) {
-            commandIOParams.as_byte_array.data[i] = commandIOParams.as_byte_array.data[j];
-        }
-        
-        commandIOParams.as_byte_array.data[i] = 0x00; // for bit shifts ...
-        
-        /* Shift bits */
-        for (i = 0; i < (cmdDescrPtr->settingsPtr.cfgVarPtr->size - byteShift); i++) {
-            commandIOParams.as_byte_array.data[i] = ((commandIOParams.as_byte_array.data[i] >> bitShift) 
-                                                     | commandIOParams.as_byte_array.data[i+1] << (8 - bitShift));
-        }
     }
     
     // convert to output data type
@@ -347,7 +310,7 @@ static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
             // do nothing ...
             break;
         case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
-            if (commandIOParams.as_byte_array.data[0] & 0x01) {
+            if (commandIOParams.as_byte_array.data[0] != 0x00) {
                 commandIOParams.as_bool = TRUE;
             } else {
                 commandIOParams.as_bool = FALSE;
@@ -358,7 +321,7 @@ static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
             commandIOParams.as_string[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH - 1] = '\0';
             break;
         case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
-            commandIOParams.as_byte_array.length = cmdDescrPtr->settingsPtr.cfgVarPtr->size - byteShift;
+            commandIOParams.as_byte_array.length = cmdDescrPtr->settingsPtr.cfgVarPtr->size;
             break;
     }
 }
@@ -371,54 +334,8 @@ static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
  */
 static void ketCube_terminal_setEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
 {
-    uint8_t i, j;
-    uint8_t byteShift = 0;
-    uint8_t bitShift = 0;
-    
     if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
         return;
-    }
-    
-    /* Handle bit variables */
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->isBitVariable == TRUE) {
-        for (i = 0; i < cmdDescrPtr->settingsPtr.cfgVarPtr->size; i++) {
-            commandIOParams.as_byte_array.data[i] &= cmdDescrPtr->settingsPtr.cfgVarPtr->bitMask[i];
-        }
-    }
-    
-    /* Handle bit shifts */
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift != 0) {
-        if (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift >= 8) {
-            byteShift = (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift) / 8;
-            bitShift = (cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift) % 8;
-        } else {
-            bitShift = cmdDescrPtr->settingsPtr.cfgVarPtr->bitShift;
-        }
-            
-        /* Shift bytes */
-        for (i = 0, j = byteShift; j < cmdDescrPtr->settingsPtr.cfgVarPtr->size; i++, j++) {
-            commandIOParams.as_byte_array.data[j] = commandIOParams.as_byte_array.data[i];
-        }
-        
-        /* Shift bits */
-        for (i = 0; i < (cmdDescrPtr->settingsPtr.cfgVarPtr->size + byteShift); i++) {
-            commandIOParams.as_byte_array.data[i+1] = ((commandIOParams.as_byte_array.data[i+1] << bitShift) 
-                                                     | commandIOParams.as_byte_array.data[i] >> (8 - bitShift));
-        }
-        commandIOParams.as_byte_array.data[0] = commandIOParams.as_byte_array.data[i] << bitShift;
-    }
-    
-    // TODO
-    
-    // load data from EEPROM as byte array when modifying bits
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->isBitVariable == TRUE) {
-        if (ketCube_cfg_Load((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
-                             (ketCube_cfg_moduleIDs_t) cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID,
-                             (ketCube_cfg_AllocEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->offset,
-                             (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
-            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-            return;
-        }
     }
         
     if (ketCube_cfg_Save((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
@@ -439,7 +356,40 @@ static void ketCube_terminal_setEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
  */
 static void ketCube_terminal_getRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
 {
+    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
+        return;
+    }
     
+     memcpy((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+            (uint8_t *) (ketCube_modules_List[cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID].cfgPtr + cmdDescrPtr->settingsPtr.cfgVarPtr->offset),
+           (uint32_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size);
+     
+     // convert to output data type
+    switch(cmdDescrPtr->outputSetType)
+    {
+        case KETCUBE_TERMINAL_PARAMS_NONE:
+        case KETCUBE_TERMINAL_PARAMS_BYTE:
+        case KETCUBE_TERMINAL_PARAMS_INT32:
+        case KETCUBE_TERMINAL_PARAMS_UINT32:
+        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
+        default:
+            // do nothing ...
+            break;
+        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
+            if (commandIOParams.as_byte_array.data[0] != 0x00) {
+                commandIOParams.as_bool = TRUE;
+            } else {
+                commandIOParams.as_bool = FALSE;
+            }
+            break;
+        case KETCUBE_TERMINAL_PARAMS_STRING:
+            // just for sure
+            commandIOParams.as_string[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH - 1] = '\0';
+            break;
+        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
+            commandIOParams.as_byte_array.length = cmdDescrPtr->settingsPtr.cfgVarPtr->size;
+            break;
+    }
 }
 
 /**
@@ -450,7 +400,13 @@ static void ketCube_terminal_getRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
  */
 static void ketCube_terminal_setRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
 {
-    
+    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
+        return;
+    }
+
+    memcpy((uint8_t *) (ketCube_modules_List[cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID].cfgPtr + cmdDescrPtr->settingsPtr.cfgVarPtr->offset),
+           (uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+           (uint32_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size);
 }
 
 /* ------------------------------ */
@@ -991,6 +947,23 @@ static bool ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command,
             /* no integer on input */
             if (endptr == &(commandBuffer[commandParamsPos])) {
                 return FALSE;
+            }
+            return TRUE;
+        }
+        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
+        {
+            commandIOParams.as_uint32 =
+                        strtoul(&(commandBuffer[commandParamsPos]), &endptr, 10);
+
+            /* no integer on input */
+            if (endptr == &(commandBuffer[commandParamsPos])) {
+                return FALSE;
+            }
+            
+            if (commandIOParams.as_uint32 != 0) {
+                commandIOParams.as_bool = TRUE;
+            } else {
+                commandIOParams.as_bool = FALSE;
             }
             return TRUE;
         }

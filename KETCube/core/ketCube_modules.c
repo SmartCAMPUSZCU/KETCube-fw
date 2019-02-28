@@ -51,10 +51,10 @@
 // List of KETCube modules
 #include "../../Projects/src/ketCube_moduleList.c"      // include a project-specific file
 
-uint8_t SensorBuffer[KETCUBE_MODULES_SENSOR_BYTES];     //<·sensor data are stored here
-uint8_t SensorBufferSize = 0;   //<·sensor data buffer size
+uint8_t SensorBuffer[KETCUBE_MODULES_SENSOR_BYTES];     ///< Sensor data are stored here
+uint8_t SensorBufferSize = 0;                           ///< Sensor data buffer size
 
-ketCube_InterModMsg_t **InterModMsgBuffer[ketCube_modules_CNT]; //<·Intra module message pointers; mesasages are stored and managed local-to modules
+ketCube_InterModMsg_t **InterModMsgBuffer[ketCube_modules_CNT]; ///< Intra module message pointers; mesasages are stored and managed local-to modules
 
 /**
  * @brief Load basic module configuration data from EEPROM and execute periodic functions for enabled modules

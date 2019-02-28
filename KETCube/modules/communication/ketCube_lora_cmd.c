@@ -194,15 +194,9 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
         .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
             .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, bitCfg),
-            .size     = sizeof(ketCube_lora_bitCfg_t),
-            .bitShift = ffs( (int) (ketCube_lora_bitCfg_t) {
-                .connectionType = (KETCUBE_LORA_SELCONNMETHOD_ABP | (KETCUBE_LORA_SELCONNMETHOD_OTAA))
-            }) - 1,
-            .bitMask  = (uint8_t *) & (ketCube_lora_bitCfg_t) {
-                .connectionType = (KETCUBE_LORA_SELCONNMETHOD_ABP | (KETCUBE_LORA_SELCONNMETHOD_OTAA))
-            },
-            .isBitVariable = TRUE,
+            .offset   = (offsetof(ketCube_lora_moduleCfg_t, cfg) 
+                        + offsetof(ketCube_lora_cfg_t, connectionType)),
+            .size     = sizeof(ketCube_lora_cfg_t),
         }
     },
     
@@ -220,15 +214,9 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
         .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
             .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, bitCfg),
-            .size     = sizeof(ketCube_lora_bitCfg_t),
-            .bitShift = ffs( (int) (ketCube_lora_bitCfg_t) {
-                .ketCube_lora_selDeveui_t = (KETCUBE_LORA_SELDEVEUI_BOARD | (KETCUBE_LORA_SELDEVEUI_CUSTOM))
-            }) - 1,
-            .bitMask  = (uint8_t *) & (ketCube_lora_bitCfg_t) {
-                .ketCube_lora_selDeveui_t = (KETCUBE_LORA_SELDEVEUI_BOARD | (KETCUBE_LORA_SELDEVEUI_CUSTOM))
-            },
-            .isBitVariable = TRUE,
+            .offset   = (offsetof(ketCube_lora_moduleCfg_t, cfg) 
+                         + offsetof(ketCube_lora_cfg_t, devEUIType)),
+            .size     = sizeof(ketCube_lora_cfg_t),
         }
     },
                 

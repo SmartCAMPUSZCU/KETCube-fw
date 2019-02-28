@@ -69,8 +69,8 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
         },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_INT32,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_INT32,
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
         .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
             .moduleID = KETCUBE_LISTS_ID_CORE,
             .offset   = offsetof(ketCube_coreCfg_t, basePeriod),
@@ -90,8 +90,8 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
         },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_INT32,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_INT32,
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
         .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
             .moduleID = KETCUBE_LISTS_ID_CORE,
             .offset   = offsetof(ketCube_coreCfg_t, startDelay),
