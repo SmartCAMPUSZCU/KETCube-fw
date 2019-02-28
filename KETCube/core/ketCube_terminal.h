@@ -147,8 +147,9 @@ typedef enum ketCube_terminal_paramSet_type_t {
     KETCUBE_TERMINAL_PARAMS_BOOLEAN,
     KETCUBE_TERMINAL_PARAMS_STRING,
     KETCUBE_TERMINAL_PARAMS_BYTE,
-    KETCUBE_TERMINAL_PARAMS_INTEGER,
-    KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR,
+    KETCUBE_TERMINAL_PARAMS_INT32,
+    KETCUBE_TERMINAL_PARAMS_UINT32,
+    KETCUBE_TERMINAL_PARAMS_INT32_PAIR,
     KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY
 } ketCube_terminal_paramSet_type_t;
 
@@ -164,15 +165,17 @@ typedef union ketCube_terminal_paramSet_t {
     bool as_bool;
     /* KETCUBE_TERMINAL_PARAMS_BYTE */
     uint8_t as_byte;
-    /* KETCUBE_TERMINAL_PARAMS_INTEGER */
-    int as_integer;
+    /* KETCUBE_TERMINAL_PARAMS_INT32 */
+    int as_int32;
+    /* KETCUBE_TERMINAL_PARAMS_UINT32 */
+    int as_uint32;
     /* KETCUBE_TERMINAL_PARAMS_STRING */
     char as_string[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH];
-    /* KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR */
+    /* KETCUBE_TERMINAL_PARAMS_INT32_PAIR */
     struct {
         int first;
         int second;
-    } as_integer_pair;
+    } as_int32_pair;
     struct {
         byte data[KETCUBE_TERMINAL_PARAM_BYTE_ARRAY_MAX_LENGTH];
         uint16_t length;
@@ -193,10 +196,11 @@ static inline int ketCube_terminal_ParamSetTypeToCount(
         case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
         case KETCUBE_TERMINAL_PARAMS_BYTE:
         case KETCUBE_TERMINAL_PARAMS_STRING:
-        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+        case KETCUBE_TERMINAL_PARAMS_INT32:
+        case KETCUBE_TERMINAL_PARAMS_UINT32:
         case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
             return 1;
-        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
             return 2;
     }
 }

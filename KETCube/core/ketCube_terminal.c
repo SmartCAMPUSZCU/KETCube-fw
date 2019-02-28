@@ -266,9 +266,11 @@ static inline int ketCube_terminal_GetIOParamsLength(
             return sizeof(uint8_t);
         case KETCUBE_TERMINAL_PARAMS_STRING:
             return strlen(commandIOParams.as_string);
-        case KETCUBE_TERMINAL_PARAMS_INTEGER:
-            return sizeof(int);
-        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        case KETCUBE_TERMINAL_PARAMS_INT32:
+            return sizeof(int32_t);
+        case KETCUBE_TERMINAL_PARAMS_UINT32:
+            return sizeof(uint32_t);
+        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
             return (2 * sizeof(int));
         case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
             return commandIOParams.as_byte_array.length;
@@ -318,8 +320,9 @@ static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
     {
         case KETCUBE_TERMINAL_PARAMS_NONE:
         case KETCUBE_TERMINAL_PARAMS_BYTE:
-        case KETCUBE_TERMINAL_PARAMS_INTEGER:
-        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        case KETCUBE_TERMINAL_PARAMS_INT32:
+        case KETCUBE_TERMINAL_PARAMS_UINT32:
+        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
         default:
             // do nothing ...
             break;
@@ -944,9 +947,9 @@ static bool ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command,
             }
             return TRUE;
         }
-        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+        case KETCUBE_TERMINAL_PARAMS_INT32:
         {
-            commandIOParams.as_integer =
+            commandIOParams.as_int32 =
                         strtol(&(commandBuffer[commandParamsPos]), &endptr, 10);
 
             /* no integer on input */
@@ -955,9 +958,20 @@ static bool ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command,
             }
             return TRUE;
         }
-        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        case KETCUBE_TERMINAL_PARAMS_UINT32:
         {
-            commandIOParams.as_integer_pair.first
+            commandIOParams.as_uint32 =
+                        strtoul(&(commandBuffer[commandParamsPos]), &endptr, 10);
+
+            /* no integer on input */
+            if (endptr == &(commandBuffer[commandParamsPos])) {
+                return FALSE;
+            }
+            return TRUE;
+        }
+        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
+        {
+            commandIOParams.as_int32_pair.first
                         = strtol(&(commandBuffer[commandParamsPos]),
                                  &endptr, 10);
 
@@ -971,7 +985,7 @@ static bool ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command,
             if (ptr == 0) {
                 return FALSE;
             }
-            commandIOParams.as_integer_pair.second
+            commandIOParams.as_int32_pair.second
                         = strtol(&(commandBuffer[ptr]), &endptr, 10);
 
             /* no integer on input */
@@ -1029,9 +1043,14 @@ static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
             KETCUBE_TERMINAL_PRINTF("%s", commandIOParams.as_string);
             break;
         }
-        case KETCUBE_TERMINAL_PARAMS_INTEGER:
+        case KETCUBE_TERMINAL_PARAMS_INT32:
         {
-            KETCUBE_TERMINAL_PRINTF("%d", commandIOParams.as_integer);
+            KETCUBE_TERMINAL_PRINTF("%d", commandIOParams.as_int32);
+            break;
+        }
+        case KETCUBE_TERMINAL_PARAMS_UINT32:
+        {
+            KETCUBE_TERMINAL_PRINTF("%d", commandIOParams.as_uint32);
             break;
         }
         case KETCUBE_TERMINAL_PARAMS_BYTE:
@@ -1039,11 +1058,11 @@ static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
             KETCUBE_TERMINAL_PRINTF("%d", commandIOParams.as_byte);
             break;
         }
-        case KETCUBE_TERMINAL_PARAMS_INTEGER_PAIR:
+        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
         {
             KETCUBE_TERMINAL_PRINTF("%d, %d",
-                                    commandIOParams.as_integer_pair.first,
-                                    commandIOParams.as_integer_pair.second);
+                                    commandIOParams.as_int32_pair.first,
+                                    commandIOParams.as_int32_pair.second);
             break;
         }
         case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:

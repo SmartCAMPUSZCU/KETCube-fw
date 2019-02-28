@@ -51,40 +51,6 @@
 #include "ketCube_terminal.h"
 #include "ketCube_batMeas.h"
 
-
-void ketCube_terminal_cmd_set_batMeas_bat(void)
-{
-    if (ketCube_cfg_Save((uint8_t *) &commandIOParams.as_integer,
-                         KETCUBE_LISTS_MODULEID_BATMEAS,
-                         (ketCube_cfg_AllocEEPROM_t) offsetof(ketCube_batMeas_moduleCfg_t, selectedBattery),
-                         (ketCube_cfg_LenEEPROM_t) sizeof(ketCube_batMeas_battList_t)) != KETCUBE_CFG_OK) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-    }
-}
-
-
-void ketCube_terminal_cmd_show_batMeas_bat(void)
-{
-    ketCube_batMeas_battList_t bat;
-    
-    if (ketCube_cfg_Load((uint8_t *) &bat,
-                         KETCUBE_LISTS_MODULEID_BATMEAS,
-                         (ketCube_cfg_AllocEEPROM_t) offsetof(ketCube_batMeas_moduleCfg_t, selectedBattery),
-                         (ketCube_cfg_LenEEPROM_t) sizeof(ketCube_batMeas_battList_t)) != KETCUBE_CFG_OK) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-
-    if (bat >= KETCUBE_BATMEAS_BATLIST_LAST) {
-        bat = KETCUBE_BATMEAS_BATLIST_CR2032;
-    }
-
-    snprintf(commandIOParams.as_string, KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-                            "%s (%s)",
-                            ketCube_batMeas_batList[bat].batName,
-                            ketCube_batMeas_batList[bat].batDescr);
-}
-
 void ketCube_terminal_cmd_show_batMeas_list(void)
 {
     uint8_t i;
@@ -100,11 +66,6 @@ void ketCube_terminal_cmd_show_batMeas_list(void)
         (here: ketCube_batMeas_batList + KETCUBE_BATMEAS_BATLIST_LAST),
         type (here: string) and step (here: sizeof(ketCube_batMeas_battery_t))
     */
-
-    snprintf(commandIOParams.as_string, KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-                            "%s (%s)",
-                            ketCube_batMeas_batList[0].batName,
-                            ketCube_batMeas_batList[0].batDescr);
     
     for (i = 0; i < KETCUBE_BATMEAS_BATLIST_LAST; i++) {
         KETCUBE_TERMINAL_PRINTF("%d)\t %s (%s)", i,
@@ -115,28 +76,44 @@ void ketCube_terminal_cmd_show_batMeas_list(void)
 }
 
 /* Terminal command definitions */
+    
 
-ketCube_terminal_cmd_t ketCube_terminal_commands_show_batMeas[] = {
-    DEF_COMMAND("bat",
-                "Show selected battery.",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_show_batMeas_bat),
-    DEF_COMMAND("list",
-                "Show supported batteries.",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_show_batMeas_list),
+ketCube_terminal_cmd_t ketCube_batMeas_commands[] = {
+    {
+        .cmd   = "list",
+        .descr = "Show supported batteries",
+        .flags = {
+            .isLocal   = TRUE,
+            .isShowCmd = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_NONE,
+        .settingsPtr.callback = &ketCube_terminal_cmd_show_batMeas_list,
+    },
+    
+    {
+        .cmd   = "bat",
+        .descr = "Select battery (battery #)",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_MODULEID_BATMEAS,
+            .offset   = offsetof(ketCube_batMeas_moduleCfg_t, selectedBattery),
+            .size     = sizeof(ketCube_batMeas_battList_t)
+        }
+    },
+    
     DEF_TERMINATE()
-};
-
-ketCube_terminal_cmd_t ketCube_terminal_commands_set_batMeas[] = {
-    DEF_COMMAND("bat",
-                "Select battery.",
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                &ketCube_terminal_cmd_set_batMeas_bat),
-    DEF_TERMINATE()
+    
 };
 
 #endif                          /* __KETCUBE_BATMEAS_CMD_H */
