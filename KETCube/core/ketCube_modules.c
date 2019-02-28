@@ -59,7 +59,7 @@ ketCube_InterModMsg_t **InterModMsgBuffer[ketCube_modules_CNT]; //<·Intra module
 /**
  * @brief Load basic module configuration data from EEPROM and execute periodic functions for enabled modules
  * @retval KETCUBE_CFG_OK in case of success
- * @retval ketCube_cfg_Load_ERROR in case of failure
+ * @retval ketCube_CFG_ERROR in case of failure
  */
 ketCube_cfg_Error_t ketCube_modules_Init(void)
 {
@@ -75,7 +75,7 @@ ketCube_cfg_Error_t ketCube_modules_Init(void)
                              0,
                              ketCube_modules_List[i].cfgLen) == KETCUBE_CFG_OK) {
         } else {
-            return ketCube_cfg_Load_ERROR;
+            return KETCUBE_CFG_ERROR;
         }
         
         // set current EEPROM pointer

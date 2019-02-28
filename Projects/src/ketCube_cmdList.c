@@ -84,98 +84,191 @@
 #endif
 
 /**
- * @brief "show" command group
+ * @brief SET/SHOW command group(s)
  */
-ketCube_terminal_cmd_t ketCube_terminal_commands_show[] = {
-    DEF_COMMAND_GROUP("core",
-                      "Show KETCube Core parameters",
-                      ketCube_terminal_commands_show_core),
+ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
+    {
+        .cmd   = "core",
+        .descr = "KETCube Core parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_terminal_commands_core,
+    },
     
-    DEF_COMMAND_GROUP("driver",
-                      "Show KETCube Driver(s) parameters",
-                      ketCube_terminal_commands_show_driver),
-
+    {
+        .cmd   = "driver",
+        .descr = "KETCube Driver(s) parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_terminal_commands_driver,
+    },
+                      
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
-    DEF_COMMAND_GROUP("batMeas",
-                      "Show batMeas parameters",
-                      ketCube_terminal_commands_show_batMeas),
+    {
+        .cmd   = "batMeas",
+        .descr = "batMeas parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_lora_commands,
+    },
 #endif /* KETCUBE_CFG_INC_MOD_BATMEAS */
      
 #ifdef KETCUBE_CFG_INC_MOD_LORA
-    DEF_COMMAND_GROUP("LoRa",
-                      "Show LoRa parameters",
-                      ketCube_terminal_commands_show_LoRa),
+    {
+        .cmd   = "LoRa",
+        .descr = "LoRa parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_lora_commands,
+    },
 #endif /* KETCUBE_CFG_INC_MOD_LORA */
 
     DEF_TERMINATE()
 };
 
-/**
- * @brief "set" command group
- */
-ketCube_terminal_cmd_t ketCube_terminal_commands_set[] = {
-    DEF_COMMAND_GROUP("core",
-                      "Set KETCube Core parameters",
-                      ketCube_terminal_commands_set_core),
-    
-    DEF_COMMAND_GROUP("driver",
-                      "Set KETCube Driver(s) parameters",
-                      ketCube_terminal_commands_set_driver),
-
-#ifdef KETCUBE_CFG_INC_MOD_BATMEAS
-    DEF_COMMAND_GROUP("batMeas",
-                      "Set batMeas parameters",
-                      ketCube_terminal_commands_set_batMeas),
-#endif /* KETCUBE_CFG_INC_MOD_BATMEAS */
-
-#ifdef KETCUBE_CFG_INC_MOD_LORA
-    DEF_COMMAND_GROUP("LoRa",
-                      "Set LoRa parameters",
-                      ketCube_terminal_commands_set_LoRa),
-#endif /* KETCUBE_CFG_INC_MOD_LORA */
-
-    DEF_TERMINATE()
-};
 
 /**
  * @brief List of KETCube terminal commands
  */
 ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
-    DEF_COMMAND("about",
-                "Print ABOUT information: Copyright, License, ...",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                &ketCube_terminal_cmd_about),
-    DEF_COMMAND("help",
-                "Print HELP",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                &ketCube_terminal_cmd_help),
-    DEF_COMMAND("disable",
-                "Disable KETCube module",
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                &ketCube_terminal_cmd_disable),
-    DEF_COMMAND("enable",
-                "Enable KETCube module",
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                &ketCube_terminal_cmd_enable),
-    DEF_COMMAND("list",
-                "List available KETCube modules",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                &ketCube_terminal_cmd_list),
-    DEF_COMMAND("reload",
-                "Reload KETCube",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                &ketCube_terminal_cmd_reload),
-    DEF_COMMAND_GROUP("show",
-                      "Show LoRa, SigFox ... parameters",
-                      ketCube_terminal_commands_show),
-    DEF_COMMAND_GROUP("set",
-                      "Set LoRa, SigFox ... parameters",
-                      ketCube_terminal_commands_set),  
+    {
+        .cmd   = "about",
+        .descr = "Print ABOUT information: Copyright, License, ...",
+        .flags = {
+            .isLocal   = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_terminal_cmd_about,
+    },
+    
+    {
+        .cmd   = "help",
+        .descr = "Print HELP",
+        .flags = {
+            .isLocal   = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_terminal_cmd_help,
+    },
+    
+    {
+        .cmd   = "disable",
+        .descr = "Disable KETCube module",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .paramSetType = KETCUBE_TERMINAL_PARAMS_STRING,
+        .settingsPtr.callback = &ketCube_terminal_cmd_disable,
+    },
+    
+    {
+        .cmd   = "enable",
+        .descr = "Enable KETCube module",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .paramSetType = KETCUBE_TERMINAL_PARAMS_STRING,
+        .settingsPtr.callback = &ketCube_terminal_cmd_enable,
+    },
+    
+    {
+        .cmd   = "list",
+        .descr = "List available KETCube modules",
+        .flags = {
+            .isLocal   = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_terminal_cmd_list,
+    },
+    
+    {
+        .cmd   = "reload",
+        .descr = "Reload KETCube",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_terminal_cmd_reload,
+    },
+    
+    {
+        .cmd   = "show",
+        .descr = "Show LoRa, SigFox ... parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_terminal_commands_setShow,
+    },
+    
+    {
+        .cmd   = "set",
+        .descr = "Set LoRa, SigFox ... parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isGeneric = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_terminal_commands_setShow,
+    },
+    
+    {
+        .cmd   = "setr",
+        .descr = "Set LoRa, SigFox ... RUNNING parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isRAM     = TRUE,
+            .isGeneric = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_terminal_commands_setShow,
+    },
+
     DEF_TERMINATE()
 };

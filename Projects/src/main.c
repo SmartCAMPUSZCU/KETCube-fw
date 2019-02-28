@@ -92,6 +92,8 @@ void KETCube_ErrorHandler(void)
     KETCUBE_TERMINAL_PRINTF("!!! KETCube ERROR !!!");
 
     KETCUBE_TERMINAL_ENDL();
+    
+    HAL_Delay(10000);
 
     while (TRUE) {
 

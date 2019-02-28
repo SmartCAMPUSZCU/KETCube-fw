@@ -51,262 +51,106 @@
 
 /** @defgroup KETCube_core_CMD KETCube core CMD
   * @brief KETCube core commandline definitions
-	* @ingroup KETCube_Terminal
+  * @ingroup KETCube_Terminal
   * @{
   */
 
-/**
- * @brief Show KETCube base period
- * 
- */
-void ketCube_terminal_cmd_show_core_basePeriod(void)
-{
-    uint32_t basePeriod;
-    
-    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
-        basePeriod), (uint8_t *) &basePeriod, sizeof(uint32_t)) != KETCUBE_EEPROM_OK) {
-        
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    commandIOParams.as_integer = basePeriod;
-}
-
-/**
- * @brief Show KETCube start delay
- * 
- */
-void ketCube_terminal_cmd_show_core_startDelay(void)
-{
-    uint32_t startDelay;
-    
-    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
-        startDelay), (uint8_t *) &startDelay, sizeof(uint32_t)) != KETCUBE_EEPROM_OK) {
-        
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    commandIOParams.as_integer = startDelay;
-}
-
-/**
- * @brief Show KETCube severity
- * 
- */
-void ketCube_terminal_cmd_show_core_severity(void)
-{
-    const char* severity = "UNKNOWN";
-    ketCube_severity_t EEPROMSeverity;
-    
-    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
-        severity), (uint8_t *) &EEPROMSeverity, sizeof(ketCube_severity_t)) != KETCUBE_EEPROM_OK) {
-        
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    switch (EEPROMSeverity) {
-        case KETCUBE_CFG_SEVERITY_NONE:
-            severity = "NONE";
-            break;
-        case KETCUBE_CFG_SEVERITY_ERROR:
-            severity = "ERROR";
-            break;
-        case KETCUBE_CFG_SEVERITY_INFO:
-            severity = "INFO";
-            break;
-        case KETCUBE_CFG_SEVERITY_DEBUG:
-            severity = "DEBUG";
-            break;
-    }
-    
-    snprintf(commandIOParams.as_string,
-             KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-             "%s",
-             severity);
-}
-
-/**
- * @brief Set KETCube base period
- * 
- */
-void ketCube_terminal_cmd_set_core_basePeriod(void)
-{
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, basePeriod),
-         (uint8_t *)&(commandIOParams.as_integer), sizeof(uint32_t))
-            == KETCUBE_EEPROM_OK) {
-        
-        snprintf(commandIOParams.as_string,
-                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-                 "%d",
-                 commandIOParams.as_integer);
-    } else {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-    }
-}
-
-/**
- * @brief Set KETCube start delay
- * 
- */
-void ketCube_terminal_cmd_set_core_startDelay(void)
-{
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, startDelay),
-         (uint8_t *)&(commandIOParams.as_integer), sizeof(uint32_t))
-            == KETCUBE_EEPROM_OK) {
-        
-        snprintf(commandIOParams.as_string,
-                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-                 "%d",
-                 commandIOParams.as_integer);
-    } else {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-    }
-}
-
-/**
- * @brief Set KETCube severity
- * 
- */
-void ketCube_terminal_cmd_set_core_severity(void)
-{
-    const char* severity = "UNKNOWN";
-    
-    switch (commandIOParams.as_integer) {
-        case KETCUBE_CFG_SEVERITY_NONE:
-            severity = "NONE";
-            break;
-        case KETCUBE_CFG_SEVERITY_ERROR:
-            severity = "ERROR";
-            break;
-        case KETCUBE_CFG_SEVERITY_INFO:
-            severity = "INFO";
-            break;
-        case KETCUBE_CFG_SEVERITY_DEBUG:
-            severity = "DEBUG";
-            break;
-        default:
-            commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
-            return;
-    }
-    
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, severity),
-         (uint8_t *)&(commandIOParams.as_integer), sizeof(ketCube_severity_t))
-            == KETCUBE_EEPROM_OK) {
-        
-        snprintf(commandIOParams.as_string,
-                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-                 "%s",
-                 severity);
-    } else {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-    }
-}
-
-/**
- * @brief Show KETCube driver(s) severity
- * 
- */
-void ketCube_terminal_cmd_show_driver_severity(void)
-{
-    ketCube_severity_t EEPROMSeverity;
-    
-    if (ketCube_EEPROM_ReadBuffer(KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t,    
-        driverSeverity), (uint8_t *) &EEPROMSeverity, sizeof(ketCube_severity_t)) != KETCUBE_EEPROM_OK) {
-        
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    snprintf(commandIOParams.as_string,
-             KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-             "%s", ketCube_severity_strAlias[EEPROMSeverity]);
-}
-
-/**
- * @brief Set KETCube driver(s) severity
- * 
- */
-void ketCube_terminal_cmd_set_driver_severity(void)
-{
-    if (ketCube_EEPROM_WriteBuffer
-        (KETCUBE_EEPROM_ALLOC_CORE + offsetof(ketCube_coreCfg_t, driverSeverity),
-         (uint8_t *)&(commandIOParams.as_integer), sizeof(ketCube_severity_t))
-            == KETCUBE_EEPROM_OK) {
-        snprintf(commandIOParams.as_string,
-                 KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH,
-                 "%s", ketCube_severity_strAlias[commandIOParams.as_integer]);
-    } else {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-    }
-}
-
 /* Terminal command definitions */
-
-ketCube_terminal_cmd_t ketCube_terminal_commands_show_core[] = {
-    DEF_COMMAND("basePeriod",
-                "KETCube base period",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                &ketCube_terminal_cmd_show_core_basePeriod),
-    DEF_COMMAND("startDelay",
-                "First periodic action is delayed after power-up",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                &ketCube_terminal_cmd_show_core_startDelay),
-    DEF_COMMAND("severity",
-                "Core messages severity",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_show_core_severity),
+ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
+    {
+        .cmd   = "basePeriod",
+        .descr = "KETCube base period",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_INTEGER,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_INTEGER,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, basePeriod),
+            .size     = sizeof(uint32_t)
+        }
+    },
+    
+    {
+        .cmd   = "startDelay",
+        .descr = "First periodic action is delayed after power-up and initialization",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_INTEGER,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_INTEGER,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, startDelay),
+            .size     = sizeof(uint32_t)
+        }
+    },
+    
+    {
+        .cmd   = "severity",
+        .descr = "Core messages severity: 0 = NONE, 1 = ERROR; 2 = INFO;"
+                 " 3 = DEBUG",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, severity),
+            .size     = sizeof(ketCube_severity_t)
+        }
+    },
+    
     DEF_TERMINATE()
+    
 };
-
-ketCube_terminal_cmd_t ketCube_terminal_commands_set_core[] = {
-    DEF_COMMAND("basePeriod",
-                "KETCube base period",
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_set_core_basePeriod),
-    DEF_COMMAND("startDelay",
-                "First periodic action is delayed after power-up",
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_set_core_startDelay),
-    DEF_COMMAND("severity",
-                "Core messages severity: 0 = NONE, 1 = ERROR; 2 = INFO;"
-                " 3 = DEBUG",
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_set_core_severity),
-    DEF_TERMINATE()
-};
-
 
 /* Terminal command definitions for driver subgroup */
-
-ketCube_terminal_cmd_t ketCube_terminal_commands_show_driver[] = {
-    DEF_COMMAND("severity",
-                "Driver(s) messages severity",
-                KETCUBE_TERMINAL_PARAMS_NONE,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_show_driver_severity),
+ketCube_terminal_cmd_t ketCube_terminal_commands_driver[] = {
+    {
+        .cmd   = "severity",
+        .descr = "Driver(s) messages severity: 0 = NONE, 1 = ERROR; 2 = INFO;"
+                 " 3 = DEBUG",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, driverSeverity),
+            .size     = sizeof(ketCube_severity_t)
+        }
+    },
+    
     DEF_TERMINATE()
-};
-
-ketCube_terminal_cmd_t ketCube_terminal_commands_set_driver[] = {
-    DEF_COMMAND("severity",
-                "Driver(s) messages severity: 0 = NONE, 1 = ERROR; 2 = INFO;"
-                " 3 = DEBUG",
-                KETCUBE_TERMINAL_PARAMS_INTEGER,
-                KETCUBE_TERMINAL_PARAMS_STRING,
-                &ketCube_terminal_cmd_set_driver_severity),
-    DEF_TERMINATE()
+    
 };
 
 
