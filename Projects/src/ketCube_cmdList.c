@@ -140,11 +140,25 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
 #ifdef KETCUBE_CFG_INC_MOD_LORA
     {
         .cmd   = "LoRa",
-        .descr = "LoRa parameters",
+        .descr = "LoRa perisitent parameters",
         .flags = {
             .isGroup   = TRUE,
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_lora_commands,
+    },
+    
+    {
+        .cmd   = "LoRa",
+        .descr = "LoRa running parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
             .isRAM     = TRUE,
             .isGeneric = TRUE,
             .isShowCmd = TRUE,

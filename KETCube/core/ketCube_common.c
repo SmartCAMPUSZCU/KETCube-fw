@@ -45,3 +45,25 @@
 #include "ketCube_common.h"
 
 char ketCube_common_buffer[KETCUBE_COMMON_BUFFER_LEN];
+
+/**
+  * Print byte array to ketCube_common_buffer
+  * 
+  * @param byteArr byte array
+  * @param len byte array length
+  * 
+  * @retval str pointer to resulting (NULL-terminated) string
+  * 
+  * @note Use this function out of ISR only!
+  * 
+  */
+char * ketCube_common_bytes2Str(uint8_t * byteArr, uint8_t len) {
+    uint8_t i;
+    
+    for (i = 0; (i < len) && ((3 * (i + 1)) < KETCUBE_COMMON_BUFFER_LEN); i++) {
+        sprintf(&(ketCube_common_buffer[3 * i]), "%02X-", byteArr[i]);
+    }
+    ketCube_common_buffer[(3 * i) - 1] = 0x00;  // remove last character: '-'
+    
+    return &(ketCube_common_buffer[0]);
+}

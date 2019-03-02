@@ -1150,7 +1150,12 @@ static bool ketCube_terminal_checkCmdContext(
     ketCube_terminal_command_flags_t * contextFlags)
 {
     if ((contextFlags->isLocal || contextFlags->isRemote) == TRUE) {
-        if ((contextFlags->isSetCmd || contextFlags->isShowCmd || contextFlags->isEnvCmd) == TRUE) {
+        if (contextFlags->isEnvCmd == TRUE) {
+            return TRUE;
+        } 
+        
+        if ((contextFlags->isSetCmd || contextFlags->isShowCmd)
+                   && (contextFlags->isRAM || contextFlags->isEEPROM)) {
             return TRUE;
         }
     }

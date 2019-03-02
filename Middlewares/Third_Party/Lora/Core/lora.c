@@ -615,6 +615,8 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
  */
 ketCube_cfg_Error_t lora_ketCubeInit(void) 
 {
+    uint8_t i;
+    
     if (ketCube_lora_moduleCfg.cfg.devEUIType == KETCUBE_LORA_SELDEVEUI_CUSTOM) {
         // devEUI
         memcpy(&(DevEui[0]), &(ketCube_lora_moduleCfg.devEUI[0]), 8);
@@ -627,7 +629,10 @@ ketCube_cfg_Error_t lora_ketCubeInit(void)
         // appSKey
         memcpy(&(AppSKey[0]), &(ketCube_lora_moduleCfg.appSKey[0]), 16);
         memcpy(&(NwkSKey[0]), &(ketCube_lora_moduleCfg.nwkSKey[0]), 16);
-        memcpy(&(DevAddr), &(ketCube_lora_moduleCfg.devAddr[0]), 4);
+        /* Copy devAddr in the reverse byte order to achieve correct endianity */
+        for (i = 0; i < 4 ; i++) {
+            ((uint8_t *) &DevAddr)[i] = ketCube_lora_moduleCfg.devAddr[3-i];
+        }
         memcpy(&(NwkID), &(ketCube_lora_moduleCfg.netID[0]), 4);
         lora_ketCube_otaa = 0;
         lora_ketCube_staticDevAddr = 1;
@@ -660,16 +665,26 @@ if (lora_ketCube_staticDevEUI != 1) {
 }
   
 if ( lora_ketCube_otaa != 0 ) {
-  KETCUBE_TERMINAL_PRINTF("OTAA\n\r"); KETCUBE_TERMINAL_ENDL();
-  KETCUBE_TERMINAL_PRINTF("DevEui= %02X", DevEui[0]) ;for(int i=1; i<8 ; i++) {KETCUBE_TERMINAL_PRINTF("-%02X", DevEui[i]); }; KETCUBE_TERMINAL_ENDL();
-  KETCUBE_TERMINAL_PRINTF("AppEui= %02X", AppEui[0]) ;for(int i=1; i<8 ; i++) {KETCUBE_TERMINAL_PRINTF("-%02X", AppEui[i]); }; KETCUBE_TERMINAL_ENDL();
-  KETCUBE_TERMINAL_PRINTF("AppKey= %02X", AppKey[0]) ;for(int i=1; i<16; i++) {KETCUBE_TERMINAL_PRINTF("-%02X", AppKey[i]); }; KETCUBE_TERMINAL_ENDL();
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "OTAA");
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "devEUI=%s",
+                                 ketCube_common_bytes2Str(&(DevEui[0]), 8));
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "appEUI=%s",
+                                 ketCube_common_bytes2Str(&(AppEui[0]), 8));
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "appKey=%s",
+                                 ketCube_common_bytes2Str(&(AppKey[0]), 16));
 } else {
-  KETCUBE_TERMINAL_PRINTF("ABP"); KETCUBE_TERMINAL_ENDL();
-  KETCUBE_TERMINAL_PRINTF("DevEui= %02X", DevEui[0]) ;for(int i=1; i<8 ; i++) {KETCUBE_TERMINAL_PRINTF("-%02X", DevEui[i]); }; KETCUBE_TERMINAL_ENDL();
-  KETCUBE_TERMINAL_PRINTF("DevAdd=  %08X\n\r", DevAddr) ; KETCUBE_TERMINAL_ENDL();
-  KETCUBE_TERMINAL_PRINTF("NwkSKey= %02X", NwkSKey[0]) ;for(int i=1; i<16 ; i++) {KETCUBE_TERMINAL_PRINTF("-%02X", NwkSKey[i]); }; KETCUBE_TERMINAL_ENDL();
-  KETCUBE_TERMINAL_PRINTF("AppSKey= %02X", AppSKey[0]) ;for(int i=1; i<16 ; i++) {KETCUBE_TERMINAL_PRINTF("-%02X", AppSKey[i]); }; KETCUBE_TERMINAL_ENDL();
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "ABP");
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "devEUI=%s",
+                                 ketCube_common_bytes2Str(&(DevEui[0]), 8));
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "devAddr=%02X-%02X-%02X-%02X", 
+                                 ((uint8_t) (DevAddr>>24 & 0xFF)),
+                                 ((uint8_t) (DevAddr>>16 & 0xFF)),
+                                 ((uint8_t) (DevAddr>>8  & 0xFF)),
+                                 ((uint8_t) (DevAddr>>0  & 0xFF)));
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "nwkSKey=%s",
+                                 ketCube_common_bytes2Str(&(NwkSKey[0]), 16));
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "appSKey=%s",
+                                 ketCube_common_bytes2Str(&(AppSKey[0]), 16));
 }
 
 if (lora_ketCube_staticDevAddr != 1) {

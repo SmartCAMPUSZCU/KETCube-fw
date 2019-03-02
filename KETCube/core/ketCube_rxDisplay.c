@@ -75,8 +75,6 @@ ketCube_cfg_ModError_t ketCube_rxDisplay_Init(ketCube_InterModMsg_t ***
 ketCube_cfg_ModError_t ketCube_rxDisplay_ProcessData(ketCube_InterModMsg_t
                                                      * msg)
 {
-    uint8_t i;
-
     switch (msg->msg[0]) {
     case KETCUBE_RXDISPLAY_DATATYPE_RSSI:
         ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
@@ -93,16 +91,9 @@ ketCube_cfg_ModError_t ketCube_rxDisplay_ProcessData(ketCube_InterModMsg_t
         break;
     default:
     case KETCUBE_RXDISPLAY_DATATYPE_DATA:
-        for (i = 1;
-             (i < msg->msgLen) && ((3 * i) < KETCUBE_COMMON_BUFFER_LEN);
-             i++) {
-            sprintf(&(ketCube_common_buffer[3 * (i - 1)]), "%02X-",
-                    msg->msg[i]);
-        }
-        ketCube_common_buffer[3 * (i - 1) - 1] = 0x00;
         ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
                                        "DATA=%s",
-                                       &(ketCube_common_buffer[0]));
+                                       ketCube_common_bytes2Str(&(msg->msg[1]), (msg->msgLen-1)));
         break;
     }
 
