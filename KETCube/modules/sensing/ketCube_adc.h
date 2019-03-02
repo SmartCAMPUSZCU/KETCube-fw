@@ -54,6 +54,15 @@
   * @{
   */
 
+/**
+* @brief  KETCube module configuration
+*/
+typedef struct ketCube_ADC_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+} ketCube_ADC_moduleCfg_t;
+
+extern ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg;
+
 #define KETCUBE_ADC_VDDA_VREFINT_CAL            ((uint32_t) 3000)       ///< Internal voltage reference was calibrated at 3V
 #define KETCUBE_ADC_VREFINT_CAL_ADDR            ((uint16_t*) ((uint32_t) 0x1FF80078))   ///< Internal voltage reference calibration value VREFINT_CAL
 #define KETCUBE_ADC_MAX                         ((uint16_t) 4095)       ///< ADC Resolution

@@ -58,15 +58,23 @@
   * @{
   */
 
+/**
+* @brief  KETCube module configuration
+*/
+typedef struct ketCube_asyncTx_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+} ketCube_asyncTx_moduleCfg_t;
+
+extern ketCube_asyncTx_moduleCfg_t ketCube_asyncTx_moduleCfg;
+
 /** @defgroup KETCube_AsyncTx_fn Public Functions
 * @{
 */
 
-extern ketCube_cfg_ModError_t ketCube_AsyncTx_Init(ketCube_InterModMsg_t
+extern ketCube_cfg_ModError_t ketCube_asyncTx_Init(ketCube_InterModMsg_t
                                                    *** msg);
 
-extern ketCube_cfg_ModError_t
-ketCube_AsyncTx_ProcessData(ketCube_InterModMsg_t * msg);
+extern ketCube_cfg_ModError_t ketCube_asyncTx_ProcessData(ketCube_InterModMsg_t * msg);
 
 
 /**

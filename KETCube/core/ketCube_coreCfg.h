@@ -55,24 +55,23 @@
   */
 
 #define KETCUBE_CORECFG_SKIP_SLEEP_PERIOD          FALSE        ///< Skip sleep period (perform sensing at maximum speed)
-#define KETCUBE_CORECFG_MIN_BASEPERIOD             5000 ///< Minimal period for periodic events
-#define KETCUBE_CORECFG_MIN_STARTDELAY             1000 ///< Minimal delay - the first periodic action is run at this time after power-on
+#define KETCUBE_CORECFG_MIN_BASEPERIOD             500          ///< Minimal period for periodic events
+#define KETCUBE_CORECFG_MIN_STARTDELAY             1000         ///< Minimal delay - the first periodic action is run at this time after power-on
 #define KETCUBE_CORECFG_DEFAULT_SEVERITY           KETCUBE_CFG_SEVERITY_ERROR   ///< Default KETCube core severity
 
 /**
-* @brief  Core CFG data relative addr.
+* @brief  KETCube core configuration
 */
-typedef enum {
-    KETCUBE_CORECFG_ADR_BASEPERIOD = 0,        /*<! Base period configuration address (in ms) */
-    KETCUBE_CORECFG_ADR_STARTDELAY = 4,        /*<! Start delay configuration address (in ms) */
-    KETCUBE_CORECFG_ADR_SEVERITY = 8,          /*<! Core severity, see @ketCube_severity_t */
-    KETCUBE_CORECFG_ADR_DRIVER_SEVERITY = 9,   /*<! Core severity, see @ketCube_severity_t */
-} ketCube_coreCfg_Addr_t;
+typedef struct ketCube_coreCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg; ///< KETCube core cfg byte
+    
+    uint32_t basePeriod;                 ///< This period is used by KETCube core to run periodic events
+    uint32_t startDelay;                 ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
+    ketCube_severity_t severity;         ///< Core messages severity
+    ketCube_severity_t driverSeverity;   ///< Driver(s) messages severity
+} ketCube_coreCfg_t;
 
-extern uint32_t ketCube_coreCfg_BasePeriod;     ///< This period is used by KETCube core to run periodic events
-extern uint32_t ketCube_coreCfg_StartDelay;     ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
-extern ketCube_severity_t ketCube_coreCfg_severity;     ///< Core messages severity
-extern ketCube_severity_t ketCube_coreCfg_driverSeverity;     ///< Driver(s) messages severity
+extern ketCube_coreCfg_t ketCube_coreCfg;
 
 /** @defgroup KETCube_coreCfg_fn Public Functions
 * @{

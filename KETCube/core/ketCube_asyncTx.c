@@ -54,13 +54,15 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
 
+ketCube_asyncTx_moduleCfg_t ketCube_asyncTx_moduleCfg;   /*<! Module configuration storage */
+
 /**
   * @brief Initialize AsyncTx module
   *
   * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
-ketCube_cfg_ModError_t ketCube_AsyncTx_Init(ketCube_InterModMsg_t *** msg)
+ketCube_cfg_ModError_t ketCube_asyncTx_Init(ketCube_InterModMsg_t *** msg)
 {
     return KETCUBE_CFG_MODULE_OK;
 }
@@ -71,7 +73,7 @@ ketCube_cfg_ModError_t ketCube_AsyncTx_Init(ketCube_InterModMsg_t *** msg)
   * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
-ketCube_cfg_ModError_t ketCube_AsyncTx_ProcessData(ketCube_InterModMsg_t
+ketCube_cfg_ModError_t ketCube_asyncTx_ProcessData(ketCube_InterModMsg_t
                                                    * msg)
 {
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ASYNCTX,
@@ -80,7 +82,7 @@ ketCube_cfg_ModError_t ketCube_AsyncTx_ProcessData(ketCube_InterModMsg_t
 
 
 #ifdef KETCUBE_CFG_INC_MOD_LORA
-    if ((ketCube_modules_List[KETCUBE_LISTS_MODULEID_LORA].cfgByte.
+    if ((ketCube_modules_List[KETCUBE_LISTS_MODULEID_LORA].cfgPtr->
          enable & 0x01) == TRUE) {
         ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ASYNCTX,
                                      "LoRa msg from module = %d",

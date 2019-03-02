@@ -57,8 +57,8 @@
 static TimerEvent_t KETCube_PeriodTimer;
 
 
-static bool KETCube_PeriodTimerElapsed = FALSE;
-
+volatile static bool KETCube_PeriodTimerElapsed = FALSE;
+volatile static bool KETCube_Initialized = FALSE;
 
 bool KETCube_wasResetPOR;
 void KETCube_getResetFlags(void)
@@ -80,7 +80,7 @@ static void KETCube_PeriodElapsed(void)
 
     KETCube_PeriodTimerElapsed = TRUE;
 
-    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg_BasePeriod);
+    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg.basePeriod);
 
     TimerStart(&KETCube_PeriodTimer);
 }
@@ -92,6 +92,8 @@ void KETCube_ErrorHandler(void)
     KETCUBE_TERMINAL_PRINTF("!!! KETCube ERROR !!!");
 
     KETCUBE_TERMINAL_ENDL();
+    
+    HAL_Delay(10000);
 
     while (TRUE) {
 
@@ -157,21 +159,20 @@ int main(void)
         NVIC_SystemReset();
     }
 
-    /* Init KETCube core config */
-    if (ketCube_coreCfg_Init() != KETCUBE_CFG_OK) {
-        KETCube_ErrorHandler();
-    }
-
     /* Init KETCube modules */
     if (ketCube_modules_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();
     }
 
+    // Initialize periodic timer
+    TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
+    
+    // KETCube is initialized
+    KETCube_Initialized = TRUE;
+
     /* Configure the periodic timer */
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
-    TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
-
-    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg_StartDelay);
+    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg.startDelay);
 
     TimerStart(&KETCube_PeriodTimer);
 #endif                          /*  */

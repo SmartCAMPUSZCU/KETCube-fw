@@ -51,38 +51,6 @@
 #include "ketCube_terminal.h"
 #include "ketCube_batMeas.h"
 
-
-void ketCube_terminal_cmd_set_batMeas_bat(void)
-{
-    ketCube_terminal_saveCfgDECStr(&(commandBuffer[commandParams]),
-                                   KETCUBE_LISTS_MODULEID_BATMEAS,
-                                   (ketCube_cfg_AllocEEPROM_t)
-                                   KETCUBE_BATMEAS_CFGADR_BAT,
-                                   (ketCube_cfg_LenEEPROM_t)
-                                   KETCUBE_BATMEAS_CFGLEN_BAT);
-}
-
-
-void ketCube_terminal_cmd_show_batMeas_bat(void)
-{
-    ketCube_batMeas_battList_t selected;
-
-    ketCube_cfg_Load((uint8_t *) & selected,
-                     KETCUBE_LISTS_MODULEID_BATMEAS,
-                     (ketCube_cfg_AllocEEPROM_t)
-                     KETCUBE_BATMEAS_CFGADR_BAT,
-                     (ketCube_cfg_LenEEPROM_t) KETCUBE_BATMEAS_CFGLEN_BAT);
-
-    if (selected >= KETCUBE_BATMEAS_BATLIST_LAST) {
-        selected = KETCUBE_BATMEAS_BATLIST_CR2032;
-    }
-
-    KETCUBE_TERMINAL_PRINTF("Selected battery: %s (%s)",
-                            ketCube_batMeas_batList[selected].batName,
-                            ketCube_batMeas_batList[selected].batDescr);
-    KETCUBE_TERMINAL_ENDL();
-}
-
 void ketCube_terminal_cmd_show_batMeas_list(void)
 {
     uint8_t i;
@@ -90,6 +58,15 @@ void ketCube_terminal_cmd_show_batMeas_list(void)
     KETCUBE_TERMINAL_PRINTF("Available batteries:");
     KETCUBE_TERMINAL_ENDL();
 
+    /* TODO: reimplement this to comply with new interface; this will probably
+        need some kind of list return type, or at least list iterator (specify
+        start, length, size, step size) so it could be easily serialized into
+        UART terminal or e.g. LoRa packet. For a list iterator, we would need
+        to specify start pointer (here: ketCube_batMeas_batList), end pointer
+        (here: ketCube_batMeas_batList + KETCUBE_BATMEAS_BATLIST_LAST),
+        type (here: string) and step (here: sizeof(ketCube_batMeas_battery_t))
+    */
+    
     for (i = 0; i < KETCUBE_BATMEAS_BATLIST_LAST; i++) {
         KETCUBE_TERMINAL_PRINTF("%d)\t %s (%s)", i,
                                 ketCube_batMeas_batList[i].batName,
@@ -97,5 +74,46 @@ void ketCube_terminal_cmd_show_batMeas_list(void)
         KETCUBE_TERMINAL_ENDL();
     }
 }
+
+/* Terminal command definitions */
+    
+
+ketCube_terminal_cmd_t ketCube_batMeas_commands[] = {
+    {
+        .cmd   = "list",
+        .descr = "Show supported batteries",
+        .flags = {
+            .isLocal   = TRUE,
+            .isShowCmd = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_NONE,
+        .settingsPtr.callback = &ketCube_terminal_cmd_show_batMeas_list,
+    },
+    
+    {
+        .cmd   = "bat",
+        .descr = "Select battery (battery #)",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_MODULEID_BATMEAS,
+            .offset   = offsetof(ketCube_batMeas_moduleCfg_t, selectedBattery),
+            .size     = sizeof(ketCube_batMeas_battList_t)
+        }
+    },
+    
+    DEF_TERMINATE()
+    
+};
 
 #endif                          /* __KETCUBE_BATMEAS_CMD_H */

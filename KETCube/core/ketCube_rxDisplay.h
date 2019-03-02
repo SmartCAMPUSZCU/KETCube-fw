@@ -57,6 +57,15 @@
   */
 
 /**
+* @brief  KETCube module configuration
+*/
+typedef struct ketCube_rxDisplay_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+} ketCube_rxDisplay_moduleCfg_t;
+
+extern ketCube_rxDisplay_moduleCfg_t ketCube_rxDisplay_moduleCfg;
+
+/**
 * @brief Rx data type
 */
 typedef enum {

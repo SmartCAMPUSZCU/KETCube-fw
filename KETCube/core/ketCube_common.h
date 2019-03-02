@@ -70,8 +70,12 @@
   FALSE      = 0
 } bool;*/
 
-#define KETCUBE_COMMON_BUFFER_LEN    50
+typedef uint8_t byte;
+
+#define KETCUBE_COMMON_BUFFER_LEN    256
 extern char ketCube_common_buffer[];    /*!< Shared buffer for common usage anywhere. */
+
+char * ketCube_common_bytes2Str(uint8_t * byteArr, uint8_t len);
 
 /**
   * @brief Convert a single Byte to HEX string (two bytes)

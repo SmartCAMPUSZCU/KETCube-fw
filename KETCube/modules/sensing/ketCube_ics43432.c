@@ -50,6 +50,8 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_ICS43432
 
+ketCube_ics43432_moduleCfg_t ketCube_ics43432_moduleCfg; /*<! Module configuration storage */
+
 static volatile uint32_t noiseCnt = 0;
 
 ketCube_cfg_ModError_t ketCube_ics43432_Init(ketCube_InterModMsg_t *** msg)

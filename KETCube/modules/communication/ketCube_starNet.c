@@ -60,6 +60,8 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_STARNET
 
+ketCube_starNet_moduleCfg_t ketCube_starNet_moduleCfg;   /*<! Module configuration storage */
+
 // Node Type
 ketCube_starNet_NodeType_t nodeType;
 
@@ -169,6 +171,7 @@ ketCube_starNet_ConcentratorInit(ketCube_InterModMsg_t *** msg)
 {
     nodeType = KETCUBE_STARNET_CONCENTRATOR;
 
+#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
     ketCube_starNet_rssi.msg = &(ketCube_starNet_rssiMsgBuff[0]);
     ketCube_starNet_rssi.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_RSSI;
     ketCube_starNet_rssi.msgLen = 0;
@@ -188,7 +191,10 @@ ketCube_starNet_ConcentratorInit(ketCube_InterModMsg_t *** msg)
     modMsgQueue[1] = &ketCube_starNet_snr;
     modMsgQueue[2] = &ketCube_starNet_rxData;
     modMsgQueue[3] = NULL;
-
+#else
+    modMsgQueue[0] = NULL;
+#endif
+    
     *msg = &(modMsgQueue[0]);
 
     return ketCube_starNet_Init(KETCUBE_STARNET_CONCENTRATOR);
@@ -236,21 +242,14 @@ ketCube_cfg_ModError_t ketCube_starNet_receiveData(void)
 ketCube_cfg_ModError_t ketCube_starNet_sendData(uint8_t * buffer,
                                                 uint8_t * len)
 {
-    uint8_t i;
-
     if (txDone != TRUE) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
     txDone = FALSE;
 
-    for (i = 0; (i < *len) && ((3 * (i + 1)) < KETCUBE_COMMON_BUFFER_LEN);
-         i++) {
-        sprintf(&(ketCube_common_buffer[3 * i]), "%02X-", buffer[i]);
-    }
-    ketCube_common_buffer[(3 * i) - 1] = 0x00;  // remove last -
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE,
                                  "Tx DATA=%s",
-                                 &(ketCube_common_buffer[0]));
+                                 ketCube_common_bytes2Str(&(buffer[0]), *len));
 
     Radio.Send(buffer, *len);
 
@@ -285,17 +284,12 @@ static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
 
     ketCube_starNet_rssi.msg[1] = rssi;
     ketCube_starNet_snr.msg[1] = snr;
-
-    for (i = 0; (i < size) && ((3 * (i + 1)) < KETCUBE_COMMON_BUFFER_LEN);
-         i++) {
-        sprintf(&(ketCube_common_buffer[3 * i]), "%02X-", payload[i]);
-    }
-    ketCube_common_buffer[(3 * i) - 1] = 0x00;  // remove last -
-
+    
     ketCube_terminal_InfoPrintln
         (KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,
-         "Rx :: RSSI=%d; SNR=%d;DATA=%s", (int) rssi, (int) snr,
-         &(ketCube_common_buffer[0]));
+         "Rx :: RSSI=%d; SNR=%d;DATA=%s", 
+         (int) rssi, (int) snr,
+         ketCube_common_bytes2Str(&(payload[0]), size));
 
     for (i = 0;
          (i < size) && ((i + 1) < KETCUBE_STARNET_RX_DATA_BUFFER_LEN);

@@ -42,10 +42,13 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
  */
 
+#include "ketCube_cfg.h"
+
+#ifdef KETCUBE_CFG_INC_DRV_I2S
+
 #include "stm32l0xx_hal.h"
 #include "stm32l0xx_hal_i2s.h"
 
-#include "ketCube_cfg.h"
 #include "ketCube_i2s.h"
 
 // local fn declarations
@@ -117,3 +120,6 @@ ketCube_cfg_ModError_t ketCube_I2S_Init(void)
         return KETCUBE_CFG_MODULE_ERROR;
     }
 }
+
+
+#endif // KETCUBE_CFG_INC_DRV_I2S

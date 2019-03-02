@@ -58,6 +58,8 @@
 #define KETCUBE_BATMEAS_VREFINT_CAL                 ((uint16_t*) ((uint32_t) 0x1FF80078))
 
 
+ketCube_batMeas_moduleCfg_t ketCube_batMeas_moduleCfg; /*<! Module configuration storage */
+
 /**
   *
   *  @brief List of supported batteries
@@ -75,8 +77,6 @@ ketCube_batMeas_battery_t ketCube_batMeas_batList[] = {
      2900}
 };
 
-uint8_t ketCube_batMeas_selectedBattery = KETCUBE_BATMEAS_BATLIST_CR2032;
-
 /**
  * @brief  Configures S0 Counter(s)
  * 
@@ -85,17 +85,14 @@ uint8_t ketCube_batMeas_selectedBattery = KETCUBE_BATMEAS_BATLIST_CR2032;
  */
 ketCube_cfg_ModError_t ketCube_batMeas_Init(ketCube_InterModMsg_t *** msg)
 {
-    // load CFG
-    ketCube_cfg_Load((uint8_t *) & ketCube_batMeas_selectedBattery,
-                     (ketCube_cfg_moduleIDs_t)
-                     KETCUBE_LISTS_MODULEID_BATMEAS,
-                     (ketCube_cfg_AllocEEPROM_t)
-                     KETCUBE_BATMEAS_CFGADR_BAT,
-                     (ketCube_cfg_LenEEPROM_t) KETCUBE_BATMEAS_CFGLEN_BAT);
-
-    if (ketCube_batMeas_selectedBattery >= KETCUBE_BATMEAS_BATLIST_LAST) {
-        ketCube_batMeas_selectedBattery = KETCUBE_BATMEAS_BATLIST_CR2032;
+    // check if selected battery is legal
+    if (ketCube_batMeas_moduleCfg.selectedBattery >= KETCUBE_BATMEAS_BATLIST_LAST) {
+        ketCube_batMeas_moduleCfg.selectedBattery = KETCUBE_BATMEAS_BATLIST_CR2032;
     }
+    
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "Selected battery is: %s (%s)",
+                                 ketCube_batMeas_batList[ketCube_batMeas_moduleCfg.selectedBattery].batName,
+                                 ketCube_batMeas_batList[ketCube_batMeas_moduleCfg.selectedBattery].batDescr);
 
     return KETCUBE_CFG_MODULE_OK;
 }
@@ -127,10 +124,10 @@ uint8_t ketcube_batLevel_GetBattery(void)
 
     uint16_t batMax =
         ketCube_batMeas_batList
-        [ketCube_batMeas_selectedBattery].batCharged;
+        [ketCube_batMeas_moduleCfg.selectedBattery].batCharged;
     uint16_t batMin =
         ketCube_batMeas_batList
-        [ketCube_batMeas_selectedBattery].batDischarged;
+        [ketCube_batMeas_moduleCfg.selectedBattery].batDischarged;
 
     measuredLevel = HW_AdcReadChannel(ADC_CHANNEL_VREFINT);
 

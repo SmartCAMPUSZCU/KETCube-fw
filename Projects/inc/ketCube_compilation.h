@@ -63,22 +63,23 @@
   * @{
   */
 
-#define KETCUBE_CFG_INC_MOD_LORA        //< Include LoRa module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_DEBUGDISPLAY        //< Include SerialDisplay module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_HDC1080     //< Include HDC1080 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_BATMEAS     //< Include batMeas module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ADC //< Include batMeas module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_STARNET     //< Include StarNet module(s); undef to disable module
-#define KETCUBE_CFG_INC_MOD_FDC2214     //< Include FDC2214 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_RXDISPLAY   //< Include RxDisplay module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ASYNCTX     //< Include AsyncTx module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_TXDISPLAY   //< Include TxDisplay module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_BMEX80      //< Include BMEx80 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_LIS2HH12    //< Include LIS2HH12 module; undef to disable module
-#define KETCUBE_CFG_INC_MOD_ICS43432    //< Include ICS43432 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_LORA        ///< Include LoRa module; undef to disable module
+//#define KETCUBE_CFG_INC_MOD_DEBUGDISPLAY        ///< Include SerialDisplay module; undef to disable module; this module is deprecated and will be (completely) removed in the next release
+#define KETCUBE_CFG_INC_MOD_HDC1080     ///< Include HDC1080 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_BATMEAS     ///< Include batMeas module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ADC         ///< Include ADC module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_STARNET     ///< Include StarNet module(s); undef to disable module
+#define KETCUBE_CFG_INC_MOD_FDC2214     ///< Include FDC2214 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_RXDISPLAY   ///< Include RxDisplay module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ASYNCTX     ///< Include AsyncTx module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_TXDISPLAY   ///< Include TxDisplay module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_BMEX80      ///< Include BMEx80 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_LIS2HH12    ///< Include LIS2HH12 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_ICS43432    ///< Include ICS43432 module; undef to disable module
 
-#define KETCUBE_CFG_INC_DRV_I2C //< Include KET's I2C driver; undef to disable driver
-#define KETCUBE_CFG_INC_DRV_MODBUS      //< Include KET's modBUS driver; undef to disable driver
+#define KETCUBE_CFG_INC_DRV_I2C         ///< Include KET's I2C driver; undef to disable driver
+#define KETCUBE_CFG_INC_DRV_I2S         ///< Include KET's I2S driver; undef to disable driver
+#define KETCUBE_CFG_INC_DRV_MODBUS      ///< Include KET's modBUS driver; undef to disable driver
 
 /**
 * @}
@@ -89,60 +90,65 @@
 * @brief  List of module Indeces.
 */
 typedef enum {
+    KETCUBE_LISTS_MODULEID_FIRST = 1,             /*<! First module index - do not modify! */
+    KETCUBE_LISTS_ID_CORE = 0,                    /*<! KETCube Core ID - do not modify! */
+    
+    /* First module has ID 1 */
+    
 #ifdef KETCUBE_CFG_INC_MOD_LORA
-    KETCUBE_LISTS_MODULEID_LORA,        /*<! Module LoRa */
+    KETCUBE_LISTS_MODULEID_LORA,                  /*<! Module LoRa */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
-    KETCUBE_LISTS_MODULEID_DEBUGDISPLAY,        /*<! Module DebugDisplay */
+    KETCUBE_LISTS_MODULEID_DEBUGDISPLAY,          /*<! Module DebugDisplay */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_HDC1080
-    KETCUBE_LISTS_MODULEID_HDC1080,     /*<! Module HDC1080 */
+    KETCUBE_LISTS_MODULEID_HDC1080,               /*<! Module HDC1080 */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
-    KETCUBE_LISTS_MODULEID_BATMEAS,     /*<! Module MeasBattery */
+    KETCUBE_LISTS_MODULEID_BATMEAS,               /*<! Module MeasBattery */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_ADC
-    KETCUBE_LISTS_MODULEID_ADC, /*<! Module ADC */
+    KETCUBE_LISTS_MODULEID_ADC,                   /*<! Module ADC */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_STARNET
-    KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,        /*<! Module starNet */
-    KETCUBE_LISTS_MODULEID_STARNET_NODE,        /*<! Module starNet */
+    KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,  /*<! Module starNet */
+    KETCUBE_LISTS_MODULEID_STARNET_NODE,          /*<! Module starNet */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_FDC2214
-    KETCUBE_LISTS_MODULEID_FDC2214,     /*<! Module FDC2214 */
+    KETCUBE_LISTS_MODULEID_FDC2214,               /*<! Module FDC2214 */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
-    KETCUBE_LISTS_MODULEID_RXDISPLAY,   /*<! Module RxDisplay */
+    KETCUBE_LISTS_MODULEID_RXDISPLAY,             /*<! Module RxDisplay */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
-    KETCUBE_LISTS_MODULEID_ASYNCTX,     /*<! Module AsyncTx */
+    KETCUBE_LISTS_MODULEID_ASYNCTX,               /*<! Module AsyncTx */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
-    KETCUBE_LISTS_MODULEID_TXDISPLAY,   /*<! Module TxDisplay */
+    KETCUBE_LISTS_MODULEID_TXDISPLAY,             /*<! Module TxDisplay */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_BMEX80
-    KETCUBE_LISTS_MODULEID_BMEX80,      /*<! Module BMEx80 */
+    KETCUBE_LISTS_MODULEID_BMEX80,                /*<! Module BMEx80 */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_LIS2HH12
-    KETCUBE_LISTS_MODULEID_LIS2HH12,    /*<! Module LIS2HH12 */
+    KETCUBE_LISTS_MODULEID_LIS2HH12,              /*<! Module LIS2HH12 */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_ICS43432
-    KETCUBE_LISTS_MODULEID_ICS43432,    /*<! Module ICS43432 */
+    KETCUBE_LISTS_MODULEID_ICS43432,              /*<! Module ICS43432 */
 #endif
 
-    KETCUBE_LISTS_MODULEID_LAST /*<! Last module index - do not modify! */
+    KETCUBE_LISTS_MODULEID_LAST                   /*<! Last module index - do not modify! */
 } ketCube_cfg_moduleIDs_t;
 
 

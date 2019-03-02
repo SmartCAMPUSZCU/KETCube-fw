@@ -50,10 +50,12 @@
 #include "ketCube_i2c.h"
 #include "ketCube_bmeX80.h"
 
+#ifdef KETCUBE_CFG_INC_MOD_BMEX80
+
+ketCube_bmeX80_moduleCfg_t ketCube_bmeX80_moduleCfg; /*<! Module configuration storage */
+
 extern void bench_StoreData_BME280(int16_t temperature, uint16_t humidity,
                                    uint16_t pressure);
-
-#ifdef KETCUBE_CFG_INC_MOD_BMEX80
 
 static ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t *
                                              calibration);
@@ -134,7 +136,7 @@ ketCube_cfg_ModError_t ketCube_bmeX80_UnInit(void)
  */
 ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t * calibration)
 {
-#ifdef KETCUBE_BMEX80_SENSOR_TYPE_BME280
+#if defined(KETCUBE_BMEX80_SENSOR_TYPE_BME280)
     //Read calibration data part 1 from chip
     uint8_t coeff_array[26] = { 0 };
     if (ketCube_I2C_ReadData(KETCUBE_BMEX80_I2C_ADDRESS,
@@ -197,9 +199,10 @@ ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t * calibration)
     calibration->dig_H6 = (int8_t) coeff_array[6];
 
     return KETCUBE_CFG_MODULE_OK;
-#endif                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME280 */
 
-#ifdef KETCUBE_BMEX80_SENSOR_TYPE_BME680
+    /* KETCUBE_BMEX80_SENSOR_TYPE_BME280 */
+#elif defined(KETCUBE_BMEX80_SENSOR_TYPE_BME680)
+
     //Read calibration data from chip
     uint8_t coeff_array[41] = { 0 };
     if (ketCube_I2C_ReadData(KETCUBE_BMEX80_I2C_ADDRESS,
@@ -276,7 +279,10 @@ ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t * calibration)
     calibration->par_gh3 = (int8_t) coeff_array[BME680_GH3_REG];
 
     return KETCUBE_CFG_MODULE_OK;
-#endif                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
+    /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
+#else
+    return KETCUBE_CFG_MODULE_ERROR;
+#endif
 }
 
 /**
