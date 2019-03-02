@@ -60,7 +60,7 @@
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_rxDisplay_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_rxDisplay_moduleCfg_t;
 
 extern ketCube_rxDisplay_moduleCfg_t ketCube_rxDisplay_moduleCfg;
@@ -69,18 +69,18 @@ extern ketCube_rxDisplay_moduleCfg_t ketCube_rxDisplay_moduleCfg;
 * @brief Rx data type
 */
 typedef enum {
-    KETCUBE_RXDISPLAY_DATATYPE_DATA,    /*<! Data bytes until the end of msg */
-    KETCUBE_RXDISPLAY_DATATYPE_RSSI,    /*<! RSSI - 1 byte */
-    KETCUBE_RXDISPLAY_DATATYPE_SNR,     /*<! SNR  - 1 byte */
-    KETCUBE_RXDISPLAY_DATATYPE_STRING,  /*<! Null-terminated string */
+    KETCUBE_RXDISPLAY_DATATYPE_DATA,    /*!< Data bytes until the end of msg */
+    KETCUBE_RXDISPLAY_DATATYPE_RSSI,    /*!< RSSI - 1 byte */
+    KETCUBE_RXDISPLAY_DATATYPE_SNR,     /*!< SNR  - 1 byte */
+    KETCUBE_RXDISPLAY_DATATYPE_STRING,  /*!< Null-terminated string */
 } ketCube_rxDisplay_DataType_t;
 
 /**
 * @brief  KETCube rxDisplay data structure
 */
 typedef struct ketCube_rxDisplay_Data_t {
-    uint8_t dataType;           /*<! Module index */
-    uint8_t msgLen;             /*<! Message length in bytes */
+    uint8_t dataType;           /*!< Module index */
+    uint8_t msgLen;             /*!< Message length in bytes */
 } ketCube_rxDisplay_Data_t;
 
 /** @defgroup KETCube_RxDisplay_fn Public Functions

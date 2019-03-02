@@ -57,7 +57,7 @@
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_lis2hh12_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_lis2hh12_moduleCfg_t;
 
 extern ketCube_lis2hh12_moduleCfg_t ketCube_lis2hh12_moduleCfg;

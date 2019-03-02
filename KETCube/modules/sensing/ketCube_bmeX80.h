@@ -61,7 +61,7 @@
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_bmeX80_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_bmeX80_moduleCfg_t;
 
 extern ketCube_bmeX80_moduleCfg_t ketCube_bmeX80_moduleCfg;

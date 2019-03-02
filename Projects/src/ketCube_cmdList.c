@@ -46,35 +46,19 @@
 #include "ketCube_common.h"
 #include "ketCube_cfg.h"
 
-/* define command group - parent for other commands, needs a pointer to
-   command subtree */
-#define DEF_COMMAND_GROUP(cmd, hlp, cptr) {((char*)&(cmd)),((char*)&(hlp)),\
-    {.isGroup = TRUE}, KETCUBE_TERMINAL_PARAMS_NONE,\
-    KETCUBE_TERMINAL_PARAMS_NONE,\
-    .settingsPtr.subCmdList = (ketCube_terminal_cmd_t*)cptr}
 
-/* define tree leaf - a command, with given in/out parameters and handler;
-   by default, a command does not have any flags */
-#define DEF_COMMAND(cmd, hlp, parType, outType, fnc) {((char*)&(cmd)),\
-    ((char*)&(hlp)), {.isLocal = TRUE, .isEEPROM = TRUE}, parType, outType,\
-    (void(*)(void))fnc}
-
-/* define tree leaf - a command, with given in/out parameters and handler;
-   in addition to DEF_COMMAND macro, this macro allows setting flags */
-#define DEF_COMMAND_WITH_FLAGS(cmd, hlp, flags, parType, outType, fnc) \
-    {((char*)&(cmd)), ((char*)&(hlp)), flags, parType, outType,\
-    (void(*)(void))fnc}
-    
-/* define subcommand list (tree level) terminator */
-#define DEF_TERMINATE() {((char*)NULL),((char*)NULL),\
-    {0} , KETCUBE_TERMINAL_PARAMS_NONE,\
-    KETCUBE_TERMINAL_PARAMS_NONE, (void(*)(void))NULL}
+/** 
+ * Define (sub)command list (tree level) terminator
+ * 
+ */
+#define DEF_TERMINATE() { .cmd = ((char*) NULL), \
+                          .descr = ((char*) NULL),\
+                          .settingsPtr.callback = (void(*)(void)) NULL }
 
 /* always include core configuration commands */
 #include "ketCube_core_cmd.c"
 
 /* conditionally include module configuration commands */
-
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
 #include "ketCube_batMeas_cmd.c"
 #endif
@@ -174,7 +158,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
 
 
 /**
- * @brief List of KETCube terminal commands
+ * @brief KETCube root terminal commands
  */
 ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
     {

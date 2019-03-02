@@ -54,7 +54,7 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_ADC
 
-ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg; /*<! Module configuration storage */
+ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg; /*!< Module configuration storage */
 
 /**
  * @brief  Configures ADC PIN

@@ -59,7 +59,7 @@
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_txDisplay_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_txDisplay_moduleCfg_t;
 
 extern ketCube_txDisplay_moduleCfg_t ketCube_txDisplay_moduleCfg;

@@ -45,95 +45,167 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>KETCube lora module configuration byte. Derived from.  
+<p>KETCube lora module configuration.  
  <a href="structketCube__lora__moduleCfg__t.html#details">More...</a></p>
 
 <p><code>#include &lt;<a class="el" href="ketCube__lora_8h_source.html">ketCube_lora.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
-<tr class="memitem:abb8ee08c7e54ee8b933bb3715880495d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#abb8ee08c7e54ee8b933bb3715880495d">enable</a>:1</td></tr>
-<tr class="separator:abb8ee08c7e54ee8b933bb3715880495d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abd027aca98e970fb20f4e94870b962d4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#abd027aca98e970fb20f4e94870b962d4">severity</a>:2</td></tr>
-<tr class="separator:abd027aca98e970fb20f4e94870b962d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a12259d35f155370309953db3069da518"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a12259d35f155370309953db3069da518">RFU</a>:3</td></tr>
-<tr class="separator:a12259d35f155370309953db3069da518"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5fae21c0b0e52482022948c2bf086030"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__LoRa.html#gaa91492d105976b7526cf40c2d15a3328">ketCube_lora_selConnMethod_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a5fae21c0b0e52482022948c2bf086030">connectionType</a>:1</td></tr>
-<tr class="separator:a5fae21c0b0e52482022948c2bf086030"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3500c5e889bad13076ccfbe5bfc1a47c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__LoRa.html#ga0d68ceb000388704a858e8064420d3aa">ketCube_lora_selDeveui_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a3500c5e889bad13076ccfbe5bfc1a47c">devEUIType</a>:1</td></tr>
-<tr class="separator:a3500c5e889bad13076ccfbe5bfc1a47c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af81237992e36c2c5a9f56fc1b3baf58d"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#af81237992e36c2c5a9f56fc1b3baf58d">coreCfg</a></td></tr>
+<tr class="separator:af81237992e36c2c5a9f56fc1b3baf58d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a11007d7687d3584982e6487300ddca"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__lora__cfg__t.html">ketCube_lora_cfg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a9a11007d7687d3584982e6487300ddca">cfg</a></td></tr>
+<tr class="separator:a9a11007d7687d3584982e6487300ddca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae752bcf9f70c94295032d1a867d39211"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#ae752bcf9f70c94295032d1a867d39211">devEUI</a> [<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a93db838d8133e2f24ee20f2acd7066b9">KETCUBE_LORA_CFGLEN_DEVEUI</a>]</td></tr>
+<tr class="separator:ae752bcf9f70c94295032d1a867d39211"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32a9fc13a35723240820f572395f0e87"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a32a9fc13a35723240820f572395f0e87">appEUI</a> [<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a1ea00a6a873310cbd069e391edb01982">KETCUBE_LORA_CFGLEN_APPEUI</a>]</td></tr>
+<tr class="separator:a32a9fc13a35723240820f572395f0e87"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a673011d3c683dd89be870a8f0151b512"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a673011d3c683dd89be870a8f0151b512">appKey</a> [<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a3f9c888f05b2adac7dc60d0f9bd1b0fd">KETCUBE_LORA_CFGLEN_APPKEY</a>]</td></tr>
+<tr class="separator:a673011d3c683dd89be870a8f0151b512"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:add2f8888cebdeac981d31dc738a0e2c5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#add2f8888cebdeac981d31dc738a0e2c5">netID</a> [<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a8197711b8b55f9777cbb37c23cdd4eb0">KETCUBE_LORA_CFGLEN_NETID</a>]</td></tr>
+<tr class="separator:add2f8888cebdeac981d31dc738a0e2c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a029a6abcbb2d252c518bbfcfddf9b407"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a029a6abcbb2d252c518bbfcfddf9b407">devAddr</a> [<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a21f91b7ebfbf7603447a1d68b7ab5d33">KETCUBE_LORA_CFGLEN_DEVADDR</a>]</td></tr>
+<tr class="separator:a029a6abcbb2d252c518bbfcfddf9b407"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6738a96fcc78d54a00e6f1983c4c4744"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a6738a96fcc78d54a00e6f1983c4c4744">nwkSKey</a> [<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98ae6f59a0df51a32da432a10827888dba8">KETCUBE_LORA_CFGLEN_NWKSKEY</a>]</td></tr>
+<tr class="separator:a6738a96fcc78d54a00e6f1983c4c4744"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4f3e3b6f1e9e4706847894e4955ac194"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__lora__moduleCfg__t.html#a4f3e3b6f1e9e4706847894e4955ac194">appSKey</a> [<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a5c8be83cfa9dc1951ac47d6f11782719">KETCUBE_LORA_CFGLEN_APPSKEY</a>]</td></tr>
+<tr class="separator:a4f3e3b6f1e9e4706847894e4955ac194"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>KETCube lora module configuration byte. Derived from. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structketCube__cfg__ModuleCfgByte__t.html" title="KETCube module configuration byte. ">ketCube_cfg_ModuleCfgByte_t</a> </dd></dl>
+<div class="textblock"><p>KETCube lora module configuration. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="a5fae21c0b0e52482022948c2bf086030"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5fae21c0b0e52482022948c2bf086030">&#9670;&nbsp;</a></span>connectionType</h2>
+<a id="a32a9fc13a35723240820f572395f0e87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a32a9fc13a35723240820f572395f0e87">&#9670;&nbsp;</a></span>appEUI</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__KETCube__LoRa.html#gaa91492d105976b7526cf40c2d15a3328">ketCube_lora_selConnMethod_t</a> ketCube_lora_moduleCfg_t::connectionType</td>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_lora_moduleCfg_t::appEUI[<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a1ea00a6a873310cbd069e391edb01982">KETCUBE_LORA_CFGLEN_APPEUI</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>LoRaWAN appEUI </p>
 
 </div>
 </div>
-<a id="a3500c5e889bad13076ccfbe5bfc1a47c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3500c5e889bad13076ccfbe5bfc1a47c">&#9670;&nbsp;</a></span>devEUIType</h2>
+<a id="a673011d3c683dd89be870a8f0151b512"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a673011d3c683dd89be870a8f0151b512">&#9670;&nbsp;</a></span>appKey</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__KETCube__LoRa.html#ga0d68ceb000388704a858e8064420d3aa">ketCube_lora_selDeveui_t</a> ketCube_lora_moduleCfg_t::devEUIType</td>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_lora_moduleCfg_t::appKey[<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a3f9c888f05b2adac7dc60d0f9bd1b0fd">KETCUBE_LORA_CFGLEN_APPKEY</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>LoRaWAN appKey </p>
 
 </div>
 </div>
-<a id="abb8ee08c7e54ee8b933bb3715880495d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb8ee08c7e54ee8b933bb3715880495d">&#9670;&nbsp;</a></span>enable</h2>
+<a id="a4f3e3b6f1e9e4706847894e4955ac194"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4f3e3b6f1e9e4706847894e4955ac194">&#9670;&nbsp;</a></span>appSKey</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool ketCube_lora_moduleCfg_t::enable</td>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_lora_moduleCfg_t::appSKey[<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a5c8be83cfa9dc1951ac47d6f11782719">KETCUBE_LORA_CFGLEN_APPSKEY</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>LoRaWAN application sesion key </p>
 
 </div>
 </div>
-<a id="a12259d35f155370309953db3069da518"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a12259d35f155370309953db3069da518">&#9670;&nbsp;</a></span>RFU</h2>
+<a id="a9a11007d7687d3584982e6487300ddca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a11007d7687d3584982e6487300ddca">&#9670;&nbsp;</a></span>cfg</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t ketCube_lora_moduleCfg_t::RFU</td>
+          <td class="memname"><a class="el" href="structketCube__lora__cfg__t.html">ketCube_lora_cfg_t</a> ketCube_lora_moduleCfg_t::cfg</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>bitwise settings </p>
 
 </div>
 </div>
-<a id="abd027aca98e970fb20f4e94870b962d4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abd027aca98e970fb20f4e94870b962d4">&#9670;&nbsp;</a></span>severity</h2>
+<a id="af81237992e36c2c5a9f56fc1b3baf58d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af81237992e36c2c5a9f56fc1b3baf58d">&#9670;&nbsp;</a></span>coreCfg</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a> ketCube_lora_moduleCfg_t::severity</td>
+          <td class="memname"><a class="el" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a> ketCube_lora_moduleCfg_t::coreCfg</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>KETCube core cfg byte </p>
+
+</div>
+</div>
+<a id="a029a6abcbb2d252c518bbfcfddf9b407"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a029a6abcbb2d252c518bbfcfddf9b407">&#9670;&nbsp;</a></span>devAddr</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_lora_moduleCfg_t::devAddr[<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a21f91b7ebfbf7603447a1d68b7ab5d33">KETCUBE_LORA_CFGLEN_DEVADDR</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>LoRaWAN device address </p>
+
+</div>
+</div>
+<a id="ae752bcf9f70c94295032d1a867d39211"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae752bcf9f70c94295032d1a867d39211">&#9670;&nbsp;</a></span>devEUI</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_lora_moduleCfg_t::devEUI[<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a93db838d8133e2f24ee20f2acd7066b9">KETCUBE_LORA_CFGLEN_DEVEUI</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>LoRaWAN devEUI </p>
+
+</div>
+</div>
+<a id="add2f8888cebdeac981d31dc738a0e2c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#add2f8888cebdeac981d31dc738a0e2c5">&#9670;&nbsp;</a></span>netID</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_lora_moduleCfg_t::netID[<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98a8197711b8b55f9777cbb37c23cdd4eb0">KETCUBE_LORA_CFGLEN_NETID</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>LoRaWAN network ID </p>
+
+</div>
+</div>
+<a id="a6738a96fcc78d54a00e6f1983c4c4744"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6738a96fcc78d54a00e6f1983c4c4744">&#9670;&nbsp;</a></span>nwkSKey</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_lora_moduleCfg_t::nwkSKey[<a class="el" href="group__KETCube__LoRa.html#ggaa803b1e1bcabb00a3625b6f2a9ea2f98ae6f59a0df51a32da432a10827888dba8">KETCUBE_LORA_CFGLEN_NWKSKEY</a>]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>LoRaWAN network sesion key </p>
 
 </div>
 </div>

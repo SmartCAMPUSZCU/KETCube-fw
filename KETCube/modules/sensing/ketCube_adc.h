@@ -58,7 +58,7 @@
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_ADC_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_ADC_moduleCfg_t;
 
 extern ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg;

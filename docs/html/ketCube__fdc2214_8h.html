@@ -43,9 +43,12 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ketCube_fdc2214.h File Reference</div>  </div>
 </div><!--header-->
@@ -60,6 +63,12 @@ $(function() {
 </div>
 <p><a href="ketCube__fdc2214_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__fdc2214__moduleCfg__t.html">ketCube_fdc2214_moduleCfg_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube module configuration.  <a href="structketCube__fdc2214__moduleCfg__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:gab3202df3571d5b502d13d644a32ab97c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__Registers.html#gab3202df3571d5b502d13d644a32ab97c">KETCUBE_FDC2214_DATA_CH0</a>&#160;&#160;&#160;0x00</td></tr>
@@ -182,7 +191,7 @@ Macros</h2></td></tr>
 <tr class="memitem:ga3857965d25a03ca5d5ff4114cb326516"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga3857965d25a03ca5d5ff4114cb326516">FDC2214_LED_INDICATION</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__common.html#gaa8cecfc5c5c054d2875c03e77b7be15d">TRUE</a></td></tr>
 <tr class="memdesc:ga3857965d25a03ca5d5ff4114cb326516"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable LED indication.  <a href="group__KETCUBE__FDC2214__settingsn.html#ga3857965d25a03ca5d5ff4114cb326516">More...</a><br /></td></tr>
 <tr class="separator:ga3857965d25a03ca5d5ff4114cb326516"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga5394de652735393a7b4077ad2c198161"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga5394de652735393a7b4077ad2c198161">FDC2214_LED_THRESHOLD_LOW</a>&#160;&#160;&#160;1000</td></tr>
+<tr class="memitem:ga5394de652735393a7b4077ad2c198161"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga5394de652735393a7b4077ad2c198161">FDC2214_LED_THRESHOLD_LOW</a>&#160;&#160;&#160;10000</td></tr>
 <tr class="memdesc:ga5394de652735393a7b4077ad2c198161"><td class="mdescLeft">&#160;</td><td class="mdescRight">FDC2214 raw value difference used to indicate significant capacity difference by using LED.  <a href="group__KETCUBE__FDC2214__settingsn.html#ga5394de652735393a7b4077ad2c198161">More...</a><br /></td></tr>
 <tr class="separator:ga5394de652735393a7b4077ad2c198161"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga244b7e7412ed78d47e353c30bc7b49d0"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga244b7e7412ed78d47e353c30bc7b49d0">FDC2214_LED_THRESHOLD_HIGH</a>&#160;&#160;&#160;10000</td></tr>
@@ -191,6 +200,12 @@ Macros</h2></td></tr>
 <tr class="memitem:ga97f988a971b943846a12f977b3340e13"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga97f988a971b943846a12f977b3340e13">FDC2214_LED_CHAN</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__FDC2214.html#gga211d22963fb13736752349030dbe88d7a6105b7d8948c72035ae10cb850e577f7">FDC2214_CH0</a></td></tr>
 <tr class="memdesc:ga97f988a971b943846a12f977b3340e13"><td class="mdescLeft">&#160;</td><td class="mdescRight">FDC2214 channel used for LED indication,.  <a href="group__KETCUBE__FDC2214__settingsn.html#ga97f988a971b943846a12f977b3340e13">More...</a><br /></td></tr>
 <tr class="separator:ga97f988a971b943846a12f977b3340e13"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga8845a6f12db432e6f1e05d1ca34f3fa7"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga8845a6f12db432e6f1e05d1ca34f3fa7">FDC2214_SAMPLE_CNT</a>&#160;&#160;&#160;10</td></tr>
+<tr class="memdesc:ga8845a6f12db432e6f1e05d1ca34f3fa7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of samples used to get mean value.  <a href="group__KETCUBE__FDC2214__settingsn.html#ga8845a6f12db432e6f1e05d1ca34f3fa7">More...</a><br /></td></tr>
+<tr class="separator:ga8845a6f12db432e6f1e05d1ca34f3fa7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga543b66c2b9daacc2effce0530d3d904c"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga543b66c2b9daacc2effce0530d3d904c">FDC2214_LED_HYST</a>&#160;&#160;&#160;3</td></tr>
+<tr class="memdesc:ga543b66c2b9daacc2effce0530d3d904c"><td class="mdescLeft">&#160;</td><td class="mdescRight">LED hysteresis.  <a href="group__KETCUBE__FDC2214__settingsn.html#ga543b66c2b9daacc2effce0530d3d904c">More...</a><br /></td></tr>
+<tr class="separator:ga543b66c2b9daacc2effce0530d3d904c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga69045fcbe19a93263be90fdaaad370e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga69045fcbe19a93263be90fdaaad370e1">FDC2214_RCOUNT</a>&#160;&#160;&#160;0xFFFF</td></tr>
 <tr class="separator:ga69045fcbe19a93263be90fdaaad370e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad26f915eb0ad267eb229761a2e5a93dc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#gad26f915eb0ad267eb229761a2e5a93dc">FDC2214_SETTLECOUNT</a>&#160;&#160;&#160;0x0400</td></tr>
@@ -205,6 +220,12 @@ Macros</h2></td></tr>
 <tr class="memitem:ga2d2296580a1a5e629cbbd8bb78e6a439"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__settingsn.html#ga2d2296580a1a5e629cbbd8bb78e6a439">FDC2214_SENSTYPE</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__FDC2214.html#gga3c65194d17b5b552f5935ff71cc9726bad820c5f62a237efca9fb6dd829676f82">FDC2214_SENSTYPE_SINGLE_ENDED</a></td></tr>
 <tr class="memdesc:ga2d2296580a1a5e629cbbd8bb78e6a439"><td class="mdescLeft">&#160;</td><td class="mdescRight">Selected sensor type,.  <a href="group__KETCUBE__FDC2214__settingsn.html#ga2d2296580a1a5e629cbbd8bb78e6a439">More...</a><br /></td></tr>
 <tr class="separator:ga2d2296580a1a5e629cbbd8bb78e6a439"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gad0c387e963f31ebef0a89057df0bca65"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structketCube__fdc2214__moduleCfg__t.html">ketCube_fdc2214_moduleCfg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__FDC2214.html#gad0c387e963f31ebef0a89057df0bca65">ketCube_fdc2214_moduleCfg_t</a></td></tr>
+<tr class="memdesc:gad0c387e963f31ebef0a89057df0bca65"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube module configuration.  <a href="group__KETCube__FDC2214.html#gad0c387e963f31ebef0a89057df0bca65">More...</a><br /></td></tr>
+<tr class="separator:gad0c387e963f31ebef0a89057df0bca65"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -255,6 +276,11 @@ Functions</h2></td></tr>
 <tr class="memitem:gaa0b375ba03ca081fa969fd051f5c2157"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCUBE__FDC2214__fn.html#gaa0b375ba03ca081fa969fd051f5c2157">ketCube_fdc2214_ReadData</a> (uint8_t *buffer, uint8_t *len)</td></tr>
 <tr class="memdesc:gaa0b375ba03ca081fa969fd051f5c2157"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read data from FDC2214 sensor.  <a href="group__KETCUBE__FDC2214__fn.html#gaa0b375ba03ca081fa969fd051f5c2157">More...</a><br /></td></tr>
 <tr class="separator:gaa0b375ba03ca081fa969fd051f5c2157"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:gab4095678dd0e1d57719c1f2812e1e081"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__fdc2214__moduleCfg__t.html">ketCube_fdc2214_moduleCfg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__FDC2214.html#gab4095678dd0e1d57719c1f2812e1e081">ketCube_fdc2214_moduleCfg</a></td></tr>
+<tr class="separator:gab4095678dd0e1d57719c1f2812e1e081"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains definitions for the FDC2214 driver. </p>

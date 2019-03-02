@@ -62,7 +62,7 @@
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_asyncTx_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_asyncTx_moduleCfg_t;
 
 extern ketCube_asyncTx_moduleCfg_t ketCube_asyncTx_moduleCfg;

@@ -50,7 +50,7 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_LIS2HH12
 
-ketCube_lis2hh12_moduleCfg_t ketCube_lis2hh12_moduleCfg;    /*<! Module configuration storage */
+ketCube_lis2hh12_moduleCfg_t ketCube_lis2hh12_moduleCfg;    /*!< Module configuration storage */
 
 /**
  * @brief Initialize the LIS2HH12 sensor

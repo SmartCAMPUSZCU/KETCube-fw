@@ -59,13 +59,14 @@ $(function() {
 <code>#include &lt;stdlib.h&gt;</code><br />
 <code>#include &quot;utilities.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__terminal_8h_source.html">ketCube_terminal.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ketCube__mainBoard_8h_source.html">ketCube_mainBoard.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__common_8h_source.html">ketCube_common.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__cfg_8h_source.html">ketCube_cfg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__coreCfg_8h_source.html">ketCube_coreCfg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__eeprom_8h_source.html">ketCube_eeprom.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__modules_8h_source.html">ketCube_modules.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__uart_8h_source.html">ketCube_uart.h</a>&quot;</code><br />
-<code>#include &quot;../../Projects/src/ketCube_cmdList.c&quot;</code><br />
+<code>#include &quot;<a class="el" href="ketCube__cmdList_8c.html">../../Projects/src/ketCube_cmdList.c</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
@@ -77,6 +78,10 @@ Macros</h2></td></tr>
 <tr class="separator:af9713c5de9c9e7e1891005a80836b25c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abfedc324fff3efaf1d5e162f122659bd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#abfedc324fff3efaf1d5e162f122659bd">KETCUBE_TERMINAL_USART_CHANNEL</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__UART.html#gga5c5e7338ed01aac9bc5f9795a1b89f30a2e5abe4b68eb508c700cc9f9900da5b7">KETCUBE_UART_CHANNEL_1</a></td></tr>
 <tr class="separator:abfedc324fff3efaf1d5e162f122659bd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe875034cbb42dd51ee33421e285eb14"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#afe875034cbb42dd51ee33421e285eb14">KETCUBE_TERMINAL_USART_TX_AF</a>&#160;&#160;&#160;GPIO_AF4_USART1</td></tr>
+<tr class="separator:afe875034cbb42dd51ee33421e285eb14"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab677b3db6d662a8fa6f976c7f2c01f9a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ab677b3db6d662a8fa6f976c7f2c01f9a">KETCUBE_TERMINAL_USART_RX_AF</a>&#160;&#160;&#160;GPIO_AF4_USART1</td></tr>
+<tr class="separator:ab677b3db6d662a8fa6f976c7f2c01f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4e94276528c0b2c93cf092b735fe1448"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a4e94276528c0b2c93cf092b735fe1448">KETCUBE_TERMINAL_USART_CLK_ENABLE</a>()&#160;&#160;&#160;__USART1_CLK_ENABLE();</td></tr>
 <tr class="separator:a4e94276528c0b2c93cf092b735fe1448"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8262711bc95265ebb2cd24d8201106e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad8262711bc95265ebb2cd24d8201106e">KETCUBE_TERMINAL_USART_RX_GPIO_CLK_ENABLE</a>()&#160;&#160;&#160;__GPIOA_CLK_ENABLE()</td></tr>
@@ -87,18 +92,14 @@ Macros</h2></td></tr>
 <tr class="separator:ae54d18831bd334dbe1195a954a033c00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad8e7cab76547f951a6da7bae24fb0e0d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad8e7cab76547f951a6da7bae24fb0e0d">KETCUBE_TERMINAL_USART_RELEASE_RESET</a>()&#160;&#160;&#160;__USART1_RELEASE_RESET()</td></tr>
 <tr class="separator:ad8e7cab76547f951a6da7bae24fb0e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5ee828b2dd744e82d5e64cf4d2c0f31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad5ee828b2dd744e82d5e64cf4d2c0f31">KETCUBE_TERMINAL_USART_TX_PIN</a>&#160;&#160;&#160;GPIO_PIN_9</td></tr>
+<tr class="memitem:ad5ee828b2dd744e82d5e64cf4d2c0f31"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad5ee828b2dd744e82d5e64cf4d2c0f31">KETCUBE_TERMINAL_USART_TX_PIN</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#gad837db5c81f5f5bc3853f4ed324e7351">KETCUBE_MAIN_BOARD_PIN_IO2_PIN</a></td></tr>
 <tr class="separator:ad5ee828b2dd744e82d5e64cf4d2c0f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4fe7919607c510b526c6c887bd83278"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad4fe7919607c510b526c6c887bd83278">KETCUBE_TERMINAL_USART_TX_GPIO_PORT</a>&#160;&#160;&#160;GPIOA</td></tr>
+<tr class="memitem:ad4fe7919607c510b526c6c887bd83278"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad4fe7919607c510b526c6c887bd83278">KETCUBE_TERMINAL_USART_TX_GPIO_PORT</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#gab31008ec8e03484b65e126e7ffded032">KETCUBE_MAIN_BOARD_PIN_IO2_PORT</a></td></tr>
 <tr class="separator:ad4fe7919607c510b526c6c887bd83278"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afe875034cbb42dd51ee33421e285eb14"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#afe875034cbb42dd51ee33421e285eb14">KETCUBE_TERMINAL_USART_TX_AF</a>&#160;&#160;&#160;GPIO_AF4_USART1</td></tr>
-<tr class="separator:afe875034cbb42dd51ee33421e285eb14"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a93d6a4a7698956324163a4cb5376de70"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a93d6a4a7698956324163a4cb5376de70">KETCUBE_TERMINAL_USART_RX_PIN</a>&#160;&#160;&#160;GPIO_PIN_10</td></tr>
+<tr class="memitem:a93d6a4a7698956324163a4cb5376de70"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a93d6a4a7698956324163a4cb5376de70">KETCUBE_TERMINAL_USART_RX_PIN</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#ga38751938c5fba1940510150045097b85">KETCUBE_MAIN_BOARD_PIN_IO1_PIN</a></td></tr>
 <tr class="separator:a93d6a4a7698956324163a4cb5376de70"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a1c72a2f1008585607368f7f7275b81"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a0a1c72a2f1008585607368f7f7275b81">KETCUBE_TERMINAL_USART_RX_GPIO_PORT</a>&#160;&#160;&#160;GPIOA</td></tr>
+<tr class="memitem:a0a1c72a2f1008585607368f7f7275b81"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a0a1c72a2f1008585607368f7f7275b81">KETCUBE_TERMINAL_USART_RX_GPIO_PORT</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#ga4355442604ab4e115e5bdd2a69a37a1b">KETCUBE_MAIN_BOARD_PIN_IO1_PORT</a></td></tr>
 <tr class="separator:a0a1c72a2f1008585607368f7f7275b81"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab677b3db6d662a8fa6f976c7f2c01f9a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ab677b3db6d662a8fa6f976c7f2c01f9a">KETCUBE_TERMINAL_USART_RX_AF</a>&#160;&#160;&#160;GPIO_AF4_USART1</td></tr>
-<tr class="separator:ab677b3db6d662a8fa6f976c7f2c01f9a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b8a4842ee8af67b851ddc35c7837654"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a3b8a4842ee8af67b851ddc35c7837654">USART_BUFFER_SIZE</a>&#160;&#160;&#160;256</td></tr>
 <tr class="separator:a3b8a4842ee8af67b851ddc35c7837654"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
@@ -107,15 +108,18 @@ Functions</h2></td></tr>
 <tr class="memitem:ac0cf082cc8ca207754e4a998196f9e67"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ac0cf082cc8ca207754e4a998196f9e67">ketCube_terminal_getNextParam</a> (uint8_t ptr)</td></tr>
 <tr class="memdesc:ac0cf082cc8ca207754e4a998196f9e67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return next command parameter index.  <a href="#ac0cf082cc8ca207754e4a998196f9e67">More...</a><br /></td></tr>
 <tr class="separator:ac0cf082cc8ca207754e4a998196f9e67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7184abee1f78af977212bf87ffe62947"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a7184abee1f78af977212bf87ffe62947">ketCube_terminal_printCmdList</a> (uint16_t cmdIndex, uint8_t level)</td></tr>
-<tr class="memdesc:a7184abee1f78af977212bf87ffe62947"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints command list at index/level.  <a href="#a7184abee1f78af977212bf87ffe62947">More...</a><br /></td></tr>
-<tr class="separator:a7184abee1f78af977212bf87ffe62947"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9ff01690643f712dbe330cd0faa492d2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a9ff01690643f712dbe330cd0faa492d2">ketCube_terminal_printCmdList</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *parent, <a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *cmdList, <a class="el" href="structketCube__terminal__command__flags__t.html">ketCube_terminal_command_flags_t</a> *contextFlags)</td></tr>
+<tr class="memdesc:a9ff01690643f712dbe330cd0faa492d2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints command list at index/level.  <a href="#a9ff01690643f712dbe330cd0faa492d2">More...</a><br /></td></tr>
+<tr class="separator:a9ff01690643f712dbe330cd0faa492d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7f5282e301c6b75d61f8e6598291867a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a7f5282e301c6b75d61f8e6598291867a">ketCube_terminal_saveCfgHEXStr</a> (char *data, ketCube_cfg_moduleIDs_t id, <a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> addr, <a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a> len)</td></tr>
 <tr class="memdesc:a7f5282e301c6b75d61f8e6598291867a"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper to ketCube_cfg_SaveStr function.  <a href="#a7f5282e301c6b75d61f8e6598291867a">More...</a><br /></td></tr>
 <tr class="separator:a7f5282e301c6b75d61f8e6598291867a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6970620700e618fb9b3b73896bece93"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ab6970620700e618fb9b3b73896bece93">ketCube_terminal_saveCfgDECStr</a> (char *data, ketCube_cfg_moduleIDs_t id, <a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> addr, <a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a> len)</td></tr>
 <tr class="memdesc:ab6970620700e618fb9b3b73896bece93"><td class="mdescLeft">&#160;</td><td class="mdescRight">A wrapper to ketCube_cfg_saveStr function.  <a href="#ab6970620700e618fb9b3b73896bece93">More...</a><br /></td></tr>
 <tr class="separator:ab6970620700e618fb9b3b73896bece93"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3a5744cee990b990d8685f23c11401b"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#aa3a5744cee990b990d8685f23c11401b">ketCube_terminal_checkCmdContext</a> (<a class="el" href="structketCube__terminal__command__flags__t.html">ketCube_terminal_command_flags_t</a> *contextFlags)</td></tr>
+<tr class="memdesc:aa3a5744cee990b990d8685f23c11401b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if the command is valid in a given context.  <a href="#aa3a5744cee990b990d8685f23c11401b">More...</a><br /></td></tr>
+<tr class="separator:aa3a5744cee990b990d8685f23c11401b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9fb1db170ad04867df31cbaa2e66d34b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a9fb1db170ad04867df31cbaa2e66d34b">ketCube_terminal_cmd_reload</a> (void)</td></tr>
 <tr class="memdesc:a9fb1db170ad04867df31cbaa2e66d34b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform KETCube reset.  <a href="#a9fb1db170ad04867df31cbaa2e66d34b">More...</a><br /></td></tr>
 <tr class="separator:a9fb1db170ad04867df31cbaa2e66d34b"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -128,24 +132,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a76ad06abfc7097a27187a7770a829562"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a76ad06abfc7097a27187a7770a829562">ketCube_terminal_cmd_disable</a> (void)</td></tr>
 <tr class="memdesc:a76ad06abfc7097a27187a7770a829562"><td class="mdescLeft">&#160;</td><td class="mdescRight">Enable given KETCube module.  <a href="#a76ad06abfc7097a27187a7770a829562">More...</a><br /></td></tr>
 <tr class="separator:a76ad06abfc7097a27187a7770a829562"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac7f02a06f609120f25ed94d50dbd51a1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ac7f02a06f609120f25ed94d50dbd51a1">ketCube_terminal_cmd_show_core_basePeriod</a> (void)</td></tr>
-<tr class="memdesc:ac7f02a06f609120f25ed94d50dbd51a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show KETCube base period.  <a href="#ac7f02a06f609120f25ed94d50dbd51a1">More...</a><br /></td></tr>
-<tr class="separator:ac7f02a06f609120f25ed94d50dbd51a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a130b4069bd056f38b8e639c7d13e2a91"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a130b4069bd056f38b8e639c7d13e2a91">ketCube_terminal_cmd_show_core_startDelay</a> (void)</td></tr>
-<tr class="memdesc:a130b4069bd056f38b8e639c7d13e2a91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show KETCube start delay.  <a href="#a130b4069bd056f38b8e639c7d13e2a91">More...</a><br /></td></tr>
-<tr class="separator:a130b4069bd056f38b8e639c7d13e2a91"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeb3e90bdd8d95f9e8333b19a8e5d4153"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#aeb3e90bdd8d95f9e8333b19a8e5d4153">ketCube_terminal_cmd_show_core_severity</a> (void)</td></tr>
-<tr class="memdesc:aeb3e90bdd8d95f9e8333b19a8e5d4153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Show KETCube severity.  <a href="#aeb3e90bdd8d95f9e8333b19a8e5d4153">More...</a><br /></td></tr>
-<tr class="separator:aeb3e90bdd8d95f9e8333b19a8e5d4153"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac78161d2eb81ce3ef420b9bfe89ee72a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ac78161d2eb81ce3ef420b9bfe89ee72a">ketCube_terminal_cmd_set_core_basePeriod</a> (void)</td></tr>
-<tr class="memdesc:ac78161d2eb81ce3ef420b9bfe89ee72a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set KETCube base period.  <a href="#ac78161d2eb81ce3ef420b9bfe89ee72a">More...</a><br /></td></tr>
-<tr class="separator:ac78161d2eb81ce3ef420b9bfe89ee72a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a083dace0da2a83de34d90ead4d097881"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a083dace0da2a83de34d90ead4d097881">ketCube_terminal_cmd_set_core_startDelay</a> (void)</td></tr>
-<tr class="memdesc:a083dace0da2a83de34d90ead4d097881"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set KETCube start delay.  <a href="#a083dace0da2a83de34d90ead4d097881">More...</a><br /></td></tr>
-<tr class="separator:a083dace0da2a83de34d90ead4d097881"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a664ea3a97e6c4c7df34b05af0f7e7cc9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a664ea3a97e6c4c7df34b05af0f7e7cc9">ketCube_terminal_cmd_set_core_severity</a> (void)</td></tr>
-<tr class="memdesc:a664ea3a97e6c4c7df34b05af0f7e7cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set KETCube severity.  <a href="#a664ea3a97e6c4c7df34b05af0f7e7cc9">More...</a><br /></td></tr>
-<tr class="separator:a664ea3a97e6c4c7df34b05af0f7e7cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac8bd1a86c6250cdded96697b87ca60de"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ac8bd1a86c6250cdded96697b87ca60de">ketCube_terminal_GetIOParamsLength</a> (<a class="el" href="group__KETCube__Terminal.html#gaaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a> type)</td></tr>
+<tr class="memdesc:ac8bd1a86c6250cdded96697b87ca60de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns parameter length in bytes.  <a href="#ac8bd1a86c6250cdded96697b87ca60de">More...</a><br /></td></tr>
+<tr class="separator:ac8bd1a86c6250cdded96697b87ca60de"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1090109f31bf560f1edaf2b02325358a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a1090109f31bf560f1edaf2b02325358a">ketCube_terminal_getEEPROMCfg</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *cmdDescrPtr)</td></tr>
+<tr class="memdesc:a1090109f31bf560f1edaf2b02325358a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic GET EEPROM cfg data.  <a href="#a1090109f31bf560f1edaf2b02325358a">More...</a><br /></td></tr>
+<tr class="separator:a1090109f31bf560f1edaf2b02325358a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a09df732d64160832af214c9ec0d93c4e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a09df732d64160832af214c9ec0d93c4e">ketCube_terminal_setEEPROMCfg</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *cmdDescrPtr)</td></tr>
+<tr class="memdesc:a09df732d64160832af214c9ec0d93c4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic SET EEPROM data.  <a href="#a09df732d64160832af214c9ec0d93c4e">More...</a><br /></td></tr>
+<tr class="separator:a09df732d64160832af214c9ec0d93c4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad989d5788164194bdc902bda7faae10e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad989d5788164194bdc902bda7faae10e">ketCube_terminal_getRAMCfg</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *cmdDescrPtr)</td></tr>
+<tr class="memdesc:ad989d5788164194bdc902bda7faae10e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic GET RAM cfg data.  <a href="#ad989d5788164194bdc902bda7faae10e">More...</a><br /></td></tr>
+<tr class="separator:ad989d5788164194bdc902bda7faae10e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb840a1f043ebf487a125893f4acb994"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#abb840a1f043ebf487a125893f4acb994">ketCube_terminal_setRAMCfg</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *cmdDescrPtr)</td></tr>
+<tr class="memdesc:abb840a1f043ebf487a125893f4acb994"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic SET RAM data.  <a href="#abb840a1f043ebf487a125893f4acb994">More...</a><br /></td></tr>
+<tr class="separator:abb840a1f043ebf487a125893f4acb994"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab5caa7d0f7f98d156a7891152f653902"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Terminal.html#gab5caa7d0f7f98d156a7891152f653902">ketCube_terminal_cmd_help</a> (void)</td></tr>
 <tr class="separator:gab5caa7d0f7f98d156a7891152f653902"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga51166c95f234ba055341db4450051446"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Terminal.html#ga51166c95f234ba055341db4450051446">ketCube_terminal_cmd_about</a> (void)</td></tr>
@@ -176,6 +177,18 @@ Functions</h2></td></tr>
 <tr class="memitem:gafe7dbb02651865bfe8c03636a5e9d0ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Terminal.html#gafe7dbb02651865bfe8c03636a5e9d0ab">ketCube_terminal_Init</a> (void)</td></tr>
 <tr class="memdesc:gafe7dbb02651865bfe8c03636a5e9d0ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Init terminal.  <a href="group__KETCube__Terminal.html#gafe7dbb02651865bfe8c03636a5e9d0ab">More...</a><br /></td></tr>
 <tr class="separator:gafe7dbb02651865bfe8c03636a5e9d0ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae3a6dde70e3ab607f49c6e86064b0537"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ae3a6dde70e3ab607f49c6e86064b0537">ketCube_terminal_parseParams</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *command, <a class="el" href="structketCube__terminal__command__flags__t.html">ketCube_terminal_command_flags_t</a> *contextFlags)</td></tr>
+<tr class="memdesc:ae3a6dde70e3ab607f49c6e86064b0537"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse command arguments and validate them.  <a href="#ae3a6dde70e3ab607f49c6e86064b0537">More...</a><br /></td></tr>
+<tr class="separator:ae3a6dde70e3ab607f49c6e86064b0537"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad876e7390d287392aead86c15da053f0"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#ad876e7390d287392aead86c15da053f0">ketCube_terminal_printCommandOutput</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *command)</td></tr>
+<tr class="memdesc:ad876e7390d287392aead86c15da053f0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse and print command outputs.  <a href="#ad876e7390d287392aead86c15da053f0">More...</a><br /></td></tr>
+<tr class="separator:ad876e7390d287392aead86c15da053f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d58f5bf3b1bf78a6c0377ad9ddb8033"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a1d58f5bf3b1bf78a6c0377ad9ddb8033">ketCube_terminal_processCommandErrors</a> ()</td></tr>
+<tr class="memdesc:a1d58f5bf3b1bf78a6c0377ad9ddb8033"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes command error code, prints the result.  <a href="#a1d58f5bf3b1bf78a6c0377ad9ddb8033">More...</a><br /></td></tr>
+<tr class="separator:a1d58f5bf3b1bf78a6c0377ad9ddb8033"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c72e81c4e0876cb2124bbf778eaa6c4"><td class="memItemLeft" align="right" valign="top">static bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a1c72e81c4e0876cb2124bbf778eaa6c4">ketCube_terminal_canRunLocalCommand</a> (<a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *command)</td></tr>
+<tr class="memdesc:a1c72e81c4e0876cb2124bbf778eaa6c4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if we can run given command in local terminal.  <a href="#a1c72e81c4e0876cb2124bbf778eaa6c4">More...</a><br /></td></tr>
+<tr class="separator:a1c72e81c4e0876cb2124bbf778eaa6c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adba87bbef498eb29dab14081e34fde03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#adba87bbef498eb29dab14081e34fde03">ketCube_terminal_execCMD</a> (void)</td></tr>
 <tr class="memdesc:adba87bbef498eb29dab14081e34fde03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute command-in-buffer.  <a href="#adba87bbef498eb29dab14081e34fde03">More...</a><br /></td></tr>
 <tr class="separator:adba87bbef498eb29dab14081e34fde03"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -200,6 +213,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga7e93f6e34dfbbc1183ad0d577f3d7905"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Terminal.html#ga7e93f6e34dfbbc1183ad0d577f3d7905">ketCube_terminal_CoreSeverityPrintln</a> (<a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a> msgSeverity, char *format,...)</td></tr>
 <tr class="memdesc:ga7e93f6e34dfbbc1183ad0d577f3d7905"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print Debug info to serial line + newline.  <a href="group__KETCube__Terminal.html#ga7e93f6e34dfbbc1183ad0d577f3d7905">More...</a><br /></td></tr>
 <tr class="separator:ga7e93f6e34dfbbc1183ad0d577f3d7905"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga2f76ff42d7183572d3a2d5b12b23320e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Terminal.html#ga2f76ff42d7183572d3a2d5b12b23320e">ketCube_terminal_DriverSeverityPrintln</a> (const char *drvName, <a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a> msgSeverity, char *format,...)</td></tr>
+<tr class="memdesc:ga2f76ff42d7183572d3a2d5b12b23320e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print Debug info to serial line + newline.  <a href="group__KETCube__Terminal.html#ga2f76ff42d7183572d3a2d5b12b23320e">More...</a><br /></td></tr>
+<tr class="separator:ga2f76ff42d7183572d3a2d5b12b23320e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga19f4a3eaf504da4c58994b02ba70c23c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Terminal.html#ga19f4a3eaf504da4c58994b02ba70c23c">ketCube_terminal_ModSeverityPrintln</a> (<a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a> msgSeverity, ketCube_cfg_moduleIDs_t modId, char *format, va_list args)</td></tr>
 <tr class="memdesc:ga19f4a3eaf504da4c58994b02ba70c23c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print Debug info to serial line + newline.  <a href="group__KETCube__Terminal.html#ga19f4a3eaf504da4c58994b02ba70c23c">More...</a><br /></td></tr>
 <tr class="separator:ga19f4a3eaf504da4c58994b02ba70c23c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -228,12 +244,16 @@ Variables</h2></td></tr>
 <tr class="separator:a60950cc0c06325db190689659b06a8ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46ba52011f0d57b7223f103cdcb5075c"><td class="memItemLeft" align="right" valign="top">static char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a46ba52011f0d57b7223f103cdcb5075c">commandBuffer</a> = (char *) &amp;(<a class="el" href="ketCube__terminal_8c.html#a60950cc0c06325db190689659b06a8ae">commandHistory</a>[0].buffer[0])</td></tr>
 <tr class="separator:a46ba52011f0d57b7223f103cdcb5075c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96d3892ed9f5dbdd2a6685919ce90a7b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="unionketCube__terminal__paramSet__t.html">ketCube_terminal_paramSet_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a96d3892ed9f5dbdd2a6685919ce90a7b">commandIOParams</a></td></tr>
+<tr class="separator:a96d3892ed9f5dbdd2a6685919ce90a7b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af805326ead66e2273452b8f170c6ba67"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__KETCube__Terminal.html#gab8649e4e090471d86ba8a2fee501c21b">ketCube_terminal_command_errorCode_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#af805326ead66e2273452b8f170c6ba67">commandErrorCode</a></td></tr>
+<tr class="separator:af805326ead66e2273452b8f170c6ba67"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a9577239eea3f2af842cf8fe848320625"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a9577239eea3f2af842cf8fe848320625">commandPtr</a> = (uint8_t *) &amp; (<a class="el" href="ketCube__terminal_8c.html#a60950cc0c06325db190689659b06a8ae">commandHistory</a>[0].ptr)</td></tr>
 <tr class="separator:a9577239eea3f2af842cf8fe848320625"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa363b9828a3f31f5606a0b6cc61f484e"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#aa363b9828a3f31f5606a0b6cc61f484e">commandHistoryPtr</a> = 0</td></tr>
 <tr class="separator:aa363b9828a3f31f5606a0b6cc61f484e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47642a9b850079e8aaadde1dd9244386"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a47642a9b850079e8aaadde1dd9244386">commandParams</a></td></tr>
-<tr class="separator:a47642a9b850079e8aaadde1dd9244386"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b56a33f5f15fb1a7951428afc8cd010"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__terminal_8c.html#a7b56a33f5f15fb1a7951428afc8cd010">commandParamsPos</a></td></tr>
+<tr class="separator:a7b56a33f5f15fb1a7951428afc8cd010"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains the KETCube Terminal. </p>
@@ -398,7 +418,7 @@ Martin Ubl </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_TERMINAL_USART_RX_GPIO_PORT&#160;&#160;&#160;GPIOA</td>
+          <td class="memname">#define KETCUBE_TERMINAL_USART_RX_GPIO_PORT&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#ga4355442604ab4e115e5bdd2a69a37a1b">KETCUBE_MAIN_BOARD_PIN_IO1_PORT</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -412,7 +432,7 @@ Martin Ubl </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_TERMINAL_USART_RX_PIN&#160;&#160;&#160;GPIO_PIN_10</td>
+          <td class="memname">#define KETCUBE_TERMINAL_USART_RX_PIN&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#ga38751938c5fba1940510150045097b85">KETCUBE_MAIN_BOARD_PIN_IO1_PIN</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -457,7 +477,7 @@ Martin Ubl </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_TERMINAL_USART_TX_GPIO_PORT&#160;&#160;&#160;GPIOA</td>
+          <td class="memname">#define KETCUBE_TERMINAL_USART_TX_GPIO_PORT&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#gab31008ec8e03484b65e126e7ffded032">KETCUBE_MAIN_BOARD_PIN_IO2_PORT</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -471,7 +491,7 @@ Martin Ubl </dd></dl>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_TERMINAL_USART_TX_PIN&#160;&#160;&#160;GPIO_PIN_9</td>
+          <td class="memname">#define KETCUBE_TERMINAL_USART_TX_PIN&#160;&#160;&#160;<a class="el" href="group__KETCube__mainBoard__Socket.html#gad837db5c81f5f5bc3853f4ed324e7351">KETCUBE_MAIN_BOARD_PIN_IO2_PIN</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -526,6 +546,82 @@ Martin Ubl </dd></dl>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1c72e81c4e0876cb2124bbf778eaa6c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c72e81c4e0876cb2124bbf778eaa6c4">&#9670;&nbsp;</a></span>ketCube_terminal_canRunLocalCommand()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool ketCube_terminal_canRunLocalCommand </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>command</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if we can run given command in local terminal. </p>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">TRUE</td><td>if success, else return FALSE </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa3a5744cee990b990d8685f23c11401b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3a5744cee990b990d8685f23c11401b">&#9670;&nbsp;</a></span>ketCube_terminal_checkCmdContext()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool ketCube_terminal_checkCmdContext </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__command__flags__t.html">ketCube_terminal_command_flags_t</a> *&#160;</td>
+          <td class="paramname"><em>contextFlags</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if the command is valid in a given context. </p>
+<p>This function returns TRUE, if the context (given by flags) identify a command, that can be executed in general</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">contextFlags</td><td>pointer to context flags</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">TRUE</td><td>if success, else return FALSE</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>flags should respect the context, where <a class="el" href="ketCube__terminal_8c.html#aa3a5744cee990b990d8685f23c11401b" title="Check if the command is valid in a given context. ">ketCube_terminal_checkCmdContext()</a> has been called </dd></dl>
 
 </div>
 </div>
@@ -667,174 +763,6 @@ Martin Ubl </dd></dl>
 
 </div>
 </div>
-<a id="ac78161d2eb81ce3ef420b9bfe89ee72a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac78161d2eb81ce3ef420b9bfe89ee72a">&#9670;&nbsp;</a></span>ketCube_terminal_cmd_set_core_basePeriod()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ketCube_terminal_cmd_set_core_basePeriod </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set KETCube base period. </p>
-
-</div>
-</div>
-<a id="a664ea3a97e6c4c7df34b05af0f7e7cc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a664ea3a97e6c4c7df34b05af0f7e7cc9">&#9670;&nbsp;</a></span>ketCube_terminal_cmd_set_core_severity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ketCube_terminal_cmd_set_core_severity </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set KETCube severity. </p>
-
-</div>
-</div>
-<a id="a083dace0da2a83de34d90ead4d097881"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a083dace0da2a83de34d90ead4d097881">&#9670;&nbsp;</a></span>ketCube_terminal_cmd_set_core_startDelay()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ketCube_terminal_cmd_set_core_startDelay </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Set KETCube start delay. </p>
-
-</div>
-</div>
-<a id="ac7f02a06f609120f25ed94d50dbd51a1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac7f02a06f609120f25ed94d50dbd51a1">&#9670;&nbsp;</a></span>ketCube_terminal_cmd_show_core_basePeriod()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ketCube_terminal_cmd_show_core_basePeriod </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Show KETCube base period. </p>
-
-</div>
-</div>
-<a id="aeb3e90bdd8d95f9e8333b19a8e5d4153"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeb3e90bdd8d95f9e8333b19a8e5d4153">&#9670;&nbsp;</a></span>ketCube_terminal_cmd_show_core_severity()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ketCube_terminal_cmd_show_core_severity </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Show KETCube severity. </p>
-
-</div>
-</div>
-<a id="a130b4069bd056f38b8e639c7d13e2a91"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a130b4069bd056f38b8e639c7d13e2a91">&#9670;&nbsp;</a></span>ketCube_terminal_cmd_show_core_startDelay()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void ketCube_terminal_cmd_show_core_startDelay </td>
-          <td>(</td>
-          <td class="paramtype">void&#160;</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Show KETCube start delay. </p>
-
-</div>
-</div>
 <a id="adba87bbef498eb29dab14081e34fde03"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#adba87bbef498eb29dab14081e34fde03">&#9670;&nbsp;</a></span>ketCube_terminal_execCMD()</h2>
 
@@ -852,6 +780,68 @@ Martin Ubl </dd></dl>
 </div><div class="memdoc">
 
 <p>Execute command-in-buffer. </p>
+
+</div>
+</div>
+<a id="a1090109f31bf560f1edaf2b02325358a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1090109f31bf560f1edaf2b02325358a">&#9670;&nbsp;</a></span>ketCube_terminal_getEEPROMCfg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_terminal_getEEPROMCfg </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>cmdDescrPtr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generic GET EEPROM cfg data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cmdDescrPtr</td><td>pointer to a command descriptor </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac8bd1a86c6250cdded96697b87ca60de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8bd1a86c6250cdded96697b87ca60de">&#9670;&nbsp;</a></span>ketCube_terminal_GetIOParamsLength()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int ketCube_terminal_GetIOParamsLength </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__KETCube__Terminal.html#gaaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a>&#160;</td>
+          <td class="paramname"><em>type</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns parameter length in bytes. </p>
 
 </div>
 </div>
@@ -897,6 +887,91 @@ Martin Ubl </dd></dl>
 
 </div>
 </div>
+<a id="ad989d5788164194bdc902bda7faae10e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad989d5788164194bdc902bda7faae10e">&#9670;&nbsp;</a></span>ketCube_terminal_getRAMCfg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_terminal_getRAMCfg </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>cmdDescrPtr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generic GET RAM cfg data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cmdDescrPtr</td><td>pointer to a command descriptor </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae3a6dde70e3ab607f49c6e86064b0537"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae3a6dde70e3ab607f49c6e86064b0537">&#9670;&nbsp;</a></span>ketCube_terminal_parseParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static bool ketCube_terminal_parseParams </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>command</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__command__flags__t.html">ketCube_terminal_command_flags_t</a> *&#160;</td>
+          <td class="paramname"><em>contextFlags</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Parse command arguments and validate them. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">command</td><td>ptr to current command </td></tr>
+    <tr><td class="paramname">contextFlags</td><td>ptr to context flags</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">TRUE</td><td>if parameters parsed successfuly, else return FALSE </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ad7645e889df96b6285ee0c3b12140f39"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad7645e889df96b6285ee0c3b12140f39">&#9670;&nbsp;</a></span>ketCube_terminal_printCMDHelp()</h2>
 
@@ -917,8 +992,8 @@ Martin Ubl </dd></dl>
 
 </div>
 </div>
-<a id="a7184abee1f78af977212bf87ffe62947"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7184abee1f78af977212bf87ffe62947">&#9670;&nbsp;</a></span>ketCube_terminal_printCmdList()</h2>
+<a id="a9ff01690643f712dbe330cd0faa492d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ff01690643f712dbe330cd0faa492d2">&#9670;&nbsp;</a></span>ketCube_terminal_printCmdList()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -929,14 +1004,20 @@ Martin Ubl </dd></dl>
         <tr>
           <td class="memname">static void ketCube_terminal_printCmdList </td>
           <td>(</td>
-          <td class="paramtype">uint16_t&#160;</td>
-          <td class="paramname"><em>cmdIndex</em>, </td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>parent</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>level</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>cmdList</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__command__flags__t.html">ketCube_terminal_command_flags_t</a> *&#160;</td>
+          <td class="paramname"><em>contextFlags</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -956,9 +1037,65 @@ Martin Ubl </dd></dl>
   <table class="params">
     <tr><td class="paramname">cmdIndex</td><td>index of the first command to print </td></tr>
     <tr><td class="paramname">level</td><td>level of commands to print </td></tr>
+    <tr><td class="paramname">contextFlags</td><td>comamnd flag context </td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ad876e7390d287392aead86c15da053f0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad876e7390d287392aead86c15da053f0">&#9670;&nbsp;</a></span>ketCube_terminal_printCommandOutput()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_terminal_printCommandOutput </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>command</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Parse and print command outputs. </p>
+
+</div>
+</div>
+<a id="a1d58f5bf3b1bf78a6c0377ad9ddb8033"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d58f5bf3b1bf78a6c0377ad9ddb8033">&#9670;&nbsp;</a></span>ketCube_terminal_processCommandErrors()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static int ketCube_terminal_processCommandErrors </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Processes command error code, prints the result. </p>
 
 </div>
 </div>
@@ -1009,7 +1146,8 @@ Martin Ubl </dd></dl>
 </div><div class="memdoc">
 
 <p>A wrapper to ketCube_cfg_saveStr function. </p>
-<p>Provides textual output to terminal </p>
+<p>Provides textual output to terminal</p>
+<dl class="section note"><dt>Note</dt><dd>This function is deprecated and it will be removed in the next release </dd></dl>
 
 </div>
 </div>
@@ -1060,7 +1198,76 @@ Martin Ubl </dd></dl>
 </div><div class="memdoc">
 
 <p>A wrapper to ketCube_cfg_SaveStr function. </p>
-<p>Provides textual output to terminal is provided </p>
+<p>Provides textual output to terminal is provided</p>
+<dl class="section note"><dt>Note</dt><dd>This function is deprecated and it will be removed in the next release </dd></dl>
+
+</div>
+</div>
+<a id="a09df732d64160832af214c9ec0d93c4e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09df732d64160832af214c9ec0d93c4e">&#9670;&nbsp;</a></span>ketCube_terminal_setEEPROMCfg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_terminal_setEEPROMCfg </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>cmdDescrPtr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generic SET EEPROM data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cmdDescrPtr</td><td>pointer to a command descriptor </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="abb840a1f043ebf487a125893f4acb994"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb840a1f043ebf487a125893f4acb994">&#9670;&nbsp;</a></span>ketCube_terminal_setRAMCfg()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_terminal_setRAMCfg </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;</td>
+          <td class="paramname"><em>cmdDescrPtr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Generic SET RAM data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">cmdDescrPtr</td><td>pointer to a command descriptor </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1223,6 +1430,28 @@ Martin Ubl </dd></dl>
 
 </div>
 </div>
+<a id="af805326ead66e2273452b8f170c6ba67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af805326ead66e2273452b8f170c6ba67">&#9670;&nbsp;</a></span>commandErrorCode</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__Terminal.html#gab8649e4e090471d86ba8a2fee501c21b">ketCube_terminal_command_errorCode_t</a> commandErrorCode</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a60950cc0c06325db190689659b06a8ae"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a60950cc0c06325db190689659b06a8ae">&#9670;&nbsp;</a></span>commandHistory</h2>
 
@@ -1267,8 +1496,8 @@ Martin Ubl </dd></dl>
 
 </div>
 </div>
-<a id="a47642a9b850079e8aaadde1dd9244386"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a47642a9b850079e8aaadde1dd9244386">&#9670;&nbsp;</a></span>commandParams</h2>
+<a id="a96d3892ed9f5dbdd2a6685919ce90a7b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96d3892ed9f5dbdd2a6685919ce90a7b">&#9670;&nbsp;</a></span>commandIOParams</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1277,7 +1506,29 @@ Martin Ubl </dd></dl>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t commandParams</td>
+          <td class="memname"><a class="el" href="unionketCube__terminal__paramSet__t.html">ketCube_terminal_paramSet_t</a> commandIOParams</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7b56a33f5f15fb1a7951428afc8cd010"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7b56a33f5f15fb1a7951428afc8cd010">&#9670;&nbsp;</a></span>commandParamsPos</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t commandParamsPos</td>
         </tr>
       </table>
   </td>

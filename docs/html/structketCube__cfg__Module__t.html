@@ -70,55 +70,43 @@ Data Fields</h2></td></tr>
 <tr class="separator:a3c7db647b0f04b33ebe6a7aacfbf665e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f5860c246538333f6bb5ca6c943a09a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga9a98d9c92107eb8fb938a27d2c453237">ketCube_cfg_ModDataPtrFn_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__cfg__Module__t.html#a6f5860c246538333f6bb5ca6c943a09a">fnProcessMsg</a></td></tr>
 <tr class="separator:a6f5860c246538333f6bb5ca6c943a09a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae6944dea7bc8bc92d77c9c1b06e548ea"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__cfg__Module__t.html#ae6944dea7bc8bc92d77c9c1b06e548ea">cfgBase</a></td></tr>
-<tr class="separator:ae6944dea7bc8bc92d77c9c1b06e548ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2665ec7f58e29e8c1cd17649e763220d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__cfg__Module__t.html#a2665ec7f58e29e8c1cd17649e763220d">cfgLen</a></td></tr>
-<tr class="separator:a2665ec7f58e29e8c1cd17649e763220d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7cb39614b31d3e3672239a8972bba49f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__cfg__Module__t.html#a7cb39614b31d3e3672239a8972bba49f">cfgByte</a></td></tr>
-<tr class="separator:a7cb39614b31d3e3672239a8972bba49f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7cddc6474e2e0944d3e6f0a8e2cc1e19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__cfg__Module__t.html#a7cddc6474e2e0944d3e6f0a8e2cc1e19">cfgPtr</a></td></tr>
+<tr class="separator:a7cddc6474e2e0944d3e6f0a8e2cc1e19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8cd40a5bdaaae0207e0c72b28eaec81b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__cfg__Module__t.html#a8cd40a5bdaaae0207e0c72b28eaec81b">cfgLen</a></td></tr>
+<tr class="separator:a8cd40a5bdaaae0207e0c72b28eaec81b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac377ae8d487001e946559c53c6277b88"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__cfg__Module__t.html#ac377ae8d487001e946559c53c6277b88">EEpromBase</a></td></tr>
+<tr class="separator:ac377ae8d487001e946559c53c6277b88"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>KETCube module definition. </p>
 </div><h2 class="groupheader">Field Documentation</h2>
-<a id="ae6944dea7bc8bc92d77c9c1b06e548ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae6944dea7bc8bc92d77c9c1b06e548ea">&#9670;&nbsp;</a></span>cfgBase</h2>
+<a id="a8cd40a5bdaaae0207e0c72b28eaec81b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8cd40a5bdaaae0207e0c72b28eaec81b">&#9670;&nbsp;</a></span>cfgLen</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t ketCube_cfg_Module_t::cfgBase</td>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a> ketCube_cfg_Module_t::cfgLen</td>
         </tr>
       </table>
 </div><div class="memdoc">
+<h1>of module configuration bytes: min = 1; max = 255; note that the first configuration byte is always set to TRUE when module is enabled and to FALSE when disabled (all bits are cleared)</h1>
 
 </div>
 </div>
-<a id="a7cb39614b31d3e3672239a8972bba49f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7cb39614b31d3e3672239a8972bba49f">&#9670;&nbsp;</a></span>cfgByte</h2>
+<a id="a7cddc6474e2e0944d3e6f0a8e2cc1e19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7cddc6474e2e0944d3e6f0a8e2cc1e19">&#9670;&nbsp;</a></span>cfgPtr</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a> ketCube_cfg_Module_t::cfgByte</td>
+          <td class="memname"><a class="el" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a>* ketCube_cfg_Module_t::cfgPtr</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2665ec7f58e29e8c1cd17649e763220d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2665ec7f58e29e8c1cd17649e763220d">&#9670;&nbsp;</a></span>cfgLen</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t ketCube_cfg_Module_t::cfgLen</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Pointer to actual/running KETCube configuration </p>
 
 </div>
 </div>
@@ -133,6 +121,22 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Human-readable module description/help </p>
+
+</div>
+</div>
+<a id="ac377ae8d487001e946559c53c6277b88"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac377ae8d487001e946559c53c6277b88">&#9670;&nbsp;</a></span>EEpromBase</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> ketCube_cfg_Module_t::EEpromBase</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>EEPROM base for module configuration </p>
 
 </div>
 </div>
@@ -147,6 +151,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Module function to get module data into buffer (sensors) </p>
 
 </div>
 </div>
@@ -161,6 +166,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Module init function </p>
 
 </div>
 </div>
@@ -175,6 +181,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Module function to process data by this module </p>
 
 </div>
 </div>
@@ -189,6 +196,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Module function to initialize periodic data reception by using communication module </p>
 
 </div>
 </div>
@@ -203,6 +211,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Module function to send data by communication module (the KETCube system period) </p>
 
 </div>
 </div>
@@ -217,6 +226,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>DeInitialize module when entering sleep mode </p>
 
 </div>
 </div>
@@ -231,6 +241,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Initialize module when returning from sleep mode </p>
 
 </div>
 </div>
@@ -245,6 +256,7 @@ Data Fields</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+<p>Module name </p>
 
 </div>
 </div>

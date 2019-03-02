@@ -74,27 +74,27 @@ typedef enum {
 * @brief  List of available S0 errors
 */
 typedef enum {
-    KETCUBE_BATMEAS_BATLIST_CR2032 = 0, /*< CR2032 battery */
-    KETCUBE_BATMEAS_BATLIST_LS33600,    /*< LS33600 battery */
+    KETCUBE_BATMEAS_BATLIST_CR2032 = 0, /*!< CR2032 battery */
+    KETCUBE_BATMEAS_BATLIST_LS33600,    /*!< LS33600 battery */
 
-    KETCUBE_BATMEAS_BATLIST_LAST        /*< Last battery index -- do not modify this line! */
+    KETCUBE_BATMEAS_BATLIST_LAST        /*!< Last battery index -- do not modify this line! */
 } ketCube_batMeas_battList_t;
 
 /**
 * @brief  KETCube battery deffinition
 */
 typedef struct ketCube_batMeas_battery_t {
-    char *batName;              /*< Battery name */
-    char *batDescr;             /*< Battery description */
-    uint16_t batCharged;        /*< Battery fully charged [mV] */
-    uint16_t batDischarged;     /*< Battery discharged [mV] */
+    char *batName;              /*!< Battery name */
+    char *batDescr;             /*!< Battery description */
+    uint16_t batCharged;        /*!< Battery fully charged [mV] */
+    uint16_t batDischarged;     /*!< Battery discharged [mV] */
 } ketCube_batMeas_battery_t;
 
 /**
 * @brief  KETCube batMeas module configuration
 */
 typedef struct ketCube_batMeas_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
     
     ketCube_batMeas_battList_t selectedBattery;
 } ketCube_batMeas_moduleCfg_t;

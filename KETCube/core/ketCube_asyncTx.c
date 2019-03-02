@@ -54,7 +54,7 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
 
-ketCube_asyncTx_moduleCfg_t ketCube_asyncTx_moduleCfg;   /*<! Module configuration storage */
+ketCube_asyncTx_moduleCfg_t ketCube_asyncTx_moduleCfg;   /*!< Module configuration storage */
 
 /**
   * @brief Initialize AsyncTx module

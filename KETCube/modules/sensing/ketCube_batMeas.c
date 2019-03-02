@@ -58,7 +58,7 @@
 #define KETCUBE_BATMEAS_VREFINT_CAL                 ((uint16_t*) ((uint32_t) 0x1FF80078))
 
 
-ketCube_batMeas_moduleCfg_t ketCube_batMeas_moduleCfg; /*<! Module configuration storage */
+ketCube_batMeas_moduleCfg_t ketCube_batMeas_moduleCfg; /*!< Module configuration storage */
 
 /**
   *

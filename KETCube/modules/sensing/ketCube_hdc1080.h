@@ -135,7 +135,7 @@ typedef enum {
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_hdc1080_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_hdc1080_moduleCfg_t;
 
 extern ketCube_hdc1080_moduleCfg_t ketCube_hdc1080_moduleCfg;
@@ -167,7 +167,7 @@ typedef struct {
 /**
 * @brief  I2C Timeout.
 */
-#define KETCUBE_HDC1080_I2C_TIMEOUT 0x1000      /*<! Value of Timeout when I2C communication fails */
+#define KETCUBE_HDC1080_I2C_TIMEOUT 0x1000      /*!< Value of Timeout when I2C communication fails */
 
 /**
 * @addtogroup KETCUBE_HDC1080_Registers HDC1080 Registers

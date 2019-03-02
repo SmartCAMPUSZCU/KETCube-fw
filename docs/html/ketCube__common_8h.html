@@ -44,6 +44,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#define-members">Macros</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
@@ -57,6 +58,7 @@ $(function() {
 <code>#include &quot;stm32l0xx_hal_gpio.h&quot;</code><br />
 <code>#include &quot;stdlib.h&quot;</code><br />
 <code>#include &quot;stdbool.h&quot;</code><br />
+<code>#include &quot;<a class="el" href="ketCube__projectCommon_8h_source.html">ketCube_projectCommon.h</a>&quot;</code><br />
 </div>
 <p><a href="ketCube__common_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -68,12 +70,19 @@ Macros</h2></td></tr>
 <tr class="memitem:gaa93f0eb578d23995850d61f7d61c55c1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaa93f0eb578d23995850d61f7d61c55c1">FALSE</a>&#160;&#160;&#160;0</td></tr>
 <tr class="memdesc:gaa93f0eb578d23995850d61f7d61c55c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">boolean FALSE  <a href="group__KETCube__common.html#gaa93f0eb578d23995850d61f7d61c55c1">More...</a><br /></td></tr>
 <tr class="separator:gaa93f0eb578d23995850d61f7d61c55c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaba537b08b9721b64580106d46002ce37"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaba537b08b9721b64580106d46002ce37">KETCUBE_COMMON_BUFFER_LEN</a>&#160;&#160;&#160;50</td></tr>
+<tr class="memitem:gaba537b08b9721b64580106d46002ce37"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaba537b08b9721b64580106d46002ce37">KETCUBE_COMMON_BUFFER_LEN</a>&#160;&#160;&#160;256</td></tr>
 <tr class="separator:gaba537b08b9721b64580106d46002ce37"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:gab8ef12fab634c171394422d0ee8baf94"><td class="memItemLeft" align="right" valign="top">typedef uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a></td></tr>
+<tr class="separator:gab8ef12fab634c171394422d0ee8baf94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga6f56f946d9622923a2d33739537bc798"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga6f56f946d9622923a2d33739537bc798">ketCube_common_Byte2hex</a> (uint8_t byte, char *str)</td></tr>
+<tr class="memitem:ga447be5a0ca94250d0dc943dcbf6d9253"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga447be5a0ca94250d0dc943dcbf6d9253">ketCube_common_bytes2Str</a> (uint8_t *byteArr, uint8_t len)</td></tr>
+<tr class="separator:ga447be5a0ca94250d0dc943dcbf6d9253"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga6f56f946d9622923a2d33739537bc798"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga6f56f946d9622923a2d33739537bc798">ketCube_common_Byte2hex</a> (uint8_t <a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>, char *str)</td></tr>
 <tr class="memdesc:ga6f56f946d9622923a2d33739537bc798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert a single Byte to HEX string (two bytes)  <a href="group__KETCube__common.html#ga6f56f946d9622923a2d33739537bc798">More...</a><br /></td></tr>
 <tr class="separator:ga6f56f946d9622923a2d33739537bc798"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga305f0121a0521f3ce009483ae2548330"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga305f0121a0521f3ce009483ae2548330">ketCube_common_Int2dec</a> (int32_t number, char *str, int len)</td></tr>
@@ -97,10 +106,19 @@ Functions</h2></td></tr>
 <tr class="memitem:ga6e772d146983a4fc3a26706966441d1a"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga6e772d146983a4fc3a26706966441d1a">ketCube_common_Max</a> (uint8_t a, uint8_t b)</td></tr>
 <tr class="memdesc:ga6e772d146983a4fc3a26706966441d1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return maximum of two bytes.  <a href="group__KETCube__common.html#ga6e772d146983a4fc3a26706966441d1a">More...</a><br /></td></tr>
 <tr class="separator:ga6e772d146983a4fc3a26706966441d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga754345ca63fe166126b6ce7bbc506109"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga754345ca63fe166126b6ce7bbc506109">ketCube_common_Med</a> (uint16_t *values, uint16_t size)</td></tr>
+<tr class="memitem:ga754345ca63fe166126b6ce7bbc506109"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga754345ca63fe166126b6ce7bbc506109">ketCube_common_Med</a> (uint16_t *<a class="el" href="ketCube__fdc2214_8c.html#ac50d8582fb4aaee896f3a79125bb3922">values</a>, uint16_t size)</td></tr>
 <tr class="memdesc:ga754345ca63fe166126b6ce7bbc506109"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return median from an array of shorts.  <a href="group__KETCube__common.html#ga754345ca63fe166126b6ce7bbc506109">More...</a><br /></td></tr>
 <tr class="separator:ga754345ca63fe166126b6ce7bbc506109"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gaec28aff529bf55654f806697341d3196"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaec28aff529bf55654f806697341d3196">ketCube_common_Avg</a> (uint16_t *values, uint16_t size)</td></tr>
+<tr class="memitem:ga2ae4265bf7ca5f2557bd999f6006c4ec"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga2ae4265bf7ca5f2557bd999f6006c4ec">ketCube_common_Med32</a> (uint32_t *<a class="el" href="ketCube__fdc2214_8c.html#ac50d8582fb4aaee896f3a79125bb3922">values</a>, uint32_t size)</td></tr>
+<tr class="memdesc:ga2ae4265bf7ca5f2557bd999f6006c4ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return median from an array of shorts.  <a href="group__KETCube__common.html#ga2ae4265bf7ca5f2557bd999f6006c4ec">More...</a><br /></td></tr>
+<tr class="separator:ga2ae4265bf7ca5f2557bd999f6006c4ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga3c24fb511030d43b81cb673bb2659562"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga3c24fb511030d43b81cb673bb2659562">ketCube_common_Max32</a> (uint32_t *<a class="el" href="ketCube__fdc2214_8c.html#ac50d8582fb4aaee896f3a79125bb3922">values</a>, uint32_t size)</td></tr>
+<tr class="memdesc:ga3c24fb511030d43b81cb673bb2659562"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return max from an array of ints.  <a href="group__KETCube__common.html#ga3c24fb511030d43b81cb673bb2659562">More...</a><br /></td></tr>
+<tr class="separator:ga3c24fb511030d43b81cb673bb2659562"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1aa4e1600941a7a7d343988c57ff872a"><td class="memItemLeft" align="right" valign="top">static uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#ga1aa4e1600941a7a7d343988c57ff872a">ketCube_common_Min32</a> (uint32_t *<a class="el" href="ketCube__fdc2214_8c.html#ac50d8582fb4aaee896f3a79125bb3922">values</a>, uint32_t size)</td></tr>
+<tr class="memdesc:ga1aa4e1600941a7a7d343988c57ff872a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return max from an array of ints.  <a href="group__KETCube__common.html#ga1aa4e1600941a7a7d343988c57ff872a">More...</a><br /></td></tr>
+<tr class="separator:ga1aa4e1600941a7a7d343988c57ff872a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaec28aff529bf55654f806697341d3196"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gaec28aff529bf55654f806697341d3196">ketCube_common_Avg</a> (uint16_t *<a class="el" href="ketCube__fdc2214_8c.html#ac50d8582fb4aaee896f3a79125bb3922">values</a>, uint16_t size)</td></tr>
 <tr class="memdesc:gaec28aff529bf55654f806697341d3196"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return median from an array of shorts.  <a href="group__KETCube__common.html#gaec28aff529bf55654f806697341d3196">More...</a><br /></td></tr>
 <tr class="separator:gaec28aff529bf55654f806697341d3196"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gadaaba625ebd2d5596ded5493980dd55d"><td class="memItemLeft" align="right" valign="top">static uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__common.html#gadaaba625ebd2d5596ded5493980dd55d">ketCube_common_swapW</a> (uint16_t n)</td></tr>

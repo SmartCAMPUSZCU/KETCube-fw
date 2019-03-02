@@ -44,6 +44,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Data Structures</a> &#124;
+<a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -55,6 +56,7 @@ $(function() {
 <p>This file contains definitions for the UART manager.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &quot;<a class="el" href="ketCube__cfg_8h_source.html">ketCube_cfg.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ketCube__gpio_8h_source.html">ketCube_gpio.h</a>&quot;</code><br />
 </div>
 <p><a href="ketCube__uart_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -63,6 +65,12 @@ Data Structures</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__UART__descriptor__t.html">ketCube_UART_descriptor_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">UART descriptor structure.  <a href="structketCube__UART__descriptor__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
+Macros</h2></td></tr>
+<tr class="memitem:ga4e7bdca45b1be226e880ece4e424c8cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga4e7bdca45b1be226e880ece4e424c8cf">KETCUBE_UART_NAME</a>&#160;&#160;&#160;&quot;uart_drv&quot;</td></tr>
+<tr class="memdesc:ga4e7bdca45b1be226e880ece4e424c8cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">UART driver name.  <a href="group__KETCube__UART.html#ga4e7bdca45b1be226e880ece4e424c8cf">More...</a><br /></td></tr>
+<tr class="separator:ga4e7bdca45b1be226e880ece4e424c8cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -86,18 +94,15 @@ Enumerations</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga44f0c2dcfd4a720b813235acdd26aa01"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga44f0c2dcfd4a720b813235acdd26aa01">ketCube_UART_RegisterHandle</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel, <a class="el" href="structketCube__UART__descriptor__t.html">ketCube_UART_descriptor_t</a> *descriptor)</td></tr>
-<tr class="memdesc:ga44f0c2dcfd4a720b813235acdd26aa01"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register UART channel for exclusive access.  <a href="group__KETCube__UART.html#ga44f0c2dcfd4a720b813235acdd26aa01">More...</a><br /></td></tr>
-<tr class="separator:ga44f0c2dcfd4a720b813235acdd26aa01"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabf325b71c2ad0e78e544b3b97d380c07"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gabf325b71c2ad0e78e544b3b97d380c07">ketCube_UART_UnRegisterHandle</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
-<tr class="memdesc:gabf325b71c2ad0e78e544b3b97d380c07"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregister UART channel.  <a href="group__KETCube__UART.html#gabf325b71c2ad0e78e544b3b97d380c07">More...</a><br /></td></tr>
-<tr class="separator:gabf325b71c2ad0e78e544b3b97d380c07"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga985471f4af6f8777388d0541374735ed"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga985471f4af6f8777388d0541374735ed">ketCube_UART_SetupPin</a> (uint32_t pin, uint32_t alternate, GPIO_TypeDef *port)</td></tr>
-<tr class="memdesc:ga985471f4af6f8777388d0541374735ed"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup pin for communication.  <a href="group__KETCube__UART.html#ga985471f4af6f8777388d0541374735ed">More...</a><br /></td></tr>
-<tr class="separator:ga985471f4af6f8777388d0541374735ed"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gae7b58c3eccba027fb12fe268b3306246"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gae7b58c3eccba027fb12fe268b3306246">ketCube_UART_ReleasePin</a> (uint32_t pin, GPIO_TypeDef *port)</td></tr>
-<tr class="memdesc:gae7b58c3eccba027fb12fe268b3306246"><td class="mdescLeft">&#160;</td><td class="mdescRight">Release pin - setup as input pin.  <a href="group__KETCube__UART.html#gae7b58c3eccba027fb12fe268b3306246">More...</a><br /></td></tr>
-<tr class="separator:gae7b58c3eccba027fb12fe268b3306246"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gadfa47ee185ef27cc49a78882e539f2b4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga95b939ff8cd8890da9841626ce5e7958">ketCube_cfg_DrvError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gadfa47ee185ef27cc49a78882e539f2b4">ketCube_UART_RegisterHandle</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel, <a class="el" href="structketCube__UART__descriptor__t.html">ketCube_UART_descriptor_t</a> *descriptor)</td></tr>
+<tr class="memdesc:gadfa47ee185ef27cc49a78882e539f2b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Register UART channel for exclusive access.  <a href="group__KETCube__UART.html#gadfa47ee185ef27cc49a78882e539f2b4">More...</a><br /></td></tr>
+<tr class="separator:gadfa47ee185ef27cc49a78882e539f2b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gab3231077e51c6dbb44c9eee5d2747acd"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga95b939ff8cd8890da9841626ce5e7958">ketCube_cfg_DrvError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gab3231077e51c6dbb44c9eee5d2747acd">ketCube_UART_UnRegisterHandle</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
+<tr class="memdesc:gab3231077e51c6dbb44c9eee5d2747acd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unregister UART channel.  <a href="group__KETCube__UART.html#gab3231077e51c6dbb44c9eee5d2747acd">More...</a><br /></td></tr>
+<tr class="separator:gab3231077e51c6dbb44c9eee5d2747acd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:gaecccaa2ecc3f34c207169ff7dd6a8d63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga95b939ff8cd8890da9841626ce5e7958">ketCube_cfg_DrvError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#gaecccaa2ecc3f34c207169ff7dd6a8d63">ketCube_UART_SetupPin</a> (<a class="el" href="group__KETCube__GPIO.html#ga12961c99294365c32e24748e867b2419">ketCube_gpio_port_t</a> port, <a class="el" href="group__KETCube__GPIO.html#ga542668478aff23325cadc697f5b49643">ketCube_gpio_pin_t</a> pin, uint8_t af)</td></tr>
+<tr class="memdesc:gaecccaa2ecc3f34c207169ff7dd6a8d63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Setup UART PIN(s)  <a href="group__KETCube__UART.html#gaecccaa2ecc3f34c207169ff7dd6a8d63">More...</a><br /></td></tr>
+<tr class="separator:gaecccaa2ecc3f34c207169ff7dd6a8d63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6c379b083a781fe08e911d60016eec77"><td class="memItemLeft" align="right" valign="top">UART_HandleTypeDef *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__UART.html#ga6c379b083a781fe08e911d60016eec77">ketCube_UART_GetHandle</a> (<a class="el" href="group__KETCube__UART.html#ga5c5e7338ed01aac9bc5f9795a1b89f30">ketCube_UART_ChannelNo_t</a> channel)</td></tr>
 <tr class="memdesc:ga6c379b083a781fe08e911d60016eec77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve UART handle for given channel.  <a href="group__KETCube__UART.html#ga6c379b083a781fe08e911d60016eec77">More...</a><br /></td></tr>
 <tr class="separator:ga6c379b083a781fe08e911d60016eec77"><td class="memSeparator" colspan="2">&#160;</td></tr>

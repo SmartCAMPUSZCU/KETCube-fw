@@ -67,6 +67,17 @@
 /**
  * Define a KETCube module 
  * 
+ * @param name module name
+ * @param descr human-readable module description
+ * @param initFn module initialization function pointer
+ * @param sleepEnter module sleep-enter function pointer
+ * @param sleepExit module sleep-exit function pointer
+ * @param getSensData getSensorData() module function - for sensing modules
+ * @param sendData sendData() module function - for communication modules
+ * @param recvsData recv() module function - for communication modules
+ * @param processData processData() callback function for inter-module messages
+ * @param cfgStruct name of the module configuration-holding structure
+ * 
  */
 #define DEF_MODULE(name, descr, initFn, sleepEnter, sleepExit, \
                    getSensData, sendData, recvData, processData, cfgStruct) \
@@ -115,6 +126,8 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                ketCube_lora_moduleCfg     /* Module cfg struct */
               ),
 #endif
+/* This is the obsolete code! */
+/* This part will be completely removed in the next release. */
 #ifdef KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
     {((char *) &("DebugDisplay")),
      ((char *) &("Display debug output on serial line")),

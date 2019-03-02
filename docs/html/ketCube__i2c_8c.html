@@ -42,9 +42,6 @@ $(function() {
 </div>
 </div><!-- top -->
 <div class="header">
-  <div class="summary">
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">ketCube_i2c.c File Reference</div>  </div>
 </div><!--header-->
@@ -52,58 +49,8 @@ $(function() {
 
 <p>This file contains the ketCube I2C driver.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;stm32l0xx_hal.h&quot;</code><br />
-<code>#include &quot;stm32l0xx_hal_i2c.h&quot;</code><br />
-<code>#include &quot;<a class="el" href="ketCube__cfg_8h_source.html">ketCube_cfg.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ketCube__i2c_8h_source.html">ketCube_i2c.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ketCube__terminal_8h_source.html">ketCube_terminal.h</a>&quot;</code><br />
-</div><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
-Functions</h2></td></tr>
-<tr class="memitem:a6bce5091f40108a5063aff0187def9f6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__i2c_8c.html#a6bce5091f40108a5063aff0187def9f6">ketCube_I2C_Error</a> ()</td></tr>
-<tr class="memdesc:a6bce5091f40108a5063aff0187def9f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Manages error callback by re-initializing I2C.  <a href="#a6bce5091f40108a5063aff0187def9f6">More...</a><br /></td></tr>
-<tr class="separator:a6bce5091f40108a5063aff0187def9f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga495972526c6540e967bb32a44ae79929"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga495972526c6540e967bb32a44ae79929">ketCube_I2C_Init</a> (void)</td></tr>
-<tr class="memdesc:ga495972526c6540e967bb32a44ae79929"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures I2C interface.  <a href="group__KETCube__I2C__fn.html#ga495972526c6540e967bb32a44ae79929">More...</a><br /></td></tr>
-<tr class="separator:ga495972526c6540e967bb32a44ae79929"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga81149ee5a87b190e5b7ca4ef57fdd297"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga81149ee5a87b190e5b7ca4ef57fdd297">ketCube_I2C_UnInit</a> (void)</td></tr>
-<tr class="memdesc:ga81149ee5a87b190e5b7ca4ef57fdd297"><td class="mdescLeft">&#160;</td><td class="mdescRight">Configures I2C interface.  <a href="group__KETCube__I2C__fn.html#ga81149ee5a87b190e5b7ca4ef57fdd297">More...</a><br /></td></tr>
-<tr class="separator:ga81149ee5a87b190e5b7ca4ef57fdd297"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gabebbadda0b34fe6014e9f0568e850579"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#gabebbadda0b34fe6014e9f0568e850579">ketCube_I2C_ReadData</a> (uint8_t Addr, uint8_t Reg, uint8_t *pBuffer, uint16_t Size)</td></tr>
-<tr class="separator:gabebbadda0b34fe6014e9f0568e850579"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga16dea146857281f3aaa9f8a11e30c414"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga16dea146857281f3aaa9f8a11e30c414">ketCube_I2C_WriteData</a> (uint8_t Addr, uint8_t Reg, uint8_t *pBuffer, uint16_t Size)</td></tr>
-<tr class="separator:ga16dea146857281f3aaa9f8a11e30c414"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga0264bd0e6ece4a70862fd4e6160fbc62"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga0264bd0e6ece4a70862fd4e6160fbc62">ketCube_I2C_WriteRawData</a> (uint8_t Addr, uint8_t *pBuffer, uint16_t Size)</td></tr>
-<tr class="separator:ga0264bd0e6ece4a70862fd4e6160fbc62"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga25035f376c56ccec21bdd5d1d6421a1d"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga25035f376c56ccec21bdd5d1d6421a1d">ketCube_I2C_ReadRawData</a> (uint8_t Addr, uint8_t *pBuffer, uint16_t Size)</td></tr>
-<tr class="separator:ga25035f376c56ccec21bdd5d1d6421a1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gafa36a4fc3a198825693d37ce31a6c621"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#gafa36a4fc3a198825693d37ce31a6c621">ketCube_I2C_TexasReadReg</a> (uint8_t devAddr, uint8_t regAddr, uint16_t *data)</td></tr>
-<tr class="memdesc:gafa36a4fc3a198825693d37ce31a6c621"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read TexasInstruments I2C periph 16-bit register.  <a href="group__KETCube__I2C__fn.html#gafa36a4fc3a198825693d37ce31a6c621">More...</a><br /></td></tr>
-<tr class="separator:gafa36a4fc3a198825693d37ce31a6c621"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1e2e90eb72e93f91444029bf2ecdc6f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga1e2e90eb72e93f91444029bf2ecdc6f5">ketCube_I2C_TexasWriteReg</a> (uint8_t devAddr, uint8_t regAddr, uint16_t *data)</td></tr>
-<tr class="memdesc:ga1e2e90eb72e93f91444029bf2ecdc6f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write TexasInstruments I2C periph 16-bit register.  <a href="group__KETCube__I2C__fn.html#ga1e2e90eb72e93f91444029bf2ecdc6f5">More...</a><br /></td></tr>
-<tr class="separator:ga1e2e90eb72e93f91444029bf2ecdc6f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4a9765121168e13c5d00072b9e6ad340"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga4a9765121168e13c5d00072b9e6ad340">ketCube_I2C_STMReadSingle</a> (uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint8_t try)</td></tr>
-<tr class="memdesc:ga4a9765121168e13c5d00072b9e6ad340"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read STM I2C Single 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga4a9765121168e13c5d00072b9e6ad340">More...</a><br /></td></tr>
-<tr class="separator:ga4a9765121168e13c5d00072b9e6ad340"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga146f311a2886208cccd89062d044578c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga146f311a2886208cccd89062d044578c">ketCube_I2C_AnalogWriteReg</a> (uint8_t devAddr, uint8_t regAddr, uint8_t data)</td></tr>
-<tr class="memdesc:ga146f311a2886208cccd89062d044578c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write AnalogDevices I2C periph 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga146f311a2886208cccd89062d044578c">More...</a><br /></td></tr>
-<tr class="separator:ga146f311a2886208cccd89062d044578c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4af461f4607425c7a917e6f354dd3362"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga4af461f4607425c7a917e6f354dd3362">ketCube_I2C_STMReadBlock</a> (uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint8_t len, uint8_t try)</td></tr>
-<tr class="memdesc:ga4af461f4607425c7a917e6f354dd3362"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read STM I2C Single 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga4af461f4607425c7a917e6f354dd3362">More...</a><br /></td></tr>
-<tr class="separator:ga4af461f4607425c7a917e6f354dd3362"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga973f1a90f2f6797c6a630ea88970e565"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__I2C__fn.html#ga973f1a90f2f6797c6a630ea88970e565">ketCube_I2C_STMWriteSingle</a> (uint8_t devAddr, uint8_t regAddr, uint8_t *data, uint8_t try)</td></tr>
-<tr class="memdesc:ga973f1a90f2f6797c6a630ea88970e565"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write STM I2C Single 8-bit register.  <a href="group__KETCube__I2C__fn.html#ga973f1a90f2f6797c6a630ea88970e565">More...</a><br /></td></tr>
-<tr class="separator:ga973f1a90f2f6797c6a630ea88970e565"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a2c41a2d0efefbfe0f6251abe1fdb77b8"><td class="memItemLeft" align="right" valign="top">I2C_HandleTypeDef&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__i2c_8c.html#a2c41a2d0efefbfe0f6251abe1fdb77b8">KETCUBE_I2C_Handle</a></td></tr>
-<tr class="separator:a2c41a2d0efefbfe0f6251abe1fdb77b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abbc85c06a93db8f7136c2643d3d5c8c5"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__i2c_8c.html#abbc85c06a93db8f7136c2643d3d5c8c5">initRuns</a> = 0</td></tr>
-<tr class="separator:abbc85c06a93db8f7136c2643d3d5c8c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><code>#include &quot;<a class="el" href="ketCube__cfg_8h_source.html">ketCube_cfg.h</a>&quot;</code><br />
+</div><a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains the ketCube I2C driver. </p>
 <dl class="section author"><dt>Author</dt><dd>Jan Belohoubek </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>0.1 </dd></dl>
@@ -118,78 +65,7 @@ Variables</h2></td></tr>
 <li>Neither the names of The SmartCampus Team, Department of Technologies and Measurement and Faculty of Electrical Engineering University of West Bohemia in Pilsen, nor the names of its contributors may be used to endorse or promote products derived from this Software without specific prior written permission.</li>
 </ul>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
-<a id="a6bce5091f40108a5063aff0187def9f6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6bce5091f40108a5063aff0187def9f6">&#9670;&nbsp;</a></span>ketCube_I2C_Error()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void ketCube_I2C_Error </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Manages error callback by re-initializing I2C. </p>
-<dl class="retval"><dt>Return values</dt><dd>
-  <table class="retval">
-    <tr><td class="paramname">None</td><td></td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="abbc85c06a93db8f7136c2643d3d5c8c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abbc85c06a93db8f7136c2643d3d5c8c5">&#9670;&nbsp;</a></span>initRuns</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t initRuns = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a2c41a2d0efefbfe0f6251abe1fdb77b8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2c41a2d0efefbfe0f6251abe1fdb77b8">&#9670;&nbsp;</a></span>KETCUBE_I2C_Handle</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">I2C_HandleTypeDef KETCUBE_I2C_Handle</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-</div><!-- contents -->
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

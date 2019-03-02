@@ -39,8 +39,10 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#enum-members">Enumerations</a> &#124;
-<a href="#func-members">Functions</a>  </div>
+<a href="#nested-classes">Data Structures</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">KETCube txDisplay<div class="ingroups"><a class="el" href="group__KETCube__Mods.html">KETCube Modules</a> &raquo; <a class="el" href="group__KETCube__CommMods.html">KETCube Communication Modules</a></div></div>  </div>
 </div><!--header-->
@@ -49,16 +51,17 @@ $(function() {
 <p>KETCube txDisplay module allows to vizualize KETCube Tx data.  
 <a href="#details">More...</a></p>
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:ga04b8322ad9d685029031dbf92e95863d"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__txDisplay.html#ga04b8322ad9d685029031dbf92e95863d">ketCube_txDisplay_cfgAddr_t</a> { <a class="el" href="group__KETCube__txDisplay.html#gga04b8322ad9d685029031dbf92e95863da27d43126e18aff367ea01309fd204c24">KETCUBE_TXDISPLAY_CFGADR_CFG</a> = 0
- }</td></tr>
-<tr class="memdesc:ga04b8322ad9d685029031dbf92e95863d"><td class="mdescLeft">&#160;</td><td class="mdescRight">txDisplay CFG data relative addr.  <a href="group__KETCube__txDisplay.html#ga04b8322ad9d685029031dbf92e95863d">More...</a><br /></td></tr>
-<tr class="separator:ga04b8322ad9d685029031dbf92e95863d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga7a5be06615cf23f4338d0bd62033e8c3"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__txDisplay.html#ga7a5be06615cf23f4338d0bd62033e8c3">ketCube_txDisplay_cfgLen_t</a> { <a class="el" href="group__KETCube__txDisplay.html#gga7a5be06615cf23f4338d0bd62033e8c3a99e1c6adb7eac1c72d5ad29007d5d755">KETCUBE_TXDISPLAY_CFGLEN_CFG</a> = 1
- }</td></tr>
-<tr class="memdesc:ga7a5be06615cf23f4338d0bd62033e8c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Length of txDisplay CFG data.  <a href="group__KETCube__txDisplay.html#ga7a5be06615cf23f4338d0bd62033e8c3">More...</a><br /></td></tr>
-<tr class="separator:ga7a5be06615cf23f4338d0bd62033e8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__txDisplay__moduleCfg__t.html">ketCube_txDisplay_moduleCfg_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube module configuration.  <a href="structketCube__txDisplay__moduleCfg__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga8c77c8a20a4c5363df3f0f7176caecda"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structketCube__txDisplay__moduleCfg__t.html">ketCube_txDisplay_moduleCfg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__txDisplay.html#ga8c77c8a20a4c5363df3f0f7176caecda">ketCube_txDisplay_moduleCfg_t</a></td></tr>
+<tr class="memdesc:ga8c77c8a20a4c5363df3f0f7176caecda"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube module configuration.  <a href="#ga8c77c8a20a4c5363df3f0f7176caecda">More...</a><br /></td></tr>
+<tr class="separator:ga8c77c8a20a4c5363df3f0f7176caecda"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -66,45 +69,28 @@ Functions</h2></td></tr>
 <tr class="separator:gad2d9ec3537c1b78a61dcd9dd5d085baa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga4089b71d876c19060067d6a7dda397eb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__txDisplay.html#ga4089b71d876c19060067d6a7dda397eb">ketCube_txDisplay_Send</a> (uint8_t *buffer, uint8_t *len)</td></tr>
 <tr class="separator:ga4089b71d876c19060067d6a7dda397eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:ga97741046a49bfaa214d3b5a191e4e107"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__txDisplay__moduleCfg__t.html">ketCube_txDisplay_moduleCfg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__txDisplay.html#ga97741046a49bfaa214d3b5a191e4e107">ketCube_txDisplay_moduleCfg</a></td></tr>
+<tr class="separator:ga97741046a49bfaa214d3b5a191e4e107"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>KETCube txDisplay module allows to vizualize KETCube Tx data. </p>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="ga04b8322ad9d685029031dbf92e95863d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga04b8322ad9d685029031dbf92e95863d">&#9670;&nbsp;</a></span>ketCube_txDisplay_cfgAddr_t</h2>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="ga8c77c8a20a4c5363df3f0f7176caecda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga8c77c8a20a4c5363df3f0f7176caecda">&#9670;&nbsp;</a></span>ketCube_txDisplay_moduleCfg_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group__KETCube__txDisplay.html#ga04b8322ad9d685029031dbf92e95863d">ketCube_txDisplay_cfgAddr_t</a></td>
+          <td class="memname">typedef struct <a class="el" href="structketCube__txDisplay__moduleCfg__t.html">ketCube_txDisplay_moduleCfg_t</a>  <a class="el" href="structketCube__txDisplay__moduleCfg__t.html">ketCube_txDisplay_moduleCfg_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>txDisplay CFG data relative addr. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga04b8322ad9d685029031dbf92e95863da27d43126e18aff367ea01309fd204c24"></a>KETCUBE_TXDISPLAY_CFGADR_CFG&#160;</td><td class="fielddoc"></td></tr>
-</table>
-
-</div>
-</div>
-<a id="ga7a5be06615cf23f4338d0bd62033e8c3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga7a5be06615cf23f4338d0bd62033e8c3">&#9670;&nbsp;</a></span>ketCube_txDisplay_cfgLen_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">enum <a class="el" href="group__KETCube__txDisplay.html#ga7a5be06615cf23f4338d0bd62033e8c3">ketCube_txDisplay_cfgLen_t</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Length of txDisplay CFG data. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga7a5be06615cf23f4338d0bd62033e8c3a99e1c6adb7eac1c72d5ad29007d5d755"></a>KETCUBE_TXDISPLAY_CFGLEN_CFG&#160;</td><td class="fielddoc"></td></tr>
-</table>
+<p>KETCube module configuration. </p>
 
 </div>
 </div>
@@ -149,6 +135,21 @@ Functions</h2></td></tr>
           <td></td>
           <td>)</td>
           <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Variable Documentation</h2>
+<a id="ga97741046a49bfaa214d3b5a191e4e107"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga97741046a49bfaa214d3b5a191e4e107">&#9670;&nbsp;</a></span>ketCube_txDisplay_moduleCfg</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structketCube__txDisplay__moduleCfg__t.html">ketCube_txDisplay_moduleCfg_t</a> ketCube_txDisplay_moduleCfg</td>
         </tr>
       </table>
 </div><div class="memdoc">

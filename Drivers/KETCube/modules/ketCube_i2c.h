@@ -68,8 +68,8 @@
 * @brief I2C Speed selection
 */
 typedef enum {
-    KETCUBE_I2C_SPEED_100KHZ = 0x10A13E56,      /*<! Analog Filter ON, Rise Time 400ns, Fall Time 100ns */
-    KETCUBE_I2C_SPEED_400KHZ = 0x00B1112E       /*<! Analog Filter ON, Rise Time 250ns, Fall Time 100ns */
+    KETCUBE_I2C_SPEED_100KHZ = 0x10A13E56,      /*!< Analog Filter ON, Rise Time 400ns, Fall Time 100ns */
+    KETCUBE_I2C_SPEED_400KHZ = 0x00B1112E       /*!< Analog Filter ON, Rise Time 250ns, Fall Time 100ns */
 } ketCube_I2C_SPEED_t;
 
 #define KETCUBE_I2C_CLK_ENABLE()               __I2C1_CLK_ENABLE()

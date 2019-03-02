@@ -52,7 +52,7 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_BMEX80
 
-ketCube_bmeX80_moduleCfg_t ketCube_bmeX80_moduleCfg; /*<! Module configuration storage */
+ketCube_bmeX80_moduleCfg_t ketCube_bmeX80_moduleCfg; /*!< Module configuration storage */
 
 extern void bench_StoreData_BME280(int16_t temperature, uint16_t humidity,
                                    uint16_t pressure);

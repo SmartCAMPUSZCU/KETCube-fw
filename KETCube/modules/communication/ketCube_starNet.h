@@ -60,7 +60,7 @@
 * @brief  KETCube module configuration
 */
 typedef struct ketCube_starNet_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*<! KETCube core cfg byte */
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
 } ketCube_starNet_moduleCfg_t;
 
 extern ketCube_starNet_moduleCfg_t ketCube_starNet_moduleCfg;

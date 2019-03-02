@@ -53,7 +53,7 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_FDC2214
 
-ketCube_fdc2214_moduleCfg_t ketCube_fdc2214_moduleCfg; /*<! Module configuration storage */
+ketCube_fdc2214_moduleCfg_t ketCube_fdc2214_moduleCfg; /*!< Module configuration storage */
 
 /**
  * @brief Exit the FDC2214 shut-down mode

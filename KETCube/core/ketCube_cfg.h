@@ -63,28 +63,28 @@
 * @brief  Allocated CFG EEPROM addreses
 */
 typedef enum {
-    KETCUBE_EEPROM_ALLOC_CORE = 0,      /*<! KETCube core configuration base address -- core configuration is located in module configuration area */
-    KETCUBE_EEPROM_ALLOC_MODULES = 0,   /*<! Module configuration base address */
+    KETCUBE_EEPROM_ALLOC_CORE = 0,      /*!< KETCube core configuration base address -- core configuration is located in module configuration area */
+    KETCUBE_EEPROM_ALLOC_MODULES = 0,   /*!< Module configuration base address */
 } ketCube_cfg_AllocEEPROM_t;
 
 /**
 * @brief  Length of CFG EEPROM data
 */
 typedef enum {
-    KETCUBE_EEPROM_LEN_CORE    = 64,    /*<! Core max configuration len in bytes */
-    KETCUBE_EEPROM_LEN_MODULES = 1024,  /*<! Modules max configuration len in bytes */
+    KETCUBE_EEPROM_LEN_CORE    = 64,    /*!< Core max configuration len in bytes */
+    KETCUBE_EEPROM_LEN_MODULES = 1024,  /*!< Modules max configuration len in bytes */
 } ketCube_cfg_LenEEPROM_t;
 
 /**
 * @brief  Error code type.
 */
 typedef enum {
-    KETCUBE_CFG_OK = 0,         /*<! Operation OK */
-    KETCUBE_CFG_ERROR = 1,      /*<! CFG ERROR */
-    ketCube_cfg_Load_ERROR = 2, /*<! Load CFG */
-    ketCube_cfg_Save_ERROR = 3, /*<! Save CFG */
-    KETCUBE_CFG_BUFF_SMALL = 4, /*<! Buffer is small */
-    KETCUBE_CFG_INV_HEX = 5     /*<! Invalid HEX  */
+    KETCUBE_CFG_OK = 0,         /*!< Operation OK */
+    KETCUBE_CFG_ERROR = 1,      /*!< CFG ERROR */
+    ketCube_cfg_Load_ERROR = 2, /*!< Load CFG */
+    ketCube_cfg_Save_ERROR = 3, /*!< Save CFG */
+    KETCUBE_CFG_BUFF_SMALL = 4, /*!< Buffer is small */
+    KETCUBE_CFG_INV_HEX = 5     /*!< Invalid HEX  */
 } ketCube_cfg_Error_t;
 
 /**
@@ -107,9 +107,9 @@ typedef enum {
 * @brief  KETCube inter-module message
 */
 typedef struct ketCube_InterModMsg_t {
-    uint8_t modID;              /*<! Module index */
-    uint8_t msgLen;             /*<! Message length in bytes */
-    uint8_t *msg;               /*<! Message body */
+    uint8_t modID;              /*!< Module index */
+    uint8_t msgLen;             /*!< Message length in bytes */
+    uint8_t *msg;               /*!< Message body */
 } ketCube_InterModMsg_t;
 
 /**
@@ -138,9 +138,9 @@ typedef ketCube_cfg_ModError_t(*ketCube_cfg_ModDataPtrFn_t) (ketCube_InterModMsg
 * @brief  KETCube module configuration byte.
 */
 typedef struct ketCube_cfg_ModuleCfgByte_t {
-    bool enable:1;                      /*<! Module enable */
-    ketCube_severity_t severity:2;      /*<! Module message severity level */
-    uint8_t RFU:5;                      /*<! RFU */
+    bool enable:1;                      /*!< Module enable */
+    ketCube_severity_t severity:2;      /*!< Module message severity level */
+    uint8_t RFU:5;                      /*!< RFU */
 } ketCube_cfg_ModuleCfgByte_t;
 
 /**
@@ -156,18 +156,18 @@ typedef struct ketCube_cfg_varDescr_t {
 * @brief  KETCube module definition.
 */
 typedef struct ketCube_cfg_Module_t {
-    char *name;                 /*<! Module name */
-    char *descr;                /*<! Human-readable module description/help */
-    ketCube_cfg_ModInitFn_t fnInit;             /*<! Module init function */
-    ketCube_cfg_ModVoidFn_t fnSleepEnter;       /*<! DeInitialize module when entering sleep mode */
-    ketCube_cfg_ModVoidFn_t fnSleepExit;        /*<! Initialize module when returning from sleep mode */
-    ketCube_cfg_ModDataFn_t fnGetSensorData;    /*<! Module function to get module data into buffer (sensors) */
-    ketCube_cfg_ModDataFn_t fnSendData;         /*<! Module function to send data by communication module (the KETCube system period) */
-    ketCube_cfg_ModVoidFn_t fnReceiveData;      /*<! Module function to initialize periodic data reception by using communication module */
-    ketCube_cfg_ModDataPtrFn_t fnProcessMsg;    /*<! Module function to process data by this module */
-    ketCube_cfg_ModuleCfgByte_t * cfgPtr;       /*<! Pointer to actual/running KETCube configuration */
-    ketCube_cfg_LenEEPROM_t cfgLen;             /*<! # of module configuration bytes: min = 1; max = 255; note that the first configuration byte is always set to TRUE when module is enabled and to FALSE when disabled (all bits are cleared) */
-    ketCube_cfg_AllocEEPROM_t EEpromBase;       /*<! EEPROM base for module configuration */
+    char *name;                 /*!< Module name */
+    char *descr;                /*!< Human-readable module description/help */
+    ketCube_cfg_ModInitFn_t fnInit;             /*!< Module init function */
+    ketCube_cfg_ModVoidFn_t fnSleepEnter;       /*!< DeInitialize module when entering sleep mode */
+    ketCube_cfg_ModVoidFn_t fnSleepExit;        /*!< Initialize module when returning from sleep mode */
+    ketCube_cfg_ModDataFn_t fnGetSensorData;    /*!< Module function to get module data into buffer (sensors) */
+    ketCube_cfg_ModDataFn_t fnSendData;         /*!< Module function to send data by communication module (the KETCube system period) */
+    ketCube_cfg_ModVoidFn_t fnReceiveData;      /*!< Module function to initialize periodic data reception by using communication module */
+    ketCube_cfg_ModDataPtrFn_t fnProcessMsg;    /*!< Module function to process data by this module */
+    ketCube_cfg_ModuleCfgByte_t * cfgPtr;       /*!< Pointer to actual/running KETCube configuration */
+    ketCube_cfg_LenEEPROM_t cfgLen;             /*!< # of module configuration bytes: min = 1; max = 255; note that the first configuration byte is always set to TRUE when module is enabled and to FALSE when disabled (all bits are cleared) */
+    ketCube_cfg_AllocEEPROM_t EEpromBase;       /*!< EEPROM base for module configuration */
 } ketCube_cfg_Module_t;
 
 extern ketCube_cfg_Error_t ketCube_cfg_Load(uint8_t * data,

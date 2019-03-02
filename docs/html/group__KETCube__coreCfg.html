@@ -40,8 +40,9 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#groups">Modules</a> &#124;
+<a href="#nested-classes">Data Structures</a> &#124;
 <a href="#define-members">Macros</a> &#124;
-<a href="#enum-members">Enumerations</a> &#124;
+<a href="#typedef-members">Typedefs</a> &#124;
 <a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">KETCube CfgCore<div class="ingroups"><a class="el" href="group__KETCube__Core.html">KETCube Core</a></div></div>  </div>
@@ -56,12 +57,18 @@ Modules</h2></td></tr>
 <tr class="memitem:group__KETCube__coreCfg__fn"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg__fn.html">Public Functions</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Data Structures</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__coreCfg__t.html">ketCube_coreCfg_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube core configuration.  <a href="structketCube__coreCfg__t.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:ga223f0c040d341d38e66719c15e797ef6"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#ga223f0c040d341d38e66719c15e797ef6">KETCUBE_CORECFG_SKIP_SLEEP_PERIOD</a>&#160;&#160;&#160;<a class="el" href="group__KETCube__common.html#gaa93f0eb578d23995850d61f7d61c55c1">FALSE</a></td></tr>
 <tr class="memdesc:ga223f0c040d341d38e66719c15e797ef6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Skip sleep period (perform sensing at maximum speed)  <a href="#ga223f0c040d341d38e66719c15e797ef6">More...</a><br /></td></tr>
 <tr class="separator:ga223f0c040d341d38e66719c15e797ef6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8645b58f2f7df39d9be6583ab9251ced"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#ga8645b58f2f7df39d9be6583ab9251ced">KETCUBE_CORECFG_MIN_BASEPERIOD</a>&#160;&#160;&#160;5000</td></tr>
+<tr class="memitem:ga8645b58f2f7df39d9be6583ab9251ced"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#ga8645b58f2f7df39d9be6583ab9251ced">KETCUBE_CORECFG_MIN_BASEPERIOD</a>&#160;&#160;&#160;500</td></tr>
 <tr class="memdesc:ga8645b58f2f7df39d9be6583ab9251ced"><td class="mdescLeft">&#160;</td><td class="mdescRight">Minimal period for periodic events.  <a href="#ga8645b58f2f7df39d9be6583ab9251ced">More...</a><br /></td></tr>
 <tr class="separator:ga8645b58f2f7df39d9be6583ab9251ced"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gad0d42b45b98383c8a23a22b2540ffed9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#gad0d42b45b98383c8a23a22b2540ffed9">KETCUBE_CORECFG_MIN_STARTDELAY</a>&#160;&#160;&#160;1000</td></tr>
@@ -71,26 +78,16 @@ Macros</h2></td></tr>
 <tr class="memdesc:ga0ff68bcae70f4375e4df298076b55d24"><td class="mdescLeft">&#160;</td><td class="mdescRight">Default KETCube core severity.  <a href="#ga0ff68bcae70f4375e4df298076b55d24">More...</a><br /></td></tr>
 <tr class="separator:ga0ff68bcae70f4375e4df298076b55d24"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:gab0b171d4943237d5751a2282cd070bb5"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#gab0b171d4943237d5751a2282cd070bb5">ketCube_coreCfg_Addr_t</a> { <a class="el" href="group__KETCube__coreCfg.html#ggab0b171d4943237d5751a2282cd070bb5a3b030b7d941c7c5d0259618a87b11d4e">KETCUBE_CORECFG_ADR_BASEPERIOD</a> = 0, 
-<a class="el" href="group__KETCube__coreCfg.html#ggab0b171d4943237d5751a2282cd070bb5af86ff7a31f2bf448b00e3f4334f9d58d">KETCUBE_CORECFG_ADR_STARTDELAY</a> = 4, 
-<a class="el" href="group__KETCube__coreCfg.html#ggab0b171d4943237d5751a2282cd070bb5aca1ad17f2f997643f3bbfae7259750e3">KETCUBE_CORECFG_ADR_SEVERITY</a> = 8
- }</td></tr>
-<tr class="memdesc:gab0b171d4943237d5751a2282cd070bb5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core CFG data relative addr.  <a href="group__KETCube__coreCfg.html#gab0b171d4943237d5751a2282cd070bb5">More...</a><br /></td></tr>
-<tr class="separator:gab0b171d4943237d5751a2282cd070bb5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="typedef-members"></a>
+Typedefs</h2></td></tr>
+<tr class="memitem:ga35d661b5dc293cfe57adc9dd26b89c83"><td class="memItemLeft" align="right" valign="top">typedef struct <a class="el" href="structketCube__coreCfg__t.html">ketCube_coreCfg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#ga35d661b5dc293cfe57adc9dd26b89c83">ketCube_coreCfg_t</a></td></tr>
+<tr class="memdesc:ga35d661b5dc293cfe57adc9dd26b89c83"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube core configuration.  <a href="#ga35d661b5dc293cfe57adc9dd26b89c83">More...</a><br /></td></tr>
+<tr class="separator:ga35d661b5dc293cfe57adc9dd26b89c83"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:ga103baf9f5a320eb6b1c883c489275f21"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#ga103baf9f5a320eb6b1c883c489275f21">ketCube_coreCfg_BasePeriod</a></td></tr>
-<tr class="memdesc:ga103baf9f5a320eb6b1c883c489275f21"><td class="mdescLeft">&#160;</td><td class="mdescRight">This period is used by KETCube core to run periodic events.  <a href="#ga103baf9f5a320eb6b1c883c489275f21">More...</a><br /></td></tr>
-<tr class="separator:ga103baf9f5a320eb6b1c883c489275f21"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga8acd1a287746ded588165e2babe54c95"><td class="memItemLeft" align="right" valign="top">uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#ga8acd1a287746ded588165e2babe54c95">ketCube_coreCfg_StartDelay</a></td></tr>
-<tr class="memdesc:ga8acd1a287746ded588165e2babe54c95"><td class="mdescLeft">&#160;</td><td class="mdescRight">This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time.  <a href="#ga8acd1a287746ded588165e2babe54c95">More...</a><br /></td></tr>
-<tr class="separator:ga8acd1a287746ded588165e2babe54c95"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gab589a1c649b39d8d7fd03fcea80a41f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#gab589a1c649b39d8d7fd03fcea80a41f5">ketCube_coreCfg_severity</a></td></tr>
-<tr class="memdesc:gab589a1c649b39d8d7fd03fcea80a41f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Core messages severity.  <a href="#gab589a1c649b39d8d7fd03fcea80a41f5">More...</a><br /></td></tr>
-<tr class="separator:gab589a1c649b39d8d7fd03fcea80a41f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga580758eb16acbc6294f152d988866bb3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__coreCfg__t.html">ketCube_coreCfg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__coreCfg.html#ga580758eb16acbc6294f152d988866bb3">ketCube_coreCfg</a></td></tr>
+<tr class="separator:ga580758eb16acbc6294f152d988866bb3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>KETCube Core configuration. </p>
@@ -118,7 +115,7 @@ Variables</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define KETCUBE_CORECFG_MIN_BASEPERIOD&#160;&#160;&#160;5000</td>
+          <td class="memname">#define KETCUBE_CORECFG_MIN_BASEPERIOD&#160;&#160;&#160;500</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -159,74 +156,36 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<h2 class="groupheader">Enumeration Type Documentation</h2>
-<a id="gab0b171d4943237d5751a2282cd070bb5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab0b171d4943237d5751a2282cd070bb5">&#9670;&nbsp;</a></span>ketCube_coreCfg_Addr_t</h2>
+<h2 class="groupheader">Typedef Documentation</h2>
+<a id="ga35d661b5dc293cfe57adc9dd26b89c83"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga35d661b5dc293cfe57adc9dd26b89c83">&#9670;&nbsp;</a></span>ketCube_coreCfg_t</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">enum <a class="el" href="group__KETCube__coreCfg.html#gab0b171d4943237d5751a2282cd070bb5">ketCube_coreCfg_Addr_t</a></td>
+          <td class="memname">typedef struct <a class="el" href="structketCube__coreCfg__t.html">ketCube_coreCfg_t</a>  <a class="el" href="structketCube__coreCfg__t.html">ketCube_coreCfg_t</a></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Core CFG data relative addr. </p>
-<table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="ggab0b171d4943237d5751a2282cd070bb5a3b030b7d941c7c5d0259618a87b11d4e"></a>KETCUBE_CORECFG_ADR_BASEPERIOD&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggab0b171d4943237d5751a2282cd070bb5af86ff7a31f2bf448b00e3f4334f9d58d"></a>KETCUBE_CORECFG_ADR_STARTDELAY&#160;</td><td class="fielddoc"></td></tr>
-<tr><td class="fieldname"><a id="ggab0b171d4943237d5751a2282cd070bb5aca1ad17f2f997643f3bbfae7259750e3"></a>KETCUBE_CORECFG_ADR_SEVERITY&#160;</td><td class="fielddoc"></td></tr>
-</table>
+<p>KETCube core configuration. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="ga103baf9f5a320eb6b1c883c489275f21"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga103baf9f5a320eb6b1c883c489275f21">&#9670;&nbsp;</a></span>ketCube_coreCfg_BasePeriod</h2>
+<a id="ga580758eb16acbc6294f152d988866bb3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga580758eb16acbc6294f152d988866bb3">&#9670;&nbsp;</a></span>ketCube_coreCfg</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">uint32_t ketCube_coreCfg_BasePeriod</td>
+          <td class="memname"><a class="el" href="structketCube__coreCfg__t.html">ketCube_coreCfg_t</a> ketCube_coreCfg</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>This period is used by KETCube core to run periodic events. </p>
-
-</div>
-</div>
-<a id="gab589a1c649b39d8d7fd03fcea80a41f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#gab589a1c649b39d8d7fd03fcea80a41f5">&#9670;&nbsp;</a></span>ketCube_coreCfg_severity</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a> ketCube_coreCfg_severity</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Core messages severity. </p>
-
-</div>
-</div>
-<a id="ga8acd1a287746ded588165e2babe54c95"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga8acd1a287746ded588165e2babe54c95">&#9670;&nbsp;</a></span>ketCube_coreCfg_StartDelay</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint32_t ketCube_coreCfg_StartDelay</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time. </p>
+<p>KETCube core configuration </p>
 
 </div>
 </div>

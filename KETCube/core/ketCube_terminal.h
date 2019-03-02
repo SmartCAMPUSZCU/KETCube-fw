@@ -62,12 +62,12 @@
   * @{
   */
 
-#define KETCUBE_TERMINAL_DEBUG           FALSE  /*<! Turn ON/OFF low-level debug messages */
-#define KETCUBE_TERMINAL_MODDEBUG        TRUE   /*<! Turn ON/OFF structured debug messages */
-#define KETCUBE_TERMINAL_ECHO            TRUE   /*<! Turn ON/OFF echo */
+#define KETCUBE_TERMINAL_DEBUG           FALSE  /*!< Turn ON/OFF low-level debug messages */
+#define KETCUBE_TERMINAL_MODDEBUG        TRUE   /*!< Turn ON/OFF structured debug messages */
+#define KETCUBE_TERMINAL_ECHO            TRUE   /*!< Turn ON/OFF echo */
 
-#define KETCUBE_TERMINAL_HISTORY_LEN     3      /*<! Remember last 3 commands */
-#define KETCUBE_TERMINAL_CMD_MAX_LEN     128    /*<! Max command length */
+#define KETCUBE_TERMINAL_HISTORY_LEN     3      /*!< Remember last 3 commands */
+#define KETCUBE_TERMINAL_CMD_MAX_LEN     128    /*!< Max command length */
 
 #define KETCUBE_TERMINAL_PRINTF(...)     ketCube_terminal_UsartPrint(__VA_ARGS__)
 
@@ -209,17 +209,17 @@ static inline int ketCube_terminal_ParamSetTypeToCount(
 * @brief  KETCube terminal command definition.
 */
 typedef struct ketCube_terminal_cmd_t {
-    char * cmd;                       /*< command format */
-    char * descr;                     /*< Human-readable command description/help */
-    ketCube_terminal_command_flags_t flags;           /*< command flags */
-    ketCube_terminal_paramSet_type_t outputSetType;   /*< cmd output parameter type */
-    ketCube_terminal_paramSet_type_t paramSetType;    /*< cmd input parameter type */
+    char * cmd;                       ///< command format
+    char * descr;                     ///< Human-readable command description/help
+    ketCube_terminal_command_flags_t flags;           ///< command flags
+    ketCube_terminal_paramSet_type_t outputSetType;   ///< cmd output parameter type
+    ketCube_terminal_paramSet_type_t paramSetType;    ///< cmd input parameter type
     union
     {
-        void (*callback) (void);                      /*< Ptr to a custom callback */
-        struct ketCube_terminal_cmd_t * subCmdList;   /*< Ptr to a subcommand list (if this is root command) */
-        struct ketCube_cfg_varDescr_t * cfgVarPtr;    /*< The configuration variable descriptor - RAM/EEPROM (use for generic commands) */ 
-    } settingsPtr;
+        void (*callback) (void);                      ///< Ptr to a custom callback
+        struct ketCube_terminal_cmd_t * subCmdList;   ///< Ptr to a subcommand list (if this is root command)
+        struct ketCube_cfg_varDescr_t * cfgVarPtr;    ///< The configuration variable descriptor - RAM/EEPROM (use for generic commands)
+    } settingsPtr;                    ///< Command settings - depends on flags
 } ketCube_terminal_cmd_t;
 
 extern ketCube_terminal_cmd_t ketCube_terminal_commands[];
