@@ -67,12 +67,12 @@ ketCube_cfg_Error_t ketCube_modules_Init(void)
     uint16_t addr = KETCUBE_EEPROM_ALLOC_MODULES;
 
     for (i = 0; i < ketCube_modules_CNT; i++) {
-        ketCube_modules_List[i].EEpromBase = addr;
+        ketCube_modules_List[i].EEpromBase = (ketCube_cfg_AllocEEPROM_t) addr;
         
         // load module configuration from EEPROM
         if (ketCube_cfg_Load((uint8_t *) ketCube_modules_List[i].cfgPtr,
                              (ketCube_cfg_moduleIDs_t) i,
-                             0,
+                             (ketCube_cfg_AllocEEPROM_t) 0,
                              ketCube_modules_List[i].cfgLen) == KETCUBE_CFG_OK) {
         } else {
             return KETCUBE_CFG_ERROR;

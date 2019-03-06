@@ -42,6 +42,8 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
+#include <stddef.h>
+
 #include "ketCube_cfg.h"
 #include "ketCube_coreCfg.h"
 #include "ketCube_common.h"
@@ -92,8 +94,8 @@
                       (ketCube_cfg_ModVoidFn_t) (recvData), \
                       (ketCube_cfg_ModDataPtrFn_t) (processData), \
                       (ketCube_cfg_ModuleCfgByte_t *) &(cfgStruct), \
-                      sizeof(cfgStruct), \
-                      0 \
+                      (ketCube_cfg_LenEEPROM_t) sizeof(cfgStruct), \
+                      (ketCube_cfg_AllocEEPROM_t) 0 \
                    }
 
 
@@ -112,7 +114,8 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                NULL,                      /* ProcessData() */
                ketCube_coreCfg            /* KETCube core cfg struct */
               ),
-              
+            
+	
 #ifdef KETCUBE_CFG_INC_MOD_LORA
     DEF_MODULE("LoRa",
                "LoRa radio",

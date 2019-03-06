@@ -46,6 +46,8 @@
 #ifndef __KETCUBE_LORA_CMD_H
 #define __KETCUBE_LORA_CMD_H
 
+#include <stddef.h>
+
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
 #include "ketCube_lora.h"

@@ -46,6 +46,8 @@
 #ifndef __KETCUBE_CORE_CMD_H
 #define __KETCUBE_CORE_CMD_H
 
+#include <stddef.h>
+
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
 
