@@ -100,7 +100,9 @@ ketCube_cfg_Error_t ketCube_modules_Init(void)
                 }
                 
                 // Execute Init()
-                (ketCube_modules_List[i].fnInit) (&(InterModMsgBuffer[i]));
+                if((ketCube_modules_List[i].fnInit) (&(InterModMsgBuffer[i])) == KETCUBE_CFG_MODULE_ERROR) {
+                    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Module \"%s\" Init() failed!", ketCube_modules_List[i].name);
+                }
                 
                 ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "--- \"%s\" Init() END ---", ketCube_modules_List[i].name);
                 ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "");

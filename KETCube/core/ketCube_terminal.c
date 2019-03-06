@@ -657,6 +657,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
 
     if (i == ketCube_modules_CNT) {
         KETCUBE_TERMINAL_PRINTF("Invalid module name!");
+        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
         return;
     }
 
