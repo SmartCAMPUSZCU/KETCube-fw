@@ -533,7 +533,7 @@ ketCube_cfg_ModError_t ketCube_fdc2214_ReadData(uint8_t * buffer,
         ketCube_fdc2214_SleepEnter();
         ketCube_fdc2214_off();
         if (ketCube_fdc2214_Init(NULL) == KETCUBE_CFG_MODULE_ERROR) {
-            while(1) {
+            for(i = 0; i < 10; i++) {
                 ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, FALSE);
                 HAL_Delay(500);
                 ketCube_GPIO_Write(FDC2214_LED_PORT, FDC2214_LED_PIN, TRUE);
