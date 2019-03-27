@@ -62,7 +62,6 @@ from . import common as common
 ### Defines
 
 class ParamReturnTypes(IntEnum):
-    PARAMS_NONE       =  0
     PARAMS_BOOLEAN    =  1
     PARAMS_STRING     =  2
     PARAMS_BYTE       =  3
@@ -82,12 +81,11 @@ PROMPT=b'>> '
 
 ser = None
 
-# remove control characters from KETCube command line output
+## Remove control characters from KETCube command line output
 #
-# @param byteArray
+# @param line byte Array
 # @retval string
 #
-
 def removeCtrlChars(line):
     global ENDL, PROMPT
     
@@ -98,7 +96,10 @@ def removeCtrlChars(line):
     
     return line2
 
-# confirm command execution
+## Confirm command execution
+#
+# Send ENDL to confirm command execution
+#
 def sendConfirm():
     global ser, ENDL
     
@@ -117,11 +118,17 @@ def sendConfirm():
         else:
             return True
 
+## Flush Rx Buffer
+#
 def flushRxBuffer():
 
     while ser.inWaiting():
         ser.read()
 
+## Select COM port
+#
+# User-interactive COM port selection
+#
 def selectComPort():
     global COM
     
@@ -144,6 +151,12 @@ def selectComPort():
     COM = input("Select COM port [" + COM + "]:") or str(COM)
 
 
+## Initialize COM port
+#
+# initialize selected COM port
+#
+# @note COM must be selected
+#
 def initCOM():
     global COM, BAUD_SPEED, TIMEOUT, ser
     
@@ -151,7 +164,9 @@ def initCOM():
 
     ser = serial.Serial(COM, BAUD_SPEED, timeout=TIMEOUT)
 
-
+## Deinitialize COM port
+#
+#
 def unInitCOM():
     global ser
     
@@ -159,7 +174,11 @@ def unInitCOM():
 
     ser.close()
 
-def sendChar(c):
+## Send a single character
+#
+# Use echo to verify if character was processed correctly
+#
+def _sendChar(c):
     global ser
     
     byteArr = [ c ]
@@ -181,6 +200,10 @@ def sendChar(c):
         else:
             return True
 
+## Send a single command
+#
+# @param cmd string containing complete KETCube comand
+#
 def sendCommand(cmd):
     global ser, ENDL
     
@@ -195,7 +218,7 @@ def sendCommand(cmd):
     try:
         data = cmd.encode()
         for b in data:
-            if (sendChar(b) == False):
+            if (_sendChar(b) == False):
                 common.exitError()    
         
         if (sendConfirm() == False):
@@ -204,8 +227,15 @@ def sendCommand(cmd):
     except:
         common.exitError()
 
-# Parse CMDline parameters
-def parseParams(paramType = None, line = None):
+
+## Parse CMDline parameters
+#
+# @param paramType type of parameter to parse
+# @line string obtained from KETCube containing command response
+#
+# @retval parsed parameter
+#
+def _parseParams(paramType = None, line = None):
     # check input parameters
     if (paramType == None) or (line == None):
         return
@@ -223,8 +253,14 @@ def parseParams(paramType = None, line = None):
         line = line.replace('-', '')
         print("ByteArray parsed: " + line)
         return line
-    
-def getCmdResp(paramType = ParamReturnTypes.PARAMS_NONE):
+
+## Get command response
+#
+# @param paramType type of parameter to parse, None if nothing expected
+#
+# @retval parsed parameter (if expected)
+#
+def getCmdResp(paramType = None):
     global ser, ENDL
     
     if ser == None:
@@ -252,7 +288,7 @@ def getCmdResp(paramType = ParamReturnTypes.PARAMS_NONE):
             continue
     
         if (line.find("Command execution OK") >= 0):
-            if (paramType != ParamReturnTypes.PARAMS_NONE):
+            if (paramType != None):
                 try:
                     line = ser.readline()
                 except:
@@ -260,7 +296,7 @@ def getCmdResp(paramType = ParamReturnTypes.PARAMS_NONE):
                     return
                 line = removeCtrlChars(line)
                 print("Recv: " + line)
-                return parseParams(paramType, line)
+                return _parseParams(paramType, line)
             return
             
         if (line.find("Command execution ERROR") >= 0):

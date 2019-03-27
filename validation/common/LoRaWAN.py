@@ -2,12 +2,12 @@
 # -*- coding: utf-8 -*-
 #
 
-## @file recipe.py
+## @file LoRaWAN.py
 #
 # @author Jan Belohoubek
 # @version 0.1
-# @date    2019-03-04
-# @brief   The KETCube recipe deffinitions
+# @date    2019-03-26
+# @brief   The KETCube LoRaWAN common deffinitions
 #
 # @note Requirements:
 #    Standard Python3 installation (Tested Fedora ...)
@@ -49,48 +49,96 @@
 #  OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
 
 ### Imports
+import os
 
 from . import common as common
-from . import terminal as term
 
-
-recipe = None
-
-## Open text file containing recipe (list of KETCube commands)
+## Get random bytes
 #
-def _openRecipe(recipePath):
-    global recipe
+# @param length number of random bytes
+#
+def _genRandomBytes(length = 16):
     
-    try:  
-        recipe = open(recipePath)
-    except:
-         common.exitError()
+    return os.urandom(length)
 
-## Close text file containing recipe (list of KETCube commands)
+## Convert byte array to HEX string
 #
-def _closeRecipe():
-    global recipe
-    
-    if (recipe == None):
-        return
-    
-    recipe.close()
-
-## Process simple recipe
-#
-# @param simpleRecipe file containing KETCube commands - one per line
-#
-def processSimpleRecipe(simpleRecipe):
-    
-    _openRecipe(simpleRecipe)
-    
-    if (recipe == None):
-        return
-    
-    for line in recipe:
-        line = line.rstrip() # remove newline
+def _toHexString(byteArray):
+    ret = ""
+    for b in byteArray:
+        ret = ret + str('%02X' % b)
         
-        term.sendCommand(line)
-        term.getCmdResp()
+    return ret
 
-    _closeRecipe()
+## Generate LoRaWAN Network Address
+#
+# @param prefix the Network Address prefix (NetID) - will be concatenated with random bytes to form 4-bytze NetAddr
+#
+def genNetAddr(prefix = [ 0x00 ]):
+    if len(prefix) > 4:
+        print("Invalid prefix!")
+        common.exitError()
+    
+    # how many bytes generate
+    gen = 4 - len(prefix)
+    
+    netAddr = bytearray()
+    for b in prefix:
+        netAddr.append(b)
+    for b in _genRandomBytes(length = gen):
+        netAddr.append(b)
+    
+    return _toHexString(netAddr)
+
+## Generate 128-bit random AES key
+#
+# @note No key checking or key validation is provided. The key characteristics (RND distribution etc. depends on RND generator provided by host system)
+#
+def _gen128AESKey():
+    byteArray = bytearray()
+    for b in _genRandomBytes(length = 16):
+        byteArray.append(b)
+    
+    return _toHexString(byteArray)
+
+## Generate LoRaWAN 1.0 Application Key
+#
+def genAppKey():  
+    return _gen128AESKey()
+
+## Generate LoRaWAN 1.0 Application Session Key
+#
+def genAppSKey():  
+    return _gen128AESKey()
+
+## Generate LoRaWAN 1.0 Network Session Key
+#
+def genNwkSKey():  
+    return _gen128AESKey()
+
+## Generate LoRaWAN 1.0 Application EUI
+#
+def genAppEUI():  
+    byteArray = bytearray()
+    for b in _genRandomBytes(length = 8):
+        byteArray.append(b)
+    
+    return _toHexString(byteArray)
+
+## Generate random device EUI
+#
+def genDevEUI(prefix = None):
+    byteArray = bytearray()
+    
+    # how many bytes generate
+    if prefix == None:
+        gen = 8
+    else:
+        gen = 8 - len(prefix)
+        for b in prefix:
+            byteArray.append(b)
+    
+    for b in _genRandomBytes(length = gen):
+        byteArray.append(b)
+    
+    return _toHexString(byteArray)
