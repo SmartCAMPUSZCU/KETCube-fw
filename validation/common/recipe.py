@@ -50,9 +50,6 @@
 
 ### Imports
 
-
-### TestBench imports
-
 from . import common as common
 from . import terminal as term
 

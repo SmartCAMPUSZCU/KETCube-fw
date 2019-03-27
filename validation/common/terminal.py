@@ -51,18 +51,30 @@
 ### Imports
 
 import sys
+import time
 import serial
 import serial.tools.list_ports
 import re
-
-### TestBench imports
+from enum import IntEnum
 
 from . import common as common
+
+### Defines
+
+class ParamReturnTypes(IntEnum):
+    PARAMS_NONE       =  0
+    PARAMS_BOOLEAN    =  1
+    PARAMS_STRING     =  2
+    PARAMS_BYTE       =  3
+    PARAMS_INT32      =  4
+    PARAMS_UINT32     =  5
+    PARAMS_INT32_PAIR =  6
+    PARAMS_BYTE_ARRAY =  7
 
 ### Connection options
 COM="COM8"
 BAUD_SPEED=9600 
-TIMEOUT=1000     # [ms]
+TIMEOUT=0.1     # [s]
 
 ### KETCube options
 ENDL=b'\x0a\x0d'
@@ -86,7 +98,27 @@ def removeCtrlChars(line):
     
     return line2
 
+# confirm command execution
+def sendConfirm():
+    global ser, ENDL
+    
+    cnt = 0
+    
+    while True:
+        if cnt > 3:
+            return False
+        
+        ser.write(ENDL)
+        ser.flush()
+        echo = ser.read(1)
+        if (echo[0] != 0x0A):
+            cnt = cnt + 1
+            continue
+        else:
+            return True
+
 def flushRxBuffer():
+
     while ser.inWaiting():
         ser.read()
 
@@ -127,36 +159,72 @@ def unInitCOM():
 
     ser.close()
 
+def sendChar(c):
+    global ser
+    
+    byteArr = [ c ]
+    
+    flushRxBuffer()
+    
+    cnt = 0
+    
+    while True:
+        if cnt > 3:
+            return False
+        
+        length = ser.write(byteArr)
+        ser.flush()
+        echo = ser.read(1)
+        if (echo[0] != byteArr[0]):
+            cnt = cnt + 1
+            continue
+        else:
+            return True
+
 def sendCommand(cmd):
     global ser, ENDL
+    
+    sendConfirm()
+    time.sleep(0.1)
+    flushRxBuffer()
     
     if ser == None:
         return
     
-    flushRxBuffer()
-    
     print("Executing cmd: " + cmd)
     try:
-        ser.write(str.encode(cmd))
-        ser.write(ENDL) # confirm command execution
-    except:
-        common.exitError()
-    
-    try:
-        echo = removeCtrlChars(ser.readline())
+        data = cmd.encode()
+        for b in data:
+            if (sendChar(b) == False):
+                common.exitError()    
+        
+        if (sendConfirm() == False):
+            common.exitError()
+            
     except:
         common.exitError()
 
-    ## get cmd echo ...
-    if (echo == cmd):
-        print ("Echo passed!")
-        pass
-    else:
-        # echo incorrect -> KETCube interpreted command incorrectly (possibly)
-        print ("Echo:" + str(echo) + " " + str(cmd))
-        pass
+# Parse CMDline parameters
+def parseParams(paramType = None, line = None):
+    # check input parameters
+    if (paramType == None) or (line == None):
+        return
     
-def getCmdResp():
+    index = line.find(" returned: ")
+    if (index < 0):
+        return
+    
+    index = index + len(" returned: ")
+    line = line[index:]
+    print("Parameter found: " + line)
+    
+    if (ParamReturnTypes.PARAMS_BYTE_ARRAY):
+        # remove byte delimiters
+        line = line.replace('-', '')
+        print("ByteArray parsed: " + line)
+        return line
+    
+def getCmdResp(paramType = ParamReturnTypes.PARAMS_NONE):
     global ser, ENDL
     
     if ser == None:
@@ -184,7 +252,15 @@ def getCmdResp():
             continue
     
         if (line.find("Command execution OK") >= 0):
-            print("RETURNED OK")
+            if (paramType != ParamReturnTypes.PARAMS_NONE):
+                try:
+                    line = ser.readline()
+                except:
+                    print("Param procesing failed!")
+                    return
+                line = removeCtrlChars(line)
+                print("Recv: " + line)
+                return parseParams(paramType, line)
             return
             
         if (line.find("Command execution ERROR") >= 0):
