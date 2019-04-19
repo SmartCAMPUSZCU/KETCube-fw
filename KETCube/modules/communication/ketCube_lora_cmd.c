@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_lora_cmd.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-04-27
+ * @version 0.2
+ * @date    2019-04-19
  * @brief   This file contains the KETCube module commandline deffinition
  *
  * @attention
@@ -80,7 +80,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
@@ -100,7 +99,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
@@ -120,7 +118,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
@@ -140,7 +137,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
@@ -160,7 +156,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
         },
         .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
@@ -174,7 +169,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
@@ -194,7 +188,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
@@ -215,7 +208,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,
@@ -236,7 +228,6 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
         .flags = {
             .isLocal   = TRUE,
             .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
             .isShowCmd = TRUE,
             .isSetCmd  = TRUE,
             .isGeneric = TRUE,

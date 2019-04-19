@@ -86,8 +86,6 @@ ketCube_terminal_cmd_t ketCube_batMeas_commands[] = {
             .isLocal   = TRUE,
             .isShowCmd = TRUE,
             .isRAM     = TRUE,
-            .isEEPROM  = TRUE,
-            .isEnvCmd  = TRUE,
         },
         .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
         .outputSetType = KETCUBE_TERMINAL_PARAMS_NONE,
