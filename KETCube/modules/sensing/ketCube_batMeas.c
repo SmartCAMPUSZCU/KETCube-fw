@@ -78,7 +78,7 @@ ketCube_batMeas_battery_t ketCube_batMeas_batList[] = {
 };
 
 /**
- * @brief  Configures S0 Counter(s)
+ * @brief  Initializes Battery Measurement
  * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure

@@ -64,27 +64,34 @@
   */
 
 /** 
+  * @defgroup KETCube_mainBoard_Revisions
   * @brief Main Board revisions
+  * @{
   */
-typedef enum {
-    KETCUBE_MAIN_REV_A = 0,
-    KETCUBE_MAIN_REV_B,
-    KETCUBE_MAIN_REV_C,
-    KETCUBE_MAIN_REV_D,
-    KETCUBE_MAIN_REV_E,
+#define KETCUBE_MAIN_REV_A      0
+#define KETCUBE_MAIN_REV_B      1
+#define KETCUBE_MAIN_REV_C      2
+#define KETCUBE_MAIN_REV_D      3
+#define KETCUBE_MAIN_REV_E      4
+#define KETCUBE_MAIN_REV_F      5
+ 
+#define KETCUBE_MAIN_REV_DEV    (KETCUBE_MAIN_REV_F + 1)  ///< The recent "public" board revision is (KETCUBE_MAIN_REV_DEV - 1)
+/**
+  * @}
+  */
 
-    KETCUBE_MAIN_REV_DEV        ///< The recent "public" board revision is (KETCUBE_MAIN_REV_DEV - 1)
-} ketCube_MainBoard_revs_t;
 
 /** 
+  * @defgroup KETCube_mainBoard_SJOptions
   * @brief Solder Jumper configuration options
+  * @{
   */
-typedef enum {
-    KETCUBE_MAIN_BOARD_SJ_OPEN = 0,     ///< Solder jumper is OPEN
-    KETCUBE_MAIN_BOARD_SJ_12,   ///< Solder jumper PADs 1 and 2 are CLOSED (this holds for all solder jumpers)
-    KETCUBE_MAIN_BOARD_SJ_23    ///< Solder jumper PADs 2 and 3 are CLOSED (this holds for 3-PAD solder jumpers)
-} ketCube_MainBoard_SJ_t;
-
+#define KETCUBE_MAIN_BOARD_SJ_OPEN  0     ///< Solder jumper is OPEN
+#define KETCUBE_MAIN_BOARD_SJ_12    1     ///< Solder jumper PADs 1 and 2 are CLOSED (this holds for all solder jumpers)
+#define KETCUBE_MAIN_BOARD_SJ_23    2     ///< Solder jumper PADs 2 and 3 are CLOSED (this holds for 3-PAD solder jumpers)
+/**
+  * @}
+  */
 
 /** @defgroup KETCube_mainBoard_Options KETCube options
   * @brief KETCube mainBoard Solder Jumpers and optional parts
