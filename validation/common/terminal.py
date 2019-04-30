@@ -86,13 +86,14 @@ ser = None
 # @param line byte Array
 # @retval string
 #
-def removeCtrlChars(line):
+def _removeCtrlChars(line):
     global ENDL, PROMPT
     
     line2 = line.decode("utf-8")
     line2 = line2.rstrip(ENDL.decode("utf-8"))
     line2 = line2.lstrip(ENDL.decode("utf-8"))
     line2 = line2.replace(PROMPT.decode("utf-8"), "")
+    line2 = line2.replace('\b', '')
     
     return line2
 
@@ -100,7 +101,7 @@ def removeCtrlChars(line):
 #
 # Send ENDL to confirm command execution
 #
-def sendConfirm():
+def _sendConfirm():
     global ser, ENDL
     
     cnt = 0
@@ -207,7 +208,7 @@ def _sendChar(c):
 def sendCommand(cmd):
     global ser, ENDL
     
-    sendConfirm()
+    _sendConfirm()
     time.sleep(0.1)
     flushRxBuffer()
     
@@ -221,7 +222,7 @@ def sendCommand(cmd):
             if (_sendChar(b) == False):
                 common.exitError()    
         
-        if (sendConfirm() == False):
+        if (_sendConfirm() == False):
             common.exitError()
             
     except:
@@ -251,6 +252,7 @@ def _parseParams(paramType = None, line = None):
     if (ParamReturnTypes.PARAMS_BYTE_ARRAY):
         # remove byte delimiters
         line = line.replace('-', '')
+        line = line.replace(' ', '')
         print("ByteArray parsed: " + line)
         return line
 
@@ -264,7 +266,7 @@ def getCmdResp(paramType = None):
     global ser, ENDL
     
     if ser == None:
-        return
+        return "ERROR"
     
     while True:
         try:
@@ -276,12 +278,12 @@ def getCmdResp(paramType = None):
         except:
             common.exitError()
             
-        line = removeCtrlChars(line)
+        line = _removeCtrlChars(line)
         print("Recv: " + line)
         
         if (line.find("Command not found!") >= 0):
             print("RETURNED ERROR")
-            return
+            return "ERROR"
         
         if (line.find("Executing command: ") >= 0):
             print("Detected command execution start!")
@@ -293,17 +295,17 @@ def getCmdResp(paramType = None):
                     line = ser.readline()
                 except:
                     print("Param procesing failed!")
-                    return
-                line = removeCtrlChars(line)
+                    return "ERROR"
+                line = _removeCtrlChars(line)
                 print("Recv: " + line)
                 return _parseParams(paramType, line)
-            return
+            return "OK"
             
         if (line.find("Command execution ERROR") >= 0):
             print("RETURNED ERROR")
-            return
+            return "ERROR"
     
         if (line.find("Help for command: ") >= 0):
             print("RETURNED ERROR - inclomplete command!")
-            return
+            return "ERROR"
                 

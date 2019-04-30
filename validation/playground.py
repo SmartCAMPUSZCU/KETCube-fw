@@ -51,8 +51,6 @@
 ### Imports
 
 import sys
-import serial
-import serial.tools.list_ports
 
 ### TestBench imports
 
