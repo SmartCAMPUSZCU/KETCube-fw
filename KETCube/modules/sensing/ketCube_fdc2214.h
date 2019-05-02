@@ -185,7 +185,7 @@ typedef enum {
 #define FDC2214_LED_PORT                    KETCUBE_MAIN_BOARD_PIN_MOSI_PORT    ///< Indication LED
 #define FDC2214_LED_PIN                     KETCUBE_MAIN_BOARD_PIN_MOSI_PIN     ///< Indication LED
 
-#define FDC2214_USE_EXTERNAL_OSC            TRUE        ///< Enable/Disable external oscillator
+#define FDC2214_USE_EXTERNAL_OSC            FALSE        ///< Enable/Disable external oscillator
 #define FDC2214_ENABLE_INT                  FALSE       ///< Enable FDC2214 interrupt
 #define FDC2214_ENABLE_SLEEP                TRUE        ///< Enter sleep mode instead of shut-down when KETCube goes low-power mode
 
