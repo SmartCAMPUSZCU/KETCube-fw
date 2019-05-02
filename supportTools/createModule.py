@@ -90,6 +90,17 @@ def copyFromTemplate(src, dst):
     s.close()
     d.close()
     
+## Insert text at the end of file
+#
+# @param dst destination file
+# @param text text to insert
+#
+def insertEnd(dst, text):
+    
+    d = open(dst, "a")
+    d.write(text)
+    d.close()
+    
 ## Insert text to dst file before line containing pattern
 #
 # @param dst destination file
@@ -196,6 +207,13 @@ textDef="""#ifdef KETCUBE_CFG_INC_MOD_""" + NAME_UPPERCASE + """
 print("  Inserting to: "+ dst)
 insertBefore(dst, ["AUTOGEN_INSERT_INCLUDE", "AUTOGEN_INSERT_MODULE_DEF"], [textInc, textDef])
 print()
+
+print("Modifying project-specific Makefile: ")
+dst=PATH + "/../Projects/Makefile/Makefile_proj"
+text="SRCS += $(COREDIR)Projects/src/sensing/ketCube_" + NAME_LOWERCASE + ".c\n"
+insertEnd(dst, text)
+print()
+
 
 print()
 print("ALL DONE!")
