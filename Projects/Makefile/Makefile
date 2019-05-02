@@ -91,6 +91,10 @@ INC_DIRS += $(COREDIR)Middlewares/Third_Party/Lora/Mac/region
 INC_DIRS += $(COREDIR)Middlewares/Third_Party/Lora/Phy
 INC_DIRS += $(COREDIR)Middlewares/Third_Party/Lora/Utilities
 INC_DIRS += $(COREDIR)Projects/inc
+INC_DIRS += $(COREDIR)Projects/inc/actuation
+INC_DIRS += $(COREDIR)Projects/inc/communication
+INC_DIRS += $(COREDIR)Projects/inc/sensing
+INC_DIRS += $(COREDIR)Projects/inc/drivers
 
 INCLUDE = $(addprefix -I, $(INC_DIRS))
 
