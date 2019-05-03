@@ -60,7 +60,6 @@
 #include "ketCube_txDisplay.h"
 
 // pre-alpha and alpha modules
-#include "ketCube_fdc2214.h"
 #include "ketCube_ics43432.h"
 #include "ketCube_bmeX80.h"
 #include "ketCube_lis2hh12.h"
@@ -208,19 +207,6 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                NULL,                              /* ReceiveData() */
                NULL,                              /* ProcessData() */
                ketCube_starNet_moduleCfg          /* Module cfg struct */
-              ),
-#endif
-#ifdef KETCUBE_CFG_INC_MOD_FDC2214
-    DEF_MODULE("FDC2214",
-               "TI\'s FDC2214 capacity to digital converter",
-               &ketCube_fdc2214_Init,       /* Init() */
-               &ketCube_fdc2214_SleepEnter, /*SleepEnter() */
-               &ketCube_fdc2214_SleepExit,  /*SleepExit() */
-               &ketCube_fdc2214_ReadData,   /* GetSensorData() */
-               NULL,                        /* SendData() */
-               NULL,                        /* ReceiveData() */
-               NULL,                        /* ProcessData() */
-               ketCube_fdc2214_moduleCfg    /* Module cfg struct */
               ),
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY

@@ -176,7 +176,6 @@ SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora_ext.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_starNet.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_adc.c
-SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_fdc2214.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_hdc1080.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_batMeas.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_bmeX80.c
