@@ -77,6 +77,8 @@ extern ketCube_EEPROM_Error_t ketCube_EEPROM_ReadBuffer(uint32_t addr,
 extern ketCube_EEPROM_Error_t ketCube_EEPROM_WriteBuffer(uint32_t addr,
                                                          uint8_t * data,
                                                          uint8_t len);
+extern ketCube_EEPROM_Error_t ketCube_EEPROM_Erase(uint32_t addr,
+                                                   uint8_t len);
 
 /**
 * @}

@@ -57,6 +57,37 @@
   * @{
   */
 
+
+/**
+ * @brief Erase EEPROM configuration - set factory defaults
+ * 
+ * @retval KETCUBE_CFG_OK in case of success
+ * @retval ketCube_CFG_ERROR in case of failure
+ */
+void ketCube_core_CMD_FactoryDefaults(void)
+{
+    uint8_t i;
+    uint16_t addr = KETCUBE_EEPROM_ALLOC_MODULES;
+
+    for (i = 0; i < ketCube_modules_CNT; i++) {
+        
+        // save zeroes to EEPROM
+        if (ketCube_cfg_SetDefaults((ketCube_cfg_moduleIDs_t) i,
+                                    (ketCube_cfg_AllocEEPROM_t) 0,
+                                    ketCube_modules_List[i].cfgLen) == KETCUBE_CFG_OK) {
+        } else {
+             ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to restore factory defaults!");
+            return;
+        }
+        
+        // set current EEPROM pointer
+        addr += ketCube_modules_List[i].cfgLen;
+    }
+    
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube was set to factory defaults!");
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Reload to apply new settings!");
+}
+
 /* Terminal command definitions */
 ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     {
@@ -78,6 +109,17 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
             .offset   = offsetof(ketCube_coreCfg_t, basePeriod),
             .size     = sizeof(uint32_t)
         }
+    },
+    
+    {
+        .cmd   = "factoryDefaults",
+        .descr = "Erase EEPROM configuration.",
+        .flags = {
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isSetCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_core_CMD_FactoryDefaults,
     },
     
     {

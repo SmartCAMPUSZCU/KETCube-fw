@@ -160,6 +160,43 @@ ketCube_EEPROM_Error_t EEPROM_Read(uint32_t addr, uint8_t * data)
 }
 
 /**
+  * @brief Erase block of the EEPROM memory
+  *
+  * @param addr EEPROM offset (from the base address)
+  * @param len data buffer length
+  *
+  * @retval error code, KETCUBE_EEPROM_OK if success
+  *
+  */
+ketCube_EEPROM_Error_t ketCube_EEPROM_Erase(uint32_t addr,
+                                            uint8_t len)
+{
+    ketCube_EEPROM_Error_t ret;
+    uint8_t i;
+
+    if ((KETCUBE_EEPROM_BASE_ADDR + addr) > KETCUBE_EEPROM_END_ADDR) {
+        return KETCUBE_EEPROM_ERROR_MEMOVER;
+    }
+
+    for (i = 0; i < len; i++) {
+        EEPROM_Unlock();
+
+        /* Reset the ERASE and DATA bits in the FLASH_PECR register to disable any residual erase */
+        FLASH->PECR = FLASH->PECR & ~(FLASH_PECR_ERASE | FLASH_PECR_DATA);
+
+        ret = EEPROM_Write(addr + i, 0x00);
+        if (ret != KETCUBE_EEPROM_OK) {
+            return ret;
+        }
+
+        /* Lock the EEPROM */
+        EEPROM_Lock();
+    }
+
+    return KETCUBE_EEPROM_OK;
+}
+
+/**
   * @brief Write Buffer to the EEPROM
   *
   * @param addr EEPROM offset (from the base address)

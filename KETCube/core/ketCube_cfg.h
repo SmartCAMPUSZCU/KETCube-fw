@@ -191,6 +191,10 @@ extern ketCube_cfg_Error_t ketCube_cfg_SaveStr(char *data,
                                                ketCube_cfg_LenEEPROM_t
                                                len);
 
+extern ketCube_cfg_Error_t ketCube_cfg_SetDefaults(ketCube_cfg_moduleIDs_t id,
+                                                   ketCube_cfg_AllocEEPROM_t addr,
+                                                   ketCube_cfg_LenEEPROM_t len);
+
 /**
 * @}
 */

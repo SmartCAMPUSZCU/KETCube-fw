@@ -164,3 +164,26 @@ ketCube_cfg_Error_t ketCube_cfg_Save(uint8_t * data,
         return ketCube_cfg_Save_ERROR;
     }
 }
+
+/**
+ * @brief Erase configuration from EEPROM
+ * 
+ * @param id  module ID
+ * @param addr EEPROM address
+ * @param len EEPROM data length
+ *
+ * @retval KETCUBE_CFG_OK in case of success
+ * @retval ketCube_cfg_Load_ERROR in case of failure
+ */
+ketCube_cfg_Error_t ketCube_cfg_SetDefaults(ketCube_cfg_moduleIDs_t id,
+                                            ketCube_cfg_AllocEEPROM_t addr,
+                                            ketCube_cfg_LenEEPROM_t len)
+{
+    if (ketCube_EEPROM_Erase
+        (ketCube_modules_List[id].EEpromBase + addr,
+         len) == KETCUBE_EEPROM_OK) {
+        return KETCUBE_CFG_OK;
+    } else {
+        return ketCube_cfg_Save_ERROR;
+    }
+}
