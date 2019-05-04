@@ -437,12 +437,12 @@ uint8_t HW_GetBatteryLevel( void )
   */
 ketCube_cfg_ModError_t HW_ketCube_getBatLevel(uint8_t * buffer, uint8_t * len)
 {
-		// write to buffer
-		*len = 1;
-		buffer[0] = HW_GetBatteryLevel();
-		
-		ketCube_terminal_DebugPrintln("batLevel :: %d", buffer[0]);
-		
+    // write to buffer
+    *len = 1;
+    buffer[0] = HW_GetBatteryLevel();
+    
+//     ketCube_terminal_DebugPrintln("batLevel :: %d", buffer[0]);
+    
     return KETCUBE_CFG_MODULE_OK;
 }
 

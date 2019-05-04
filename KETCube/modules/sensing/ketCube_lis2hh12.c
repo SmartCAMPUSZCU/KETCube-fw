@@ -200,7 +200,6 @@ ketCube_cfg_ModError_t ketCube_lis2hh12_ReadData(uint8_t * buffer,
         buffer[0] = 0;
         ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LIS2HH12,
                                      "Facing: Unknown");
-        ketCube_terminal_DebugPrintln("");
     }
 
     *len = 1;
