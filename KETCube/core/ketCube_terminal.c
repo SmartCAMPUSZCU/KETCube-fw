@@ -1204,6 +1204,7 @@ void ketCube_terminal_execCMD(void)
     
     uint8_t commandTreeLevel = 0;
     ketCube_terminal_command_flags_t activeFlags;
+    ketCube_terminal_command_flags_t contextFlags;
 
     KETCUBE_TERMINAL_ENDL();
 
@@ -1242,8 +1243,8 @@ void ketCube_terminal_execCMD(void)
         /* set active flags for root commands */
         if (commandTreeLevel == 0) {
             // set active flags
-            activeFlags = cmdList[cmdIndex].flags;
-            activeFlags.isGroup = FALSE;
+            contextFlags = cmdList[cmdIndex].flags;
+            contextFlags.isGroup = FALSE;
         }
         
         /* move to next command if mismatch */
@@ -1257,7 +1258,7 @@ void ketCube_terminal_execCMD(void)
         if ((cmdList[cmdIndex].cmd[j] == 0x00) &&
             (commandBuffer[cmdBuffIndex] != 0x00) &&
             (cmdList[cmdIndex].flags.isGroup == TRUE)) {
-            ketCube_terminal_andCmdFlags(&activeFlags, &activeFlags, &(cmdList[cmdIndex].flags));
+            ketCube_terminal_andCmdFlags(&contextFlags, &contextFlags, &(cmdList[cmdIndex].flags));
             commandTreeLevel += 1;
             
             cmdBuffIndex++;     // remove space character: ' '
@@ -1275,20 +1276,23 @@ void ketCube_terminal_execCMD(void)
                             cmdList[cmdIndex].paramSetType) != 0)))) {
             commandParamsPos = cmdBuffIndex + 1;
         
-            /* set falgs for current command */
-            ketCube_terminal_andCmdFlags(&activeFlags, &activeFlags, &(cmdList[cmdIndex].flags));
+            /* set flags for current command */
+            ketCube_terminal_andCmdFlags(&activeFlags, &contextFlags, &(cmdList[cmdIndex].flags));
         
             /* Check command flags */
             if (ketCube_terminal_checkCmdContext(&activeFlags) == FALSE) {
                 /* Command/group is not enabled in this context */
-                KETCUBE_TERMINAL_PRINTF("Command not enabled in current context!");
+                
+                /* Removed because of same command names with different flags are enabled */
+                /* KETCUBE_TERMINAL_PRINTF("Command not enabled in current context!");
                 KETCUBE_TERMINAL_ENDL();
-                KETCUBE_TERMINAL_PROMPT();
-                break;
+                KETCUBE_TERMINAL_PROMPT(); */
+                
+                /* continue with next command -- enable same command names with different flags */
+                cmdIndex++;
+                cmdBuffIndex -= j;
+                continue;
             }
-        
-            // Set flags valid for command in current subtree
-            ketCube_terminal_andCmdFlags(&activeFlags, &activeFlags, &(cmdList[cmdIndex].flags));
         
             /* we've reached command parsing end, now check if this is a valid
                command or group, parse parameters and eventually execute */
