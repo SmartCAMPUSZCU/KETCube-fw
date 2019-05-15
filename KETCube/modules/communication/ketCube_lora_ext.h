@@ -59,8 +59,8 @@
   * @{
   */
 
-extern void ketCube_lora_OTAAJoin(ApplyCFListParams_t * applyCFList);
-extern void ketCube_lora_PrintCFList(ApplyCFListParams_t * applyCFList);
+extern void ketCube_lora_OTAAJoin(uint8_t * LoRaMacRxPayload, ApplyCFListParams_t * CFList);
+extern void ketCube_lora_PrintCFList(ApplyCFListParams_t * CFList);
 
 /**
 * @}

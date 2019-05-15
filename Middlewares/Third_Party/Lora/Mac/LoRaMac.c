@@ -783,7 +783,7 @@ static void OnRadioRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t
                 IsLoRaMacNetworkJoined = true;
                 LoRaMacParams.ChannelsDatarate = LoRaMacParamsDefaults.ChannelsDatarate;
                 
-                ketCube_lora_OTAAJoin(&applyCFList);
+                ketCube_lora_OTAAJoin(&(LoRaMacRxPayload[0]), &applyCFList);
             }
             else
             {

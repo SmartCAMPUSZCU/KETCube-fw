@@ -254,40 +254,44 @@ __weak void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len)
  */
 static void ketCube_lora_RxData(lora_AppData_t * AppData)
 {
-    uint16_t i;
+   uint16_t i;
 
-    // previous msg not processed ... ignore this one
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s on PORT=%d", ketCube_common_bytes2Str(&(AppData->Buff[0]), AppData->BuffSize), AppData->Port);
+
+   if (AppData->Port == 12) {
+      // custom data
+      ketCube_lora_processCustomData(&(AppData->Buff[0]), AppData->BuffSize);
+      return;
+    } else if (AppData->Port != 10 && AppData->Port != 11) {
+      // unknown port
+      return;
+   }
+
+   // previous msg not processed ... ignore this one
     if (ketCube_lora_rxData.msgLen > 0) {
-        return;
+       return;
     }
-    
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s",
-                                 ketCube_common_bytes2Str(&(AppData->Buff[0]), AppData->BuffSize));
 
-    for (i = 0;
-         (i < AppData->BuffSize) && ((i + 1) < KETCUBE_LORA_RX_BUFFER_LEN);
-         i++) {
-        ketCube_lora_rxData.msg[i + 1] = AppData->Buff[i];
+    for (i = 0; (i < AppData->BuffSize) && ((i + 1) < KETCUBE_LORA_RX_BUFFER_LEN); i++) {
+      ketCube_lora_rxData.msg[i + 1] = AppData->Buff[i];
     }
 
     // update i to the actual position in ketCube_lora_rxData.msg buffer
     i++;
 
-    if (AppData->Port == 10) {  // received HEX
-        ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
-    } else if (AppData->Port == 11) {   // received STRING
-        if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
-            ketCube_lora_rxData.msg[i] = (char) 0;
-            i++;
-        } else {
-            ketCube_lora_rxData.msg[i - 1] = (char) 0;
-        }
-        ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
-    } else if (AppData->Port == 12) {
-        // custom data
-        ketCube_lora_processCustomData(&(AppData->Buff[0]),
-                                       AppData->BuffSize);
-    }
+   if (AppData->Port == 10) {
+      // received HEX
+      ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
+   } else if (AppData->Port == 11) {
+      // received STRING
+      if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
+         ketCube_lora_rxData.msg[i] = (char) 0;
+               i++;
+           } else {
+         ketCube_lora_rxData.msg[i - 1] = (char) 0;
+           }
+      ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
+   }
 
     ketCube_lora_rxData.msgLen = i;
 }

@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_lora_ext.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2019-01-30
+ * @version 0.2
+ * @date    2019-05-10
  * @brief   This file contains the KETCube LoRa extension and helper functions interacting directly with LoRaWAN stack, while added for/by the KETCube project
  *
  * @attention
@@ -50,33 +50,64 @@
 /**
  * @brief Print OTAA Join-related info
  * 
+ * @param LoRaMacRxPayload LoRaWAN MAC join RX payload
+ * @param CFList
+ * 
  */
-void ketCube_lora_OTAAJoin(ApplyCFListParams_t * applyCFList)
+void ketCube_lora_OTAAJoin(uint8_t * LoRaMacRxPayload, ApplyCFListParams_t * CFList)
 {
+    uint32_t netID, devAddr;
+    uint16_t rxDelay;
+    
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "OTAA Joined!");
-    ketCube_lora_PrintCFList(applyCFList);
+    
+    netID  = ( uint32_t )LoRaMacRxPayload[4];
+    netID |= ( ( uint32_t )LoRaMacRxPayload[5] << 8 );
+    netID |= ( ( uint32_t )LoRaMacRxPayload[6] << 16 );
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "NetID: 0x%04X", netID);
+
+    devAddr  = ( uint32_t )LoRaMacRxPayload[7];
+    devAddr |= ( ( uint32_t )LoRaMacRxPayload[8] << 8 );
+    devAddr |= ( ( uint32_t )LoRaMacRxPayload[9] << 16 );
+    devAddr |= ( ( uint32_t )LoRaMacRxPayload[10] << 24 );
+    
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "DevAddr: 0x%04X", devAddr);
+
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX1 DR offset: %d", (LoRaMacRxPayload[11] >> 4) & 0x07);
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX2 datarate: %d", LoRaMacRxPayload[11] & 0x0F);
+
+    // RxDelay
+    rxDelay = ( LoRaMacRxPayload[12] & 0x0F );
+    if(rxDelay == 0) {
+        rxDelay = 1;
+    }
+    rxDelay = rxDelay * 1000;
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX1 delay: %d ms", rxDelay);
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX2 delay: %d ms", rxDelay + 1000);
+
+    ketCube_lora_PrintCFList(CFList);
 }
 
 /**
  * @brief Print Cf list as received in a LoRaWAN Join response
  * 
  */
-void ketCube_lora_PrintCFList(ApplyCFListParams_t * applyCFList)
+void ketCube_lora_PrintCFList(ApplyCFListParams_t * CFList)
 {
     uint32_t freq;
     uint8_t i;
 
     // Size of the optional CF list
-    if(applyCFList->Size != 16) {
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFLIST :: size too small (%d).", applyCFList->Size);
+    if(CFList->Size != 16) {
+        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFLIST :: size too small (%d).", CFList->Size);
         return;
     }
 
     // Last byte is RFU, don't take it into account
     for(i = 0; i < 15; i += 3) {
-        freq = (uint32_t) applyCFList->Payload[i];
-        freq |= ((uint32_t) applyCFList->Payload[i + 1] << 8);
-        freq |= ((uint32_t) applyCFList->Payload[i + 2] << 16);
+        freq = (uint32_t) CFList->Payload[i];
+        freq |= ((uint32_t) CFList->Payload[i + 1] << 8);
+        freq |= ((uint32_t) CFList->Payload[i + 2] << 16);
         freq *= 100;
 
         if(freq != 0) {
