@@ -69,6 +69,7 @@ typedef struct ketCube_coreCfg_t {
     uint32_t startDelay;                 ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
     ketCube_severity_t severity;         ///< Core messages severity
     ketCube_severity_t driverSeverity;   ///< Driver(s) messages severity
+    uint16_t remoteTerminalCounter;      ///< Is currently in remote terminal mode (value > 0)? If so, how many basePeriods to reload?
 } ketCube_coreCfg_t;
 
 extern ketCube_coreCfg_t ketCube_coreCfg;

@@ -49,6 +49,7 @@
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
 #include "ketCube_terminal.h"
+#include "ketCube_remote_terminal.h"
 #include "ketCube_modules.h"
 #include "ketCube_rxDisplay.h"
 
@@ -86,6 +87,10 @@
  */
 #define LORAWAN_ASYNCAPP_PORT                       3
 
+#define LORAWAN_HEX_DISPLAY_PORT                    10
+#define LORAWAN_STRING_DISPLAY_PORT                 11
+#define LORAWAN_CUSTOM_DATA_PORT                    12
+#define LORAWAN_REMOTE_TERMINAL_PORT                13
 
 /**
  *  LoRa module configuration storage
@@ -203,14 +208,23 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
 /**
  * @brief Process lora state and prepare data...
  */
-ketCube_cfg_ModError_t ketCube_lora_Send(uint8_t * buffer, uint8_t * len)
+ketCube_cfg_ModError_t ketCube_lora_Send_To(uint8_t port,
+    uint8_t * buffer, uint8_t * len)
 {
    lora_AppData_t AppData;
    AppData.Buff = buffer;
    AppData.BuffSize = *len;
-   AppData.Port = LORAWAN_APP_PORT;
+   AppData.Port = port;
 
    return ketCube_lora_SendData(&AppData);
+}
+
+/**
+ * @brief Process lora state and prepare data...
+ */
+ketCube_cfg_ModError_t ketCube_lora_Send(uint8_t * buffer, uint8_t * len)
+{
+    return ketCube_lora_Send_To(LORAWAN_APP_PORT, buffer, len);
 }
 
 /**
@@ -219,12 +233,16 @@ ketCube_cfg_ModError_t ketCube_lora_Send(uint8_t * buffer, uint8_t * len)
 ketCube_cfg_ModError_t ketCube_lora_AsyncSend(uint8_t * buffer,
                                               uint8_t * len)
 {
-   lora_AppData_t AppData;
-   AppData.Buff = buffer;
-   AppData.BuffSize = *len;
-   AppData.Port = LORAWAN_ASYNCAPP_PORT;
+   return ketCube_lora_Send_To(LORAWAN_ASYNCAPP_PORT, buffer, len);
+}
 
-   return ketCube_lora_SendData(&AppData);
+/**
+ * @brief Process lora state and prepare data for remote terminal sending
+ */
+ketCube_cfg_ModError_t ketCube_lora_RemoteTerminalSend(uint8_t * buffer,
+                                                       uint8_t * len)
+{
+    return ketCube_lora_Send_To(LORAWAN_REMOTE_TERMINAL_PORT, buffer, len);
 }
 
 /**
@@ -300,11 +318,15 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s on PORT=%d",
    ketCube_common_bytes2Str(&(AppData->Buff[0]), AppData->BuffSize), AppData->Port);
 
-   if (AppData->Port == 12) {
+   if (AppData->Port == LORAWAN_CUSTOM_DATA_PORT) {
       // custom data
       ketCube_lora_processCustomData(&(AppData->Buff[0]), AppData->BuffSize);
       return;
-   } else if (AppData->Port != 10 && AppData->Port != 11) {
+   } else if (AppData->Port == LORAWAN_REMOTE_TERMINAL_PORT) {
+      ketCube_remoteTerminal_deferCmd((char*)&(AppData->Buff[0]),
+          AppData->BuffSize, &ketCube_lora_RemoteTerminalSend);
+      return;
+   } else if (AppData->Port != LORAWAN_HEX_DISPLAY_PORT && AppData->Port != LORAWAN_STRING_DISPLAY_PORT) {
       // unknown port
       return;
    }
@@ -321,10 +343,10 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
    // update i to the actual position in ketCube_lora_rxData.msg buffer
    i++;
 
-   if (AppData->Port == 10) {
+   if (AppData->Port == LORAWAN_HEX_DISPLAY_PORT) {
       // received HEX
       ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
-   } else if (AppData->Port == 11) {  
+   } else if (AppData->Port == LORAWAN_STRING_DISPLAY_PORT) {  
       // received STRING
       if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
          ketCube_lora_rxData.msg[i] = (char) 0;

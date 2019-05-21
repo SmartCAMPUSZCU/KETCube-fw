@@ -109,6 +109,9 @@ ketCube_cfg_Error_t ketCube_modules_Init(void)
             }
         }
     }
+    
+    /* reset remote terminal counter in RAM on init */
+    ketCube_coreCfg.remoteTerminalCounter = 0;
 
     ketCube_terminal_UpdateCmdLine();
     return KETCUBE_CFG_OK;
@@ -124,41 +127,59 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
 {
     uint8_t len;
     uint8_t i;
+    
+    // remote terminal mode allows silencing sensor modules, and reserves all
+    // traffic just for remote terminal
+    if (ketCube_coreCfg.remoteTerminalCounter == 0) {
 
-    SensorBufferSize = 0;
+        SensorBufferSize = 0;
 
-    // Run module getData functions periodicaly
-    for (i = 0; i < ketCube_modules_CNT; i++) {
-        if ((ketCube_modules_List[i].cfgPtr->enable & 0x01) == TRUE) {
-            if (ketCube_modules_List[i].fnGetSensorData != NULL) {
-                ketCube_terminal_CoreSeverityPrintln
-                    (KETCUBE_CFG_SEVERITY_DEBUG,
-                     "Module \"%s\" GetSensorData()",
-                     ketCube_modules_List[i].name);
+        // Run module getData functions periodicaly
+        for (i = 0; i < ketCube_modules_CNT; i++) {
+            if ((ketCube_modules_List[i].cfgPtr->enable & 0x01) == TRUE) {
+                if (ketCube_modules_List[i].fnGetSensorData != NULL) {
+                    ketCube_terminal_CoreSeverityPrintln
+                        (KETCUBE_CFG_SEVERITY_DEBUG,
+                         "Module \"%s\" GetSensorData()",
+                         ketCube_modules_List[i].name);
 
-                len = 0;
-                (ketCube_modules_List[i].fnGetSensorData) (&
-                                                           (SensorBuffer
-                                                            [SensorBufferSize]),
-                                                           &len);
-                SensorBufferSize += len;
+                    len = 0;
+                    (ketCube_modules_List[i].fnGetSensorData) (&
+                                                               (SensorBuffer
+                                                                [SensorBufferSize]),
+                                                               &len);
+                    SensorBufferSize += len;
+                }
+            }
+        }
+
+        // Run module communication functions
+        for (i = 0; i < ketCube_modules_CNT; i++) {
+            if ((ketCube_modules_List[i].cfgPtr->enable & 0x01) == TRUE) {
+                if (ketCube_modules_List[i].fnSendData != NULL) {
+                    ketCube_terminal_CoreSeverityPrintln
+                        (KETCUBE_CFG_SEVERITY_DEBUG,
+                         "Module \"%s\" SendData()",
+                         ketCube_modules_List[i].name);
+
+                    (ketCube_modules_List[i].fnSendData) (&(SensorBuffer[0]),
+                                                          &SensorBufferSize);
+                }
             }
         }
     }
+    else {
 
-    // Run module communication functions
-    for (i = 0; i < ketCube_modules_CNT; i++) {
-        if ((ketCube_modules_List[i].cfgPtr->enable & 0x01) == TRUE) {
-            if (ketCube_modules_List[i].fnSendData != NULL) {
-                ketCube_terminal_CoreSeverityPrintln
-                    (KETCUBE_CFG_SEVERITY_DEBUG,
-                     "Module \"%s\" SendData()",
-                     ketCube_modules_List[i].name);
-
-                (ketCube_modules_List[i].fnSendData) (&(SensorBuffer[0]),
-                                                      &SensorBufferSize);
-            }
+        ketCube_coreCfg.remoteTerminalCounter--;
+        /* when timeout elapsed, automatically reload the node */
+        if (ketCube_coreCfg.remoteTerminalCounter == 0) {
+            NVIC_SystemReset();
         }
+        
+        ketCube_terminal_CoreSeverityPrintln
+                    (KETCUBE_CFG_SEVERITY_DEBUG,
+                     "RemoteTerminal :: Remaining periods: %d",
+                     ketCube_coreCfg.remoteTerminalCounter);
     }
 
     for (i = 0; i < ketCube_modules_CNT; i++) {

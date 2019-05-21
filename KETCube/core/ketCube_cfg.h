@@ -47,8 +47,11 @@
 #define __KETCUBE_CFG_H
 
 #include "ketCube_common.h"
+#ifndef DESKTOP_BUILD
 #include "ketCube_eeprom.h"
+#endif
 #include "ketCube_compilation.h"
+#include "ketCube_module_id.h"
 
 /*!
  * LoRaWAN versions
@@ -165,6 +168,7 @@ typedef struct ketCube_cfg_varDescr_t {
 typedef struct ketCube_cfg_Module_t {
     char *name;                 /*!< Module name */
     char *descr;                /*!< Human-readable module description/help */
+    ketCube_moduleID_t id;      /*!< Module global unique identifier */
     ketCube_cfg_ModInitFn_t fnInit;             /*!< Module init function */
     ketCube_cfg_ModVoidFn_t fnSleepEnter;       /*!< DeInitialize module when entering sleep mode */
     ketCube_cfg_ModVoidFn_t fnSleepExit;        /*!< Initialize module when returning from sleep mode */

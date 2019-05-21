@@ -165,6 +165,29 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
         }
     },
     
+    {
+        .cmd   = "remoteTerminalCounter",
+        .descr = "If set to value > 0, no application data is sent through"
+                 " radio, but rather just remote terminal commands and"
+                 " responses",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isRAM     = TRUE,
+            .isEEPROM  = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, remoteTerminalCounter),
+            .size     = sizeof(uint16_t)
+        }
+    },
+    
     DEF_TERMINATE()
     
 };

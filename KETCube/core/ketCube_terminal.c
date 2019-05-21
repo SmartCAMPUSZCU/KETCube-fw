@@ -89,619 +89,19 @@ static char usartRxBuffer[USART_BUFFER_SIZE];
 
 static char usartTxBuffer[USART_BUFFER_SIZE];
 
+/* helper functions definition */
+static uint8_t ketCube_terminal_getNextParam(uint8_t ptr);
+
 // END of USART configuration
 
 static ketCube_terminal_buffer_t
     commandHistory[KETCUBE_TERMINAL_HISTORY_LEN];
 static char *commandBuffer = (char *) &(commandHistory[0].buffer[0]);
-static ketCube_terminal_paramSet_t commandIOParams;
-static ketCube_terminal_command_errorCode_t commandErrorCode;
+
 static uint8_t *commandPtr = (uint8_t *) & (commandHistory[0].ptr);
 static uint8_t commandHistoryPtr = 0;
 /* Index of the first command parameter in buffer */
 static uint8_t commandParamsPos;
-
-/* Helper function prototypes */
-static uint8_t ketCube_terminal_getNextParam(uint8_t ptr);
-static void ketCube_terminal_printCmdList(ketCube_terminal_cmd_t * parent,
-                                          ketCube_terminal_cmd_t * cmdList,
-                                          ketCube_terminal_command_flags_t * contextFlags);
-static void ketCube_terminal_saveCfgHEXStr(char *data,
-                                           ketCube_cfg_moduleIDs_t id,
-                                           ketCube_cfg_AllocEEPROM_t addr,
-                                           ketCube_cfg_LenEEPROM_t len);
-static void ketCube_terminal_saveCfgDECStr(char *data,
-                                           ketCube_cfg_moduleIDs_t id,
-                                           ketCube_cfg_AllocEEPROM_t addr,
-                                           ketCube_cfg_LenEEPROM_t len);
-
-static bool ketCube_terminal_checkCmdContext(ketCube_terminal_command_flags_t * contextFlags);
-
-/* Core command callback prototypes */
-static void ketCube_terminal_cmd_reload(void);
-static void ketCube_terminal_cmd_list(void);
-static void ketCube_terminal_cmd_enable(void);
-static void ketCube_terminal_cmd_disable(void);
-
-// List of KETCube commands
-#include "../../Projects/src/ketCube_cmdList.c" // include a project-specific file
-
-/* --------------------------------- */
-/* --- Terminal Helper functions --- */
-
-/**
- * @brief A wrapper to ketCube_cfg_SaveStr function 
- *
- * Provides textual output to terminal is provided
- * 
- * @note This function is deprecated and it will be removed in the next release
- * 
- */
-void ketCube_terminal_saveCfgHEXStr(char *data, ketCube_cfg_moduleIDs_t id,
-                                    ketCube_cfg_AllocEEPROM_t addr,
-                                    ketCube_cfg_LenEEPROM_t len)
-{
-    ketCube_cfg_Error_t ret;
-
-    KETCUBE_TERMINAL_ENDL();
-
-    ret = ketCube_cfg_SaveStr(data, id, addr, len);
-    if (ret == KETCUBE_CFG_INV_HEX) {
-        KETCUBE_TERMINAL_PRINTF("Invalid HEX number!");
-        KETCUBE_TERMINAL_ENDL();
-        return;
-    } else if (ret == ketCube_cfg_Save_ERROR) {
-        KETCUBE_TERMINAL_PRINTF("Write error!");
-        KETCUBE_TERMINAL_ENDL();
-        return;
-    } else {
-        KETCUBE_TERMINAL_PRINTF("Write success!");
-    }
-
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief A wrapper to ketCube_cfg_saveStr function 
- *
- * Provides textual output to terminal
- * 
- * @note This function is deprecated and it will be removed in the next release
- * 
- */
-void ketCube_terminal_saveCfgDECStr(char *data, ketCube_cfg_moduleIDs_t id,
-                                    ketCube_cfg_AllocEEPROM_t addr,
-                                    ketCube_cfg_LenEEPROM_t len)
-{
-    ketCube_cfg_Error_t ret;
-
-    KETCUBE_TERMINAL_ENDL();
-
-    if (ketCube_common_IsDecString(data, strlen(data)) == FALSE) {
-        KETCUBE_TERMINAL_PRINTF("Invalid DEC number!");
-        KETCUBE_TERMINAL_ENDL();
-        return;
-    } else if (len > sizeof(int32_t)) {
-        KETCUBE_TERMINAL_PRINTF("Invalid number size!");
-        KETCUBE_TERMINAL_ENDL();
-        return;
-    }
-
-    int32_t target;
-    ketCube_common_Dec2int(&target, data, strlen(data));
-
-    ret = ketCube_cfg_Save((uint8_t *) & target, id, addr, len);
-    if (ret == ketCube_cfg_Save_ERROR) {
-        KETCUBE_TERMINAL_PRINTF("Write error!");
-        KETCUBE_TERMINAL_ENDL();
-        return;
-    } else {
-        KETCUBE_TERMINAL_PRINTF("Write success!");
-    }
-
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
-  *
-  * @brief Prints command list at index/level
-  * 
-  * @param cmdIndex index of the first command to print
-  * @param level level of commands to print
-  * @param contextFlags comamnd flag context
-  */
-static void ketCube_terminal_printCmdList(ketCube_terminal_cmd_t * parent,
-                                          ketCube_terminal_cmd_t * cmdList,
-                                          ketCube_terminal_command_flags_t * contextFlags)
-{
-    int cmdIndex = 0;
-    ketCube_terminal_command_flags_t localContext;
-    
-    if (parent != NULL &&
-        (parent->flags.isGroup == FALSE))
-    {
-        KETCUBE_TERMINAL_PRINTF("Description: %s", parent->descr);
-        KETCUBE_TERMINAL_ENDL();
-        return;
-    }
-
-    if (parent != NULL) {
-        KETCUBE_TERMINAL_PRINTF("List of sub-commands for command %s: ",
-                                parent->cmd);
-        KETCUBE_TERMINAL_ENDL();
-    } else {
-        KETCUBE_TERMINAL_PRINTF("List of commands: ");
-        KETCUBE_TERMINAL_ENDL();
-    }
-
-    while ((cmdList[cmdIndex].cmd != NULL)) {
-        ketCube_terminal_andCmdFlags(&localContext, contextFlags, &(cmdList[cmdIndex].flags));
-        if (ketCube_terminal_checkCmdContext(&localContext) == FALSE) {
-            cmdIndex++;
-            continue;
-        }
-        
-        KETCUBE_TERMINAL_PRINTF("\t%s\t%s",
-                                cmdList[cmdIndex].cmd,
-                                cmdList[cmdIndex].descr);
-        KETCUBE_TERMINAL_ENDL();
-        cmdIndex++;
-    }
-}
-
-/**
- * @brief Returns parameter length in bytes
- */
-static inline int ketCube_terminal_GetIOParamsLength(
-    ketCube_terminal_paramSet_type_t type)
-{
-    switch (type)
-    {
-        case KETCUBE_TERMINAL_PARAMS_NONE:
-        default:
-            return 0;
-        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
-            return sizeof(bool);
-        case KETCUBE_TERMINAL_PARAMS_BYTE:
-            return sizeof(uint8_t);
-        case KETCUBE_TERMINAL_PARAMS_STRING:
-            return strlen(commandIOParams.as_string);
-        case KETCUBE_TERMINAL_PARAMS_INT32:
-            return sizeof(int32_t);
-        case KETCUBE_TERMINAL_PARAMS_UINT32:
-            return sizeof(uint32_t);
-        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
-            return (2 * sizeof(int));
-        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
-            return commandIOParams.as_byte_array.length;
-    }
-}
-
-/**
- * @brief Generic GET EEPROM cfg data
- *
- * @param cmdDescrPtr pointer to a command descriptor
- * 
- */
-static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
-{
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
-        return;
-    }
-    
-    // load data from EEPROM as byte array
-    if (ketCube_cfg_Load((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
-                         (ketCube_cfg_moduleIDs_t) cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID,
-                         (ketCube_cfg_AllocEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->offset,
-                         (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-    
-    // convert to output data type
-    switch(cmdDescrPtr->outputSetType)
-    {
-        case KETCUBE_TERMINAL_PARAMS_NONE:
-        case KETCUBE_TERMINAL_PARAMS_BYTE:
-        case KETCUBE_TERMINAL_PARAMS_INT32:
-        case KETCUBE_TERMINAL_PARAMS_UINT32:
-        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
-        default:
-            // do nothing ...
-            break;
-        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
-            if (commandIOParams.as_byte_array.data[0] != 0x00) {
-                commandIOParams.as_bool = TRUE;
-            } else {
-                commandIOParams.as_bool = FALSE;
-            }
-            break;
-        case KETCUBE_TERMINAL_PARAMS_STRING:
-            // just for sure
-            commandIOParams.as_string[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH - 1] = '\0';
-            break;
-        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
-            commandIOParams.as_byte_array.length = cmdDescrPtr->settingsPtr.cfgVarPtr->size;
-            break;
-    }
-}
-
-/**
- * @brief Generic SET EEPROM data
- *
- * @param cmdDescrPtr pointer to a command descriptor
- * 
- */
-static void ketCube_terminal_setEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
-{
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
-        return;
-    }
-        
-    if (ketCube_cfg_Save((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
-                         (ketCube_cfg_moduleIDs_t) cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID,
-                         (ketCube_cfg_AllocEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->offset,
-                         (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
-        return;
-    }
-}
-
-
-/**
- * @brief Generic GET RAM cfg data
- *
- * @param cmdDescrPtr pointer to a command descriptor
- * 
- */
-static void ketCube_terminal_getRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
-{
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
-        return;
-    }
-    
-     memcpy((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
-            (uint8_t *) (ketCube_modules_List[cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID].cfgPtr + cmdDescrPtr->settingsPtr.cfgVarPtr->offset),
-           (uint32_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size);
-     
-     // convert to output data type
-    switch(cmdDescrPtr->outputSetType)
-    {
-        case KETCUBE_TERMINAL_PARAMS_NONE:
-        case KETCUBE_TERMINAL_PARAMS_BYTE:
-        case KETCUBE_TERMINAL_PARAMS_INT32:
-        case KETCUBE_TERMINAL_PARAMS_UINT32:
-        case KETCUBE_TERMINAL_PARAMS_INT32_PAIR:
-        default:
-            // do nothing ...
-            break;
-        case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
-            if (commandIOParams.as_byte_array.data[0] != 0x00) {
-                commandIOParams.as_bool = TRUE;
-            } else {
-                commandIOParams.as_bool = FALSE;
-            }
-            break;
-        case KETCUBE_TERMINAL_PARAMS_STRING:
-            // just for sure
-            commandIOParams.as_string[KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH - 1] = '\0';
-            break;
-        case KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY:
-            commandIOParams.as_byte_array.length = cmdDescrPtr->settingsPtr.cfgVarPtr->size;
-            break;
-    }
-}
-
-/**
- * @brief Generic SET RAM data
- *
- * @param cmdDescrPtr pointer to a command descriptor
- * 
- */
-static void ketCube_terminal_setRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
-{
-    if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
-        return;
-    }
-
-    memcpy((uint8_t *) (ketCube_modules_List[cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID].cfgPtr + cmdDescrPtr->settingsPtr.cfgVarPtr->offset),
-           (uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
-           (uint32_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size);
-}
-
-/* ------------------------------ */
-/* --- Core command callbacks --- */
-
-
-void ketCube_terminal_cmd_help(void)
-{
-    ketCube_terminal_command_flags_t context = {
-        .isGroup  = TRUE,
-        .isLocal  = TRUE,
-        .isEnvCmd = TRUE,
-        .isEEPROM = TRUE,
-        .isRAM    = TRUE,
-    };
-    
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("%s Command-line Interface HELP",
-                            KETCUBE_CFG_DEV_NAME);
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("-----------------------------------");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-
-    ketCube_terminal_printCmdList(NULL, ketCube_terminal_commands, &context);
-
-    KETCUBE_TERMINAL_ENDL();
-}
-
-void ketCube_terminal_cmd_about(void)
-{
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("About %s", KETCUBE_CFG_DEV_NAME);
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("-------------");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-
-    KETCUBE_TERMINAL_PRINTF
-        ("KETCube was created on University of West Bohemia in Pilsen.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF
-        ("KETCube home: https://github.com/SmartCAMPUSZCU/KETCube-docs");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF
-        ("KETCube is provided under NCSA Open Source License - see LICENSE.txt.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF
-        ("Copyright (c) 2018 University of West Bohemia in Pilsen");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("All rights reserved.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("Developed by:");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("The SmartCampus Team");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("Department of Technologies and Measurement");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("www.smartcampus.cz | www.zcu.cz");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-
-    KETCUBE_TERMINAL_PRINTF
-        ("KETCube includes code provided by SEMTECH S.A.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF
-        ("under Revised BSD License - see LICENSE_SEMTECH.txt");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("Copyright (c) 2013, SEMTECH S.A.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("All rights reserved.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-
-    KETCUBE_TERMINAL_PRINTF("KETCube includes code provided by");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF
-        ("STMicroelectronics International N.V. - see LICENSE_STM.txt");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF
-        ("Copyright (c) 2017 STMicroelectronics International N.V.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("All rights reserved.");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Perform KETCube reset
- * 
- */
-void ketCube_terminal_cmd_reload(void)
-{
-    KETCUBE_TERMINAL_ENDL();
-
-    KETCUBE_TERMINAL_PRINTF
-        ("Performing system reset and reloading %s configuration ...",
-         KETCUBE_CFG_DEV_NAME);
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_ENDL();
-
-    NVIC_SystemReset();
-}
-
-/**
- * @brief Show available KETCube modules
- * 
- */
-void ketCube_terminal_cmd_list(void)
-{
-    uint16_t i;
-    ketCube_cfg_ModuleCfgByte_t data;
-    char severityEEPROM = 'N';
-    char severity = 'N';
-
-    KETCUBE_TERMINAL_ENDL();
-
-    KETCUBE_TERMINAL_PRINTF("Available modules:");
-    KETCUBE_TERMINAL_ENDL();
-
-    for (i = KETCUBE_LISTS_MODULEID_FIRST; i < ketCube_modules_CNT; i++) {
-        if (ketCube_cfg_Load
-            (((uint8_t *) & data), (ketCube_cfg_moduleIDs_t) i,
-             (ketCube_cfg_AllocEEPROM_t) 0,
-             (ketCube_cfg_LenEEPROM_t) 1) == KETCUBE_CFG_OK) {
-
-            switch (data.severity) {
-            case KETCUBE_CFG_SEVERITY_NONE:
-                severity = 'N';
-                break;
-            case KETCUBE_CFG_SEVERITY_ERROR:
-                severity = 'R';
-                break;
-            case KETCUBE_CFG_SEVERITY_INFO:
-                severity = 'I';
-                break;
-            case KETCUBE_CFG_SEVERITY_DEBUG:
-                severity = 'D';
-                break;
-            }
-
-            switch (ketCube_modules_List[i].cfgPtr->severity) {
-            case KETCUBE_CFG_SEVERITY_NONE:
-                severityEEPROM = 'N';
-                break;
-            case KETCUBE_CFG_SEVERITY_ERROR:
-                severityEEPROM = 'R';
-                break;
-            case KETCUBE_CFG_SEVERITY_INFO:
-                severityEEPROM = 'I';
-                break;
-            case KETCUBE_CFG_SEVERITY_DEBUG:
-                severityEEPROM = 'D';
-                break;
-            }
-
-            if (severityEEPROM != severity) {
-                KETCUBE_TERMINAL_PRINTF("%c -> %c\t", severityEEPROM,
-                                        severity);
-            } else {
-                KETCUBE_TERMINAL_PRINTF("  %c\t", severity);
-            }
-
-            if (data.enable != ketCube_modules_List[i].cfgPtr->enable) {
-                if (ketCube_modules_List[i].cfgPtr->enable == TRUE) {
-                    KETCUBE_TERMINAL_PRINTF("E -> ");
-                } else {
-                    KETCUBE_TERMINAL_PRINTF("D -> ");
-                }
-            }
-
-            if (data.enable == TRUE) {
-                KETCUBE_TERMINAL_PRINTF("E");
-            } else {
-                KETCUBE_TERMINAL_PRINTF("D");
-            }
-
-            KETCUBE_TERMINAL_PRINTF("\t%s\t%s",
-                                    ketCube_modules_List[i].name,
-                                    ketCube_modules_List[i].descr);
-            KETCUBE_TERMINAL_ENDL();
-        } else {
-            KETCUBE_TERMINAL_PRINTF
-                ("Error while reading module configuration!");
-        }
-
-    }
-
-
-    KETCUBE_TERMINAL_ENDL();
-
-    KETCUBE_TERMINAL_PRINTF
-        ("Module State: E == Module Enabled; D == Module Disabled");
-    KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF
-        ("Module severity: N = %s, R = %s; I = %s; D = %s",
-            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_NONE],
-            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_ERROR],
-            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_INFO],
-            ketCube_severity_strAlias[KETCUBE_CFG_SEVERITY_DEBUG]);
-
-
-    KETCUBE_TERMINAL_ENDL();
-}
-
-/**
- * @brief Enable/disable given KETCube module
- *
- * @param enable enable given module
- * 
- */
-void ketCube_terminal_cmd_enableDisable(bool enable)
-{
-    uint16_t i;
-    ketCube_cfg_ModuleCfgByte_t tmpCfgByte;
-    uint8_t tmpCmdLen;
-    ketCube_severity_t severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
-    int32_t tmpSeverity;
-
-
-    for (i = KETCUBE_LISTS_MODULEID_FIRST; i < ketCube_modules_CNT; i++) {
-        tmpCmdLen = strlen(&(ketCube_modules_List[i].name[0]));
-        
-        if (strncmp(&(ketCube_modules_List[i].name[0]), &(commandBuffer[commandParamsPos]), tmpCmdLen) == 0) {
-            
-            if (commandBuffer[commandParamsPos + tmpCmdLen] == 0x00) {
-                break;
-            }
-            
-            if (commandBuffer[commandParamsPos + tmpCmdLen] == ' ') {
-                // get next param - severity
-                sscanf(&(commandBuffer[commandParamsPos + tmpCmdLen + 1]), "%d", (int *) &tmpSeverity);
-                severity = (ketCube_severity_t) tmpSeverity;
-                if (severity > KETCUBE_CFG_SEVERITY_DEBUG) {
-                    severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
-                }
-                break;
-            }
-        }
-    }
-
-    if (i == ketCube_modules_CNT) {
-        KETCUBE_TERMINAL_PRINTF("Invalid module name!");
-        commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
-        return;
-    }
-
-    KETCUBE_TERMINAL_PRINTF("Setting module %s:",
-                            ketCube_modules_List[i].name);
-
-    //do not enable/disable now but when reload ...
-    tmpCfgByte = *(ketCube_modules_List[i].cfgPtr);
-    tmpCfgByte.enable = enable; // enable/disable
-    tmpCfgByte.severity = severity;     // set severity
-
-    if (ketCube_cfg_Save
-        (((uint8_t *) & (tmpCfgByte)), (ketCube_cfg_moduleIDs_t) i,
-         (ketCube_cfg_AllocEEPROM_t) 0,
-         (ketCube_cfg_LenEEPROM_t) 1) == KETCUBE_CFG_OK) {
-        KETCUBE_TERMINAL_PRINTF("\t success!");
-    } else {
-        KETCUBE_TERMINAL_PRINTF("\t error!");
-    }
-}
-
-
-/**
- * @brief Enable given KETCube module
- * 
- */
-void ketCube_terminal_cmd_enable(void)
-{
-    KETCUBE_TERMINAL_ENDL();
-    ketCube_terminal_cmd_enableDisable(TRUE);
-    KETCUBE_TERMINAL_ENDL();
-}
-
-
-/**
- * @brief Enable given KETCube module
- * 
- */
-void ketCube_terminal_cmd_disable(void)
-{
-    KETCUBE_TERMINAL_ENDL();
-    ketCube_terminal_cmd_enableDisable(FALSE);
-    KETCUBE_TERMINAL_ENDL();
-}
 
 void ketCube_terminal_usartIoInit(void)
 {
@@ -901,7 +301,7 @@ void ketCube_terminal_Init(void)
     KETCUBE_TERMINAL_ENDL();
 
     ketCube_terminal_printCmdList(NULL, ketCube_terminal_commands, &context);
-
+    
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PROMPT();
 }
@@ -920,6 +320,7 @@ static bool ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command,
 {
     uint8_t ptr = 0;
     uint8_t len = 0;
+    int i, tmpCmdLen, tmpSeverity;
     char *endptr;
     
     if ((contextFlags->isGeneric == TRUE) 
@@ -966,6 +367,39 @@ static bool ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command,
             } else {
                 commandIOParams.as_bool = FALSE;
             }
+            return TRUE;
+        }
+        case KETCUBE_TERMINAL_PARAMS_MODULEID:
+        {
+            commandIOParams.as_module_id.module_id = (uint16_t)-1;
+            commandIOParams.as_module_id.severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
+            
+            for (i = KETCUBE_LISTS_MODULEID_FIRST; i < ketCube_modules_CNT; i++)
+            {
+                tmpCmdLen = strlen(&(ketCube_modules_List[i].name[0]));
+        
+                if (strncmp(&(ketCube_modules_List[i].name[0]), &(commandBuffer[commandParamsPos]), tmpCmdLen) == 0) {
+                    
+                    commandIOParams.as_module_id.module_id = ketCube_modules_List[i].id;
+                    
+                    if (commandBuffer[commandParamsPos + tmpCmdLen] == 0x00) {
+                        break;
+                    }
+                    
+                    if (commandBuffer[commandParamsPos + tmpCmdLen] == ' ') {
+                        sscanf(&(commandBuffer[commandParamsPos + tmpCmdLen + 1]), "%d", (int*)&tmpSeverity);
+                        commandIOParams.as_module_id.severity = (ketCube_severity_t)tmpSeverity;
+                        if (commandIOParams.as_module_id.severity > KETCUBE_CFG_SEVERITY_DEBUG) {
+                            commandIOParams.as_module_id.severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            if (i == ketCube_modules_CNT)
+                return FALSE;
+            
             return TRUE;
         }
         case KETCUBE_TERMINAL_PARAMS_INT32:
@@ -1030,8 +464,6 @@ static bool ketCube_terminal_parseParams(ketCube_terminal_cmd_t* command,
             return TRUE;
         }
     }
-    
-    return FALSE;
 }
 
 /**
@@ -1094,6 +526,19 @@ static void ketCube_terminal_printCommandOutput(ketCube_terminal_cmd_t* command)
             KETCUBE_TERMINAL_PRINTF("\b \b");
             break;
         }
+        case KETCUBE_TERMINAL_PARAMS_MODULEID:
+        {
+            for (i = KETCUBE_LISTS_MODULEID_FIRST; i < ketCube_modules_CNT; i++) {
+                if (ketCube_modules_List[i].id == commandIOParams.as_module_id.module_id) {
+                    KETCUBE_TERMINAL_PRINTF("%s", ketCube_modules_List[i].name);
+                    break;
+                }
+            }
+            
+            if (i == ketCube_modules_CNT) {
+                KETCUBE_TERMINAL_PRINTF("invalid module");
+            }
+        }
         default:
         {
             KETCUBE_TERMINAL_PRINTF("<unknown return type>");
@@ -1134,62 +579,29 @@ static int ketCube_terminal_processCommandErrors()
     return 1;
 }
 
-/**
- * @brief Check if the command is valid in a given context
- * 
- * This function returns TRUE, if the context (given by flags)
- * identify a command, that can be executed in general
- * 
- * @param contextFlags pointer to context flags
- * 
- * @retval TRUE if success, else return FALSE
- * 
- * @note flags should respect the context, where ketCube_terminal_checkCmdContext() has been called
- * 
- */
-static bool ketCube_terminal_checkCmdContext(
-    ketCube_terminal_command_flags_t * contextFlags)
+bool ketCube_terminal_canRunCommand(ketCube_terminal_cmd_t* command, bool local)
 {
-    if ((contextFlags->isLocal || contextFlags->isRemote) == TRUE) {
-        if (contextFlags->isEnvCmd == TRUE) {
+    ketCube_terminal_cmdCheckResult_t result =
+            ketCube_terminal_checkCmdContext(command, local);
+    
+    switch (result) {
+        case KETCUBE_CMD_CHECK_OK:
             return TRUE;
-        } 
-        
-        if ((contextFlags->isSetCmd || contextFlags->isShowCmd)
-                   && (contextFlags->isRAM || contextFlags->isEEPROM)) {
-            return TRUE;
-        }
+        case KETCUBE_CMD_CHECK_FAILED_DEFINITION:
+            KETCUBE_TERMINAL_PRINTF("Cannot execute command in current context!");
+            break;
+        case KETCUBE_CMD_CHECK_FAILED_CONTEXT_ONLY_LOCAL:
+            KETCUBE_TERMINAL_PRINTF("Cannot execute local-only command"
+                                    " in remote terminal!");
+            break;
+        case KETCUBE_CMD_CHECK_FAILED_CONTEXT_ONLY_REMOTE:
+            KETCUBE_TERMINAL_PRINTF("Cannot execute remote-only command"
+                                    " in local terminal!");
+            break;
     }
     
+    KETCUBE_TERMINAL_ENDL();
     return FALSE;
-}
-
-/**
- * @brief Check if we can run given command in local terminal
- * 
- * @retval TRUE if success, else return FALSE
- * 
- */
-static bool ketCube_terminal_canRunLocalCommand(ketCube_terminal_cmd_t* command)
-{
-    if (ketCube_terminal_checkCmdContext(&(command->flags)) == FALSE) {
-        KETCUBE_TERMINAL_PRINTF("Cannot execute command in current context!");
-        KETCUBE_TERMINAL_ENDL();
-        return FALSE;
-    }
-    
-    /* cannot execute remote-only commands in local terminal */
-    if (command->flags.isLocal == FALSE)
-    {
-        KETCUBE_TERMINAL_PRINTF("Cannot execute non-local command"
-                                " in local terminal!");
-        KETCUBE_TERMINAL_ENDL();
-        return FALSE;
-    }
-    
-    /* add more flag checks here in the future */
-    
-    return TRUE;
 }
 
 /**
@@ -1280,7 +692,7 @@ void ketCube_terminal_execCMD(void)
             ketCube_terminal_andCmdFlags(&activeFlags, &contextFlags, &(cmdList[cmdIndex].flags));
         
             /* Check command flags */
-            if (ketCube_terminal_checkCmdContext(&activeFlags) == FALSE) {
+            if (ketCube_terminal_checkCmdSubtreeContext(&activeFlags) == FALSE) {
                 /* Command/group is not enabled in this context */
                 
                 /* Removed because of same command names with different flags are enabled */
@@ -1302,7 +714,7 @@ void ketCube_terminal_execCMD(void)
 
                 /* now we are sure it is a command and have valid params;
                    let's check, whether we can execute it or not */
-                if (ketCube_terminal_canRunLocalCommand(&cmdList[cmdIndex]) == TRUE) {
+                if (ketCube_terminal_canRunCommand(&cmdList[cmdIndex], TRUE) == TRUE) {
 
                     KETCUBE_TERMINAL_PRINTF("Executing command: %s",
                                             cmdList[cmdIndex].cmd);
@@ -1312,33 +724,8 @@ void ketCube_terminal_execCMD(void)
                        if needed */
                     commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_OK;
                     
-                    /* Execute specific command callback 
-                       or generic callback */
-                    if (activeFlags.isGeneric == TRUE) {
-                        if (activeFlags.isSetCmd == TRUE) {
-                            // run generic SET
-                            if (activeFlags.isEEPROM == TRUE) {
-                                ketCube_terminal_setEEPROMCfg(&(cmdList[cmdIndex]));
-                            }
-                            if (activeFlags.isRAM == TRUE) {
-                                ketCube_terminal_setRAMCfg(&(cmdList[cmdIndex]));
-                            }
-                        } else if (activeFlags.isShowCmd == TRUE) {
-                            // run generic SET
-                            if (activeFlags.isEEPROM == TRUE) {
-                                ketCube_terminal_getEEPROMCfg(&(cmdList[cmdIndex]));
-                            }
-                            if (activeFlags.isRAM == TRUE) {
-                                ketCube_terminal_getRAMCfg(&(cmdList[cmdIndex]));
-                            }
-                        } else {
-                            // Env commands don't have generic callbacks
-                            KETCUBE_TERMINAL_PRINTF("Unable to execute generic command - nor SHOW or SET command!");
-                            KETCUBE_TERMINAL_ENDL();
-                        }
-                    } else {
-                        cmdList[cmdIndex].settingsPtr.callback();
-                    }
+                    /* Execute specific command callback or generic callback */
+                    ketCube_terminal_execute(&cmdList[cmdIndex], activeFlags);
                     
                     /* if the command executed OK, print outputs */
                     if (ketCube_terminal_processCommandErrors() == 0) {
@@ -1467,7 +854,7 @@ void ketCube_terminal_printCMDHelp(void)
         if ((eq == TRUE)
             && (cmdList[cmdIndex].cmd[j] == 0x00)
             && ((commandBuffer[cmdBuffIndex] == 0x00))
-            && (ketCube_terminal_checkCmdContext(&activeFlags) == TRUE)) {
+            && (ketCube_terminal_checkCmdSubtreeContext(&activeFlags) == TRUE)) {
             
             /* set falgs for current command */
             ketCube_terminal_andCmdFlags(&activeFlags, &activeFlags, &(cmdList[cmdIndex].flags));
@@ -1500,7 +887,7 @@ void ketCube_terminal_printCMDHelp(void)
                 }
                 ketCube_terminal_andCmdFlags(&localContext, &activeFlags, &(cmdList[k].flags));
                 if ((eq == TRUE) 
-                     && (ketCube_terminal_checkCmdContext(&localContext) == TRUE)) {
+                     && (ketCube_terminal_checkCmdSubtreeContext(&localContext) == TRUE)) {
                     
                     KETCUBE_TERMINAL_PRINTF("\t%s",
                                             cmdList

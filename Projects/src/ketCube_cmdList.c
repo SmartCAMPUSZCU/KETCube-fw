@@ -85,6 +85,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
             .isEnvCmd  = TRUE,
         },
         .settingsPtr.subCmdList = ketCube_terminal_commands_core,
+        .moduleId = KETCUBE_MODULEID_CORE
     },
     
     {
@@ -101,6 +102,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
             .isEnvCmd  = TRUE,
         },
         .settingsPtr.subCmdList = ketCube_terminal_commands_driver,
+        .moduleId = KETCUBE_MODULEID_DRIVERS
     },
                       
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
@@ -118,6 +120,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
             .isEnvCmd  = TRUE,
         },
         .settingsPtr.subCmdList = ketCube_batMeas_commands,
+        .moduleId = KETCUBE_MODULEID_BATMEAS
     },
 #endif /* KETCUBE_CFG_INC_MOD_BATMEAS */
      
@@ -136,6 +139,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
             .isEnvCmd  = TRUE,
         },
         .settingsPtr.subCmdList = ketCube_lora_commands,
+        .moduleId = KETCUBE_MODULEID_LORA,
     },
 #endif /* KETCUBE_CFG_INC_MOD_LORA */
 
@@ -175,7 +179,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
             .isRemote  = TRUE,
             .isEnvCmd  = TRUE,
         },
-        .paramSetType = KETCUBE_TERMINAL_PARAMS_STRING,
+        .paramSetType = KETCUBE_TERMINAL_PARAMS_MODULEID,
         .settingsPtr.callback = &ketCube_terminal_cmd_disable,
     },
     
@@ -187,7 +191,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands[] = {
             .isRemote  = TRUE,
             .isEnvCmd  = TRUE,
         },
-        .paramSetType = KETCUBE_TERMINAL_PARAMS_STRING,
+        .paramSetType = KETCUBE_TERMINAL_PARAMS_MODULEID,
         .settingsPtr.callback = &ketCube_terminal_cmd_enable,
     },
     

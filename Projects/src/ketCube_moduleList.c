@@ -48,6 +48,9 @@
 #include "ketCube_coreCfg.h"
 #include "ketCube_common.h"
 
+#include "ketCube_module_id.h"
+
+#ifndef DESKTOP_BUILD
 #include "hw_msp.h"
 #include "ketCube_lora.h"
 #include "ketCube_i2c.h"
@@ -81,11 +84,12 @@
  * @param cfgStruct name of the module configuration-holding structure
  * 
  */
-#define DEF_MODULE(name, descr, initFn, sleepEnter, sleepExit, \
+#define DEF_MODULE(name, descr, moduleId, initFn, sleepEnter, sleepExit, \
                    getSensData, sendData, recvData, processData, cfgStruct) \
                   { \
                       ((char*) &(name)),\
                       ((char*) &(descr)), \
+                      moduleId, \
                       (ketCube_cfg_ModInitFn_t) (initFn), \
                       (ketCube_cfg_ModVoidFn_t) (sleepEnter), \
                       (ketCube_cfg_ModVoidFn_t) (sleepExit), \
@@ -97,14 +101,15 @@
                       (ketCube_cfg_LenEEPROM_t) sizeof(cfgStruct), \
                       (ketCube_cfg_AllocEEPROM_t) 0 \
                    }
-
+#endif
 
 /**
 * @brief List of KETCube modules
 */
 ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
-    DEF_MODULE("KETCube core",
+    DEF_MODULE("core",
                "Note: core is always enabled",
+               KETCUBE_MODULEID_CORE,
                &ketCube_coreCfg_Init,     /* Init() */
                NULL,                      /* SleepEnter() */
                NULL,                      /* SleepExit() */
@@ -119,6 +124,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_LORA
     DEF_MODULE("LoRa",
                "LoRa radio",
+               KETCUBE_MODULEID_LORA,
                &ketCube_lora_Init,        /* Init() */
                &ketCube_lora_SleepEnter,  /* SleepEnter() */
                NULL,                      /* SleepExit() */
@@ -134,21 +140,23 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_DEBUGDISPLAY
     {((char *) &("DebugDisplay")),
      ((char *) &("Display debug output on serial line")),
-     (ketCube_cfg_ModInitFn_t) NULL,    /*Module Init() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*SleepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*SleepExit() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*GetSensorData() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*SendData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*ReceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL, /*ProcessData() */
-     0,                         /*CFG base addr -- set dynamicaly */
-     1,                         /*CFG len in bytes */
-     TRUE                       /*module CFG byte -- set dynamically */
+     KETCUBE_MODULEID_DEBUGDISPLAY,
+     (ketCube_cfg_ModInitFn_t) NULL,    /*·Module Init() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·SleepExit() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*·SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*·ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL, /*·ProcessData() */
+     0,                         /*·CFG base addr -- set dynamicaly */
+     1,                         /*·CFG len in bytes */
+     TRUE                       /*·module CFG byte -- set dynamically */
      },
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_HDC1080
     DEF_MODULE("HDC1080",
                "On-board RHT sensor based on TI HDC1080",
+               KETCUBE_MODULEID_HDC1080,
                &ketCube_hdc1080_Init,     /* Init() */
                NULL,                      /* SleepEnter() */
                NULL,                      /* SleepExit() */
@@ -162,6 +170,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
     DEF_MODULE("batMeas",
                "On-chip battery voltage measurement",
+               KETCUBE_MODULEID_BATMEAS,
                &ketCube_batMeas_Init,     /* Init() */
                NULL,                      /* SleepEnter() */
                NULL,                      /* SleepExit() */
@@ -175,6 +184,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_ADC
     DEF_MODULE("ADC",
                "Measure mVolts on PA4",
+               KETCUBE_MODULEID_ADC,
                &ketCube_ADC_Init,         /* Init() */
                NULL,                      /* SleepEnter() */
                NULL,                      /* SleepExit() */
@@ -188,6 +198,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_STARNET
     DEF_MODULE("StarNetConcentrator",
                "Compose a star-type network with this module as the network concentrator",
+               KETCUBE_MODULEID_STARNET_CONCENTRATOR,
                &ketCube_starNet_ConcentratorInit, /* Init() */
                &ketCube_starNet_SleepEnter,       /* SleepEnter() */
                NULL,                              /* SleepExit() */
@@ -199,7 +210,8 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
               ),
     DEF_MODULE("StarNetNode",
                "Compose a star-type network with this module as a sensor node",
-               &ketCube_starNet_NodeInit, /* Init() */
+               KETCUBE_MODULEID_STARNET_NODE,
+               &ketCube_starNet_NodeInit,         /* Init() */
                &ketCube_starNet_SleepEnter,       /* SleepEnter() */
                NULL,                              /* SleepExit() */
                NULL,                              /* GetSensorData() */
@@ -212,6 +224,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
     DEF_MODULE("RxDisplay",
                "Display received data on serial line",
+               KETCUBE_MODULEID_RXDISPLAY,
                &ketCube_rxDisplay_Init,         /* Init() */
                NULL,                            /* SleepEnter() */
                NULL,                            /* SleepExit() */
@@ -225,6 +238,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_ASYNCTX
     DEF_MODULE("AsyncTx",
                "Asynchronously transmit data",
+               KETCUBE_MODULEID_ASYNCTX,
                &ketCube_asyncTx_Init,         /* Init() */
                NULL,                            /* SleepEnter() */
                NULL,                            /* SleepExit() */
@@ -238,6 +252,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_TXDISPLAY
     DEF_MODULE("TxDisplay",
                "Display data ready for transmission on serial line",
+               KETCUBE_MODULEID_TXDISPLAY,
                &ketCube_txDisplay_Init,         /* Init() */
                NULL,                            /* SleepEnter() */
                NULL,                            /* SleepExit() */
@@ -251,6 +266,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_BMEX80
     DEF_MODULE("BMEx80",
                "On-board environmental sensor based on Bosch BME family",
+               KETCUBE_MODULEID_BMEX80,
                &ketCube_bmeX80_Init,        /* Init() */
                NULL,                        /*SleepEnter() */
                NULL,                        /*SleepExit() */
@@ -264,6 +280,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_LIS2HH12
     DEF_MODULE("LIS2HH12",
                "3 axis accelerometer",
+               KETCUBE_MODULEID_LIS2HH12,
                &ketCube_lis2hh12_Init,      /* Init() */
                NULL,                        /*SleepEnter() */
                NULL,                        /*SleepExit() */
@@ -277,6 +294,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 #ifdef KETCUBE_CFG_INC_MOD_ICS43432
     DEF_MODULE("ICS43432",
                "MEMS microphone",
+               KETCUBE_MODULEID_ICS43432,
                &ketCube_ics43432_Init,      /* Init() */
                NULL,                        /*SleepEnter() */
                NULL,                        /*SleepExit() */

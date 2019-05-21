@@ -53,6 +53,7 @@
 #include "ketCube_terminal.h"
 #include "ketCube_modules.h"
 #include "ketCube_common.h"
+#include "ketCube_remote_terminal.h"
 
 static TimerEvent_t KETCube_PeriodTimer;
 
@@ -181,6 +182,9 @@ int main(void)
     while (TRUE) {
         /* process pendig commands */
         ketCube_terminal_ProcessCMD();
+        
+        /* process pending remote terminal commands */
+        ketCube_remoteTerminal_ProcessCMD();
 
         /* execute periodic function for enabled modules */
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)

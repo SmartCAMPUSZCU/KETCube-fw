@@ -48,8 +48,12 @@
 #define __KETCUBE_COMMON_H
 
 /* Includes ------------------------------------------------------------------*/
+#ifndef DESKTOP_BUILD
 #include "stm32l0xx_hal.h"
 #include "stm32l0xx_hal_gpio.h"
+#else
+#include "stdint.h"
+#endif
 #include "stdlib.h"
 #include "stdbool.h"
 
@@ -142,7 +146,7 @@ static inline void ketCube_common_Int2dec(int32_t number, char *str,
   * @retval TRUE if it is a valid HEX string
   * @retval FALSE otherwise
   */
-static inline bool ketCube_common_IsHexString(char *str, uint8_t len)
+static inline bool ketCube_common_IsHexString(const char *str, uint8_t len)
 {
     uint8_t i = 0;
 
@@ -168,7 +172,7 @@ static inline bool ketCube_common_IsHexString(char *str, uint8_t len)
   * @retval TRUE if it is a valid DEC string
   * @retval FALSE otherwise
   */
-static inline bool ketCube_common_IsDecString(char *str, uint8_t len)
+static inline bool ketCube_common_IsDecString(const char *str, uint8_t len)
 {
     uint8_t i = 0;
 
@@ -189,7 +193,7 @@ static inline bool ketCube_common_IsDecString(char *str, uint8_t len)
   * @param len HEX string length
   *
   */
-static inline void ketCube_common_Hex2Bytes(uint8_t * bytes, char *str,
+static inline void ketCube_common_Hex2Bytes(uint8_t * bytes, const char *str,
                                             uint8_t len)
 {
     uint8_t i = 0, j = 0;
@@ -231,7 +235,7 @@ static inline void ketCube_common_Hex2Bytes(uint8_t * bytes, char *str,
   * @param len HEX string length
   *
   */
-static inline void ketCube_common_Dec2int(int32_t * output, char *str,
+static inline void ketCube_common_Dec2int(int32_t * output, const char *str,
                                           uint8_t len)
 {
     uint8_t sign = FALSE;
@@ -448,7 +452,9 @@ static inline void ketCube_common_BasicErrorHandler()
 
 
 // Include project-specific common here
+#ifndef DESKTOP_BUILD
 #include "ketCube_projectCommon.h"
+#endif
 
 
 /**
