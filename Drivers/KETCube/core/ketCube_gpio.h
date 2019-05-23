@@ -95,7 +95,7 @@ typedef enum {
 /**
 * @brief Pointer to a IRQ Handler Function
 */
-typedef void (*ketCube_GPIO_VoidFn_t) (void);
+typedef void (*ketCube_GPIO_VoidFn_t) (void* context);
 
 /** @defgroup KETCube_GPIO_fn Public Functions
   * @brief Public functions

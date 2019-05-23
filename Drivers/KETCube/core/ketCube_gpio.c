@@ -343,7 +343,7 @@ void HAL_GPIO_EXTI_Callback(ketCube_gpio_pin_t pin)
     uint8_t index = ketCube_GPIO_GetBitPos(pin);
 
     if (ketCube_GPIO_IrqHandlers[index] != NULL) {
-        ketCube_GPIO_IrqHandlers[index] ();
+        ketCube_GPIO_IrqHandlers[index] (NULL);
     }
 }
 

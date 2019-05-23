@@ -12,7 +12,7 @@
  *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
  *               _____) ) ____| | | || |_| ____( (___| | | |
  *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
- *              (C)2013 Semtech
+ *              (C)2013-2017 Semtech
  *
  *               ___ _____ _   ___ _  _____ ___  ___  ___ ___
  *              / __|_   _/_\ / __| |/ / __/ _ \| _ \/ __| __|
@@ -28,12 +28,16 @@
  *
  * \author    Daniel Jaeckle ( STACKFORCE )
  *
+ * \author    Johannes Bruder ( STACKFORCE )
+ *
  * \defgroup  REGIONCN470 Region CN470
  *            Implementation according to LoRaWAN Specification v1.0.2.
  * \{
  */
 #ifndef __REGION_CN470_H__
 #define __REGION_CN470_H__
+
+#include "region/Region.h"
 
 /*!
  * LoRaMac maximum number of channels
@@ -93,7 +97,17 @@
 /*!
  * Default Tx output power used by the node
  */
-#define CN470_DEFAULT_TX_POWER                    TX_POWER_2
+#define CN470_DEFAULT_TX_POWER                    TX_POWER_0
+
+/*!
+ * Default Max EIRP
+ */
+#define CN470_DEFAULT_MAX_EIRP                      19.15f
+
+/*!
+ * Default antenna gain
+ */
+#define CN470_DEFAULT_ANTENNA_GAIN                  2.15f
 
 /*!
  * ADR Ack limit
@@ -160,41 +174,89 @@
  */
 #define CN470_RX_WND_2_DR                           DR_0
 
+/*
+ * CLASS B
+ */
+/*!
+ * Beacon frequency
+ */
+#define CN470_BEACON_CHANNEL_FREQ                   508300000
+
+/*!
+ * Beacon frequency channel stepwidth
+ */
+#define CN470_BEACON_CHANNEL_STEPWIDTH              200000
+
+/*!
+ * Number of possible beacon channels
+ */
+#define CN470_BEACON_NB_CHANNELS                    8
+
+/*!
+ * Payload size of a beacon frame
+ */
+#define CN470_BEACON_SIZE                           19
+
+/*!
+ * Size of RFU 1 field
+ */
+#define CN470_RFU1_SIZE                             3
+
+/*!
+ * Size of RFU 2 field
+ */
+#define CN470_RFU2_SIZE                             1
+
+/*!
+ * Datarate of the beacon channel
+ */
+#define CN470_BEACON_CHANNEL_DR                     DR_2
+
+/*!
+ * Bandwith of the beacon channel
+ */
+#define CN470_BEACON_CHANNEL_BW                     0
+
+/*!
+ * Ping slot channel datarate
+ */
+#define CN470_PING_SLOT_CHANNEL_DR                  DR_2
+
 /*!
  * LoRaMac maximum number of bands
  */
-#define CN470_MAX_NB_BANDS                           1
+#define CN470_MAX_NB_BANDS                          1
 
 /*!
  * Band 0 definition
- * { DutyCycle, TxMaxPower, LastTxDoneTime, TimeOff }
+ * { DutyCycle, TxMaxPower, LastJoinTxDoneTime, LastTxDoneTime, TimeOff }
  */
-#define CN470_BAND0                                 { 1, CN470_DEFAULT_TX_POWER, 0,  0 } //  100.0 %
-
-/*!
- * LoRaMac random offset for the first join request.
- */
-#define CN470_BACKOFF_RND_OFFSET      600000
+#define CN470_BAND0                                 { 1, CN470_MAX_TX_POWER, 0, 0, 0 } //  100.0 %
 
 /*!
  * Defines the first channel for RX window 1 for CN470 band
  */
-#define CN470_FIRST_RX1_CHANNEL                     ( (uint32_t) 500.3e6 )
+#define CN470_FIRST_RX1_CHANNEL                     ( (uint32_t) 500300000 )
 
 /*!
  * Defines the last channel for RX window 1 for CN470 band
  */
-#define CN470_LAST_RX1_CHANNEL                      ( (uint32_t) 509.7e6 )
+#define CN470_LAST_RX1_CHANNEL                      ( (uint32_t) 509700000 )
 
 /*!
  * Defines the step width of the channels for RX window 1
  */
-#define CN470_STEPWIDTH_RX1_CHANNEL                 ( (uint32_t) 200e3 )
+#define CN470_STEPWIDTH_RX1_CHANNEL                 ( (uint32_t) 200000 )
 
 /*!
  * Data rates table definition
  */
 static const uint8_t DataratesCN470[]  = { 12, 11, 10,  9,  8,  7 };
+
+/*!
+ * Bandwidths table definition in Hz
+ */
+static const uint32_t BandwidthsCN470[] = { 125000, 125000, 125000, 125000, 125000, 125000 };
 
 /*!
  * Maximum payload with respect to the datarate index. Cannot operate with repeater.
@@ -207,18 +269,13 @@ static const uint8_t MaxPayloadOfDatarateCN470[] = { 51, 51, 51, 115, 222, 222 }
 static const uint8_t MaxPayloadOfDatarateRepeaterCN470[] = { 51, 51, 51, 115, 222, 222 };
 
 /*!
- * Tx output powers table definition
- */
-static const int8_t TxPowersCN470[] = { 17, 16, 14, 12, 10, 7, 5, 2 };
-
-
-
-/*!
  * \brief The function gets a value of a specific phy attribute.
  *
  * \param [IN] getPhy Pointer to the function parameters.
+ *
+ * \retval Returns a structure containing the PHY parameter.
  */
-void RegionCN470GetPhyParam( GetPhyParams_t* getPhy );
+PhyParam_t RegionCN470GetPhyParam( GetPhyParams_t* getPhy );
 
 /*!
  * \brief Updates the last TX done parameters of the current channel.
@@ -232,7 +289,16 @@ void RegionCN470SetBandTxDone( SetBandTxDoneParams_t* txDone );
  *
  * \param [IN] type Sets the initialization type.
  */
-void RegionCN470InitDefaults( InitType_t type );
+void RegionCN470InitDefaults( InitDefaultsParams_t* params );
+
+/*!
+ * \brief Returns a pointer to the internal context and its size.
+ *
+ * \param [OUT] params Pointer to the function parameters.
+ *
+ * \retval      Points to a structure where the module store its non-volatile context.
+ */
+void* RegionCN470GetNvmCtx( GetNvmCtxParams_t* params );
 
 /*!
  * \brief Verifies a parameter.
@@ -263,19 +329,19 @@ void RegionCN470ApplyCFList( ApplyCFListParams_t* applyCFList );
 bool RegionCN470ChanMaskSet( ChanMaskSetParams_t* chanMaskSet );
 
 /*!
- * \brief Calculates the next datarate to set, when ADR is on or off.
+ * Computes the Rx window timeout and offset.
  *
- * \param [IN] adrNext Pointer to the function parameters.
+ * \param [IN] datarate     Rx window datarate index to be used
  *
- * \param [OUT] drOut The calculated datarate for the next TX.
+ * \param [IN] minRxSymbols Minimum required number of symbols to detect an Rx frame.
  *
- * \param [OUT] txPowOut The TX power for the next TX.
+ * \param [IN] rxError      System maximum timing error of the receiver. In milliseconds
+ *                          The receiver will turn on in a [-rxError : +rxError] ms
+ *                          interval around RxOffset
  *
- * \param [OUT] adrAckCounter The calculated ADR acknowledgement counter.
- *
- * \retval Returns true, if an ADR request should be performed.
+ * \param [OUT]rxConfigParams Returns updated WindowTimeout and WindowOffset fields.
  */
-bool RegionCN470AdrNext( AdrNextParams_t* adrNext, int8_t* drOut, int8_t* txPowOut, uint32_t* adrAckCounter );
+void RegionCN470ComputeRxWindowParameters( int8_t datarate, uint8_t minRxSymbols, uint32_t rxError, RxConfigParams_t *rxConfigParams );
 
 /*!
  * \brief Configuration of the RX windows.
@@ -348,14 +414,14 @@ int8_t RegionCN470TxParamSetupReq( TxParamSetupReqParams_t* txParamSetupReq );
  */
 uint8_t RegionCN470DlChannelReq( DlChannelReqParams_t* dlChannelReq );
 
-/*
+/*!
  * \brief Alternates the datarate of the channel for the join request.
  *
- * \param [IN] alternateDr Pointer to the function parameters.
+ * \param [IN] currentDr Current datarate.
  *
  * \retval Datarate to apply.
  */
-int8_t RegionCN470AlternateDr( AlternateDrParams_t* alternateDr );
+int8_t RegionCN470AlternateDr( int8_t currentDr, AlternateDrType_t type );
 
 /*!
  * \brief Calculates the back-off time.
@@ -372,9 +438,11 @@ void RegionCN470CalcBackOff( CalcBackOffParams_t* calcBackOff );
  * \param [OUT] time Time to wait for the next transmission according to the duty
  *              cycle.
  *
+ * \param [OUT] aggregatedTimeOff Updates the aggregated time off.
+ *
  * \retval Function status [1: OK, 0: Unable to find a channel on the current datarate]
  */
-bool RegionCN470NextChannel( NextChanParams_t* nextChanParams, uint8_t* channel, TimerTime_t* time );
+LoRaMacStatus_t RegionCN470NextChannel( NextChanParams_t* nextChanParams, uint8_t* channel, TimerTime_t* time, TimerTime_t* aggregatedTimeOff );
 
 /*!
  * \brief Adds a channel.
@@ -400,6 +468,26 @@ bool RegionCN470ChannelsRemove( ChannelRemoveParams_t* channelRemove  );
  * \param [IN] continuousWave Pointer to the function parameters.
  */
 void RegionCN470SetContinuousWave( ContinuousWaveParams_t* continuousWave );
+
+/*!
+ * \brief Computes new datarate according to the given offset
+ *
+ * \param [IN] downlinkDwellTime Downlink dwell time configuration. 0: No limit, 1: 400ms
+ *
+ * \param [IN] dr Current datarate
+ *
+ * \param [IN] drOffset Offset to be applied
+ *
+ * \retval newDr Computed datarate.
+ */
+uint8_t RegionCN470ApplyDrOffset( uint8_t downlinkDwellTime, int8_t dr, int8_t drOffset );
+
+/*!
+ * \brief Sets the radio into beacon reception mode
+ *
+ * \param [IN] rxBeaconSetup Pointer to the function parameters
+ */
+ void RegionCN470RxBeaconSetup( RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr );
 
 /*! \} defgroup REGIONCN470 */
 

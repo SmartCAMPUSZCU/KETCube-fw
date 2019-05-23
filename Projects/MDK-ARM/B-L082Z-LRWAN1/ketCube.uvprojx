@@ -7,15 +7,16 @@
 
   <Targets>
     <Target>
-      <TargetName>ketCube</TargetName>
+      <TargetName>LORAWAN_DEVICE_EUIketCube</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L072CZYx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.1.6.0</PackID>
+          <PackID>Keil.STM32L0xx_DFP.1.6.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x08000000,0x00030000) IRAM(0x20000000,0x00005000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -323,6 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
             <v6LangP>0</v6LangP>
@@ -335,7 +337,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>STM32L082xx,USE_B_L082Z_KETCube,USE_HAL_DRIVER, REGION_EU868,LOW_POWER_DISABLE,DEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\..\Drivers\BSP\MLM32L07X01;..\..\..\Drivers\BSP\MLM32L07X01\Phy;..\..\..\Drivers\STM32L0xx_HAL_Driver\Inc;..\..\..\Drivers\CMSIS\Device\ST\STM32L0xx\Include;..\..\..\Drivers\CMSIS\Include;..\..\..\Middlewares\Third_Party\Lora\Crypto;..\..\..\Middlewares\Third_Party\Lora\Mac;..\..\..\Middlewares\Third_Party\Lora\Phy;..\..\..\Middlewares\Third_Party\Lora\Utilities;..\..\..\Middlewares\Third_Party\Lora\Core;..\..\..\Middlewares\Third_Party\Lora\Mac\region;..\..\..\KETCube\core;..\..\..\KETCube\modules\actuation;..\..\..\KETCube\modules\sensing;..\..\..\KETCube\modules\communication;..\..\..\Drivers\KETCube\core;..\..\..\Drivers\KETCube\modules</IncludePath>
+              <IncludePath>..\..\inc;..\..\..\Drivers\BSP\CMWX1ZZABZ-0xx;..\..\..\Drivers\BSP\Components\sx1276;..\..\..\Drivers\STM32L0xx_HAL_Driver\Inc;..\..\..\Drivers\CMSIS\Device\ST\STM32L0xx\Include;..\..\..\Drivers\CMSIS\Include;..\..\..\Middlewares\Third_Party\Semtech\Utilities;..\..\..\Middlewares\Third_Party\Lora\Crypto;..\..\..\Middlewares\Third_Party\Lora\Mac;..\..\..\Middlewares\Third_Party\Lora\Utilities;..\..\..\Middlewares\Third_Party\Lora\Core;..\..\..\Middlewares\Third_Party\Lora\Mac\region;..\..\..\KETCube\core;..\..\..\KETCube\modules\actuation;..\..\..\KETCube\modules\sensing;..\..\..\KETCube\modules\communication;..\..\..\Drivers\KETCube\core;..\..\..\Drivers\KETCube\modules</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -376,21 +378,6 @@
         </TargetArmAds>
       </TargetOption>
       <Groups>
-        <Group>
-          <GroupName>Drivers/BSP/MLM32L0X01</GroupName>
-          <Files>
-            <File>
-              <FileName>mlm32l07x01.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Drivers\BSP\MLM32L07X01\mlm32l07x01.c</FilePath>
-            </File>
-            <File>
-              <FileName>sx1276.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Drivers\BSP\MLM32L07X01\Phy\sx1276.c</FilePath>
-            </File>
-          </Files>
-        </Group>
         <Group>
           <GroupName>Drivers/CMSIS</GroupName>
           <Files>
@@ -586,6 +573,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -641,6 +629,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -669,6 +658,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\Middlewares\Third_Party\Lora\Core\lora.c</FilePath>
             </File>
+            <File>
+              <FileName>lora-test.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Core\lora-test.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -684,70 +678,40 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacCrypto.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Middlewares/Lora/Mac/Regions</GroupName>
-          <Files>
             <File>
-              <FileName>Region.c</FileName>
+              <FileName>LoRaMacAdr.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\Region.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacAdr.c</FilePath>
             </File>
             <File>
-              <FileName>RegionAS923.c</FileName>
+              <FileName>LoRaMacClassB.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionAS923.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacClassB.c</FilePath>
             </File>
             <File>
-              <FileName>RegionAU915.c</FileName>
+              <FileName>LoRaMacCommands.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionAU915.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacCommands.c</FilePath>
             </File>
             <File>
-              <FileName>RegionCN470.c</FileName>
+              <FileName>LoRaMacConfirmQueue.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionCN470.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacConfirmQueue.c</FilePath>
             </File>
             <File>
-              <FileName>RegionCN779.c</FileName>
+              <FileName>LoRaMacFCntHandler.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionCN779.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacFCntHandler.c</FilePath>
             </File>
             <File>
-              <FileName>RegionCommon.c</FileName>
+              <FileName>LoRaMacParser.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionCommon.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacParser.c</FilePath>
             </File>
             <File>
-              <FileName>RegionEU433.c</FileName>
+              <FileName>LoRaMacSerializer.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionEU433.c</FilePath>
-            </File>
-            <File>
-              <FileName>RegionEU868.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionEU868.c</FilePath>
-            </File>
-            <File>
-              <FileName>RegionIN865.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionIN865.c</FilePath>
-            </File>
-            <File>
-              <FileName>RegionKR920.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionKR920.c</FilePath>
-            </File>
-            <File>
-              <FileName>RegionUS915.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionUS915.c</FilePath>
-            </File>
-            <File>
-              <FileName>RegionUS915-Hybrid.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionUS915-Hybrid.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\LoRaMacSerializer.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -755,24 +719,14 @@
           <GroupName>Middlewares/Lora/Utilities</GroupName>
           <Files>
             <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Utilities\delay.c</FilePath>
-            </File>
-            <File>
               <FileName>low_power.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Middlewares\Third_Party\Lora\Utilities\low_power.c</FilePath>
             </File>
             <File>
-              <FileName>timeServer.c</FileName>
+              <FileName>systime.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Utilities\timeServer.c</FilePath>
-            </File>
-            <File>
-              <FileName>utilities.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Utilities\utilities.c</FilePath>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Utilities\systime.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -788,6 +742,11 @@
               <FileName>cmac.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Middlewares\Third_Party\Lora\Crypto\cmac.c</FilePath>
+            </File>
+            <File>
+              <FileName>soft-se.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Crypto\soft-se.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -943,6 +902,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -1015,16 +975,6 @@
               <FileName>ketCube_bmeX80.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\KETCube\modules\sensing\ketCube_bmeX80.h</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_fdc2214.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_fdc2214.c</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_fdc2214.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_fdc2214.h</FilePath>
             </File>
             <File>
               <FileName>ketCube_hdc1080.c</FileName>
@@ -1103,6 +1053,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -1195,6 +1146,121 @@
               <FileName>ketCube_timer.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_timer.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/BSP/Components</GroupName>
+          <Files>
+            <File>
+              <FileName>sx1276.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Drivers\BSP\Components\sx1276\sx1276.c</FilePath>
+            </File>
+            <File>
+              <FileName>sx1276.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\Drivers\BSP\Components\sx1276\sx1276.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/BSP/CMWX1ZZABZ-0xx</GroupName>
+          <Files>
+            <File>
+              <FileName>mlm32l07x01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Drivers\BSP\CMWX1ZZABZ-0xx\mlm32l07x01.c</FilePath>
+            </File>
+            <File>
+              <FileName>mlm32l07x01.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\Drivers\BSP\CMWX1ZZABZ-0xx\mlm32l07x01.h</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/Semtech/Utilities</GroupName>
+          <Files>
+            <File>
+              <FileName>timeServer.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Semtech\Utilities\timeServer.h</FilePath>
+            </File>
+            <File>
+              <FileName>timeServer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Semtech\Utilities\timeServer.c</FilePath>
+            </File>
+            <File>
+              <FileName>utilities.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Semtech\Utilities\utilities.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Middlewares/LoRaWAN/Mac/Regions</GroupName>
+          <Files>
+            <File>
+              <FileName>Region.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\Region.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionAS923.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionAS923.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionAU915.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionAU915.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionCN470.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionCN470.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionCN779.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionCN779.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionCommon.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionCommon.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionEU433.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionEU433.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionEU868.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionEU868.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionIN865.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionIN865.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionKR920.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionKR920.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionRU864.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionRU864.c</FilePath>
+            </File>
+            <File>
+              <FileName>RegionUS915.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionUS915.c</FilePath>
             </File>
           </Files>
         </Group>

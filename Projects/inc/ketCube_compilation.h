@@ -57,6 +57,7 @@
 
 
 #define KETCUBE_CFG_DEV_NAME           "KETCube"        //< Device name
+#define LRWAN_VERSION	                 LRWAN_VERSION_V10x
 
 /** @defgroup KETCube_inc_mod Included KETCube Modules
   * Define/undefine to include/exclude KETCube modules

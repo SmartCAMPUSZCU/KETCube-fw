@@ -52,6 +52,7 @@
 #include "utilities.h"
 #include "LoRaMac.h"
 #include "Region.h"
+#include "LoRaMacMessageTypes.h"
 
 /** @defgroup KETCube_LoRa_ext KETCube LoRaWAN stack Extensions
   * @brief KETCube LoRaWAN stack Extensions
@@ -59,7 +60,7 @@
   * @{
   */
 
-extern void ketCube_lora_OTAAJoin(uint8_t * LoRaMacRxPayload, ApplyCFListParams_t * CFList);
+extern void ketCube_lora_OTAAJoin(LoRaMacNvmCtx_t * NvmCtx, ApplyCFListParams_t * CFList);
 extern void ketCube_lora_PrintCFList(ApplyCFListParams_t * CFList);
 
 /**
