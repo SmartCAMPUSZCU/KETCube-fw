@@ -155,7 +155,7 @@ static void ketCube_remoteTerminal_tryExecuteCmd(ketCube_terminal_cmd_t* cmd,
 
 /**
  * @brief Defers command to be processed outside radio IRQ context
- *        (in next base period)
+ *        (in the next base period)
  *
  * @param bytes incoming bytes pointer
  * @param len incoming bytes count

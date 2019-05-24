@@ -60,7 +60,7 @@ typedef enum {
 
     KETCUBE_MODULEID_CORE = 0,              /*!< KETCube Core ID */
 
-    /* category 1 - core modules - ID range 1 - 99 */
+    /* category 1 - core modules - ID range 1 - 127 */
 
     // modules included as a part of core
 
@@ -68,35 +68,38 @@ typedef enum {
     KETCUBE_MODULEID_LOCAL_TERMINAL         = 2,    /*!< Local terminal */
     KETCUBE_MODULEID_REMOTE_TERMINAL        = 3,    /*!< Remote terminal */
 
-    /* category 2 - upstream modules - ID range 100 - 999 */
+    /* category 2 - upstream modules - ID range 128 - 1023 */
 
     // modules included as a callable module (not a part of core)
     // these modules are maintained by the SmartCampus Team only
 
-    KETCUBE_MODULEID_LORA                   = 100,  /*!< Module LoRa */
-    KETCUBE_MODULEID_DEBUGDISPLAY           = 101,  /*!< Module DebugDisplay */
-    KETCUBE_MODULEID_HDC1080                = 102,  /*!< Module HDC1080 */
-    KETCUBE_MODULEID_BATMEAS                = 103,  /*!< Module MeasBattery */
-    KETCUBE_MODULEID_ADC                    = 104,  /*!< Module ADC */
-    KETCUBE_MODULEID_STARNET_CONCENTRATOR   = 105,  /*!< Module starNet */
-    KETCUBE_MODULEID_STARNET_NODE           = 106,  /*!< Module starNet */
-    KETCUBE_MODULEID_RXDISPLAY              = 107,  /*!< Module RxDisplay */
-    KETCUBE_MODULEID_ASYNCTX                = 108,  /*!< Module AsyncTx */
-    KETCUBE_MODULEID_TXDISPLAY              = 109,  /*!< Module TxDisplay */
-    KETCUBE_MODULEID_BMEX80                 = 110,  /*!< Module BMEx80 */
-    KETCUBE_MODULEID_LIS2HH12               = 111,  /*!< Module LIS2HH12 */
-    KETCUBE_MODULEID_ICS43432               = 112,  /*!< Module ICS43432 */
+    KETCUBE_MODULEID_UPSTREAM               = 128,  /*!< Upstream modules BEGIN */
+    KETCUBE_MODULEID_LORA                   = 128,  /*!< Module LoRa */
+    KETCUBE_MODULEID_DEBUGDISPLAY           = 129,  /*!< Module DebugDisplay */
+    KETCUBE_MODULEID_HDC1080                = 130,  /*!< Module HDC1080 */
+    KETCUBE_MODULEID_BATMEAS                = 131,  /*!< Module MeasBattery */
+    KETCUBE_MODULEID_ADC                    = 132,  /*!< Module ADC */
+    KETCUBE_MODULEID_STARNET_CONCENTRATOR   = 133,  /*!< Module starNet */
+    KETCUBE_MODULEID_STARNET_NODE           = 134,  /*!< Module starNet */
+    KETCUBE_MODULEID_RXDISPLAY              = 135,  /*!< Module RxDisplay */
+    KETCUBE_MODULEID_ASYNCTX                = 136,  /*!< Module AsyncTx */
+    KETCUBE_MODULEID_TXDISPLAY              = 137,  /*!< Module TxDisplay */
+    KETCUBE_MODULEID_BMEX80                 = 138,  /*!< Module BMEx80 */
+    KETCUBE_MODULEID_LIS2HH12               = 139,  /*!< Module LIS2HH12 */
+    KETCUBE_MODULEID_ICS43432               = 140,  /*!< Module ICS43432 */
 
-    /* category 3 - third party modules - ID range 1000 - 65534 */
+    /* category 3 - third party modules - ID range 1024 - 65534 */
+    
+    KETCUBE_MODULEID_3RDPARTY               = 1024, /*!< 3rd party modules BEGIN */
 
     // modules maintained by forks of original repository;
     // this category should remain empty in main repository
 
-    //KETCUBE_MODULEID_MY_OWN_SENSOR        = 1000,
+    //KETCUBE_MODULEID_MY_OWN_SENSOR        = 1024,
 
     /* category 4 - non-module IDs - ID 65535 */
 
-    KETCUBE_INVALID_MODULEID = 65535,
+    KETCUBE_MODULEID_INVALID                = 65535, /*!< Invalid module ID */
 
 } ketCube_moduleID_t;
 
