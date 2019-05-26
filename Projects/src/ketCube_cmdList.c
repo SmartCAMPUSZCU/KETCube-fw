@@ -102,7 +102,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
             .isEnvCmd  = TRUE,
         },
         .settingsPtr.subCmdList = ketCube_terminal_commands_driver,
-        .moduleId = KETCUBE_MODULEID_DRIVERS
+        .moduleId = KETCUBE_MODULEID_DRIVERS_BEGIN
     },
                       
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS

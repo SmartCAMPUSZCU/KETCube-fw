@@ -64,7 +64,7 @@ typedef enum {
 
     // modules included as a part of core
 
-    KETCUBE_MODULEID_DRIVERS                = 1,    /*!< All drivers */
+    KETCUBE_MODULEID_DRIVERS_BEGIN          = 1,    /*!< All drivers */
     KETCUBE_MODULEID_LOCAL_TERMINAL         = 2,    /*!< Local terminal */
     KETCUBE_MODULEID_REMOTE_TERMINAL        = 3,    /*!< Remote terminal */
 
@@ -73,7 +73,7 @@ typedef enum {
     // modules included as a callable module (not a part of core)
     // these modules are maintained by the SmartCampus Team only
 
-    KETCUBE_MODULEID_UPSTREAM               = 128,  /*!< Upstream modules BEGIN */
+    KETCUBE_MODULEID_UPSTREAM_BEGIN         = 128,  /*!< Upstream modules BEGIN */
     KETCUBE_MODULEID_LORA                   = 128,  /*!< Module LoRa */
     KETCUBE_MODULEID_DEBUGDISPLAY           = 129,  /*!< Module DebugDisplay */
     KETCUBE_MODULEID_HDC1080                = 130,  /*!< Module HDC1080 */
@@ -90,7 +90,7 @@ typedef enum {
 
     /* category 3 - third party modules - ID range 1024 - 65534 */
     
-    KETCUBE_MODULEID_3RDPARTY               = 1024, /*!< 3rd party modules BEGIN */
+    KETCUBE_MODULEID_3RDPARTY_BEGIN         = 1024, /*!< 3rd party modules BEGIN */
 
     // modules maintained by forks of original repository;
     // this category should remain empty in main repository
