@@ -195,7 +195,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                NULL,                              /* SendData() */
                ketCube_starNet_receiveData,       /* ReceiveData() */
                NULL,                              /* ProcessData() */
-               ketCube_starNet_moduleCfg          /* Module cfg struct */
+               ketCube_starNetConcentrator_moduleCfg   /* Module cfg struct */
               ),
     DEF_MODULE("StarNetNode",
                "Compose a star-type network with this module as a sensor node",
@@ -206,7 +206,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                ketCube_starNet_sendData,          /* SendData() */
                NULL,                              /* ReceiveData() */
                NULL,                              /* ProcessData() */
-               ketCube_starNet_moduleCfg          /* Module cfg struct */
+               ketCube_starNetNode_moduleCfg      /* Module cfg struct */
               ),
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY

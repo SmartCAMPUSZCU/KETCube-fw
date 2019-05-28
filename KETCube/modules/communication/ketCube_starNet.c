@@ -60,7 +60,8 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_STARNET
 
-ketCube_starNet_moduleCfg_t ketCube_starNet_moduleCfg;   /*!< Module configuration storage */
+ketCube_starNet_moduleCfg_t ketCube_starNetConcentrator_moduleCfg;       /*!< Module configuration storage */
+ketCube_starNet_moduleCfg_t ketCube_starNetNode_moduleCfg;               /*!< Module configuration storage */
 
 // Node Type
 ketCube_starNet_NodeType_t nodeType;
