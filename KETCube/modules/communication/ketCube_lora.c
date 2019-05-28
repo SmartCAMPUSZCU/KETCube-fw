@@ -183,10 +183,11 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
       
    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN stack version: %X", VERSION);
 
-   if (ketCube_lora_moduleCfg.devClass != 0 && ketCube_lora_moduleCfg.devClass <= 2) {
+   if (ketCube_lora_moduleCfg.devClass <= 2) {
       ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Device class %c", "ABC"[ketCube_lora_moduleCfg.devClass]);
    } else {
-      ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Invalid device class: %d", ketCube_lora_moduleCfg.devClass);
+       ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Invalid device class: %d", ketCube_lora_moduleCfg.devClass);
+       // TODO some action should be taken if devClass is invalid; possibly set default class? Class A?
    }
 
    LORA_Init(&LoRaMainCallbacks, &LoRaParamInit);      
