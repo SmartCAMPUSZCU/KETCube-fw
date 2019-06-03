@@ -49,6 +49,27 @@
 /** @defgroup KETCube_mod_id Identifiers of all existing modules
   * @{
   */
+  
+/**
+ * Module ID assignment rules
+ *
+ * There are 5 ID categories:
+ *    1) 0          = reserved ID for KETCube core
+ *    2) 1 - 127    = core modules, maintained by SmartCampus Team
+ *    3) 128 - 1023 = upstream modlues, maintained by SmartCampusTeam
+ *    4) 1024 - 65534 = 3rd party modules, empty in official upstream branch
+ *    5) 65535      = invalid ID
+ *
+ * When the module is defined and implemented, it gets its ID assigned here.
+ * The ID is a part of several core subsystems - e.g. terminal subsystem.
+ * When the module gets a new major version released, and its interface changes,
+ * a new ID needs to be assigned. When the interface definition does not change,
+ * there's no need for new ID.
+ *
+ * It is typical to include both IDs amd module versions for a while to achieve
+ * backwards compatibility. The old module goes to deprecated state and is to be
+ * removed in upcoming firmware release
+ */
 
 /**
 * @brief  List of global module identifiers
@@ -67,6 +88,7 @@ typedef enum {
     KETCUBE_MODULEID_DRIVERS_BEGIN          = 1,    /*!< All drivers */
     KETCUBE_MODULEID_LOCAL_TERMINAL         = 2,    /*!< Local terminal */
     KETCUBE_MODULEID_REMOTE_TERMINAL        = 3,    /*!< Remote terminal */
+    KETCUBE_MODULEID_CORE_API               = 4,    /*!< Core API ID/version */
 
     /* category 2 - upstream modules - ID range 128 - 1023 */
 
