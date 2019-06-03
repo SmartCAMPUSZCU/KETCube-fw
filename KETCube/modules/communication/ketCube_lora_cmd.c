@@ -75,274 +75,297 @@ void ketCube_LoRa_cmd_show_devEUI(void)
 /* Terminal command definitions */
 
 ketCube_terminal_cmd_t ketCube_lora_commands[] = {
-    {
-        .cmd   = "appEUI",
-        .descr = "LoRa application EUI.",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, appEUI),
-            .size     = KETCUBE_LORA_CFGLEN_APPEUI,
-        }
-    },
-    
-    {
-        .cmd   = "appKey",
-        .descr = "LoRa application key.",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, appKey),
-            .size     = KETCUBE_LORA_CFGLEN_APPKEY,
-        }
-    },
-    
-    {
-        .cmd   = "appSKey",
-        .descr = "LoRa application session key.",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, appSKey),
-            .size     = KETCUBE_LORA_CFGLEN_APPSKEY,
-        }
-    },
-    
-    {
-        .cmd   = "devAddr",
-        .descr = "LoRa device address.",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, devAddr),
-            .size     = KETCUBE_LORA_CFGLEN_DEVADDR,
-        }
-    },
+   {
+      .cmd   = "appEUI",
+      .descr = "LoRa application EUI.",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, appEUI),
+         .size     = KETCUBE_LORA_CFGLEN_APPEUI,
+      }
+   },
 
-    {
-        .cmd   = "devClass",
-        .descr = "Lora device class: 0 = A, 1 = B, 2 = C",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, devClass),
-            .size     = sizeof(DeviceClass_t),
-        }
-    },    
-		
-    {
-        .cmd   = "devEUIBoard",
-        .descr = "Board (boardID-based) LoRa device EUI",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.callback = &ketCube_LoRa_cmd_show_devEUI,
-    },
-    
-    {
-        .cmd   = "devEUICustom",
-        .descr = "Custom LoRa device EUI",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, devEUI),
-            .size     = KETCUBE_LORA_CFGLEN_DEVEUI,
-        }
-    },
-    
-    {
-        .cmd   = "enableABP",
-        .descr = "Enable ABP",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = (offsetof(ketCube_lora_moduleCfg_t, cfg) 
-                        + offsetof(ketCube_lora_cfg_t, connectionType)),
-            .size     = sizeof(ketCube_lora_cfg_t),
-        }
-    },
-    
-    {
-        .cmd   = "enableCustomDevEUI",
-        .descr = "Custom (user-defined) LoRa device EUI",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = (offsetof(ketCube_lora_moduleCfg_t, cfg) 
-                         + offsetof(ketCube_lora_cfg_t, devEUIType)),
-            .size     = sizeof(ketCube_lora_cfg_t),
-        }
-    },
-    
+   {
+      .cmd   = "appKey",
+      .descr = "LoRa application key.",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, appKey),
+         .size     = KETCUBE_LORA_CFGLEN_APPKEY,
+      }
+   },
+
+   {
+      .cmd   = "appSKey",
+      .descr = "LoRa application session key.",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, appSKey),
+         .size     = KETCUBE_LORA_CFGLEN_APPSKEY,
+      }
+   },
+
+   {
+      .cmd   = "devAddr",
+      .descr = "LoRa device address.",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, devAddr),
+         .size     = KETCUBE_LORA_CFGLEN_DEVADDR,
+      }
+   },
+
+   {
+      .cmd   = "devClass",
+      .descr = "Lora device class: 0 = A, 1 = B, 2 = C",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isRAM     = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, devClass),
+         .size     = sizeof(DeviceClass_t),
+      }
+   },    
+
+   {
+      .cmd   = "devEUIBoard",
+      .descr = "Board (boardID-based) LoRa device EUI",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.callback = &ketCube_LoRa_cmd_show_devEUI,
+   },
+
+   {
+      .cmd   = "devEUICustom",
+      .descr = "Custom LoRa device EUI",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, devEUI),
+         .size     = KETCUBE_LORA_CFGLEN_DEVEUI,
+      }
+   },
+
+   {
+      .cmd   = "enableABP",
+      .descr = "Enable ABP",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = (offsetof(ketCube_lora_moduleCfg_t, cfg) 
+                     + offsetof(ketCube_lora_cfg_t, connectionType)),
+         .size     = sizeof(ketCube_lora_cfg_t),
+      }
+   },
+   
+   {
+      .cmd   = "enableCustomDevEUI",
+      .descr = "Custom (user-defined) LoRa device EUI",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BOOLEAN,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = (offsetof(ketCube_lora_moduleCfg_t, cfg) 
+                      + offsetof(ketCube_lora_cfg_t, devEUIType)),
+         .size     = sizeof(ketCube_lora_cfg_t),
+      }
+   },
+   
 #if (LRWAN_VERSION == LRWAN_VERSION_V11x)
-    {
-        .cmd   = "fNwkSIntKey",
-        .descr = "Forwarding Network session integrity key",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, fNwkSIntKey),
-            .size     = KETCUBE_LORA_CFGLEN_FNWKSINTKEY,
-        }
-    },
-		{
-        .cmd   = "nwkKey",
-        .descr = "Network key",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, nwkKey),
-            .size     = KETCUBE_LORA_CFGLEN_NWKKEY,
-        }
-    },
-		{
-        .cmd   = "nwkSEncKey",
-        .descr = "Network session encryption key",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, nwkSEncKey),
-            .size     = KETCUBE_LORA_CFGLEN_NWKSENCKEY,
-        }
-    },
-		{
-        .cmd   = "sNwkSIntKey",
-        .descr = "Serving Network session integrity key",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isRAM     = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, sNwkSIntKey),
-            .size     = KETCUBE_LORA_CFGLEN_SNWKSINTKEY,
-        }
-    },
-		
+   {
+      .cmd   = "fNwkSIntKey",
+      .descr = "Forwarding Network session integrity key",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isRAM     = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, fNwkSIntKey),
+         .size     = KETCUBE_LORA_CFGLEN_FNWKSINTKEY,
+      }
+   },
+   
+   {
+      .cmd   = "nwkKey",
+      .descr = "Network key",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isRAM     = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, nwkKey),
+         .size     = KETCUBE_LORA_CFGLEN_NWKKEY,
+      }
+   },
+   
+   {
+      .cmd   = "nwkSEncKey",
+      .descr = "Network session encryption key",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isRAM     = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, nwkSEncKey),
+         .size     = KETCUBE_LORA_CFGLEN_NWKSENCKEY,
+      }
+   },
+   
+   {
+      .cmd   = "sNwkSIntKey",
+      .descr = "Serving Network session integrity key",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isRAM     = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, sNwkSIntKey),
+         .size     = KETCUBE_LORA_CFGLEN_SNWKSINTKEY,
+      }
+   },
+   
 #else
-		{
-        .cmd   = "nwkSKey",
-        .descr = "LoRa network session key",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
-        },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_MODULEID_LORA,
-            .offset   = offsetof(ketCube_lora_moduleCfg_t, nwkSEncKey),
-            .size     = KETCUBE_LORA_CFGLEN_NWKSENCKEY,
-        }
-    },
+   {
+      .cmd   = "nwkSKey",
+      .descr = "LoRa network session key",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, nwkSEncKey),
+         .size     = KETCUBE_LORA_CFGLEN_NWKSENCKEY,
+      }
+   },
+   
 #endif
-    
-    DEF_TERMINATE()
+   {
+      .cmd   = "txDatarate",
+      .descr = "Uplink datarate (0-15)",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isRAM     = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, txDatarate),
+         .size     = sizeof(uint8_t),
+      }
+   },
+
+   DEF_TERMINATE()
 };
 
 

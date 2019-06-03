@@ -156,18 +156,18 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
 {
 
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
-    ketCube_lora_rxData.msg = &(ketCube_lora_rxDataBuff[0]);
-    ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
-    ketCube_lora_rxData.msgLen = 0;
-    ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
+   ketCube_lora_rxData.msg = &(ketCube_lora_rxDataBuff[0]);
+   ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
+   ketCube_lora_rxData.msgLen = 0;
+   ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
 
-    modMsgQueue[0] = &ketCube_lora_rxData;
-    modMsgQueue[1] = NULL;
+   modMsgQueue[0] = &ketCube_lora_rxData;
+   modMsgQueue[1] = NULL;
 #else
-    modMsgQueue[0] = NULL;
+   modMsgQueue[0] = NULL;
 #endif //KETCUBE_CFG_INC_MOD_RXDISPLAY
     
-    *msg = &(modMsgQueue[0]);
+   *msg = &(modMsgQueue[0]);
 
 #if (KETCUBE_LORA_SELCFG_SELECTED == KETCUBE_LORA_SELCFG_KETCube)
    if (lora_ketCubeInit() != KETCUBE_CFG_OK) {
@@ -186,10 +186,15 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
    if (ketCube_lora_moduleCfg.devClass <= 2) {
       ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Device class %c", "ABC"[ketCube_lora_moduleCfg.devClass]);
    } else {
-       ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Invalid device class: %d", ketCube_lora_moduleCfg.devClass);
-       // TODO some action should be taken if devClass is invalid; possibly set default class? Class A?
+      ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Invalid device class: %d", ketCube_lora_moduleCfg.devClass);
    }
 
+   if (ketCube_lora_moduleCfg.txDatarate <= 15) {
+      LoRaParamInit.TxDatarate = ketCube_lora_moduleCfg.txDatarate;
+   } else {
+      ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Invalid uplink datarate: %d", ketCube_lora_moduleCfg.txDatarate);
+   }
+   
    LORA_Init(&LoRaMainCallbacks, &LoRaParamInit);      
 
    return KETCUBE_CFG_MODULE_OK;
@@ -351,7 +356,9 @@ static void ketCube_lora_HasJoined( void )
    if (lora_config_otaa_get() == LORA_ENABLE) {
       ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Joined");
    }
-   LORA_RequestClass(ketCube_lora_moduleCfg.devClass);
+   if (ketCube_lora_moduleCfg.devClass <= 2) {
+      LORA_RequestClass(ketCube_lora_moduleCfg.devClass);
+   }
 }
 
 static void ketCube_lora_ConfirmClass(DeviceClass_t Class)

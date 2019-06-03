@@ -86,42 +86,41 @@ typedef enum {
 * @brief  Length of LoRa CFG data
 */
 typedef enum {
-    KETCUBE_LORA_CFGLEN_DEVEUI  =  8,      /*!< DevEUI len in bytes */
-    KETCUBE_LORA_CFGLEN_APPEUI  =  8,      /*!< AppEUI len in bytes */
-    KETCUBE_LORA_CFGLEN_APPKEY  = 16,      /*!< AppKEY len in bytes */
-    KETCUBE_LORA_CFGLEN_NETID   =  3,      /*!< NetID len in bytes */
-    KETCUBE_LORA_CFGLEN_NWKKEY   =  16,      /*!< Network root key len in bytes */
-    KETCUBE_LORA_CFGLEN_DEVADDR =  4,      /*!< DEVAddr len in bytes */
-    KETCUBE_LORA_CFGLEN_NWKSENCKEY = 16,   /*!< Network session encryption key len in bytes */
-    KETCUBE_LORA_CFGLEN_SNWKSINTKEY = 16,  /*!< Network session encryption key len in bytes */
-     KETCUBE_LORA_CFGLEN_FNWKSINTKEY = 16,  /*!< Forwarding Network session integrity key len in bytes */
-     KETCUBE_LORA_CFGLEN_APPSKEY = 16,      /*!< Application session KEY len in bytes */
+   KETCUBE_LORA_CFGLEN_DEVEUI  =  8,      /*!< DevEUI len in bytes */
+   KETCUBE_LORA_CFGLEN_APPEUI  =  8,      /*!< AppEUI len in bytes */
+   KETCUBE_LORA_CFGLEN_APPKEY  = 16,      /*!< AppKEY len in bytes */
+   KETCUBE_LORA_CFGLEN_NETID   =  3,      /*!< NetID len in bytes */
+   KETCUBE_LORA_CFGLEN_NWKKEY   =  16,      /*!< Network root key len in bytes */
+   KETCUBE_LORA_CFGLEN_DEVADDR =  4,      /*!< DEVAddr len in bytes */
+   KETCUBE_LORA_CFGLEN_NWKSENCKEY = 16,   /*!< Network session encryption key len in bytes */
+   KETCUBE_LORA_CFGLEN_SNWKSINTKEY = 16,  /*!< Network session encryption key len in bytes */
+   KETCUBE_LORA_CFGLEN_FNWKSINTKEY = 16,  /*!< Forwarding Network session integrity key len in bytes */
+   KETCUBE_LORA_CFGLEN_APPSKEY = 16,      /*!< Application session KEY len in bytes */
 } ketCube_lora_cfgLen_t;
 
 typedef struct ketCube_lora_cfg_t {
-    ketCube_lora_selConnMethod_t connectionType; /*!< Connection type OTAA/ABP */
-    ketCube_lora_selDeveui_t     devEUIType;     /*!< devEUI from device or custom devEUI */
+   ketCube_lora_selConnMethod_t connectionType; /*!< Connection type OTAA/ABP */
+   ketCube_lora_selDeveui_t     devEUIType;     /*!< devEUI from device or custom devEUI */
 } ketCube_lora_cfg_t;
 
 /**
 * @brief  KETCube lora module configuration
 */
 typedef struct ketCube_lora_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;                /*!< KETCube core cfg byte */
-    
-    ketCube_lora_cfg_t cfg;                             /*!< bitwise settings */
-    
-    byte netID[KETCUBE_LORA_CFGLEN_NETID];              /*!< LoRaWAN network ID */
-      byte appEUI[KETCUBE_LORA_CFGLEN_APPEUI];            /*!< LoRaWAN appEUI */
-    byte devEUI[KETCUBE_LORA_CFGLEN_DEVEUI];            /*!< LoRaWAN devEUI */
-    byte appKey[KETCUBE_LORA_CFGLEN_APPKEY];            /*!< LoRaWAN appKey */
-    byte nwkKey[KETCUBE_LORA_CFGLEN_NWKKEY];            /*!< LoRaWAN Network root key */
-    byte devAddr[KETCUBE_LORA_CFGLEN_DEVADDR];          /*!< LoRaWAN device address */
-    byte nwkSEncKey[KETCUBE_LORA_CFGLEN_NWKSENCKEY];    /*!< LoRaWAN Network session encryption key */
-     byte sNwkSIntKey[KETCUBE_LORA_CFGLEN_SNWKSINTKEY];  /*!< LoRaWAN Network session integrity key */
-     byte fNwkSIntKey[KETCUBE_LORA_CFGLEN_FNWKSINTKEY];  /*!< LoRaWAN Forwarding Network session integrity key */
-    byte appSKey[KETCUBE_LORA_CFGLEN_APPSKEY];          /*!< LoRaWAN Application sesion key */
-    DeviceClass_t devClass;                             /*!< Device class  */    
+   ketCube_cfg_ModuleCfgByte_t coreCfg;                /*!< KETCube core cfg byte */
+   ketCube_lora_cfg_t cfg;                             /*!< bitwise settings */
+   byte netID[KETCUBE_LORA_CFGLEN_NETID];              /*!< LoRaWAN network ID */
+   byte appEUI[KETCUBE_LORA_CFGLEN_APPEUI];            /*!< LoRaWAN appEUI */
+   byte devEUI[KETCUBE_LORA_CFGLEN_DEVEUI];            /*!< LoRaWAN devEUI */
+   byte appKey[KETCUBE_LORA_CFGLEN_APPKEY];            /*!< LoRaWAN appKey */
+   byte nwkKey[KETCUBE_LORA_CFGLEN_NWKKEY];            /*!< LoRaWAN Network root key */
+   byte devAddr[KETCUBE_LORA_CFGLEN_DEVADDR];          /*!< LoRaWAN device address */
+   byte nwkSEncKey[KETCUBE_LORA_CFGLEN_NWKSENCKEY];    /*!< LoRaWAN Network session encryption key */
+   byte sNwkSIntKey[KETCUBE_LORA_CFGLEN_SNWKSINTKEY];  /*!< LoRaWAN Network session integrity key */
+   byte fNwkSIntKey[KETCUBE_LORA_CFGLEN_FNWKSINTKEY];  /*!< LoRaWAN Forwarding Network session integrity key */
+   byte appSKey[KETCUBE_LORA_CFGLEN_APPSKEY];          /*!< LoRaWAN Application sesion key */
+   DeviceClass_t devClass;                             /*!< Device class  */
+   uint8_t txDatarate;                                 /*!< Uplink datarate  */
 } ketCube_lora_moduleCfg_t;
 
 extern ketCube_lora_moduleCfg_t ketCube_lora_moduleCfg;
