@@ -135,6 +135,24 @@ int main(void)
 {
     uint32_t basePeriodCnt = 0;
 
+    if (1) {
+        //RCC_DeInit();
+        SysTick->CTRL = 0;
+        SysTick->LOAD = 0;
+        SysTick->VAL  = 0;
+        
+        __disable_irq();
+        //__set_PRIMASK(1);
+        
+        // remap to system memory
+        SYSCFG->CFGR1 = 0x01;
+        
+        __set_MSP(*(__IO uint32_t*) 0x1FF00000);
+        ((void (*)(void)) (*((uint32_t *)(0x1FF00004))))();
+        
+        while(1) {}
+    }
+    
     /* STM32 HAL library initialization */
     HAL_Init();
 

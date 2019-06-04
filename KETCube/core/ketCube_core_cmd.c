@@ -61,8 +61,6 @@
 /**
  * @brief Erase EEPROM configuration - set factory defaults
  * 
- * @retval KETCUBE_CFG_OK in case of success
- * @retval ketCube_CFG_ERROR in case of failure
  */
 void ketCube_core_CMD_FactoryDefaults(void)
 {
@@ -88,6 +86,100 @@ void ketCube_core_CMD_FactoryDefaults(void)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Reload to apply new settings!");
 }
 
+
+static void BootloaderClockInit(void){
+	RCC_OscInitTypeDef RCC_OscInitStruct;
+	RCC_ClkInitTypeDef RCC_ClkInitStruct;
+ 
+	/**Configure the main internal regulator output voltage
+	*/
+	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+ 
+	/**Initializes the CPU, AHB and APB busses clocks
+	*/
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.HSICalibrationValue = 16;
+	RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
+	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+	{
+	KETCube_ErrorHandler();
+	}
+ 
+	/**Initializes the CPU, AHB and APB busses clocks
+	*/
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
+							  |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
+	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
+	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
+	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
+ 
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
+	{
+	KETCube_ErrorHandler();
+	}
+}
+
+typedef void(*voidFn) (void); // define pointer to a void function
+
+/**
+ * @brief Initialize STM bootloader to allow KETCube flash programming over communication interface(s)
+ * 
+ * @note AppNotes AN2606 and AN3155 describe the STM bootloader
+ * @note An online tutorial has been used to implement this (@ref https://www.youtube.com/watch?v=cvKC-4tCRgw)
+ * @note FLASHER-STM32 can be used to communicate with stm32 bootloader (@ref https://my.st.com/content/my_st_com/en/products/development-tools/software-development-tools/stm32-software-development-tools/stm32-programmers/flasher-stm32.license=1559121604826.product=FLASHER-STM32.version=2.8.0.html)
+ * @note https://community.st.com/s/question/0D50X00009sTgmrSAC/usb-dfu-bootloader-start-from-source
+ * 
+ */
+void ketCube_core_CMD_startBootloader(void) {
+    
+    voidFn jump_to_bootloader = (void (*)(void)) (*((uint32_t *)(0x1FF00004)));
+    
+    KETCUBE_TERMINAL_ENDL();
+    KETCUBE_TERMINAL_PRINTF
+        ("Starting STM bootloader! Use FLASHER-STM32 or similar tool to program %s.",
+         KETCUBE_CFG_DEV_NAME);
+    KETCUBE_TERMINAL_ENDL();
+    KETCUBE_TERMINAL_ENDL();
+    
+    HAL_Delay(2000);
+    
+    //HAL_RCC_DeInit();
+	BootloaderClockInit();
+	//Reset systick
+	SysTick->CTRL = 0;
+	SysTick->LOAD = 0;
+	SysTick->VAL = 0;
+ 
+	//No need to disable interrupt, this is call on startup only, before any initialization
+	//__disable_irq();
+    
+    /* Probably not needed, but just to be sure.*/
+	__DSB();
+	__ISB();
+	__DMB();
+ 
+    //__set_PRIMASK(1);
+
+ 
+	__HAL_SYSCFG_REMAPMEMORY_SYSTEMFLASH();
+    //	SCB->VTOR=0;
+ 
+	//Set Main Stack Pointer to it's default value
+	__set_MSP(*(__IO uint32_t*) 0x1FF00000);
+ 
+    	/* Probably not needed, but just to be sure.*/
+	__DSB();
+	__ISB();
+	__DMB();
+
+	jump_to_bootloader();
+	
+	while(1) { }
+}
+
 /* Terminal command definitions */
 ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     {
@@ -109,6 +201,17 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
             .offset   = offsetof(ketCube_coreCfg_t, basePeriod),
             .size     = sizeof(uint32_t)
         }
+    },
+    
+    {
+        .cmd   = "startBootloader",
+        .descr = "Start STM bootloader.",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRAM     = TRUE,
+            .isSetCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_core_CMD_startBootloader,
     },
     
     {
