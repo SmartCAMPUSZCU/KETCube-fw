@@ -293,16 +293,16 @@ DEFINE_USART_IRQ_HANDLER(5);
  */
 static ketCube_UART_ChannelNo_t HAL_UART_MapInstanceToChannel(uintptr_t instance)
 {
-	switch (instance)
-	{
-		case (uintptr_t)USART1: return KETCUBE_UART_CHANNEL_1;
-		case (uintptr_t)USART2: return KETCUBE_UART_CHANNEL_2;
-		//case (uintptr_t)USART3: return KETCUBE_UART_CHANNEL_3;
-		case (uintptr_t)USART4: return KETCUBE_UART_CHANNEL_4;
-		case (uintptr_t)USART5: return KETCUBE_UART_CHANNEL_5;
-	}
-	
-	return KETCUBE_UART_CHANNEL_COUNT;
+    switch (instance)
+    {
+        case (uintptr_t)USART1: return KETCUBE_UART_CHANNEL_1;
+        case (uintptr_t)USART2: return KETCUBE_UART_CHANNEL_2;
+        //case (uintptr_t)USART3: return KETCUBE_UART_CHANNEL_3;
+        case (uintptr_t)USART4: return KETCUBE_UART_CHANNEL_4;
+        case (uintptr_t)USART5: return KETCUBE_UART_CHANNEL_5;
+    }
+    
+    return KETCUBE_UART_CHANNEL_COUNT;
 }
 
 /**
@@ -311,9 +311,22 @@ static ketCube_UART_ChannelNo_t HAL_UART_MapInstanceToChannel(uintptr_t instance
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
-	if (channel != KETCUBE_UART_CHANNEL_COUNT)
-		ketCube_UART_ReceiveCallback(channel);
+    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    if (channel != KETCUBE_UART_CHANNEL_COUNT) {
+        ketCube_UART_ReceiveCallback(channel);
+    }
+}
+
+/**
+ * @brief USART TX complete HAL callback
+ * @param huart		USART handle which triggered callback
+ */
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    if (channel != KETCUBE_UART_CHANNEL_COUNT) {
+        ketCube_UART_TransmitCallback(channel);
+    }
 }
 
 /**
@@ -322,9 +335,10 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  */
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-  ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
-	if (channel != KETCUBE_UART_CHANNEL_COUNT)
-		ketCube_UART_ErrorCallback(channel);
+    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    if (channel != KETCUBE_UART_CHANNEL_COUNT) {
+        ketCube_UART_ErrorCallback(channel);
+    }
 }
 
 /**
@@ -333,9 +347,10 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
  */
 void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
 {
-  ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
-	if (channel != KETCUBE_UART_CHANNEL_COUNT)
-		ketCube_UART_WakeupCallback(channel);
+    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    if (channel != KETCUBE_UART_CHANNEL_COUNT) {
+        ketCube_UART_WakeupCallback(channel);
+    }
 }
 
 /**
@@ -344,9 +359,10 @@ void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  */
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
-  ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
-	if (channel != KETCUBE_UART_CHANNEL_COUNT)
-		ketCube_UART_IoInitCallback(channel);
+    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    if (channel != KETCUBE_UART_CHANNEL_COUNT) {
+        ketCube_UART_IoInitCallback(channel);
+    }
 }
 
 /**
@@ -355,9 +371,10 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
  */
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 {
-  ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
-	if (channel != KETCUBE_UART_CHANNEL_COUNT)
-		ketCube_UART_IoDeInitCallback(channel);
+    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    if (channel != KETCUBE_UART_CHANNEL_COUNT) {
+	    ketCube_UART_IoDeInitCallback(channel);
+    }
 }
 
 void RTC_IRQHandler( void )
