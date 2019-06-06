@@ -12,51 +12,25 @@ License: Revised BSD License, see LICENSE.TXT file include in the project
 
 Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 */
-/******************************************************************************
+/**
+  ******************************************************************************
   * @file    lora.h
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    27-February-2017
   * @brief   lora API to drive the lora state Machine
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without 
-  * modification, are permitted, provided that the following conditions are met:
-  *
-  * 1. Redistribution of source code must retain the above copyright notice, 
-  *    this list of conditions and the following disclaimer.
-  * 2. Redistributions in binary form must reproduce the above copyright notice,
-  *    this list of conditions and the following disclaimer in the documentation
-  *    and/or other materials provided with the distribution.
-  * 3. Neither the name of STMicroelectronics nor the names of other 
-  *    contributors to this software may be used to endorse or promote products 
-  *    derived from this software without specific written permission.
-  * 4. This software, including modifications and/or derivative works of this 
-  *    software, must execute solely and exclusively on microcontroller or
-  *    microprocessor devices manufactured by or for STMicroelectronics.
-  * 5. Redistribution and use of this software other than as permitted under 
-  *    this license is void and will automatically terminate your rights under 
-  *    this license. 
-  *
-  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
-  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
-  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-  * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
-  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
-  * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
+
 /* Define to prevent recursive inclusion -------------------------------------*/
 
 #ifndef __LORA_MAIN_H__
@@ -67,13 +41,21 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #endif
    
 /* Includes ------------------------------------------------------------------*/
-#include "Comissioning.h"
+#include "Commissioning.h"
 #include "LoRaMac.h"
 #include "region/Region.h"
-	 
+
 #include "ketCube_cfg.h"
 
 /* Exported constants --------------------------------------------------------*/
+
+/*!
+ * LoRaWAN confirmed messages
+ */
+#define LORAWAN_ADR_ON                              1
+#define LORAWAN_ADR_OFF                             0
+
+
 /* Exported types ------------------------------------------------------------*/
 
 /*!
@@ -90,18 +72,35 @@ typedef struct
   
 } lora_AppData_t;
 
-/*!
- * LoRa State Machine states 
- */
-typedef enum eDevicState
+typedef enum 
 {
-    DEVICE_STATE_INIT,
-    DEVICE_STATE_JOIN,
-    DEVICE_STATE_JOINED,
-    DEVICE_STATE_SEND,
-    DEVICE_STATE_CYCLE,
-    DEVICE_STATE_SLEEP
-} DeviceState_t;
+  LORA_RESET = 0, 
+  LORA_SET = !LORA_RESET
+} LoraFlagStatus;
+
+typedef enum 
+{
+  LORA_DISABLE = 0, 
+  LORA_ENABLE = !LORA_DISABLE
+} LoraState_t;
+
+typedef enum 
+{
+  LORA_ERROR = -1, 
+  LORA_SUCCESS = 0
+} LoraErrorStatus;
+
+typedef enum 
+{
+  LORAWAN_UNCONFIRMED_MSG = 0, 
+  LORAWAN_CONFIRMED_MSG = !LORAWAN_UNCONFIRMED_MSG
+} LoraConfirm_t;
+
+typedef enum 
+{
+  LORA_TRUE = 0, 
+  LORA_FALSE = !LORA_TRUE
+} LoraBool_t;
 
 /*!
  * LoRa State Machine states 
@@ -125,22 +124,6 @@ typedef enum eTxEventType
 typedef struct sLoRaParam
 {
 /*!
- * @brief Event type
- *
- * @retval value  battery level ( 0: very low, 254: fully charged )
- */
-    TxEventType_t TxEvent;
-/*!
- * @brief Application data transmission duty cycle in ms
- *
- * @note when TX_ON_TIMER Event type is selected
- */
-    uint32_t TxDutyCycleTime;
-/*!
- * @brief LoRaWAN device class
- */
-    DeviceClass_t Class;
-/*!
  * @brief Activation state of adaptativeDatarate
  */
     bool AdrEnable;
@@ -159,48 +142,83 @@ typedef struct sLoRaParam
 /* Lora Main callbacks*/
 typedef struct sLoRaMainCallback
 {
-/*!
- * @brief Get the current battery level
- *
- * @retval value  battery level ( 0: very low, 254: fully charged )
- */
+   /*!
+    * @brief Get the current battery level
+    *
+    * @retval value  battery level ( 0: very low, 254: fully charged )
+    */
     uint8_t ( *BoardGetBatteryLevel )( void );
-  
-/*!
- * @brief Gets the board 64 bits unique ID 
- *
- * @param [IN] id Pointer to an array that will contain the Unique ID
- */
+   
+   /*!
+    * \brief Get the current temperature
+    *
+    * \retval value  temperature in degreeCelcius( q7.8 )
+    */
+   uint16_t ( *BoardGetTemperatureLevel)( void );
+   
+   /*!
+    * @brief Gets the board 64 bits unique ID 
+    *
+    * @param [IN] id Pointer to an array that will contain the Unique ID
+    */
     void    ( *BoardGetUniqueId ) ( uint8_t *id);
-  /*!
- * Returns a pseudo random seed generated using the MCU Unique ID
- *
- * @retval seed Generated pseudo random seed
- */
+   
+   /*!
+    * Returns a pseudo random seed generated using the MCU Unique ID
+    *
+    * @retval seed Generated pseudo random seed
+    */
     uint32_t ( *BoardGetRandomSeed ) (void);
-/*!
- * @brief Prepares Tx Data to be sent on Lora network 
- *
- * @param [IN] AppData is a buffer to fill
- *
- * @param [IN] port is a Application port on wicth Appdata will be sent
- *
- * @param [IN] length of the AppDataBuffer to send
- *
- * @param [IN] requests a confirmed Frame from the Network
- */
-    void ( *LoraTxData ) ( lora_AppData_t *AppData, FunctionalState* IsTxConfirmed);
-/*!
- * @brief Process Rx Data received from Lora network 
- *
- * @param [IN] AppData is a buffer to process
- *
- * @param [IN] port is a Application port on wicth Appdata will be sent
- *
- * @param [IN] length is the number of recieved bytes
- */
-    void ( *LoraRxData ) ( lora_AppData_t *AppData);
-  
+    
+   /*!
+    * @brief Process Rx Data received from Lora network 
+    *
+    * @param [IN] AppData structure
+    *
+    */
+    void ( *LORA_RxData ) ( lora_AppData_t *AppData);
+    
+   /*!
+    * @brief callback indicating EndNode has jsu joiny 
+    *
+    * @param [IN] None
+    */
+    void ( *LORA_HasJoined)( void );
+    
+   /*!
+    * @brief Confirms the class change 
+    *
+    * @param [IN] AppData is a buffer to process
+    *
+    * @param [IN] port is a Application port on wicth Appdata will be sent
+    *
+    * @param [IN] length is the number of recieved bytes
+    */
+    void ( *LORA_ConfirmClass) ( DeviceClass_t Class );
+    
+   /*!
+    * @brief callback indicating an uplink transmission is needed to allow
+    *        a pending downlink transmission 
+    *
+    * @param [IN] None
+    */
+    void ( *LORA_TxNeeded) ( void);
+
+   /*!
+    *\brief    Will be called each time a Radio IRQ is handled by the MAC
+    *          layer.
+    * 
+    *\warning  Runs in a IRQ context. Should only change variables state.  
+    */
+    void ( *MacProcessNotify )( void ); 
+    
+    /*!
+    * @brief callback indicating a downlink transmission providing
+    *        an acknowledgment for an uplink confirmed data message transmission 
+    *
+    * @param [IN] None
+    */
+    void ( *LORA_McpsDataConfirm) ( void);   
 } LoRaMainCallback_t;
 
 
@@ -208,48 +226,134 @@ typedef struct sLoRaMainCallback
 /* External variables --------------------------------------------------------*/
 /* Exported macros -----------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */ 
-
-/**
- * @brief Lora KETCube Initialisation -- load LoRa parameters from EEPROM
- * @retval KETCUBE_CFG_OK in case of success
- * @retval KETCUBE_CFG_LOAD_ERROR in case of failure
- */
-ketCube_cfg_Error_t lora_ketCubeInit (void);
-
 /**
  * @brief Lora Initialisation
  * @param [IN] LoRaMainCallback_t
  * @param [IN] application parmaters
  * @retval none
  */
-void lora_Init (LoRaMainCallback_t *callbacks, LoRaParam_t* LoRaParam );
+void LORA_Init (LoRaMainCallback_t *callbacks, LoRaParam_t* LoRaParam );
 
 /**
  * @brief run Lora classA state Machine 
  * @param [IN] none
  * @retval none
  */
-void lora_fsm( void );
+LoraErrorStatus LORA_send(lora_AppData_t* AppData, LoraConfirm_t IsTxConfirmed);
 
 /**
- * @brief functionl requesting loRa state machine to send data 
- * @note function to link in mode TX_ON_EVENT 
- * @param  none
+ * @brief Join a Lora Network in classA
+ * @Note if the device is ABP, this is a pass through functon
+ * @param [IN] none
  * @retval none
  */
-void OnSendEvent( void );
-
+LoraErrorStatus LORA_Join( void);
 
 /**
- * @brief API returns the state of the lora state machine
- * @note return @DeviceState_t state
+ * @brief Check whether the Device is joined to the network
  * @param [IN] none
- * @retval return @FlagStatus
+ * @retval returns LORA_SET if joined
+ */
+LoraFlagStatus LORA_JoinStatus( void);
+
+/**
+ * @brief change Lora Class
+ * @Note callback LORA_ConfirmClass informs upper layer that the change has occured
+ * @Note Only switch from class A to class B/C OR from  class B/C to class A is allowed
+ * @Attention can be calld only in LORA_ClassSwitchSlot or LORA_RxData callbacks
+ * @param [IN] DeviceClass_t NewClass
+ * @retval LoraErrorStatus
+ */
+LoraErrorStatus LORA_RequestClass( DeviceClass_t newClass );
+
+/**
+ * @brief get the current Lora Class
+ * @param [IN] DeviceClass_t NewClass
+ * @retval None
+ */
+void LORA_GetCurrentClass( DeviceClass_t *currentClass );
+
+/**
+  * @brief  Set duty cycle: ENABLE or DISABLE
+  * @param  Duty cycle to set: enable or disable
+  * @retval None
   */
-DeviceState_t lora_getDeviceState( void );
+void lora_config_duty_cycle_set(LoraState_t duty_cycle);
 
-void lora_setDeviceState (DeviceState_t state);
+/**
+  * @brief  Get Duty cycle: OTAA vs ABP
+  * @param  None
+  * @retval ENABLE / DISABLE
+  */
+LoraState_t lora_config_duty_cycle_get(void);
 
+/**
+ * @brief  Set whether or not acknowledgement is required
+ * @param  ENABLE or DISABLE
+ * @retval None
+ */
+void lora_config_reqack_set(LoraConfirm_t reqack);
+
+/**
+ * @brief  Get whether or not acknowledgement is required
+ * @param  None
+ * @retval ENABLE or DISABLE
+ */
+LoraConfirm_t lora_config_reqack_get(void);
+
+/**
+ * @brief  Get the SNR of the last received data
+ * @param  None
+ * @retval SNR
+ */
+int8_t lora_config_snr_get(void);
+
+/**
+ * @brief  Get the RSSI of the last received data
+ * @param  None
+ * @retval RSSI
+ */
+int16_t lora_config_rssi_get(void);
+
+/**
+ * @brief  Get whether or not the last sent data were acknowledged
+ * @param  None
+ * @retval ENABLE if so, DISABLE otherwise
+ */
+LoraState_t lora_config_isack_get(void);
+
+/**
+ * @brief  Launch LoraWan certification tests
+ * @param  None
+ * @retval The application port
+ */ 
+void lora_wan_certif(void);
+
+/**
+ * @brief  set tx datarate
+ * @param  None
+ * @retval The application port
+ */ 
+void lora_config_tx_datarate_set(int8_t TxDataRate);
+
+/**
+ * @brief  get tx datarate
+ * @param  None
+ * @retval tx datarate
+ */ 
+int8_t lora_config_tx_datarate_get(void);
+
+/**
+  * @brief  Get join activation process: OTAA vs ABP
+  * @param  None
+  * @retval ENABLE if OTAA is used, DISABLE if ABP is used
+  */
+LoraState_t lora_config_otaa_get(void);
+
+void lora_config_print(void);
+
+ketCube_cfg_Error_t lora_ketCubeInit(void);
+ 
 #ifdef __cplusplus
 }
 #endif

@@ -1,39 +1,41 @@
-/*
- / _____)             _              | |
-( (____  _____ ____ _| |_ _____  ____| |__
- \____ \| ___ |    (_   _) ___ |/ ___)  _ \
- _____) ) ____| | | || |_| ____( (___| | | |
-(______/|_____)_|_|_| \__)_____)\____)_| |_|
-    (C)2013 Semtech
- ___ _____ _   ___ _  _____ ___  ___  ___ ___
-/ __|_   _/_\ / __| |/ / __/ _ \| _ \/ __| __|
-\__ \ | |/ _ \ (__| ' <| _| (_) |   / (__| _|
-|___/ |_/_/ \_\___|_|\_\_| \___/|_|_\\___|___|
-embedded.connectivity.solutions===============
-
-Description: LoRa MAC common region implementation
-
-License: Revised BSD License, see LICENSE.TXT file include in the project
-
-Maintainer: Miguel Luis ( Semtech ), Gregory Cristian ( Semtech ) and Daniel Jaeckle ( STACKFORCE )
-*/
-
-#include <stdbool.h>
-#include <string.h>
-#include <stdint.h>
-
-#include "timer.h"
+/*!
+ * \file      RegionCommon.c
+ *
+ * \brief     LoRa MAC common region implementation
+ *
+ * \copyright Revised BSD License, see section \ref LICENSE.
+ *
+ * \code
+ *                ______                              _
+ *               / _____)             _              | |
+ *              ( (____  _____ ____ _| |_ _____  ____| |__
+ *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
+ *               _____) ) ____| | | || |_| ____( (___| | | |
+ *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
+ *              (C)2013-2017 Semtech
+ *
+ *               ___ _____ _   ___ _  _____ ___  ___  ___ ___
+ *              / __|_   _/_\ / __| |/ / __/ _ \| _ \/ __| __|
+ *              \__ \ | |/ _ \ (__| ' <| _| (_) |   / (__| _|
+ *              |___/ |_/_/ \_\___|_|\_\_| \___/|_|_\\___|___|
+ *              embedded.connectivity.solutions===============
+ *
+ * \endcode
+ *
+ * \author    Miguel Luis ( Semtech )
+ *
+ * \author    Gregory Cristian ( Semtech )
+ *
+ * \author    Daniel Jaeckle ( STACKFORCE )
+ */
+#include <math.h>
+#include "radio.h"
 #include "utilities.h"
-#include "LoRaMac.h"
 #include "RegionCommon.h"
-
-
 
 #define BACKOFF_DC_1_HOUR       100
 #define BACKOFF_DC_10_HOURS     1000
 #define BACKOFF_DC_24_HOURS     10000
-
-
 
 static uint8_t CountChannels( uint16_t mask, uint8_t nbBits )
 {
@@ -48,8 +50,6 @@ static uint8_t CountChannels( uint16_t mask, uint8_t nbBits )
     }
     return nbActiveBits;
 }
-
-
 
 uint16_t RegionCommonGetJoinDc( TimerTime_t elapsedTime )
 {
@@ -83,7 +83,8 @@ bool RegionCommonChanVerifyDr( uint8_t nbChannels, uint16_t* channelsMask, int8_
         {
             if( ( ( channelsMask[k] & ( 1 << j ) ) != 0 ) )
             {// Check datarate validity for enabled channels
-                if( RegionCommonValueInRange( dr, channels[i + j].DrRange.Fields.Min, channels[i + j].DrRange.Fields.Max ) == 1 )
+                if( RegionCommonValueInRange( dr, ( channels[i + j].DrRange.Fields.Min & 0x0F ),
+                                                  ( channels[i + j].DrRange.Fields.Max & 0x0F ) ) == 1 )
                 {
                     // At least 1 channel has been found we can return OK.
                     return true;
@@ -146,40 +147,65 @@ void RegionCommonChanMaskCopy( uint16_t* channelsMaskDest, uint16_t* channelsMas
     }
 }
 
-void RegionCommonSetBandTxDone( Band_t* band, TimerTime_t lastTxDone )
+void RegionCommonSetBandTxDone( bool joined, Band_t* band, TimerTime_t lastTxDone )
 {
-    band->LastTxDoneTime = lastTxDone;
+    if( joined == true )
+    {
+        band->LastTxDoneTime = lastTxDone;
+    }
+    else
+    {
+        band->LastTxDoneTime = lastTxDone;
+        band->LastJoinTxDoneTime = lastTxDone;
+    }
 }
 
-TimerTime_t RegionCommonUpdateBandTimeOff( bool dutyCycle, Band_t* bands, uint8_t nbBands )
+TimerTime_t RegionCommonUpdateBandTimeOff( bool joined, bool dutyCycle, Band_t* bands, uint8_t nbBands )
 {
     TimerTime_t nextTxDelay = ( TimerTime_t )( -1 );
 
     // Update bands Time OFF
     for( uint8_t i = 0; i < nbBands; i++ )
     {
-        if( dutyCycle == true )
+        if( joined == false )
         {
-            if( bands[i].TimeOff <= TimerGetElapsedTime( bands[i].LastTxDoneTime ) )
+            TimerTime_t txDoneTime =  MAX( TimerGetElapsedTime( bands[i].LastJoinTxDoneTime ),
+                                        ( dutyCycle == true ) ? TimerGetElapsedTime( bands[i].LastTxDoneTime ) : 0 );
+
+            if( bands[i].TimeOff <= txDoneTime )
             {
                 bands[i].TimeOff = 0;
             }
             if( bands[i].TimeOff != 0 )
             {
-                nextTxDelay = MIN( bands[i].TimeOff - TimerGetElapsedTime( bands[i].LastTxDoneTime ),
-                                   nextTxDelay );
+                nextTxDelay = MIN( bands[i].TimeOff - txDoneTime, nextTxDelay );
             }
         }
         else
         {
-            nextTxDelay = 0;
-            bands[i].TimeOff = 0;
+            if( dutyCycle == true )
+            {
+                if( bands[i].TimeOff <= TimerGetElapsedTime( bands[i].LastTxDoneTime ) )
+                {
+                    bands[i].TimeOff = 0;
+                }
+                if( bands[i].TimeOff != 0 )
+                {
+                    nextTxDelay = MIN( bands[i].TimeOff - TimerGetElapsedTime( bands[i].LastTxDoneTime ),
+                                       nextTxDelay );
+                }
+            }
+            else
+            {
+                nextTxDelay = 0;
+                bands[i].TimeOff = 0;
+            }
         }
     }
     return nextTxDelay;
 }
 
-uint8_t RegionCommonParseLinkAdrReq( uint8_t* payload, LinkAdrParams_t* linkAdrParams )
+uint8_t RegionCommonParseLinkAdrReq( uint8_t* payload, RegionCommonLinkAdrParams_t* linkAdrParams )
 {
     uint8_t retIndex = 0;
 
@@ -201,4 +227,158 @@ uint8_t RegionCommonParseLinkAdrReq( uint8_t* payload, LinkAdrParams_t* linkAdrP
         retIndex = 5;
     }
     return retIndex;
+}
+
+uint8_t RegionCommonLinkAdrReqVerifyParams( RegionCommonLinkAdrReqVerifyParams_t* verifyParams, int8_t* dr, int8_t* txPow, uint8_t* nbRep )
+{
+    uint8_t status = verifyParams->Status;
+    int8_t datarate = verifyParams->Datarate;
+    int8_t txPower = verifyParams->TxPower;
+    int8_t nbRepetitions = verifyParams->NbRep;
+
+    // Handle the case when ADR is off.
+    if( verifyParams->AdrEnabled == false )
+    {
+        // When ADR is off, we are allowed to change the channels mask
+        nbRepetitions = verifyParams->CurrentNbRep;
+        datarate =  verifyParams->CurrentDatarate;
+        txPower =  verifyParams->CurrentTxPower;
+    }
+
+    if( status != 0 )
+    {
+        // Verify datarate. The variable phyParam. Value contains the minimum allowed datarate.
+        if( RegionCommonChanVerifyDr( verifyParams->NbChannels, verifyParams->ChannelsMask, datarate,
+                                      verifyParams->MinDatarate, verifyParams->MaxDatarate, verifyParams->Channels  ) == false )
+        {
+            status &= 0xFD; // Datarate KO
+        }
+
+        // Verify tx power
+        if( RegionCommonValueInRange( txPower, verifyParams->MaxTxPower, verifyParams->MinTxPower ) == 0 )
+        {
+            // Verify if the maximum TX power is exceeded
+            if( verifyParams->MaxTxPower > txPower )
+            { // Apply maximum TX power. Accept TX power.
+                txPower = verifyParams->MaxTxPower;
+            }
+            else
+            {
+                status &= 0xFB; // TxPower KO
+            }
+        }
+    }
+
+    // If the status is ok, verify the NbRep
+    if( status == 0x07 )
+    {
+        if( nbRepetitions == 0 )
+        { // Restore the default value according to the LoRaWAN specification
+            nbRepetitions = 1;
+        }
+    }
+
+    // Apply changes
+    *dr = datarate;
+    *txPow = txPower;
+    *nbRep = nbRepetitions;
+
+    return status;
+}
+
+double RegionCommonComputeSymbolTimeLoRa( uint8_t phyDr, uint32_t bandwidth )
+{
+    return ( ( double )( 1 << phyDr ) / ( double )bandwidth ) * 1000;
+}
+
+double RegionCommonComputeSymbolTimeFsk( uint8_t phyDr )
+{
+    return ( 8.0 / ( double )phyDr ); // 1 symbol equals 1 byte
+}
+
+void RegionCommonComputeRxWindowParameters( double tSymbol, uint8_t minRxSymbols, uint32_t rxError, uint32_t wakeUpTime, uint32_t* windowTimeout, int32_t* windowOffset )
+{
+    *windowTimeout = MAX( ( uint32_t )ceil( ( ( 2 * minRxSymbols - 8 ) * tSymbol + 2 * rxError ) / tSymbol ), minRxSymbols ); // Computed number of symbols
+    *windowOffset = ( int32_t )ceil( ( 4.0 * tSymbol ) - ( ( *windowTimeout * tSymbol ) / 2.0 ) - wakeUpTime );
+}
+
+int8_t RegionCommonComputeTxPower( int8_t txPowerIndex, float maxEirp, float antennaGain )
+{
+    int8_t phyTxPower = 0;
+
+    phyTxPower = ( int8_t )floor( ( maxEirp - ( txPowerIndex * 2U ) ) - antennaGain );
+
+    return phyTxPower;
+}
+
+void RegionCommonCalcBackOff( RegionCommonCalcBackOffParams_t* calcBackOffParams )
+{
+    uint8_t bandIdx = calcBackOffParams->Channels[calcBackOffParams->Channel].Band;
+    uint16_t dutyCycle = calcBackOffParams->Bands[bandIdx].DCycle;
+    uint16_t joinDutyCycle = 0;
+
+    // Reset time-off to initial value.
+    calcBackOffParams->Bands[bandIdx].TimeOff = 0;
+
+    if( calcBackOffParams->Joined == false )
+    {
+        // Get the join duty cycle
+        joinDutyCycle = RegionCommonGetJoinDc( calcBackOffParams->ElapsedTime );
+        // Apply the most restricting duty cycle
+        dutyCycle = MAX( dutyCycle, joinDutyCycle );
+        // Reset the timeoff if the last frame was not a join request and when the duty cycle is not enabled
+        if( ( calcBackOffParams->DutyCycleEnabled == false ) && ( calcBackOffParams->LastTxIsJoinRequest == false ) )
+        {
+            // This is the case when the duty cycle is off and the last uplink frame was not a join.
+            // This could happen in case of a rejoin, e.g. in compliance test mode.
+            // In this special case we have to set the time off to 0, since the join duty cycle shall only
+            // be applied after the first join request.
+            calcBackOffParams->Bands[bandIdx].TimeOff = 0;
+        }
+        else
+        {
+            // Apply band time-off.
+            calcBackOffParams->Bands[bandIdx].TimeOff = calcBackOffParams->TxTimeOnAir * dutyCycle - calcBackOffParams->TxTimeOnAir;
+        }
+    }
+    else
+    {
+        if( calcBackOffParams->DutyCycleEnabled == true )
+        {
+            calcBackOffParams->Bands[bandIdx].TimeOff = calcBackOffParams->TxTimeOnAir * dutyCycle - calcBackOffParams->TxTimeOnAir;
+        }
+        else
+        {
+            calcBackOffParams->Bands[bandIdx].TimeOff = 0;
+        }
+    }
+}
+
+
+void RegionCommonRxBeaconSetup( RegionCommonRxBeaconSetupParams_t* rxBeaconSetupParams )
+{
+    bool rxContinuous = true;
+    uint8_t datarate;
+
+    // Set the radio into sleep mode
+    Radio.Sleep( );
+
+    // Setup frequency and payload length
+    Radio.SetChannel( rxBeaconSetupParams->Frequency );
+    Radio.SetMaxPayloadLength( MODEM_LORA, rxBeaconSetupParams->BeaconSize );
+
+    // Check the RX continuous mode
+    if( rxBeaconSetupParams->RxTime != 0 )
+    {
+        rxContinuous = false;
+    }
+
+    // Get region specific datarate
+    datarate = rxBeaconSetupParams->Datarates[rxBeaconSetupParams->BeaconDatarate];
+
+    // Setup radio
+    Radio.SetRxConfig( MODEM_LORA, rxBeaconSetupParams->BeaconChannelBW, datarate,
+                       1, 0, 10, rxBeaconSetupParams->SymbolTimeout, true, rxBeaconSetupParams->BeaconSize, false, 0, 0, false, rxContinuous );
+
+    Radio.Rx( rxBeaconSetupParams->RxTime );
 }

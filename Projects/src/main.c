@@ -74,7 +74,7 @@ void KETCube_getResetFlags(void)
 /*!
  * @brief Function executed on TxNextPacket Timeout event
  */
-static void KETCube_PeriodElapsed(void)
+void KETCube_PeriodElapsed(void* context)
 {
     TimerStop(&KETCube_PeriodTimer);
 

@@ -42,10 +42,10 @@ DEALINGS WITH THE SOFTWARE
 #define AES_CMAC_DIGEST_LENGTH  16
  
 typedef struct _AES_CMAC_CTX {
-  uint32_t       M_n;
-  uint8_t        X[16];
-  uint8_t        M_last[16];
-   aes_context    rijndael;
+            aes_context    rijndael;
+            uint8_t        X[16];
+            uint8_t        M_last[16];
+            uint32_t       M_n;
     } AES_CMAC_CTX;
    
 //#include <sys/cdefs.h>

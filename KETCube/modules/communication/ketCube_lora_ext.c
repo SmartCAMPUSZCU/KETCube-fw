@@ -46,6 +46,7 @@
 #include "ketCube_lora_ext.h"
 
 #include "Region.h"
+#include "LoRaMacMessageTypes.h"
 
 /**
  * @brief Print OTAA Join-related info
@@ -54,38 +55,18 @@
  * @param CFList
  * 
  */
-void ketCube_lora_OTAAJoin(uint8_t * LoRaMacRxPayload, ApplyCFListParams_t * CFList)
-{
-    uint32_t netID, devAddr;
-    uint16_t rxDelay;
-    
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "OTAA Joined!");
-    
-    netID  = ( uint32_t )LoRaMacRxPayload[4];
-    netID |= ( ( uint32_t )LoRaMacRxPayload[5] << 8 );
-    netID |= ( ( uint32_t )LoRaMacRxPayload[6] << 16 );
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "NetID: 0x%04X", netID);
+void ketCube_lora_OTAAJoin(LoRaMacNvmCtx_t * NvmCtx, ApplyCFListParams_t * CFList)
+{    
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "NetID: 0x%04X", NvmCtx->NetID);
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "DevAddr: 0x%04X", NvmCtx->DevAddr);
 
-    devAddr  = ( uint32_t )LoRaMacRxPayload[7];
-    devAddr |= ( ( uint32_t )LoRaMacRxPayload[8] << 8 );
-    devAddr |= ( ( uint32_t )LoRaMacRxPayload[9] << 16 );
-    devAddr |= ( ( uint32_t )LoRaMacRxPayload[10] << 24 );
-    
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "DevAddr: 0x%04X", devAddr);
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX1 DR offset: %d", NvmCtx->MacParams.Rx1DrOffset);
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX2 datarate: %d", NvmCtx->MacParams.Rx2Channel.Datarate);   
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX1 DR offset: %d", (LoRaMacRxPayload[11] >> 4) & 0x07);
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX2 datarate: %d", LoRaMacRxPayload[11] & 0x0F);
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX1 delay: %d ms", NvmCtx->MacParams.ReceiveDelay1);
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX2 delay: %d ms", NvmCtx->MacParams.ReceiveDelay2);
 
-    // RxDelay
-    rxDelay = ( LoRaMacRxPayload[12] & 0x0F );
-    if(rxDelay == 0) {
-        rxDelay = 1;
-    }
-    rxDelay = rxDelay * 1000;
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX1 delay: %d ms", rxDelay);
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX2 delay: %d ms", rxDelay + 1000);
-
-    ketCube_lora_PrintCFList(CFList);
+   ketCube_lora_PrintCFList(CFList);
 }
 
 /**
@@ -94,25 +75,25 @@ void ketCube_lora_OTAAJoin(uint8_t * LoRaMacRxPayload, ApplyCFListParams_t * CFL
  */
 void ketCube_lora_PrintCFList(ApplyCFListParams_t * CFList)
 {
-    uint32_t freq;
-    uint8_t i;
+   uint32_t freq;
+   uint8_t i;
 
-    // Size of the optional CF list
-    if(CFList->Size != 16) {
-        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFLIST :: size too small (%d).", CFList->Size);
-        return;
-    }
+   // Size of the optional CF list
+   if(CFList->Size != 16) {
+      ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFLIST :: size too small (%d).", CFList->Size);
+      return;
+   }
 
-    // Last byte is RFU, don't take it into account
-    for(i = 0; i < 15; i += 3) {
-        freq = (uint32_t) CFList->Payload[i];
-        freq |= ((uint32_t) CFList->Payload[i + 1] << 8);
-        freq |= ((uint32_t) CFList->Payload[i + 2] << 16);
-        freq *= 100;
+   // Last byte is RFU, don't take it into account
+   for(i = 0; i < 15; i += 3) {
+      freq = (uint32_t) CFList->Payload[i];
+      freq |= ((uint32_t) CFList->Payload[i + 1] << 8);
+      freq |= ((uint32_t) CFList->Payload[i + 2] << 16);
+      freq *= 100;
 
-        if(freq != 0) {
-            // print freq
-            ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFList :: New Freq: %d Hz", freq);
-        }
-    }
+      if(freq != 0) {
+         // print freq
+         ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFList :: New Freq: %d Hz", freq);
+      }
+   }
 }

@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_lora.c
- * @author  Jan Belohoubek
+ * @author  Jan Belohoubek, Jan Zaruba
  * @version 0.2
- * @date    2018-11-20
+ * @date    2019-05-15
  * @brief   This file contains the KETCube module wrapper for Semtech's LoRa
  *
  * @attention
@@ -68,10 +68,12 @@
  * @note Please note that when ADR is enabled the end-device should be static
  */
 #define LORAWAN_ADR_ON                              1
+
 /*!
- * LoRaWAN confirmed messages
+ * LoRaWAN default confirm state
  */
-#define LORAWAN_CONFIRMED_MSG                    DISABLE
+ #define LORAWAN_DEFAULT_CONFIRM_MSG_STATE           LORAWAN_UNCONFIRMED_MSG
+
 /*!
  * LoRaWAN application port
  * @note do not use 224. It is reserved for certification
@@ -84,43 +86,59 @@
  */
 #define LORAWAN_ASYNCAPP_PORT                       3
 
+
 /**
  *  LoRa module configuration storage
  */
 ketCube_lora_moduleCfg_t ketCube_lora_moduleCfg;
 
-/* call back when LoRa will transmit a frame */
-static void ketCube_lora_TxData(lora_AppData_t * AppData,
-                                FunctionalState * IsTxConfirmed);
+/* call back when server needs endNode to send a frame*/
+static void ketCube_lora_TxNeeded ( void );
 
 /* call back when LoRa has received a frame*/
 static void ketCube_lora_RxData(lora_AppData_t * AppData);
 
+/* call back when LoRa endNode has just joined*/
+static void ketCube_lora_HasJoined( void );
+
+/* call back when LoRa endNode has just switch the class*/
+static void ketCube_lora_ConfirmClass ( DeviceClass_t Class );
+
 /* TxLED turnOFF */
-static void ketCube_lora_OnTimerLed(void);
+static void ketCube_lora_OnTimerLed(void* context);
+
+/* tx timer callback function*/
+static void ketCube_lora_MacProcessNotify(void);
+
+static void ketCube_lora_McpsDataConfirm(void);
+
+static ketCube_cfg_ModError_t ketCube_lora_SendData(lora_AppData_t * AppData);
 
 /* Private variables ---------------------------------------------------------*/
 static TimerEvent_t TxLedTimer;
 
 /* load call backs*/
-static LoRaMainCallback_t LoRaMainCallbacks = { HW_GetBatteryLevel,
-    HW_GetUniqueId,
-    HW_GetRandomSeed,
-    ketCube_lora_TxData,
-    ketCube_lora_RxData
-};
+static LoRaMainCallback_t LoRaMainCallbacks = {HW_GetBatteryLevel,
+                                                HW_GetTemperatureLevel,
+                                                HW_GetUniqueId,
+                                                HW_GetRandomSeed,
+                                                ketCube_lora_RxData,
+                                                ketCube_lora_HasJoined,
+                                                ketCube_lora_ConfirmClass,
+                                                ketCube_lora_TxNeeded,
+                                                ketCube_lora_MacProcessNotify,
+                                                ketCube_lora_McpsDataConfirm};
+
+LoraFlagStatus LoraMacProcessRequest = LORA_RESET;
 
 
-/* !
- *Initialises the Lora Parameters
+/**
+ * Initialises the Lora Parameters
  */
-static LoRaParam_t LoRaParamInit = { TX_ON_TIMER,
-    10000,                      // is not valid. The true period is given by KETCUBE_PERIOD !!
-    CLASS_A,
-    LORAWAN_ADR_ON,
-    DR_0,
-    LORAWAN_PUBLIC_NETWORK
-};
+static LoRaParam_t LoRaParamInit = {LORAWAN_ADR_ON,
+                                    DR_0,
+                                    LORAWAN_PUBLIC_NETWORK};
+
 
 // KETCube messaging
 ketCube_InterModMsg_t ketCube_lora_rxData;
@@ -128,6 +146,7 @@ uint8_t ketCube_lora_rxDataBuff[KETCUBE_LORA_RX_BUFFER_LEN];
 
 static ketCube_InterModMsg_t *modMsgQueue[2];
 
+                                                      
 /**
  * @brief Load basic module configuration data from EEPROM
  * @retval KETCUBE_CFG_MODULE_OK in case of success
@@ -135,48 +154,63 @@ static ketCube_InterModMsg_t *modMsgQueue[2];
  */
 ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
 {
-#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
-    ketCube_lora_rxData.msg = &(ketCube_lora_rxDataBuff[0]);
-    ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
-    ketCube_lora_rxData.msgLen = 0;
-    ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
 
-    modMsgQueue[0] = &ketCube_lora_rxData;
-    modMsgQueue[1] = NULL;
+#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
+   ketCube_lora_rxData.msg = &(ketCube_lora_rxDataBuff[0]);
+   ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
+   ketCube_lora_rxData.msgLen = 0;
+   ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
+
+   modMsgQueue[0] = &ketCube_lora_rxData;
+   modMsgQueue[1] = NULL;
 #else
-    modMsgQueue[0] = NULL;
+   modMsgQueue[0] = NULL;
 #endif //KETCUBE_CFG_INC_MOD_RXDISPLAY
     
-    *msg = &(modMsgQueue[0]);
+   *msg = &(modMsgQueue[0]);
 
 #if (KETCUBE_LORA_SELCFG_SELECTED == KETCUBE_LORA_SELCFG_KETCube)
-    if (lora_ketCubeInit() != KETCUBE_CFG_OK) {
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
+   if (lora_ketCubeInit() != KETCUBE_CFG_OK) {
+      return KETCUBE_CFG_MODULE_ERROR;
+   }
 #endif
-    lora_Init(&LoRaMainCallbacks, &LoRaParamInit);
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN stack version: %X", VERSION);
 
-    return KETCUBE_CFG_MODULE_OK;
+#if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN stack version: 1.1.0");
+#else
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN MAC version: 1.0.3");
+#endif
+      
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN stack version: %X", VERSION);
+
+   if (ketCube_lora_moduleCfg.devClass <= 2) {
+      ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Device class %c", "ABC"[ketCube_lora_moduleCfg.devClass]);
+   } else {
+      ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Invalid device class: %d", ketCube_lora_moduleCfg.devClass);
+   }
+
+   if (ketCube_lora_moduleCfg.txDatarate <= 15) {
+      LoRaParamInit.TxDatarate = ketCube_lora_moduleCfg.txDatarate;
+   } else {
+      ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Invalid uplink datarate: %d", ketCube_lora_moduleCfg.txDatarate);
+   }
+   
+   LORA_Init(&LoRaMainCallbacks, &LoRaParamInit);      
+
+   return KETCUBE_CFG_MODULE_OK;
 }
-
-static uint8_t *dataBuffer;
-static uint8_t dataBufferLen;
-static uint8_t txPort;
 
 /**
  * @brief Process lora state and prepare data...
  */
 ketCube_cfg_ModError_t ketCube_lora_Send(uint8_t * buffer, uint8_t * len)
 {
-    txPort = LORAWAN_APP_PORT;
-    dataBuffer = buffer;
-    dataBufferLen = *len;
+   lora_AppData_t AppData;
+   AppData.Buff = buffer;
+   AppData.BuffSize = *len;
+   AppData.Port = LORAWAN_APP_PORT;
 
-    // when timer elapsed tx next packet or join ...
-    OnSendEvent();
-
-    return KETCUBE_CFG_MODULE_OK;
+   return ketCube_lora_SendData(&AppData);
 }
 
 /**
@@ -185,14 +219,12 @@ ketCube_cfg_ModError_t ketCube_lora_Send(uint8_t * buffer, uint8_t * len)
 ketCube_cfg_ModError_t ketCube_lora_AsyncSend(uint8_t * buffer,
                                               uint8_t * len)
 {
-    txPort = LORAWAN_ASYNCAPP_PORT;
-    dataBuffer = buffer;
-    dataBufferLen = *len;
+   lora_AppData_t AppData;
+   AppData.Buff = buffer;
+   AppData.BuffSize = *len;
+   AppData.Port = LORAWAN_ASYNCAPP_PORT;
 
-    // when timer elapsed tx next packet or join ...
-    OnSendEvent();
-
-    return KETCUBE_CFG_MODULE_OK;
+   return ketCube_lora_SendData(&AppData);
 }
 
 /**
@@ -203,37 +235,18 @@ ketCube_cfg_ModError_t ketCube_lora_AsyncSend(uint8_t * buffer,
  */
 ketCube_cfg_ModError_t ketCube_lora_SleepEnter(void)
 {
-    // execute LoRa StateMachine
-    lora_fsm();
+   // execute LoRa StateMachine
+   if (LoraMacProcessRequest == LORA_SET) {
+      // reset notification flag
+      LoraMacProcessRequest = LORA_RESET;
+      LoRaMacProcess();
+   }
 
-    if (lora_getDeviceState() == DEVICE_STATE_SLEEP) {
-        return KETCUBE_CFG_MODULE_OK;
-    } else {
-        return KETCUBE_CFG_MODULE_ERROR;
-    }
-}
+   if (LoraMacProcessRequest != LORA_SET) {
+      return KETCUBE_CFG_MODULE_OK;
+   }   
 
-
-/**
- * @brief LoRa Tx Data callback ...
- */
-static void ketCube_lora_TxData(lora_AppData_t * AppData,
-                                FunctionalState * IsTxConfirmed)
-{
-    AppData->Port = txPort;
-    *IsTxConfirmed = LORAWAN_CONFIRMED_MSG;
-
-    memcpy(&(AppData->Buff[0]), &(dataBuffer[0]), dataBufferLen);
-
-    AppData->BuffSize = dataBufferLen;
-
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA,
-                                 "Transmitting sensor data ...");
-
-    TimerInit(&TxLedTimer, ketCube_lora_OnTimerLed);
-    TimerSetValue(&TxLedTimer, 200);
-    //KETCUBE_MAIN_BOARD_LED1_On();
-    TimerStart(&TxLedTimer);
+   return KETCUBE_CFG_MODULE_ERROR;  
 }
 
 
@@ -249,6 +262,34 @@ __weak void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len)
 
 }
 
+static ketCube_cfg_ModError_t ketCube_lora_SendData(lora_AppData_t * AppData)
+{
+   if (LORA_JoinStatus() != LORA_SET) {
+      // Not joined, try again later
+      LORA_Join();
+      if (lora_config_otaa_get() == LORA_ENABLE) {
+         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Not joined");
+      }
+      return KETCUBE_CFG_MODULE_ERROR;
+   }
+
+   //ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Transmitting sensor data ...");
+
+   TimerInit(&TxLedTimer, ketCube_lora_OnTimerLed);
+   TimerSetValue(&TxLedTimer, 200);
+   //KETCUBE_MAIN_BOARD_LED1_On();
+   TimerStart(&TxLedTimer);
+
+   if (LORA_send(AppData, LORAWAN_DEFAULT_CONFIRM_MSG_STATE) == LORA_SUCCESS) {
+      ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Transmitting sensor data: SUCCESS");
+      return KETCUBE_CFG_MODULE_OK;
+   }
+
+   ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LORA, "Transmitting sensor data: Error");
+
+   return KETCUBE_CFG_MODULE_ERROR;
+}
+
 /**
  * @brief LoRa Rx Data callback ...
  */
@@ -256,52 +297,97 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
 {
    uint16_t i;
 
-   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s on PORT=%d", ketCube_common_bytes2Str(&(AppData->Buff[0]), AppData->BuffSize), AppData->Port);
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s on PORT=%d",
+   ketCube_common_bytes2Str(&(AppData->Buff[0]), AppData->BuffSize), AppData->Port);
 
    if (AppData->Port == 12) {
       // custom data
       ketCube_lora_processCustomData(&(AppData->Buff[0]), AppData->BuffSize);
       return;
-    } else if (AppData->Port != 10 && AppData->Port != 11) {
+   } else if (AppData->Port != 10 && AppData->Port != 11) {
       // unknown port
       return;
    }
 
    // previous msg not processed ... ignore this one
-    if (ketCube_lora_rxData.msgLen > 0) {
-       return;
-    }
+   if (ketCube_lora_rxData.msgLen > 0) {
+      return;
+   }
 
-    for (i = 0; (i < AppData->BuffSize) && ((i + 1) < KETCUBE_LORA_RX_BUFFER_LEN); i++) {
+   for (i = 0; (i < AppData->BuffSize) && ((i + 1) < KETCUBE_LORA_RX_BUFFER_LEN); i++) {
       ketCube_lora_rxData.msg[i + 1] = AppData->Buff[i];
-    }
+   }
 
-    // update i to the actual position in ketCube_lora_rxData.msg buffer
-    i++;
+   // update i to the actual position in ketCube_lora_rxData.msg buffer
+   i++;
 
    if (AppData->Port == 10) {
       // received HEX
       ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
-   } else if (AppData->Port == 11) {
+   } else if (AppData->Port == 11) {  
       // received STRING
       if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
          ketCube_lora_rxData.msg[i] = (char) 0;
-               i++;
-           } else {
+         i++;
+      } else {
          ketCube_lora_rxData.msg[i - 1] = (char) 0;
-           }
+      }
       ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
    }
 
-    ketCube_lora_rxData.msgLen = i;
+   ketCube_lora_rxData.msgLen = i;
 }
 
 /**
  * @brief LoRa Tx LED callback ...
  */
-static void ketCube_lora_OnTimerLed(void)
+static void ketCube_lora_OnTimerLed(void* context)
 {
     //KETCUBE_MAIN_BOARD_LED1_Off();
+}
+
+static void ketCube_lora_MacProcessNotify(void)
+{
+   LoraMacProcessRequest = LORA_SET;
+}
+
+static void ketCube_lora_HasJoined( void )
+{
+   if (lora_config_otaa_get() == LORA_ENABLE) {
+      ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Joined");
+   }
+   if (ketCube_lora_moduleCfg.devClass <= 2) {
+      LORA_RequestClass(ketCube_lora_moduleCfg.devClass);
+   }
+}
+
+static void ketCube_lora_ConfirmClass(DeviceClass_t Class)
+{
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Switch to class %c done", "ABC"[Class]);
+
+   /*Optionnal*/
+   /*informs the server that switch has occurred ASAP*/
+   lora_AppData_t AppData;
+   AppData.BuffSize = 0;
+   AppData.Port = LORAWAN_APP_PORT;
+
+   LORA_send(&AppData, LORAWAN_UNCONFIRMED_MSG);
+}
+
+static void ketCube_lora_TxNeeded(void)
+{
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Network Server is asking for an uplink transmission");
+
+   lora_AppData_t AppData;
+   AppData.BuffSize = 0;
+   AppData.Port = LORAWAN_APP_PORT;
+
+   LORA_send( &AppData, LORAWAN_UNCONFIRMED_MSG);
+}
+
+static void ketCube_lora_McpsDataConfirm (void)
+{
+   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "Network Server \"ack\" an uplink data confirmed message transmission");
 }
 
 #endif                          /* KETCUBE_CFG_INC_MOD_LORA */

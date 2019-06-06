@@ -51,7 +51,7 @@
 #include "ketCube_gpio.h"
    
    
-typedef void( GpioIrqHandler )( void );
+typedef void( GpioIrqHandler )( void* context );
 
 static inline void HW_GPIO_Init( GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_InitTypeDef* initStruct) {
      ketCube_GPIO_ReInit((ketCube_gpio_port_t) GPIOx, (ketCube_gpio_pin_t) GPIO_Pin, initStruct);

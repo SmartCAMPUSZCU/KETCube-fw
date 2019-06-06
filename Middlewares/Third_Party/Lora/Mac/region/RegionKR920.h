@@ -12,7 +12,7 @@
  *               \____ \| ___ |    (_   _) ___ |/ ___)  _ \
  *               _____) ) ____| | | || |_| ____( (___| | | |
  *              (______/|_____)_|_|_| \__)_____)\____)_| |_|
- *              (C)2013 Semtech
+ *              (C)2013-2017 Semtech
  *
  *               ___ _____ _   ___ _  _____ ___  ___  ___ ___
  *              / __|_   _/_\ / __| |/ / __/ _ \| _ \/ __| __|
@@ -28,12 +28,16 @@
  *
  * \author    Daniel Jaeckle ( STACKFORCE )
  *
+ * \author    Johannes Bruder ( STACKFORCE )
+ *
  * \defgroup  REGIONKR920 Region KR920
  *            Implementation according to LoRaWAN Specification v1.0.2.
  * \{
  */
 #ifndef __REGION_KR920_H__
 #define __REGION_KR920_H__
+
+#include "region/Region.h"
 
 /*!
  * LoRaMac maximum number of channels
@@ -44,6 +48,11 @@
  * Number of default channels
  */
 #define KR920_NUMB_DEFAULT_CHANNELS                 3
+
+/*!
+ * Number of channels to apply for the CF list
+ */
+#define KR920_NUMB_CHANNELS_CF_LIST                 5
 
 /*!
  * Minimal datarate that can be used by the node
@@ -88,7 +97,7 @@
 /*!
  * Minimal Tx output power that can be used by the node
  */
-#define KR920_MIN_TX_POWER                          TX_POWER_6
+#define KR920_MIN_TX_POWER                          TX_POWER_7
 
 /*!
  * Maximal Tx output power that can be used by the node
@@ -98,7 +107,22 @@
 /*!
  * Default Tx output power used by the node
  */
-#define KR920_DEFAULT_TX_POWER                      TX_POWER_1
+#define KR920_DEFAULT_TX_POWER                      TX_POWER_0
+
+/*!
+ * Default Max EIRP for frequency 920.9 MHz - 921.9 MHz
+ */
+#define KR920_DEFAULT_MAX_EIRP_LOW                  10.0f
+
+/*!
+ * Default Max EIRP for frequency 922.1 MHz - 923.3 MHz
+ */
+#define KR920_DEFAULT_MAX_EIRP_HIGH                 14.0f
+
+/*!
+ * Default antenna gain
+ */
+#define KR920_DEFAULT_ANTENNA_GAIN                  2.15f
 
 /*!
  * ADR Ack limit
@@ -118,7 +142,7 @@
 /*!
  * Maximum RX window duration
  */
-#define KR920_MAX_RX_WINDOW                         3000
+#define KR920_MAX_RX_WINDOW                         4000
 
 /*!
  * Receive delay 1
@@ -169,6 +193,44 @@
  */
 #define KR920_RX_WND_2_DR                           DR_0
 
+/*
+ * CLASS B
+ */
+/*!
+ * Beacon frequency
+ */
+#define KR920_BEACON_CHANNEL_FREQ                   923100000
+
+/*!
+ * Payload size of a beacon frame
+ */
+#define KR920_BEACON_SIZE                           17
+
+/*!
+ * Size of RFU 1 field
+ */
+#define KR920_RFU1_SIZE                             2
+
+/*!
+ * Size of RFU 2 field
+ */
+#define KR920_RFU2_SIZE                             0
+
+/*!
+ * Datarate of the beacon channel
+ */
+#define KR920_BEACON_CHANNEL_DR                     DR_3
+
+/*!
+ * Bandwith of the beacon channel
+ */
+#define KR920_BEACON_CHANNEL_BW                     0
+
+/*!
+ * Ping slot channel datarate
+ */
+#define KR920_PING_SLOT_CHANNEL_DR                  DR_3
+
 /*!
  * Maximum number of bands
  */
@@ -176,9 +238,9 @@
 
 /*!
  * Band 0 definition
- * { DutyCycle, TxMaxPower, LastTxDoneTime, TimeOff }
+ * { DutyCycle, TxMaxPower, LastJoinTxDoneTime, LastTxDoneTime, TimeOff }
  */
-#define KR920_BAND0                                 { 1 , KR920_DEFAULT_TX_POWER, 0,  0 } //  100.0 %
+#define KR920_BAND0                                 { 1 , KR920_MAX_TX_POWER, 0, 0, 0 } //  100.0 %
 
 /*!
  * LoRaMac default channel 1
@@ -197,11 +259,6 @@
  * Channel = { Frequency [Hz], RX1 Frequency [Hz], { ( ( DrMax << 4 ) | DrMin ) }, Band }
  */
 #define KR920_LC3                                   { 922500000, 0, { ( ( DR_5 << 4 ) | DR_0 ) }, 0 }
-
-/*!
- * LoRaMac random offset for the first join request.
- */
-#define KR920_BACKOFF_RND_OFFSET                    600000
 
 /*!
  * LoRaMac channels which are allowed for the join procedure
@@ -224,24 +281,28 @@
 static const uint8_t DataratesKR920[]  = { 12, 11, 10,  9,  8,  7 };
 
 /*!
- * Maximum payload with respect to the datarate index. Can operate with and without a repeater.
+ * Bandwidths table definition in Hz
  */
-static const uint8_t MaxPayloadOfDatarateKR920[] = { 65, 151, 242, 242, 242, 242 };
+static const uint32_t BandwidthsKR920[] = { 125000, 125000, 125000, 125000, 125000, 125000 };
 
 /*!
- * Tx output powers table definition
+ * Maximum payload with respect to the datarate index. Can operate with and without a repeater.
  */
-static const int8_t TxPowersKR920[] = { 20, 14, 10,  8,  5,  2, 0 };
+static const uint8_t MaxPayloadOfDatarateKR920[] = { 51, 51, 51, 115, 242, 242 };
 
-
-
+/*!
+ * Maximum payload with respect to the datarate index. Can operate with repeater.
+ */
+static const uint8_t MaxPayloadOfDatarateRepeaterKR920[] = { 51, 51, 51, 115, 222, 222 };
 
 /*!
  * \brief The function gets a value of a specific phy attribute.
  *
  * \param [IN] getPhy Pointer to the function parameters.
+ *
+ * \retval Returns a structure containing the PHY parameter.
  */
-void RegionKR920GetPhyParam( GetPhyParams_t* getPhy );
+PhyParam_t RegionKR920GetPhyParam( GetPhyParams_t* getPhy );
 
 /*!
  * \brief Updates the last TX done parameters of the current channel.
@@ -255,7 +316,16 @@ void RegionKR920SetBandTxDone( SetBandTxDoneParams_t* txDone );
  *
  * \param [IN] type Sets the initialization type.
  */
-void RegionKR920InitDefaults( InitType_t type );
+void RegionKR920InitDefaults( InitDefaultsParams_t* params );
+
+/*!
+ * \brief Returns a pointer to the internal context and its size.
+ *
+ * \param [OUT] params Pointer to the function parameters.
+ *
+ * \retval      Points to a structure where the module store its non-volatile context.
+ */
+void* RegionKR920GetNvmCtx( GetNvmCtxParams_t* params );
 
 /*!
  * \brief Verifies a parameter.
@@ -286,19 +356,19 @@ void RegionKR920ApplyCFList( ApplyCFListParams_t* applyCFList );
 bool RegionKR920ChanMaskSet( ChanMaskSetParams_t* chanMaskSet );
 
 /*!
- * \brief Calculates the next datarate to set, when ADR is on or off.
+ * Computes the Rx window timeout and offset.
  *
- * \param [IN] adrNext Pointer to the function parameters.
+ * \param [IN] datarate     Rx window datarate index to be used
  *
- * \param [OUT] drOut The calculated datarate for the next TX.
+ * \param [IN] minRxSymbols Minimum required number of symbols to detect an Rx frame.
  *
- * \param [OUT] txPowOut The TX power for the next TX.
+ * \param [IN] rxError      System maximum timing error of the receiver. In milliseconds
+ *                          The receiver will turn on in a [-rxError : +rxError] ms
+ *                          interval around RxOffset
  *
- * \param [OUT] adrAckCounter The calculated ADR acknowledgement counter.
- *
- * \retval Returns true, if an ADR request should be performed.
+ * \param [OUT]rxConfigParams Returns updated WindowTimeout and WindowOffset fields.
  */
-bool RegionKR920AdrNext( AdrNextParams_t* adrNext, int8_t* drOut, int8_t* txPowOut, uint32_t* adrAckCounter );
+void RegionKR920ComputeRxWindowParameters( int8_t datarate, uint8_t minRxSymbols, uint32_t rxError, RxConfigParams_t *rxConfigParams );
 
 /*!
  * \brief Configuration of the RX windows.
@@ -371,14 +441,14 @@ int8_t RegionKR920TxParamSetupReq( TxParamSetupReqParams_t* txParamSetupReq );
  */
 uint8_t RegionKR920DlChannelReq( DlChannelReqParams_t* dlChannelReq );
 
-/*
+/*!
  * \brief Alternates the datarate of the channel for the join request.
  *
- * \param [IN] alternateDr Pointer to the function parameters.
+ * \param [IN] currentDr current datarate.
  *
  * \retval Datarate to apply.
  */
-int8_t RegionKR920AlternateDr( AlternateDrParams_t* alternateDr );
+int8_t RegionKR920AlternateDr( int8_t currentDr, AlternateDrType_t type );
 
 /*!
  * \brief Calculates the back-off time.
@@ -395,9 +465,11 @@ void RegionKR920CalcBackOff( CalcBackOffParams_t* calcBackOff );
  * \param [OUT] time Time to wait for the next transmission according to the duty
  *              cycle.
  *
+ * \param [OUT] aggregatedTimeOff Updates the aggregated time off.
+ *
  * \retval Function status [1: OK, 0: Unable to find a channel on the current datarate]
  */
-bool RegionKR920NextChannel( NextChanParams_t* nextChanParams, uint8_t* channel, TimerTime_t* time );
+LoRaMacStatus_t RegionKR920NextChannel( NextChanParams_t* nextChanParams, uint8_t* channel, TimerTime_t* time, TimerTime_t* aggregatedTimeOff );
 
 /*!
  * \brief Adds a channel.
@@ -423,6 +495,26 @@ bool RegionKR920ChannelsRemove( ChannelRemoveParams_t* channelRemove  );
  * \param [IN] continuousWave Pointer to the function parameters.
  */
 void RegionKR920SetContinuousWave( ContinuousWaveParams_t* continuousWave );
+
+/*!
+ * \brief Computes new datarate according to the given offset
+ *
+ * \param [IN] downlinkDwellTime Downlink dwell time configuration. 0: No limit, 1: 400ms
+ *
+ * \param [IN] dr Current datarate
+ *
+ * \param [IN] drOffset Offset to be applied
+ *
+ * \retval newDr Computed datarate.
+ */
+uint8_t RegionKR920ApplyDrOffset( uint8_t downlinkDwellTime, int8_t dr, int8_t drOffset );
+
+/*!
+ * \brief Sets the radio into beacon reception mode
+ *
+ * \param [IN] rxBeaconSetup Pointer to the function parameters
+ */
+ void RegionKR920RxBeaconSetup( RxBeaconSetup_t* rxBeaconSetup, uint8_t* outDr );
 
 /*! \} defgroup REGIONKR920 */
 

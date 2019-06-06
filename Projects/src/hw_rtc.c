@@ -12,55 +12,31 @@ License: Revised BSD License, see LICENSE.TXT file include in the project
 
 Maintainer: Miguel Luis and Gregory Cristian
 */
- /*******************************************************************************
+/**
+  ******************************************************************************
   * @file    hw_rtc.c
   * @author  MCD Application Team
-  * @version V1.1.0
-  * @date    27-February-2017
   * @brief   driver for RTC
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics International N.V. 
+  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
   * All rights reserved.</center></h2>
   *
-  * Redistribution and use in source and binary forms, with or without 
-  * modification, are permitted, provided that the following conditions are met:
-  *
-  * 1. Redistribution of source code must retain the above copyright notice, 
-  *    this list of conditions and the following disclaimer.
-  * 2. Redistributions in binary form must reproduce the above copyright notice,
-  *    this list of conditions and the following disclaimer in the documentation
-  *    and/or other materials provided with the distribution.
-  * 3. Neither the name of STMicroelectronics nor the names of other 
-  *    contributors to this software may be used to endorse or promote products 
-  *    derived from this software without specific written permission.
-  * 4. This software, including modifications and/or derivative works of this 
-  *    software, must execute solely and exclusively on microcontroller or
-  *    microprocessor devices manufactured by or for STMicroelectronics.
-  * 5. Redistribution and use of this software other than as permitted under 
-  *    this license is void and will automatically terminate your rights under 
-  *    this license. 
-  *
-  * THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS IS" 
-  * AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT 
-  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A 
-  * PARTICULAR PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY
-  * RIGHTS ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT 
-  * SHALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-  * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, 
-  * OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF 
-  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  * This software component is licensed by ST under Ultimate Liberty license
+  * SLA0044, the "License"; You may not use this file except in compliance with
+  * the License. You may obtain a copy of the License at:
+  *                             www.st.com/SLA0044
   *
   ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
+#include <math.h>
+#include <time.h>
 #include "hw.h"
 #include "low_power.h"
+#include "systime.h"
 
 #include "ketCube_terminal.h"
 
@@ -90,11 +66,7 @@ typedef struct
 #define PREDIV_A                  (1<<(15-N_PREDIV_S))-1
 
 /* Sub-second mask definition  */
-#if  (N_PREDIV_S == 10)
-#define HW_RTC_ALARMSUBSECONDMASK RTC_ALARMSUBSECONDMASK_SS14_10
-#else
-#error "Please define HW_RTC_ALARMSUBSECONDMASK"
-#endif
+#define HW_RTC_ALARMSUBSECONDMASK (N_PREDIV_S<<RTC_ALRMASSR_MASKSS_Pos)
 
 /* RTC Time base in us */
 #define USEC_NUMBER               1000000
@@ -105,23 +77,16 @@ typedef struct
 #define CONV_NUMER                (MSEC_NUMBER>>COMMON_FACTOR)
 #define CONV_DENOM                (1<<(N_PREDIV_S-COMMON_FACTOR))
 
-#define  DAYS_IN_LEAP_YEAR (uint32_t) 366
-
-#define  DAYS_IN_YEAR      (uint32_t) 365
-
-#define  SECONDS_IN_1DAY   (uint32_t) 86400
-
-#define  SECONDS_IN_1HOUR   (uint32_t) 3600
-
-#define  SECONDS_IN_1MINUTE   (uint32_t) 60
-
-#define  MINUTES_IN_1HOUR    (uint32_t) 60
-
-#define  HOURS_IN_1DAY      (uint32_t) 24
+#define DAYS_IN_LEAP_YEAR                        ( ( uint32_t )  366U )
+#define DAYS_IN_YEAR                             ( ( uint32_t )  365U )
+#define SECONDS_IN_1DAY                          ( ( uint32_t )86400U )
+#define SECONDS_IN_1HOUR                         ( ( uint32_t ) 3600U )
+#define SECONDS_IN_1MINUTE                       ( ( uint32_t )   60U )
+#define MINUTES_IN_1HOUR                         ( ( uint32_t )   60U )
+#define HOURS_IN_1DAY                            ( ( uint32_t )   24U )
 
 #define  DAYS_IN_MONTH_CORRECTION_NORM     ((uint32_t) 0x99AAA0 )
 #define  DAYS_IN_MONTH_CORRECTION_LEAP     ((uint32_t) 0x445550 )
-
 
 /* Calculates ceiling(X/N) */
 #define DIVC(X,N)   ( ( (X) + (N) -1 ) / (N) )
@@ -175,7 +140,7 @@ static void HW_RTC_SetAlarmConfig( void );
 
 static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue );
 
-static TimerTime_t HW_RTC_GetCalendarValue(  RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct  );
+static uint64_t HW_RTC_GetCalendarValue(  RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct  );
 
 /* Exported functions ---------------------------------------------------------*/
 
@@ -241,6 +206,7 @@ static void HW_RTC_SetConfig( void )
   HAL_RTCEx_EnableBypassShadow(&RtcHandle);
 }
 
+
 /*!
  * @brief calculates the wake up time between wake up and mcu start
  * @note resulotion in RTC_ALARM_TIME_BASE in timer ticks
@@ -260,10 +226,8 @@ void HW_RTC_setMcuWakeUpTime( void )
   { /* warning: works ok if now is below 30 days
        it is ok since it's done once at first alarm wake-up*/
     McuWakeUpTimeInitialized = true;
-    now = HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
+    now = (uint32_t) HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
 
-    DBG_GPIO_SET(GPIOB, GPIO_PIN_13);
-    DBG_GPIO_RST(GPIOB, GPIO_PIN_13);
     HAL_RTC_GetAlarm(&RtcHandle, &RTC_AlarmStructure, RTC_ALARM_A, RTC_FORMAT_BIN );
     hit = RTC_AlarmStructure.AlarmTime.Seconds+
           60*(RTC_AlarmStructure.AlarmTime.Minutes+
@@ -273,7 +237,6 @@ void HW_RTC_setMcuWakeUpTime( void )
       
     McuWakeUpTime = (int16_t) ((now-hit));
     McuWakeUpTimeCal += McuWakeUpTime;
-    DBG_PRINTF("Cal=%d, %d\n\r",McuWakeUpTimeCal, McuWakeUpTime);
   }
 }
 
@@ -377,13 +340,12 @@ uint32_t HW_RTC_GetTimerValue( void )
  */
 void HW_RTC_StopAlarm( void )
 {
-
+  /* Disable the Alarm A interrupt */
+  HAL_RTC_DeactivateAlarm(&RtcHandle, RTC_ALARM_A );
   /* Clear RTC Alarm Flag */
   __HAL_RTC_ALARM_CLEAR_FLAG( &RtcHandle, RTC_FLAG_ALRAF);
-
-  /* Disable the Alarm A interrupt */
-
-  HAL_RTC_DeactivateAlarm(&RtcHandle, RTC_ALARM_A );
+  /* Clear the EXTI's line Flag for RTC Alarm */  
+  __HAL_RTC_ALARM_EXTI_CLEAR_FLAG();
 }
 
 /*!
@@ -421,6 +383,17 @@ void HW_RTC_DelayMs( uint32_t delay )
 }
 
 /*!
+ * @brief set Time Reference set also the RTC_DateStruct and RTC_TimeStruct
+ * @param none
+ * @retval Timer Value
+ */
+uint32_t HW_RTC_SetTimerContext( void )
+{
+  RtcTimerContext.Rtc_Time = ( uint32_t ) HW_RTC_GetCalendarValue( &RtcTimerContext.RTC_Calndr_Date, &RtcTimerContext.RTC_Calndr_Time );
+  return ( uint32_t ) RtcTimerContext.Rtc_Time;
+}
+
+/*!
  * @brief HAL_GetTick RTC-based replacement
  * @retval current ms
  */
@@ -429,16 +402,6 @@ uint32_t HAL_GetTick(void)
   return HW_RTC_GetTimerValue();
 }
 
-/*!
- * @brief set Time Reference set also the RTC_DateStruct and RTC_TimeStruct
- * @param none
- * @retval Timer Value
- */
-uint32_t HW_RTC_SetTimerContext( void )
-{
-  RtcTimerContext.Rtc_Time = HW_RTC_GetCalendarValue( &RtcTimerContext.RTC_Calndr_Date, &RtcTimerContext.RTC_Calndr_Time );
-  return ( uint32_t ) RtcTimerContext.Rtc_Time;
-}
 
 /*!
  * @brief Get the RTC timer Reference
@@ -478,7 +441,6 @@ static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
   RTC_DateTypeDef RTC_DateStruct = RtcTimerContext.RTC_Calndr_Date;
 
   HW_RTC_StopAlarm( );
-  DBG_GPIO_SET(GPIOB, GPIO_PIN_13);
   
   /*reverse counter */
   rtcAlarmSubSeconds =  PREDIV_S - RTC_TimeStruct.SubSeconds;
@@ -569,13 +531,6 @@ static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
   
   /* Set RTC_Alarm */
   HAL_RTC_SetAlarm_IT( &RtcHandle, &RTC_AlarmStructure, RTC_FORMAT_BIN );
-  
-  /* Debug Printf - RTC interrupt is not working with MIN_ALARM_DELAY < 50 */
-  //HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
-  //ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "it's %d:%d:%d:%d ", RTC_TimeStruct.Hours, RTC_TimeStruct.Minutes, RTC_TimeStruct.Seconds, ((PREDIV_S - RTC_TimeStruct.SubSeconds)*1000)>>N_PREDIV_S);
-  //ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "WU@ %d:%d:%d:%d\n\r", rtcAlarmHours, rtcAlarmMinutes, rtcAlarmSeconds, (rtcAlarmSubSeconds*1000)>>N_PREDIV_S );
-  
-  DBG_GPIO_RST(GPIOB, GPIO_PIN_13);
 }
 
 
@@ -585,11 +540,12 @@ static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
  * @param pointer to RTC_TimeStruct
  * @retval time in ticks
  */
-static TimerTime_t HW_RTC_GetCalendarValue( RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct )
+static uint64_t HW_RTC_GetCalendarValue( RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct )
 {
-  TimerTime_t calendarValue = 0;
+  uint64_t calendarValue = 0;
   uint32_t first_read;
   uint32_t correction;
+  uint32_t seconds;
   
   /* Get Time and Date*/
   HAL_RTC_GetTime( &RtcHandle, RTC_TimeStruct, RTC_FORMAT_BIN );
@@ -602,26 +558,96 @@ static TimerTime_t HW_RTC_GetCalendarValue( RTC_DateTypeDef* RTC_DateStruct, RTC
   } while (first_read != RTC_TimeStruct->SubSeconds);
  
   /* calculte amount of elapsed days since 01/01/2000 */
-  calendarValue= DIVC( (DAYS_IN_YEAR*3 + DAYS_IN_LEAP_YEAR)* RTC_DateStruct->Year , 4);
+  seconds= DIVC( (DAYS_IN_YEAR*3 + DAYS_IN_LEAP_YEAR)* RTC_DateStruct->Year , 4);
 
   correction = ( (RTC_DateStruct->Year % 4) == 0 ) ? DAYS_IN_MONTH_CORRECTION_LEAP : DAYS_IN_MONTH_CORRECTION_NORM ;
  
-  calendarValue +=( DIVC( (RTC_DateStruct->Month-1)*(30+31) ,2 ) - (((correction>> ((RTC_DateStruct->Month-1)*2) )&0x3)));
+  seconds +=( DIVC( (RTC_DateStruct->Month-1)*(30+31) ,2 ) - (((correction>> ((RTC_DateStruct->Month-1)*2) )&0x3)));
 
-  calendarValue += (RTC_DateStruct->Date -1);
+  seconds += (RTC_DateStruct->Date -1);
   
   /* convert from days to seconds */
-  calendarValue *= SECONDS_IN_1DAY; 
+  seconds *= SECONDS_IN_1DAY; 
 
-  calendarValue += ( ( uint32_t )RTC_TimeStruct->Seconds + 
-                     ( ( uint32_t )RTC_TimeStruct->Minutes * SECONDS_IN_1MINUTE ) +
-                     ( ( uint32_t )RTC_TimeStruct->Hours * SECONDS_IN_1HOUR ) ) ;
+  seconds += ( ( uint32_t )RTC_TimeStruct->Seconds + 
+             ( ( uint32_t )RTC_TimeStruct->Minutes * SECONDS_IN_1MINUTE ) +
+             ( ( uint32_t )RTC_TimeStruct->Hours * SECONDS_IN_1HOUR ) ) ;
 
 
   
-  calendarValue = (calendarValue<<N_PREDIV_S) + ( PREDIV_S - RTC_TimeStruct->SubSeconds);
+  calendarValue = (((uint64_t) seconds)<<N_PREDIV_S) + ( PREDIV_S - RTC_TimeStruct->SubSeconds);
 
   return( calendarValue );
+}
+
+/*!
+ * \brief Get system time
+ * \param [IN]   pointer to ms 
+ *               
+ * \return uint32_t seconds 
+ */
+uint32_t HW_RTC_GetCalendarTime( uint16_t *mSeconds)
+{
+  RTC_TimeTypeDef RTC_TimeStruct ;
+  RTC_DateTypeDef RTC_DateStruct;
+  uint32_t ticks;
+  
+  uint64_t calendarValue = HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
+  
+  uint32_t seconds = (uint32_t) calendarValue >>N_PREDIV_S;
+  
+  ticks =  (uint32_t) calendarValue&PREDIV_S;
+  
+  *mSeconds = HW_RTC_Tick2ms(ticks);
+  
+  return seconds;
+}
+
+void HW_RTC_BKUPWrite( uint32_t Data0, uint32_t Data1)
+{
+  HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, Data0);
+  HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR1, Data1);
+}
+
+void HW_RTC_BKUPRead( uint32_t *Data0, uint32_t *Data1)
+{
+  *Data0=HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0);
+  *Data1=HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR1);
+}
+
+TimerTime_t RtcTempCompensation( TimerTime_t period, float temperature )
+{
+    float k = RTC_TEMP_COEFFICIENT;
+    float kDev = RTC_TEMP_DEV_COEFFICIENT;
+    float t = RTC_TEMP_TURNOVER;
+    float tDev = RTC_TEMP_DEV_TURNOVER;
+    float interim = 0.0;
+    float ppm = 0.0;
+
+    if( k < 0.0f )
+    {
+        ppm = ( k - kDev );
+    }
+    else
+    {
+        ppm = ( k + kDev );
+    }
+    interim = ( temperature - ( t - tDev ) );
+    ppm *=  interim * interim;
+
+    // Calculate the drift in time
+    interim = ( ( float ) period * ppm ) / 1000000;
+    // Calculate the resulting time period
+    interim += period;
+    interim = floor( interim );
+
+    if( interim < 0.0f )
+    {
+        interim = ( float )period;
+    }
+
+    // Calculate the resulting period
+    return ( TimerTime_t ) interim;
 }
 
 
