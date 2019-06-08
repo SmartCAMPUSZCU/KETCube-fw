@@ -469,8 +469,8 @@ static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
     }
     
     // convert to output data type
-    switch (cmdDescrPtr->outputSetType)
-    {
+    switch (cmdDescrPtr->outputSetType) {
+
         case KETCUBE_TERMINAL_PARAMS_NONE:
         case KETCUBE_TERMINAL_PARAMS_BYTE:
         case KETCUBE_TERMINAL_PARAMS_MODULEID:
@@ -508,11 +508,12 @@ static void ketCube_terminal_setEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
     if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
         return;
     }
-        
+
     if (ketCube_cfg_Save((uint8_t *) &(commandIOParams.as_byte_array.data[0]),
                          (ketCube_cfg_moduleIDs_t) cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID,
                          (ketCube_cfg_AllocEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->offset,
                          (ketCube_cfg_LenEEPROM_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size) != KETCUBE_CFG_OK) {
+
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_MEMORY_IO_FAIL;
         return;
     }
@@ -530,13 +531,13 @@ static void ketCube_terminal_getRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
     if (cmdDescrPtr->settingsPtr.cfgVarPtr->size == 0) {
         return;
     }
-    
-     memcpy((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
-            (uint8_t *) (ketCube_modules_List[cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID].cfgPtr + cmdDescrPtr->settingsPtr.cfgVarPtr->offset),
+
+    memcpy((uint8_t *) &(commandIOParams.as_byte_array.data[0]), 
+           (uint8_t *) (ketCube_modules_List[cmdDescrPtr->settingsPtr.cfgVarPtr->moduleID].cfgPtr + cmdDescrPtr->settingsPtr.cfgVarPtr->offset),
            (uint32_t) cmdDescrPtr->settingsPtr.cfgVarPtr->size);
-     
+
      // convert to output data type
-    switch(cmdDescrPtr->outputSetType)
+    switch (cmdDescrPtr->outputSetType)
     {
         case KETCUBE_TERMINAL_PARAMS_NONE:
         case KETCUBE_TERMINAL_PARAMS_BYTE:

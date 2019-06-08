@@ -103,16 +103,16 @@ static void ketCube_remoteTerminal_tryExecuteCmd(ketCube_terminal_cmd_t* cmd,
                     ketCube_terminal_checkCmdContext(cmd, FALSE);
     
     if (result == KETCUBE_CMD_CHECK_FAILED_CONTEXT_ONLY_LOCAL
-        || result == KETCUBE_CMD_CHECK_FAILED_DEFINITION)
-    {
+        || result == KETCUBE_CMD_CHECK_FAILED_DEFINITION) {
+
         ketCube_remoteTerminal_sendError(
                     KETCUBE_TERMINAL_CMD_ERR_FAILED_CONTEXT,
                     responseTarget, responseLen);
         return;
     }
 
-    if (result != KETCUBE_CMD_CHECK_OK)
-    {
+    if (result != KETCUBE_CMD_CHECK_OK) {
+
         ketCube_remoteTerminal_sendError(
                     KETCUBE_TERMINAL_CMD_ERR_UNSPECIFIED_ERROR,
                     responseTarget, responseLen);
@@ -123,8 +123,8 @@ static void ketCube_remoteTerminal_tryExecuteCmd(ketCube_terminal_cmd_t* cmd,
        this leaves out e.g. strings, byte arrays and other non-static stuff,
        which has minimum of one or zero bytes*/
     int paramLen = ketCube_terminal_GetIOParamsMinStaticLength(cmd->paramSetType);
-    if (bufLen < paramLen)
-    {
+    if (bufLen < paramLen) {
+
         ketCube_remoteTerminal_sendError(
                     KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS,
                     responseTarget, responseLen);
@@ -134,8 +134,8 @@ static void ketCube_remoteTerminal_tryExecuteCmd(ketCube_terminal_cmd_t* cmd,
 
     ketCube_terminal_execute(cmd, activeFlags);
     
-    if (commandErrorCode != KETCUBE_TERMINAL_CMD_ERR_OK)
-    {
+    if (commandErrorCode != KETCUBE_TERMINAL_CMD_ERR_OK) {
+
         ketCube_remoteTerminal_sendError(commandErrorCode,
                                          responseTarget, responseLen);
         return;
@@ -199,10 +199,8 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
 
     found = FALSE;
     // find in cmd tree root
-    for (; cmdList[cmdIndex].cmd != NULL; )
-    {
-        if (cmdIndex == curFindIdx)
-        {
+    for (; cmdList[cmdIndex].cmd != NULL; ) {
+        if (cmdIndex == curFindIdx) {
             found = TRUE;
                
             byteItr++;
@@ -214,8 +212,7 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
         cmdIndex++;
     }
 
-    if (found != TRUE)
-    {
+    if (found != TRUE) {
         ketCube_remoteTerminal_sendError(
                             KETCUBE_TERMINAL_CMD_ERR_COMMAND_NOT_FOUND,
                             response, responseLen);
@@ -226,17 +223,15 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
     
     if (activeFlags.isGeneric
         && activeFlags.isGroup
-        && (activeFlags.isSetCmd || activeFlags.isShowCmd))
-    {
+        && (activeFlags.isSetCmd || activeFlags.isShowCmd)) {
+
         activeFlags.isGroup = FALSE;
         cmdList = cmdList[cmdIndex].settingsPtr.subCmdList;
         
         cmdIndex = 0;
         found = FALSE;
-        for ( ; cmdList[cmdIndex].cmd != NULL; )
-        {
-            if (cmdList[cmdIndex].moduleId == curFindIdx)
-            {
+        for ( ; cmdList[cmdIndex].cmd != NULL; ) {
+            if (cmdList[cmdIndex].moduleId == curFindIdx) {
                 found = TRUE;
                 byteItr += 2;
                 curFindIdx = *byteItr;
@@ -246,16 +241,14 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
             cmdIndex++;
         }
 
-        if (found != TRUE)
-        {
+        if (found != TRUE) {
             ketCube_remoteTerminal_sendError(
                                     KETCUBE_TERMINAL_CMD_ERR_COMMAND_NOT_FOUND,
                                     response, responseLen);
             return TRUE;
         }
         
-        if (!cmdList[cmdIndex].flags.isGroup)
-        {
+        if (!cmdList[cmdIndex].flags.isGroup) {
             ketCube_remoteTerminal_sendError(
                                     KETCUBE_TERMINAL_CMD_ERR_COMMAND_NOT_FOUND,
                                     response, responseLen);
@@ -267,16 +260,13 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
         cmdIndex = 0;
         found = FALSE;
         
-        for ( ; cmdList[cmdIndex].cmd != NULL; )
-        {
-            if (cmdIndex == curFindIdx)
-            {
+        for ( ; cmdList[cmdIndex].cmd != NULL; ) {
+            if (cmdIndex == curFindIdx) {
                 ketCube_terminal_andCmdFlags(&activeFlags,
                                              &activeFlags,
                                              &(cmdList[cmdIndex].flags));
                 
-                if (!cmdList[cmdIndex].flags.isGroup)
-                {
+                if (!cmdList[cmdIndex].flags.isGroup) {
                     found = TRUE;
                     break;
                 }
@@ -291,16 +281,14 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
             cmdIndex++;
         }
         
-        if (found != TRUE)
-        {
+        if (found != TRUE) {
             ketCube_remoteTerminal_sendError(
                                     KETCUBE_TERMINAL_CMD_ERR_COMMAND_NOT_FOUND,
                                     response, responseLen);
             return TRUE;
         }
         
-        if (ketCube_terminal_checkCmdSubtreeContext(&activeFlags) != TRUE)
-        {
+        if (ketCube_terminal_checkCmdSubtreeContext(&activeFlags) != TRUE) {
             ketCube_remoteTerminal_sendError(
                                     KETCUBE_TERMINAL_CMD_ERR_FAILED_CONTEXT,
                                     response, responseLen);
@@ -314,14 +302,14 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
                         byteItr, len - (byteItr - startItr),
                         response, responseLen);
     }
-    else if (!cmdList[cmdIndex].flags.isGroup)
-    {
+    else if (!cmdList[cmdIndex].flags.isGroup) {
+
         ketCube_remoteTerminal_tryExecuteCmd(&cmdList[cmdIndex], activeFlags,
                         byteItr, len - (byteItr - startItr),
                         response, responseLen);
     }
-    else
-    {
+    else {
+
         ketCube_remoteTerminal_sendError(KETCUBE_TERMINAL_CMD_ERR_NOT_SUPPORTED,
                                          response, responseLen);
     }
@@ -366,8 +354,8 @@ int ketCube_remoteTerminal_processCommandBatch(char* cmdBuf, int length,
     bool allResult = TRUE;
     int cmdResponseLen;
     
-    for (lenCtr = 0; lenCtr < length; )
-    {
+    for (lenCtr = 0; lenCtr < length; ) {
+
         curLen = cmdBuf[lenCtr];
         cmdResponseLen = 0;
         
@@ -402,13 +390,15 @@ int ketCube_remoteTerminal_processDeferredCmd(char** response, int* responseLen)
     ketCube_terminal_command_opcode_t termOpcode;
     uint8_t seq;
     
-    if (isCmdDefered != TRUE)
+    if (isCmdDefered != TRUE) {
         return FALSE;
+    }
 
     isCmdDefered = FALSE;
 
-    if (deferCmdBufLen < 2)
+    if (deferCmdBufLen < 2) {
         return FALSE;
+    }
 
     termOpcode = (ketCube_terminal_command_opcode_t)deferCmdBuf[0];
     seq = deferCmdBuf[1];
@@ -426,8 +416,8 @@ int ketCube_remoteTerminal_processDeferredCmd(char** response, int* responseLen)
     byteItr = deferCmdBuf + 2;
     remLength = deferCmdBufLen - 2;
 
-    switch (termOpcode)
-    {
+    switch (termOpcode) {
+
         case KETCUBE_TERMINAL_OPCODE_CMD:
             return ketCube_remoteTerminal_processSingleCmd(byteItr, remLength,
                                                 &respItr, responseLen);
