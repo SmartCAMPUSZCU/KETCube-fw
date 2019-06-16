@@ -70,7 +70,8 @@ typedef enum ketCube_terminal_command_errorCode_t {
     KETCUBE_TERMINAL_CMD_ERR_MODULE_NOT_FOUND,
     KETCUBE_TERMINAL_CMD_ERR_FAILED_CONTEXT,
     KETCUBE_TERMINAL_CMD_ERR_UNSPECIFIED_ERROR,
-    KETCUBE_TERMINAL_CMD_ERR_NOT_SUPPORTED
+    KETCUBE_TERMINAL_CMD_ERR_NOT_SUPPORTED,
+    KETCUBE_TERMINAL_CMD_ERR_CORE_API_MISMATCH,
 } ketCube_terminal_command_errorCode_t;
 
 /**
@@ -188,6 +189,37 @@ typedef union ketCube_terminal_paramSet_t {
         uint16_t length;
     } as_byte_array;
 } ketCube_terminal_paramSet_t;
+
+/**
+ * @brief KETCube terminal packet header (common)
+ */
+typedef struct ketCube_remoteTerminal_packet_header_t {
+    uint8_t opcode : 2;             // 2 bit opcode
+    uint8_t is_16b_moduleid : 1;    // flag - is moduleid 16 bit?
+    uint8_t rfu : 1;                // flag - RFU
+    uint8_t seq : 4;                // sequence number (4 bits)
+    uint8_t coreApiVersion;         // core API version (always 8bit)
+} ketCube_remoteTerminal_packet_header_t;
+
+/**
+ * @brief KETCube terminal single command packet header
+ */
+typedef struct ketCube_remoteTerminal_single_cmd_header_t {
+    union {
+        uint8_t moduleId_8bit;      // 8bit module ID
+        uint16_t moduleId_16bit;    // 16bit module ID
+    } module_id;  // length determined by common header is_16b_moduleid flag
+} ketCube_remoteTerminal_single_cmd_header_t;
+
+/**
+ * @brief KETCube terminal batch command packet header (header of each command
+ *        in batch)
+ */
+typedef struct ketCube_remoteTerminal_batch_cmd_header_t {
+    uint8_t length;             // length of batch block (single cmd)
+    ketCube_remoteTerminal_single_cmd_header_t cmdHeader;
+                                // batch command always comprises a single cmd
+} ketCube_remoteTerminal_batch_cmd_header_t;
 
 #pragma pack(pop)
 

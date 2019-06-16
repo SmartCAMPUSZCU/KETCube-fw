@@ -182,12 +182,18 @@ int ketCube_remoteTerminal_deferCmd(char* bytes, int len,
  * @param responseLen current response buffer length (will be modified)
  */
 static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
-    char** response, int* responseLen)
+    char** response, int* responseLen,
+    ketCube_remoteTerminal_packet_header_t* inHdr,
+    ketCube_remoteTerminal_single_cmd_header_t* cmdHdr)
 {
     uint16_t cmdIndex;
     int curFindIdx;
     bool found;
     char* byteItr;
+    
+    uint16_t findModuleId = inHdr->is_16b_moduleid ?
+                                        cmdHdr->module_id.moduleId_16bit :
+                                        cmdHdr->module_id.moduleId_8bit;
     
     ketCube_terminal_command_flags_t activeFlags;
     ketCube_terminal_cmd_t* cmdList;
@@ -205,7 +211,7 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
                
             byteItr++;
 
-            curFindIdx = (int)byteItr[0] | (int)byteItr[1] << 8;
+            curFindIdx = findModuleId;
             break;
         }
         
@@ -216,7 +222,7 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
         ketCube_remoteTerminal_sendError(
                             KETCUBE_TERMINAL_CMD_ERR_COMMAND_NOT_FOUND,
                             response, responseLen);
-        return FALSE;
+        return TRUE;
     }
     
     activeFlags = cmdList[cmdIndex].flags;
@@ -233,7 +239,6 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
         for ( ; cmdList[cmdIndex].cmd != NULL; ) {
             if (cmdList[cmdIndex].moduleId == curFindIdx) {
                 found = TRUE;
-                byteItr += 2;
                 curFindIdx = *byteItr;
                 break;
             }
@@ -326,11 +331,22 @@ static int ketCube_remoteTerminal_processCmd(char* startItr, int len,
  * @param responseLen current response buffer length (will be modified)
  */
 static int ketCube_remoteTerminal_processSingleCmd(char* startItr, int len,
-    char** response, int* responseLen)
+    char** response, int* responseLen,
+    ketCube_remoteTerminal_packet_header_t *inHdr)
 {
     int cmdLen, res;
     
-    res = ketCube_remoteTerminal_processCmd(startItr, len, response, &cmdLen);
+    ketCube_remoteTerminal_single_cmd_header_t* singleCmdHeader = 
+        (ketCube_remoteTerminal_single_cmd_header_t*)startItr;
+    
+    /* perform step in incoming data according to ID length */
+    if (inHdr->is_16b_moduleid)
+        startItr += sizeof(uint16_t);
+    else
+        startItr += sizeof(uint8_t);
+    
+    res = ketCube_remoteTerminal_processCmd(startItr, len, response, &cmdLen,
+                                            inHdr, singleCmdHeader);
     
     *responseLen += cmdLen;
     
@@ -346,17 +362,28 @@ static int ketCube_remoteTerminal_processSingleCmd(char* startItr, int len,
  * @param responseLen current response buffer length (will be modified)
  */
 int ketCube_remoteTerminal_processCommandBatch(char* cmdBuf, int length,
-    char** response, int* responseLen)
+    char** response, int* responseLen,
+    ketCube_remoteTerminal_packet_header_t *inHdr)
 {
-    int lenCtr;
-    int curLen;
+    int lenCtr, beg;
     char* lenTarget;
     bool allResult = TRUE;
     int cmdResponseLen;
     
-    for (lenCtr = 0; lenCtr < length; ) {
+    ketCube_remoteTerminal_batch_cmd_header_t* batchCmdHeader;
 
-        curLen = cmdBuf[lenCtr];
+    for (lenCtr = 0; lenCtr < length; ) {
+        
+        batchCmdHeader = (ketCube_remoteTerminal_batch_cmd_header_t*)&cmdBuf[lenCtr];
+        
+        lenCtr++;
+
+        /* the actual command block begins further by moduleID size */
+        if (inHdr->is_16b_moduleid)
+            beg = lenCtr + sizeof(uint16_t);
+        else
+            beg = lenCtr + sizeof(uint8_t);
+
         cmdResponseLen = 0;
         
         lenTarget = *response;
@@ -364,12 +391,13 @@ int ketCube_remoteTerminal_processCommandBatch(char* cmdBuf, int length,
         (*responseLen)++;
         
         allResult |= ketCube_remoteTerminal_processCmd(
-                        &cmdBuf[lenCtr + 1], curLen,
-                        response, &cmdResponseLen);
+                        &cmdBuf[beg], batchCmdHeader->length,
+                        response, &cmdResponseLen,
+                        inHdr, &batchCmdHeader->cmdHeader);
         
         *responseLen += cmdResponseLen;
         *lenTarget = cmdResponseLen;
-        lenCtr += 1 + curLen;
+        lenCtr += batchCmdHeader->length;
     }
     
     return allResult;
@@ -386,9 +414,8 @@ int ketCube_remoteTerminal_processDeferredCmd(char** response, int* responseLen)
     char* byteItr;
     char* respItr;
     int remLength;
-
-    ketCube_terminal_command_opcode_t termOpcode;
-    uint8_t seq;
+    
+    ketCube_remoteTerminal_packet_header_t *inHdr, *outHdr;
     
     if (isCmdDefered != TRUE) {
         return FALSE;
@@ -396,34 +423,44 @@ int ketCube_remoteTerminal_processDeferredCmd(char** response, int* responseLen)
 
     isCmdDefered = FALSE;
 
-    if (deferCmdBufLen < 2) {
+    /* at least a header should be received */
+    if (deferCmdBufLen < sizeof(ketCube_remoteTerminal_packet_header_t)) {
         return FALSE;
     }
-
-    termOpcode = (ketCube_terminal_command_opcode_t)deferCmdBuf[0];
-    seq = deferCmdBuf[1];
-
+    
+    inHdr = (ketCube_remoteTerminal_packet_header_t*)&deferCmdBuf[0];
+    outHdr = (ketCube_remoteTerminal_packet_header_t*)&responseBuf[0];
+    
     *responseLen = 0;
     *response = responseBuf;
     respItr = responseBuf;
     
-    responseBuf[0] = termOpcode;
-    responseBuf[1] = seq;
+    respItr += sizeof(ketCube_remoteTerminal_packet_header_t);
+    *responseLen += sizeof(ketCube_remoteTerminal_packet_header_t);
+
+    byteItr = deferCmdBuf + sizeof(ketCube_remoteTerminal_packet_header_t);
+    remLength = deferCmdBufLen - sizeof(ketCube_remoteTerminal_packet_header_t);
     
-    respItr += 2;
-    *responseLen += 2;
+    /* check core API version */
+    if (inHdr->coreApiVersion != KETCUBE_MODULEID_CORE_API) {
+        ketCube_remoteTerminal_sendError(
+                            KETCUBE_TERMINAL_CMD_ERR_CORE_API_MISMATCH,
+                            response, responseLen);
+        return TRUE;
+    }
+    
+    outHdr->opcode = inHdr->opcode;
+    outHdr->seq = inHdr->seq;
+    outHdr->coreApiVersion = KETCUBE_MODULEID_CORE_API;
 
-    byteItr = deferCmdBuf + 2;
-    remLength = deferCmdBufLen - 2;
-
-    switch (termOpcode) {
+    switch (inHdr->opcode) {
 
         case KETCUBE_TERMINAL_OPCODE_CMD:
             return ketCube_remoteTerminal_processSingleCmd(byteItr, remLength,
-                                                &respItr, responseLen);
+                                                &respItr, responseLen, inHdr);
         case KETCUBE_TERMINAL_OPCODE_BATCH:
             return ketCube_remoteTerminal_processCommandBatch(byteItr, remLength,
-                                                &respItr, responseLen);
+                                                &respItr, responseLen, inHdr);
     }
     
     return FALSE;

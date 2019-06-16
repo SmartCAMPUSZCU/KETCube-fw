@@ -343,17 +343,14 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
     }
 
     if (i == ketCube_modules_CNT) {
-        //KETCUBE_TERMINAL_PRINTF("Invalid module name!");
         commandErrorCode = KETCUBE_TERMINAL_CMD_ERR_INVALID_PARAMS;
         return;
     }
 
-    //KETCUBE_TERMINAL_PRINTF("Setting module %s:", ketCube_modules_List[i].name);
-
-    //do not enable/disable now but when reload ...
+    // enable/disable on next reload, not now
     tmpCfgByte = *(ketCube_modules_List[i].cfgPtr);
     tmpCfgByte.enable = enable; // enable/disable
-    tmpCfgByte.severity = commandIOParams.as_module_id.severity; // set severity
+    tmpCfgByte.severity = commandIOParams.as_module_id.severity;
 
     if (ketCube_cfg_Save
         (((uint8_t *) & (tmpCfgByte)), (ketCube_cfg_moduleIDs_t) i,
@@ -372,9 +369,7 @@ void ketCube_terminal_cmd_enableDisable(bool enable)
  */
 void ketCube_terminal_cmd_enable(void)
 {
-    KETCUBE_TERMINAL_ENDL();
     ketCube_terminal_cmd_enableDisable(TRUE);
-    KETCUBE_TERMINAL_ENDL();
 }
 
 
@@ -384,9 +379,7 @@ void ketCube_terminal_cmd_enable(void)
  */
 void ketCube_terminal_cmd_disable(void)
 {
-    KETCUBE_TERMINAL_ENDL();
     ketCube_terminal_cmd_enableDisable(FALSE);
-    KETCUBE_TERMINAL_ENDL();
 }
 
 /**
