@@ -340,10 +340,11 @@ static int ketCube_remoteTerminal_processSingleCmd(char* startItr, int len,
         (ketCube_remoteTerminal_single_cmd_header_t*)startItr;
     
     /* perform step in incoming data according to ID length */
-    if (inHdr->is_16b_moduleid)
+    if (inHdr->is_16b_moduleid) {
         startItr += sizeof(uint16_t);
-    else
+    } else {
         startItr += sizeof(uint8_t);
+    }
     
     res = ketCube_remoteTerminal_processCmd(startItr, len, response, &cmdLen,
                                             inHdr, singleCmdHeader);
@@ -379,10 +380,11 @@ int ketCube_remoteTerminal_processCommandBatch(char* cmdBuf, int length,
         lenCtr++;
 
         /* the actual command block begins further by moduleID size */
-        if (inHdr->is_16b_moduleid)
+        if (inHdr->is_16b_moduleid) {
             beg = lenCtr + sizeof(uint16_t);
-        else
+        } else {
             beg = lenCtr + sizeof(uint8_t);
+        }
 
         cmdResponseLen = 0;
         
