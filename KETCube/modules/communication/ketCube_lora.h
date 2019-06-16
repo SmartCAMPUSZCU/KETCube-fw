@@ -48,7 +48,11 @@
 
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
+#ifndef DESKTOP_BUILD
 #include "LoRaMac.h"
+#else
+typedef int DeviceClass_t;
+#endif
 
 /** @defgroup KETCube_LoRa KETCube LoRa
   * @brief KETCube LoRa module

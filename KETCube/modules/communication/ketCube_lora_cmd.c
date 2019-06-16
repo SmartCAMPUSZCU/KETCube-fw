@@ -51,7 +51,9 @@
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
 #include "ketCube_lora.h"
+#ifndef DESKTOP_BUILD
 #include "LoRaMac.h"
+#endif
 
 /** @defgroup KETCube_LoRa_CMD KETCube LoRa CMD
   * @brief KETCube LoRa module commandline deffinition

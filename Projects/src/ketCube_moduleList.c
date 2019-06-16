@@ -109,7 +109,7 @@
 ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
     DEF_MODULE("core",
                "Note: core is always enabled",
-               KETCUBE_MODULEID_CORE,
+               KETCUBE_MODULEID_CORE_API,
                &ketCube_coreCfg_Init,     /* Init() */
                NULL,                      /* SleepEnter() */
                NULL,                      /* SleepExit() */

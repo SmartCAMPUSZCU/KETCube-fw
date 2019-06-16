@@ -85,7 +85,7 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
             .isEnvCmd  = TRUE,
         },
         .settingsPtr.subCmdList = ketCube_terminal_commands_core,
-        .moduleId = KETCUBE_MODULEID_CORE
+        .moduleId = KETCUBE_MODULEID_CORE_API
     },
     
     {
