@@ -47,12 +47,12 @@
 #define __KETCUBE_COMPILATION_H
 
 /**
- * @brief LoRaWAN Stack versions
+ * @brief LoRaWAN Protocol versions
  */
 typedef enum {
     KETCUBE_LORA_LRWAN_VERSION_V10x = 1,    /*!< */
     KETCUBE_LORA_LRWAN_VERSION_V11x = 2     /*!< */
-} ketCube_lora_stackVersion_t;
+} ketCube_lora_protocolVersion_t;
 
 /** @defgroup  KETCube_compilation KETCube Compilation
   * @brief KETCube Compilation defines
