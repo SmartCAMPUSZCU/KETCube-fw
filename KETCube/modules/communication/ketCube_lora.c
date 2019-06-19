@@ -180,7 +180,7 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
    }
 #endif
 
-#if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+#if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN stack version: 1.1.0");
 #else
    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN MAC version: 1.0.3");
@@ -326,10 +326,16 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
       ketCube_remoteTerminal_deferCmd((char*)&(AppData->Buff[0]),
           AppData->BuffSize, &ketCube_lora_RemoteTerminalSend);
       return;
-   } else if (AppData->Port != LORAWAN_HEX_DISPLAY_PORT && AppData->Port != LORAWAN_STRING_DISPLAY_PORT) {
+   } else if (AppData->Port == LORAWAN_HEX_DISPLAY_PORT) {
+      // NOTE: Continue below this conditional block; do not return!
+   } else if (AppData->Port == LORAWAN_STRING_DISPLAY_PORT) {
+      // NOTE: Continue below this conditional block; do not return!
+   } else {
       // unknown port
       return;
    }
+   
+   // NOTE: just inter module messages are handled here
 
    // previous msg not processed ... ignore this one
    if (ketCube_lora_rxData.msgLen > 0) {

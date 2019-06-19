@@ -598,7 +598,7 @@ LoraErrorStatus LORA_Join( void)
    // Enable legacy mode to operate according to LoRaWAN Spec. 1.0.3
    Version_t abpLrWanVersion;
 
-   #if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+   #if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
    abpLrWanVersion.Fields.Major    = 1;
    abpLrWanVersion.Fields.Minor    = 1;
    abpLrWanVersion.Fields.Revision = 0;
@@ -842,7 +842,7 @@ void lora_config_print(void)
   if (lora_config.otaa == LORA_ENABLE) {
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "OTAA Mode enabled"); 
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "devEUI=%s", ketCube_common_bytes2Str(&(lora_config.DevEui[0]), KETCUBE_LORA_CFGLEN_DEVEUI));
-#if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+#if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
     // v1.1.0
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "joinEui=%s", ketCube_common_bytes2Str(&(lora_config.JoinEui[0]), KETCUBE_LORA_CFGLEN_APPEUI));
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "nwkKey=%s", ketCube_common_bytes2Str(&(lora_config.NwkKey[0]), KETCUBE_LORA_CFGLEN_NWKKEY));
@@ -857,7 +857,7 @@ void lora_config_print(void)
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "devEUI=%s", ketCube_common_bytes2Str(&(lora_config.DevEui[0]), KETCUBE_LORA_CFGLEN_DEVEUI));
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "devAddr=%08X", DevAddr);
       
-#if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+#if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
       // v1.1.0
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "nwkSEncKey=%s", ketCube_common_bytes2Str(&(lora_config.NwkSEncKey[0]), KETCUBE_LORA_CFGLEN_NWKSENCKEY));
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "sNwkSIntKey=%s", ketCube_common_bytes2Str(&(lora_config.SNwkSIntKey[0]), KETCUBE_LORA_CFGLEN_SNWKSINTKEY));
@@ -959,7 +959,7 @@ ketCube_cfg_Error_t lora_ketCubeInit(void)
 
    if (ketCube_lora_moduleCfg.cfg.connectionType == KETCUBE_LORA_SELCONNMETHOD_ABP) {   
       // ABP
-      #if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+      #if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
          memcpy1(lora_config.NwkSEncKey, ketCube_lora_moduleCfg.nwkSEncKey, KETCUBE_LORA_CFGLEN_NWKSENCKEY);
          memcpy1(lora_config.SNwkSIntKey, ketCube_lora_moduleCfg.sNwkSIntKey, KETCUBE_LORA_CFGLEN_SNWKSINTKEY);
          memcpy1(lora_config.FNwkSIntKey, ketCube_lora_moduleCfg.fNwkSIntKey, KETCUBE_LORA_CFGLEN_FNWKSINTKEY);
@@ -979,7 +979,7 @@ ketCube_cfg_Error_t lora_ketCubeInit(void)
       lora_config.static_dev_addr = 1;
    } else {
       // OTAA
-      #if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+      #if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
          memcpy1(lora_config.JoinEui, ketCube_lora_moduleCfg.appEUI, KETCUBE_LORA_CFGLEN_APPEUI);
          memcpy1(lora_config.AppKey, ketCube_lora_moduleCfg.appKey, KETCUBE_LORA_CFGLEN_APPKEY);
          memcpy1(lora_config.NwkKey, ketCube_lora_moduleCfg.nwkKey, KETCUBE_LORA_CFGLEN_NWKKEY);

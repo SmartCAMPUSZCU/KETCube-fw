@@ -46,6 +46,14 @@
 #ifndef __KETCUBE_COMPILATION_H
 #define __KETCUBE_COMPILATION_H
 
+/**
+ * @brief LoRaWAN Stack versions
+ */
+typedef enum {
+    KETCUBE_LORA_LRWAN_VERSION_V10x = 1,    /*!< */
+    KETCUBE_LORA_LRWAN_VERSION_V11x = 2     /*!< */
+} ketCube_lora_stackVersion_t;
+
 /** @defgroup  KETCube_compilation KETCube Compilation
   * @brief KETCube Compilation defines
   *
@@ -57,7 +65,7 @@
 
 
 #define KETCUBE_CFG_DEV_NAME           "KETCube"        //< Device name
-#define LRWAN_VERSION	                 LRWAN_VERSION_V10x
+#define KETCUBE_LORA_LRWAN_VERSION	   KETCUBE_LORA_LRWAN_VERSION_V10x
 
 /** @defgroup KETCube_inc_mod Included KETCube Modules
   * Define/undefine to include/exclude KETCube modules

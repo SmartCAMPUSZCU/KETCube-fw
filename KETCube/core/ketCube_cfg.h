@@ -53,13 +53,6 @@
 #include "ketCube_compilation.h"
 #include "ketCube_module_id.h"
 
-/*!
- * LoRaWAN versions
- */
-#define LRWAN_VERSION_V10x    1 
-#define LRWAN_VERSION_V11x    2
-#define LRWAN_VERSION	        LRWAN_VERSION_V10x
-
 /** @defgroup  KETCube_cfg KETCube Configuration Manager
   * @brief KETCube Configuration Manager
   *

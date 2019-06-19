@@ -245,7 +245,7 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
       }
    },
    
-#if (LRWAN_VERSION == LRWAN_VERSION_V11x)
+#if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
    {
       .cmd   = "fNwkSIntKey",
       .descr = "Forwarding Network session integrity key",
