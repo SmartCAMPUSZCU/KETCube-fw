@@ -68,6 +68,7 @@
 typedef enum {
     KETCUBE_EEPROM_ALLOC_CORE = 0,      /*!< KETCube core configuration base address -- core configuration is located in module configuration area */
     KETCUBE_EEPROM_ALLOC_MODULES = 0,   /*!< Module configuration base address */
+    KETCUBE_EEPROM_ALLOC_LAST    = 2048,   /*!< Module configuration base address */
 } ketCube_cfg_AllocEEPROM_t;
 
 /**
