@@ -105,7 +105,7 @@ ketCube_cfg_ModError_t ketCube_[NAME_LOWERCASE]_ReadData(uint8_t * buffer,
     
     *len = i;
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_[NAME],
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_[NAME_UPPERCASE],
                                  "Measured data: %d", data);
 
     return KETCUBE_CFG_MODULE_OK;
