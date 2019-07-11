@@ -135,7 +135,7 @@ void ketCube_lora_processCustomData(uint8_t * buffer, uint8_t len)
 int main(void)
 {
     uint32_t basePeriodCnt = 0;
-
+    
     /* STM32 HAL library initialization */
     HAL_Init();
 

@@ -61,8 +61,6 @@
 /**
  * @brief Erase EEPROM configuration - set factory defaults
  * 
- * @retval KETCUBE_CFG_OK in case of success
- * @retval ketCube_CFG_ERROR in case of failure
  */
 void ketCube_core_CMD_FactoryDefaults(void)
 {
@@ -88,6 +86,94 @@ void ketCube_core_CMD_FactoryDefaults(void)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Reload to apply new settings!");
 }
 
+/**
+ * @brief Initialize STM32 MCU to allow bootloader startup 
+ * 
+ * This allows KETCube flash programming over communication interface(s)
+ * 
+ * TODO some of Println() call do not make sense ... requires some rewriting
+ * 
+ */
+void ketCube_core_CMD_startBootloader(void) {
+    FLASH_EraseInitTypeDef EraseInitStruct; 
+    uint32_t SECTORError = 0;
+    FLASH_AdvOBProgramInitTypeDef pAdvOBInit;
+    
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Note, that this operation causes firmware malfunction!");
+    
+    /* Introduce small amount of delay here to be sure, that above note will successfully print */
+    HAL_Delay(2000);
+    
+    /* Unlock Flash */
+    HAL_FLASH_Unlock();
+    
+    /* Erase page ... */
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+    EraseInitStruct.PageAddress = FLASH_BANK2_BASE;
+    EraseInitStruct.NbPages = 1;
+    
+    if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK) {
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to erase BANK 2 START!");
+        return;
+    }
+    
+    /* Write invalid data to BANK START addresses */
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_BANK2_BASE, 0xFFFFFFFF) != HAL_OK) {
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to init BANK 1!");
+        HAL_FLASH_Lock();
+        return;
+    }
+    
+    /* Erase page ... */
+    EraseInitStruct.TypeErase = FLASH_TYPEERASE_PAGES;
+    EraseInitStruct.PageAddress = FLASH_BASE;
+    EraseInitStruct.NbPages = 1;
+    
+    if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK) {
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to erase BANK 1 START!");
+        HAL_FLASH_Lock();
+        return;
+    }
+    
+    /* Write invalid data to BANK START addresses */
+    if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_BASE, 0xFFFFFFFF) != HAL_OK) {
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to init BANK 1!");
+        HAL_FLASH_Lock();
+        return;
+    }
+
+    /* Get error cause*/
+    /* uint32_t status = HAL_FLASH_GetError();
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "FE: %d", status);*/
+    
+    pAdvOBInit.OptionType = OPTIONBYTE_BOOTCONFIG;
+    pAdvOBInit.BootConfig = OB_BOOT_BANK2;
+    HAL_FLASH_OB_Unlock();
+    if (HAL_FLASHEx_AdvOBProgram(&pAdvOBInit) != HAL_OK) {
+        HAL_FLASH_OB_Lock();
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to change BOOT settings (BFB2)!");
+        HAL_FLASH_Lock();
+        return;
+    }
+    
+    /* Commit OB change  */
+    HAL_FLASH_OB_Launch();
+    HAL_FLASH_OB_Lock();
+    
+    /* Lock flash - just to be coherent */
+    HAL_FLASH_Lock();
+    
+    /* Report ... */
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Memory BANKs invalidated!");
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "");
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Starting STM32 Bootloader ...");
+    
+    HAL_Delay(2000);
+    
+    /* Start bootloader */
+    NVIC_SystemReset();
+}
+
 /* Terminal command definitions */
 ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     {
@@ -109,6 +195,17 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
             .offset   = offsetof(ketCube_coreCfg_t, basePeriod),
             .size     = sizeof(uint32_t)
         }
+    },
+    
+    {
+        .cmd   = "startBootloader",
+        .descr = "Initialize MCU to allow STM bootloader startup.",
+        .flags = {
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isSetCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_core_CMD_startBootloader,
     },
     
     {
