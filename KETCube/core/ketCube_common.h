@@ -3,7 +3,7 @@
   * @author  Jan Belohoubek
   * @author  Martin Ubl
   * @version 0.2
-  * @date    2018-10-10
+  * @date    2019-07-11
   * @brief   KETCube common definitions
  *
  * @attention
@@ -153,6 +153,8 @@ static inline bool ketCube_common_IsHexString(const char *str, uint8_t len)
     for (i = 0; i < len; i++) {
         if ((str[i] >= 'A') && (str[i] <= 'F')) {
             continue;
+        } else if ((str[i] >= 'a') && (str[i] <= 'f')) {
+            continue;
         } else if ((str[i] >= '0') && (str[i] <= '9')) {
             continue;
         } else {
@@ -186,12 +188,36 @@ static inline bool ketCube_common_IsDecString(const char *str, uint8_t len)
 
 
 /**
+  * @brief Convert HEX char to Int (Byte)
+  *
+  * @param c hex character
+  * 
+  * @retval character value 0 - 15; in case of error 0xFF
+  *
+  * @note the function is safe -- ranges are checked strictly
+  */
+static inline uint8_t ketCube_common_Hex2Val(const char c) {
+    
+    if ((c >= '0') && (c <= '9')) {
+        return (c - '0') & 0x0F;
+    } else if ((c >= 'A') && (c <= 'F')) {
+        return (c - 'A' + 10) & 0x0F;
+    } else if ((c >= 'a') && (c <= 'f')) {
+        return (c - 'a' + 10) & 0x0F;
+    } else {
+        return 0xFF;
+    }
+                                               
+}
+
+/**
   * @brief Convert HEX string to Byte array
   *
   * @param bytes pointer to byte array
   * @param str pointer to HEX string
   * @param len HEX string length
   *
+  * @note in case of error (range), function exits immediately
   */
 static inline void ketCube_common_Hex2Bytes(uint8_t * bytes, const char *str,
                                             uint8_t len)
@@ -204,26 +230,26 @@ static inline void ketCube_common_Hex2Bytes(uint8_t * bytes, const char *str,
     }
 
     for (i = 0; i < (len - 1); i += 2, j++) {
-        if (str[i] < 'A') {
-            conv0 = (str[i] - '0') & 0x0F;
+        conv0 = ketCube_common_Hex2Val(str[i]);
+        conv1 = ketCube_common_Hex2Val(str[i + 1]);
+        
+        if ((conv0 < 0x10) && ((conv1 < 0x10))) {
+            bytes[j] = (conv0 << 4) | conv1;
         } else {
-            conv0 = (str[i] - 'A' + 10) & 0x0F;
+            /* return earlier in case of error */
+            return;
         }
-        if (str[i + 1] < 'A') {
-            conv1 = (str[i + 1] - '0') & 0x0F;
-        } else {
-            conv1 = (str[i + 1] - 'A' + 10) & 0x0F;
-        }
-        bytes[j] = conv0 << 4 | conv1;
     }
 
     if (i == (len - 1)) {
-        if (str[i] < 'A') {
-            conv0 = (str[i] - '0') & 0x0F;
+        conv0 = ketCube_common_Hex2Val(str[i]);
+        
+        if (conv0 < 0x10) {
+            bytes[j] = conv0 << 4;
         } else {
-            conv0 = (str[i] - 'A' + 10) & 0x0F;
+            /* return earlier in case of error */
+            return;
         }
-        bytes[j] = conv0 << 4;
     }
 }
 
