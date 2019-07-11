@@ -133,8 +133,10 @@ __Vectors_Size  EQU  __Vectors_End - __Vectors
 ; Reset handler routine
 Reset_Handler    PROC
                  EXPORT  Reset_Handler                 [WEAK]
+		IMPORT  KETCube_getResetFlags
         IMPORT  __main
         IMPORT  SystemInit  
+			     BL KETCube_getResetFlags
                  LDR     R0, =SystemInit
                  BLX     R0
                  LDR     R0, =__main

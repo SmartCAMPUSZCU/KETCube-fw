@@ -86,45 +86,6 @@ void ketCube_core_CMD_FactoryDefaults(void)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Reload to apply new settings!");
 }
 
-
-static void BootloaderClockInit(void){
-	RCC_OscInitTypeDef RCC_OscInitStruct;
-	RCC_ClkInitTypeDef RCC_ClkInitStruct;
- 
-	/**Configure the main internal regulator output voltage
-	*/
-	__HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
- 
-	/**Initializes the CPU, AHB and APB busses clocks
-	*/
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-	RCC_OscInitStruct.HSICalibrationValue = 16;
-	RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
-	RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-	{
-	KETCube_ErrorHandler();
-	}
- 
-	/**Initializes the CPU, AHB and APB busses clocks
-	*/
-	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
-							  |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
-	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-	RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
- 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
-	{
-	KETCube_ErrorHandler();
-	}
-}
-
-typedef void(*voidFn) (void); // define pointer to a void function
-
-
 /**
  * @brief Initialize STM32 MCU to allow bootloader startup 
  * 
