@@ -74,6 +74,7 @@
  * 
  * @param name module name
  * @param descr human-readable module description
+ * @param moduleId persistent module ID
  * @param initFn module initialization function pointer
  * @param sleepEnter module sleep-enter function pointer
  * @param sleepExit module sleep-exit function pointer

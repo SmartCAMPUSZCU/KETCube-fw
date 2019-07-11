@@ -51,6 +51,11 @@
 #include "ketCube_terminal.h"
 #include "ketCube_batMeas.h"
 
+/**
+ * @brief Display list of batteries
+ * 
+ * @todo This function requires refactoring
+ */
 void ketCube_terminal_cmd_show_batMeas_list(void)
 {
     uint8_t i;
@@ -75,9 +80,9 @@ void ketCube_terminal_cmd_show_batMeas_list(void)
     }
 }
 
-/* Terminal command definitions */
-    
-
+/**
+ * @brief Terminal command definitions 
+ */
 ketCube_terminal_cmd_t ketCube_batMeas_commands[] = {
     {
         .cmd   = "list",

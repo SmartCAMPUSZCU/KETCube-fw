@@ -74,8 +74,9 @@ void ketCube_LoRa_cmd_show_devEUI(void)
     commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_DEVEUI;
 }
 
-/* Terminal command definitions */
-
+/**
+ * @brief Terminal command definitions 
+ */
 ketCube_terminal_cmd_t ketCube_lora_commands[] = {
    {
       .cmd   = "appEUI",

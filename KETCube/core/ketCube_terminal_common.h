@@ -52,6 +52,9 @@
 #include "ketCube_cfg.h"
 #include "ketCube_module_id.h"
 
+/**
+ * @brief Terminal opcodes
+ */
 typedef enum ketCube_terminal_command_opcode_t {
     KETCUBE_TERMINAL_OPCODE_CMD = 0,
     KETCUBE_TERMINAL_OPCODE_BATCH = 1,

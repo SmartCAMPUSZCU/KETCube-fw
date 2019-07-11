@@ -62,6 +62,7 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a28be83e9bea76ceccad6ffc1b0e162a5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__cmdList_8c.html#a28be83e9bea76ceccad6ffc1b0e162a5">DEF_TERMINATE</a>()</td></tr>
+<tr class="memdesc:a28be83e9bea76ceccad6ffc1b0e162a5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define (sub)command list (tree level) terminator.  <a href="#a28be83e9bea76ceccad6ffc1b0e162a5">More...</a><br /></td></tr>
 <tr class="separator:a28be83e9bea76ceccad6ffc1b0e162a5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
@@ -69,9 +70,9 @@ Variables</h2></td></tr>
 <tr class="memitem:af94cbed337f700049471fb799d0d98d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__cmdList_8c.html#af94cbed337f700049471fb799d0d98d3">ketCube_terminal_commands_setShow</a> []</td></tr>
 <tr class="memdesc:af94cbed337f700049471fb799d0d98d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">SET/SHOW command group(s)  <a href="#af94cbed337f700049471fb799d0d98d3">More...</a><br /></td></tr>
 <tr class="separator:af94cbed337f700049471fb799d0d98d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga71a70f3bdea71679b9c33cefd27b3f19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__Terminal.html#ga71a70f3bdea71679b9c33cefd27b3f19">ketCube_terminal_commands</a> []</td></tr>
-<tr class="memdesc:ga71a70f3bdea71679b9c33cefd27b3f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube root terminal commands.  <a href="group__KETCube__Terminal.html#ga71a70f3bdea71679b9c33cefd27b3f19">More...</a><br /></td></tr>
-<tr class="separator:ga71a70f3bdea71679b9c33cefd27b3f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71a70f3bdea71679b9c33cefd27b3f19"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__cmdList_8c.html#a71a70f3bdea71679b9c33cefd27b3f19">ketCube_terminal_commands</a> []</td></tr>
+<tr class="memdesc:a71a70f3bdea71679b9c33cefd27b3f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">KETCube root terminal commands.  <a href="#a71a70f3bdea71679b9c33cefd27b3f19">More...</a><br /></td></tr>
+<tr class="separator:a71a70f3bdea71679b9c33cefd27b3f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains the KETCube Command List. </p>
@@ -103,11 +104,28 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">{ .cmd = ((<span class="keywordtype">char</span>*) NULL), \</div><div class="line">                          .descr = ((<span class="keywordtype">char</span>*) NULL),\</div><div class="line">                          .settingsPtr.callback = (void(*)(void)) NULL }</div></div><!-- fragment --><p>Define (sub)command list (tree level) terminator </p>
+<b>Value:</b><div class="fragment"><div class="line">{ .cmd = ((<span class="keywordtype">char</span>*) NULL), \</div><div class="line">                          .descr = ((<span class="keywordtype">char</span>*) NULL),\</div><div class="line">                          .settingsPtr.callback = (void(*)(void)) NULL }</div></div><!-- fragment -->
+<p>Define (sub)command list (tree level) terminator. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
+<a id="a71a70f3bdea71679b9c33cefd27b3f19"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a71a70f3bdea71679b9c33cefd27b3f19">&#9670;&nbsp;</a></span>ketCube_terminal_commands</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> ketCube_terminal_commands[]</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>KETCube root terminal commands. </p>
+
+</div>
+</div>
 <a id="af94cbed337f700049471fb799d0d98d3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af94cbed337f700049471fb799d0d98d3">&#9670;&nbsp;</a></span>ketCube_terminal_commands_setShow</h2>
 

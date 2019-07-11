@@ -58,6 +58,7 @@ $(function() {
 <div class="textblock"><code>#include &quot;<a class="el" href="ketCube__common_8h_source.html">ketCube_common.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__eeprom_8h_source.html">ketCube_eeprom.h</a>&quot;</code><br />
 <code>#include &quot;ketCube_compilation.h&quot;</code><br />
+<code>#include &quot;ketCube_module_id.h&quot;</code><br />
 </div>
 <p><a href="ketCube__cfg_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -106,7 +107,8 @@ Typedefs</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ga3a4d793e4316c6ac968fa54222f97c40"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> { <a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a7cf05885191bc5133efd45657d1dceae">KETCUBE_EEPROM_ALLOC_CORE</a> = 0, 
-<a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a215945d9302f2217830156920376d863">KETCUBE_EEPROM_ALLOC_MODULES</a> = 0
+<a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a215945d9302f2217830156920376d863">KETCUBE_EEPROM_ALLOC_MODULES</a> = 0, 
+<a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a6d12328d695316fcb1d16dd890ae4a91">KETCUBE_EEPROM_ALLOC_LAST</a> = 2048
  }</td></tr>
 <tr class="memdesc:ga3a4d793e4316c6ac968fa54222f97c40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocated CFG EEPROM addreses.  <a href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">More...</a><br /></td></tr>
 <tr class="separator:ga3a4d793e4316c6ac968fa54222f97c40"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -159,6 +161,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga9d7fc7d9ac7a4755a67744059a1865f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga8263966b13dc1b740c0ec0288f8e1f00">ketCube_cfg_Error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__cfg.html#ga9d7fc7d9ac7a4755a67744059a1865f6">ketCube_cfg_SaveStr</a> (char *data, ketCube_cfg_moduleIDs_t id, <a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> addr, <a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a> len)</td></tr>
 <tr class="memdesc:ga9d7fc7d9ac7a4755a67744059a1865f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save configuration data to EEPROM from string.  <a href="group__KETCube__cfg.html#ga9d7fc7d9ac7a4755a67744059a1865f6">More...</a><br /></td></tr>
 <tr class="separator:ga9d7fc7d9ac7a4755a67744059a1865f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga10e09ce8978cc6f2294a5d87be61dcf1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga8263966b13dc1b740c0ec0288f8e1f00">ketCube_cfg_Error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__cfg.html#ga10e09ce8978cc6f2294a5d87be61dcf1">ketCube_cfg_SetDefaults</a> (ketCube_cfg_moduleIDs_t id, <a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> addr, <a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a> len)</td></tr>
+<tr class="memdesc:ga10e09ce8978cc6f2294a5d87be61dcf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erase configuration from EEPROM.  <a href="group__KETCube__cfg.html#ga10e09ce8978cc6f2294a5d87be61dcf1">More...</a><br /></td></tr>
+<tr class="separator:ga10e09ce8978cc6f2294a5d87be61dcf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>

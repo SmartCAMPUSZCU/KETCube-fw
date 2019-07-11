@@ -48,7 +48,7 @@
 
 
 /** 
- * Define (sub)command list (tree level) terminator
+ * @brief Define (sub)command list (tree level) terminator
  * 
  */
 #define DEF_TERMINATE() { .cmd = ((char*) NULL), \

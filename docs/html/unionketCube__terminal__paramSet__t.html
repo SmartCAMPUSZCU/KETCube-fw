@@ -41,14 +41,14 @@ $(function() {
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">ketCube_terminal_paramSet_t Union Reference<div class="ingroups"><a class="el" href="group__KETCube__Core.html">KETCube Core</a> &raquo; <a class="el" href="group__KETCube__Terminal.html">KETCube Terminal</a></div></div>  </div>
+<div class="title">ketCube_terminal_paramSet_t Union Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p>KETCube terminal command parameter container.  
  <a href="unionketCube__terminal__paramSet__t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="ketCube__terminal_8h_source.html">ketCube_terminal.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="ketCube__terminal__common_8h_source.html">ketCube_terminal_common.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -56,26 +56,33 @@ Data Fields</h2></td></tr>
 <tr class="separator:aab3122a328c6e47d268ea98d3fdc645a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad5a7d0a19878bb29fe3fbc1e0521787a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#ad5a7d0a19878bb29fe3fbc1e0521787a">as_byte</a></td></tr>
 <tr class="separator:ad5a7d0a19878bb29fe3fbc1e0521787a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f3862901093f7c189113eb814053141"><td class="memItemLeft" >struct {</td></tr>
+<tr class="memitem:ab3ebe0ba3486d694402718dfed15f8e0"><td class="memItemLeft" >&#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#aadf161b828bddc4ed39e0b8e200c473b">module_id</a></td></tr>
+<tr class="separator:ab3ebe0ba3486d694402718dfed15f8e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab08a7fea1eb64e00feea5cc10a9232f3"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a>&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#a48fe075596dbc58fd9854296ed1c4728">severity</a></td></tr>
+<tr class="separator:ab08a7fea1eb64e00feea5cc10a9232f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f3862901093f7c189113eb814053141"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#a2f3862901093f7c189113eb814053141">as_module_id</a></td></tr>
+<tr class="separator:a2f3862901093f7c189113eb814053141"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afc696b971dba1923c657fdeccc0ec450"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#afc696b971dba1923c657fdeccc0ec450">as_int32</a></td></tr>
 <tr class="separator:afc696b971dba1923c657fdeccc0ec450"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5d2fc5119779b34f1cbdcb36591dd036"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#a5d2fc5119779b34f1cbdcb36591dd036">as_uint32</a></td></tr>
 <tr class="separator:a5d2fc5119779b34f1cbdcb36591dd036"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62121e9ad7246aa78b4ee2d69bd4d411"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#a62121e9ad7246aa78b4ee2d69bd4d411">as_string</a> [<a class="el" href="group__KETCube__Terminal.html#ga8d19813ab0ca1b63f0e65378fa3fb299">KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH</a>]</td></tr>
+<tr class="memitem:a62121e9ad7246aa78b4ee2d69bd4d411"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#a62121e9ad7246aa78b4ee2d69bd4d411">as_string</a> [<a class="el" href="ketCube__terminal__common_8h.html#a8d19813ab0ca1b63f0e65378fa3fb299">KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH</a>]</td></tr>
 <tr class="separator:a62121e9ad7246aa78b4ee2d69bd4d411"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28ecc3f153e7df2bf767d83303d3b3b2"><td class="memItemLeft" >struct {</td></tr>
-<tr class="memitem:a45c61fef66ed07ec9b4ead60df5dc0cb"><td class="memItemLeft" >&#160;&#160;&#160;int&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#a92be8557cfdab9d3f36b578bc87f593f">first</a></td></tr>
-<tr class="separator:a45c61fef66ed07ec9b4ead60df5dc0cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a47700ef26726072fc575d4c11231e288"><td class="memItemLeft" >&#160;&#160;&#160;int&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#a76fb6452ef7679c8c1c7c044fef2770a">second</a></td></tr>
-<tr class="separator:a47700ef26726072fc575d4c11231e288"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a28ecc3f153e7df2bf767d83303d3b3b2"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#a28ecc3f153e7df2bf767d83303d3b3b2">as_int32_pair</a></td></tr>
-<tr class="separator:a28ecc3f153e7df2bf767d83303d3b3b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ca284a5f0d26f44c09cac1c66ba234c"><td class="memItemLeft" >struct {</td></tr>
-<tr class="memitem:a761bf3e9f736666fde04a19b9b8a4da1"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#af783193d2faa86cbe36ff3ef81ebaf7d">data</a> [<a class="el" href="group__KETCube__Terminal.html#ga554a9732c1283b8209167a9ede489d39">KETCUBE_TERMINAL_PARAM_BYTE_ARRAY_MAX_LENGTH</a>]</td></tr>
-<tr class="separator:a761bf3e9f736666fde04a19b9b8a4da1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aebf4ce0b8f7f965d2ad694eda353a6dd"><td class="memItemLeft" >&#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#aaf8a905ed56a4a6abef8abba341aa97d">length</a></td></tr>
-<tr class="separator:aebf4ce0b8f7f965d2ad694eda353a6dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7ca284a5f0d26f44c09cac1c66ba234c"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#a7ca284a5f0d26f44c09cac1c66ba234c">as_byte_array</a></td></tr>
-<tr class="separator:a7ca284a5f0d26f44c09cac1c66ba234c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8fa806488a2832be016e006a17de533"><td class="memItemLeft" >struct {</td></tr>
+<tr class="memitem:a331e70f9b9a86b28aed81eb21cec47c1"><td class="memItemLeft" >&#160;&#160;&#160;int&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#a92be8557cfdab9d3f36b578bc87f593f">first</a></td></tr>
+<tr class="separator:a331e70f9b9a86b28aed81eb21cec47c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad69dcca12410d746b76f6180c9337e6a"><td class="memItemLeft" >&#160;&#160;&#160;int&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#a76fb6452ef7679c8c1c7c044fef2770a">second</a></td></tr>
+<tr class="separator:ad69dcca12410d746b76f6180c9337e6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab8fa806488a2832be016e006a17de533"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#ab8fa806488a2832be016e006a17de533">as_int32_pair</a></td></tr>
+<tr class="separator:ab8fa806488a2832be016e006a17de533"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac963459472841d6ebd67bfbca3bf971b"><td class="memItemLeft" >struct {</td></tr>
+<tr class="memitem:a3e11c525edc3ab328deb44ac3c73913b"><td class="memItemLeft" >&#160;&#160;&#160;<a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a>&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#af783193d2faa86cbe36ff3ef81ebaf7d">data</a> [<a class="el" href="ketCube__terminal__common_8h.html#a554a9732c1283b8209167a9ede489d39">KETCUBE_TERMINAL_PARAM_BYTE_ARRAY_MAX_LENGTH</a>]</td></tr>
+<tr class="separator:a3e11c525edc3ab328deb44ac3c73913b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af198c587a3141478edc7f115bc0cb2c7"><td class="memItemLeft" >&#160;&#160;&#160;uint16_t&#160;&#160;&#160;<a class="el" href="unionketCube__terminal__paramSet__t.html#aaf8a905ed56a4a6abef8abba341aa97d">length</a></td></tr>
+<tr class="separator:af198c587a3141478edc7f115bc0cb2c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac963459472841d6ebd67bfbca3bf971b"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="unionketCube__terminal__paramSet__t.html#ac963459472841d6ebd67bfbca3bf971b">as_byte_array</a></td></tr>
+<tr class="separator:ac963459472841d6ebd67bfbca3bf971b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>KETCube terminal command parameter container. </p>
@@ -108,8 +115,8 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a7ca284a5f0d26f44c09cac1c66ba234c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7ca284a5f0d26f44c09cac1c66ba234c">&#9670;&nbsp;</a></span>as_byte_array</h2>
+<a id="ac963459472841d6ebd67bfbca3bf971b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac963459472841d6ebd67bfbca3bf971b">&#9670;&nbsp;</a></span>as_byte_array</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -136,14 +143,28 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="a28ecc3f153e7df2bf767d83303d3b3b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28ecc3f153e7df2bf767d83303d3b3b2">&#9670;&nbsp;</a></span>as_int32_pair</h2>
+<a id="ab8fa806488a2832be016e006a17de533"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab8fa806488a2832be016e006a17de533">&#9670;&nbsp;</a></span>as_int32_pair</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
           <td class="memname">struct { ... }   ketCube_terminal_paramSet_t::as_int32_pair</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2f3862901093f7c189113eb814053141"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f3862901093f7c189113eb814053141">&#9670;&nbsp;</a></span>as_module_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct { ... }   ketCube_terminal_paramSet_t::as_module_id</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -157,7 +178,7 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char ketCube_terminal_paramSet_t::as_string[<a class="el" href="group__KETCube__Terminal.html#ga8d19813ab0ca1b63f0e65378fa3fb299">KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH</a>]</td>
+          <td class="memname">char ketCube_terminal_paramSet_t::as_string[<a class="el" href="ketCube__terminal__common_8h.html#a8d19813ab0ca1b63f0e65378fa3fb299">KETCUBE_TERMINAL_PARAM_STR_MAX_LENGTH</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -185,7 +206,7 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_terminal_paramSet_t::data[<a class="el" href="group__KETCube__Terminal.html#ga554a9732c1283b8209167a9ede489d39">KETCUBE_TERMINAL_PARAM_BYTE_ARRAY_MAX_LENGTH</a>]</td>
+          <td class="memname"><a class="el" href="group__KETCube__common.html#gab8ef12fab634c171394422d0ee8baf94">byte</a> ketCube_terminal_paramSet_t::data[<a class="el" href="ketCube__terminal__common_8h.html#a554a9732c1283b8209167a9ede489d39">KETCUBE_TERMINAL_PARAM_BYTE_ARRAY_MAX_LENGTH</a>]</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -220,6 +241,20 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="aadf161b828bddc4ed39e0b8e200c473b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aadf161b828bddc4ed39e0b8e200c473b">&#9670;&nbsp;</a></span>module_id</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint16_t ketCube_terminal_paramSet_t::module_id</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a76fb6452ef7679c8c1c7c044fef2770a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76fb6452ef7679c8c1c7c044fef2770a">&#9670;&nbsp;</a></span>second</h2>
 
@@ -234,8 +269,22 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="a48fe075596dbc58fd9854296ed1c4728"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48fe075596dbc58fd9854296ed1c4728">&#9670;&nbsp;</a></span>severity</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga4935bbb4fe5e8d1ca137ac5784b7e10b">ketCube_severity_t</a> ketCube_terminal_paramSet_t::severity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this union was generated from the following file:<ul>
-<li>KETCube/core/<a class="el" href="ketCube__terminal_8h_source.html">ketCube_terminal.h</a></li>
+<li>KETCube/core/<a class="el" href="ketCube__terminal__common_8h_source.html">ketCube_terminal_common.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

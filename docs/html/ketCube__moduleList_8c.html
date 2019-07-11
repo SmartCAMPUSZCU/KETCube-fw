@@ -52,9 +52,11 @@ $(function() {
 
 <p>This file contains the KETCube module list.  
 <a href="#details">More...</a></p>
-<div class="textblock"><code>#include &quot;<a class="el" href="ketCube__cfg_8h_source.html">ketCube_cfg.h</a>&quot;</code><br />
+<div class="textblock"><code>#include &lt;stddef.h&gt;</code><br />
+<code>#include &quot;<a class="el" href="ketCube__cfg_8h_source.html">ketCube_cfg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__coreCfg_8h_source.html">ketCube_coreCfg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__common_8h_source.html">ketCube_common.h</a>&quot;</code><br />
+<code>#include &quot;ketCube_module_id.h&quot;</code><br />
 <code>#include &quot;hw_msp.h&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__lora_8h_source.html">ketCube_lora.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__i2c_8h_source.html">ketCube_i2c.h</a>&quot;</code><br />
@@ -65,15 +67,14 @@ $(function() {
 <code>#include &quot;<a class="el" href="ketCube__rxDisplay_8h_source.html">ketCube_rxDisplay.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__asyncTx_8h_source.html">ketCube_asyncTx.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__txDisplay_8h_source.html">ketCube_txDisplay.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="ketCube__fdc2214_8h_source.html">ketCube_fdc2214.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__ics43432_8h_source.html">ketCube_ics43432.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__bmeX80_8h_source.html">ketCube_bmeX80.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__lis2hh12_8h_source.html">ketCube_lis2hh12.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a102822e411407821d8def923936596e8"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__moduleList_8c.html#a102822e411407821d8def923936596e8">DEF_MODULE</a>(name,  descr,  initFn,  sleepEnter,  sleepExit,  getSensData,  sendData,  recvData,  processData,  cfgStruct)</td></tr>
-<tr class="separator:a102822e411407821d8def923936596e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a672e8976bd6ca599deaa55650fc63f53"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__moduleList_8c.html#a672e8976bd6ca599deaa55650fc63f53">DEF_MODULE</a>(name,  descr,  moduleId,  initFn,  sleepEnter,  sleepExit,  getSensData,  sendData,  recvData,  processData,  cfgStruct)</td></tr>
+<tr class="separator:a672e8976bd6ca599deaa55650fc63f53"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -97,8 +98,8 @@ Variables</h2></td></tr>
 </ul>
 <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
-<a id="a102822e411407821d8def923936596e8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a102822e411407821d8def923936596e8">&#9670;&nbsp;</a></span>DEF_MODULE</h2>
+<a id="a672e8976bd6ca599deaa55650fc63f53"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a672e8976bd6ca599deaa55650fc63f53">&#9670;&nbsp;</a></span>DEF_MODULE</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -114,6 +115,12 @@ Variables</h2></td></tr>
           <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname">descr, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">moduleId, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -170,16 +177,19 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">{ \</div><div class="line">                      ((<span class="keywordtype">char</span>*) &amp;(name)),\</div><div class="line">                      ((<span class="keywordtype">char</span>*) &amp;(descr)), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gadf0c73a843c2d33af2bffcfbc25c9d5e">ketCube_cfg_ModInitFn_t</a>) (initFn), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a>) (sleepEnter), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a>) (sleepExit), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaf0f0c1e900da2baf4a7348ac1e8b35fb">ketCube_cfg_ModDataFn_t</a>) (getSensData), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaf0f0c1e900da2baf4a7348ac1e8b35fb">ketCube_cfg_ModDataFn_t</a>) (sendData), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a>) (recvData), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#ga9a98d9c92107eb8fb938a27d2c453237">ketCube_cfg_ModDataPtrFn_t</a>) (processData), \</div><div class="line">                      (<a class="code" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a> *) &amp;(cfgStruct), \</div><div class="line">                      sizeof(cfgStruct), \</div><div class="line">                      0 \</div><div class="line">                   }</div><div class="ttc" id="group__KETCube__cfg_html_gaa10791aba920b1d42bb6c79511e3715d"><div class="ttname"><a href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModVoidFn_t)(void)</div><div class="ttdoc">Pointer to function returning ketCube_cfg_ModError_t. </div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:130</div></div>
-<div class="ttc" id="group__KETCube__cfg_html_gadf0c73a843c2d33af2bffcfbc25c9d5e"><div class="ttname"><a href="group__KETCube__cfg.html#gadf0c73a843c2d33af2bffcfbc25c9d5e">ketCube_cfg_ModInitFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModInitFn_t)(ketCube_InterModMsg_t ***msg)</div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:132</div></div>
-<div class="ttc" id="group__KETCube__cfg_html_ga9a98d9c92107eb8fb938a27d2c453237"><div class="ttname"><a href="group__KETCube__cfg.html#ga9a98d9c92107eb8fb938a27d2c453237">ketCube_cfg_ModDataPtrFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModDataPtrFn_t)(ketCube_InterModMsg_t *msg)</div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:135</div></div>
-<div class="ttc" id="structketCube__cfg__ModuleCfgByte__t_html"><div class="ttname"><a href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a></div><div class="ttdoc">KETCube module configuration byte. </div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:140</div></div>
-<div class="ttc" id="group__KETCube__cfg_html_gaf0f0c1e900da2baf4a7348ac1e8b35fb"><div class="ttname"><a href="group__KETCube__cfg.html#gaf0f0c1e900da2baf4a7348ac1e8b35fb">ketCube_cfg_ModDataFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModDataFn_t)(uint8_t *buffer, uint8_t *len)</div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:134</div></div>
+<b>Value:</b><div class="fragment"><div class="line">{ \</div><div class="line">                      ((<span class="keywordtype">char</span>*) &amp;(name)),\</div><div class="line">                      ((<span class="keywordtype">char</span>*) &amp;(descr)), \</div><div class="line">                      moduleId, \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gadf0c73a843c2d33af2bffcfbc25c9d5e">ketCube_cfg_ModInitFn_t</a>) (initFn), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a>) (sleepEnter), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a>) (sleepExit), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaf0f0c1e900da2baf4a7348ac1e8b35fb">ketCube_cfg_ModDataFn_t</a>) (getSensData), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaf0f0c1e900da2baf4a7348ac1e8b35fb">ketCube_cfg_ModDataFn_t</a>) (sendData), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a>) (recvData), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#ga9a98d9c92107eb8fb938a27d2c453237">ketCube_cfg_ModDataPtrFn_t</a>) (processData), \</div><div class="line">                      (<a class="code" href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a> *) &amp;(cfgStruct), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a>) <span class="keyword">sizeof</span>(cfgStruct), \</div><div class="line">                      (<a class="code" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a>) 0 \</div><div class="line">                   }</div><div class="ttc" id="group__KETCube__cfg_html_gaa10791aba920b1d42bb6c79511e3715d"><div class="ttname"><a href="group__KETCube__cfg.html#gaa10791aba920b1d42bb6c79511e3715d">ketCube_cfg_ModVoidFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModVoidFn_t)(void)</div><div class="ttdoc">Pointer to function returning ketCube_cfg_ModError_t. </div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:134</div></div>
+<div class="ttc" id="group__KETCube__cfg_html_ga11b71f9679c0c8f662a7bbc31f6dcb54"><div class="ttname"><a href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a></div><div class="ttdeci">ketCube_cfg_LenEEPROM_t</div><div class="ttdoc">Length of CFG EEPROM data. </div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:77</div></div>
+<div class="ttc" id="group__KETCube__cfg_html_gadf0c73a843c2d33af2bffcfbc25c9d5e"><div class="ttname"><a href="group__KETCube__cfg.html#gadf0c73a843c2d33af2bffcfbc25c9d5e">ketCube_cfg_ModInitFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModInitFn_t)(ketCube_InterModMsg_t ***msg)</div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:136</div></div>
+<div class="ttc" id="group__KETCube__cfg_html_ga9a98d9c92107eb8fb938a27d2c453237"><div class="ttname"><a href="group__KETCube__cfg.html#ga9a98d9c92107eb8fb938a27d2c453237">ketCube_cfg_ModDataPtrFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModDataPtrFn_t)(ketCube_InterModMsg_t *msg)</div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:139</div></div>
+<div class="ttc" id="group__KETCube__cfg_html_ga3a4d793e4316c6ac968fa54222f97c40"><div class="ttname"><a href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a></div><div class="ttdeci">ketCube_cfg_AllocEEPROM_t</div><div class="ttdoc">Allocated CFG EEPROM addreses. </div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:68</div></div>
+<div class="ttc" id="structketCube__cfg__ModuleCfgByte__t_html"><div class="ttname"><a href="structketCube__cfg__ModuleCfgByte__t.html">ketCube_cfg_ModuleCfgByte_t</a></div><div class="ttdoc">KETCube module configuration byte. </div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:144</div></div>
+<div class="ttc" id="group__KETCube__cfg_html_gaf0f0c1e900da2baf4a7348ac1e8b35fb"><div class="ttname"><a href="group__KETCube__cfg.html#gaf0f0c1e900da2baf4a7348ac1e8b35fb">ketCube_cfg_ModDataFn_t</a></div><div class="ttdeci">ketCube_cfg_ModError_t(* ketCube_cfg_ModDataFn_t)(uint8_t *buffer, uint8_t *len)</div><div class="ttdef"><b>Definition:</b> ketCube_cfg.h:138</div></div>
 </div><!-- fragment --><p>Define a KETCube module</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>module name </td></tr>
     <tr><td class="paramname">descr</td><td>human-readable module description </td></tr>
+    <tr><td class="paramname">moduleId</td><td>persistent module ID </td></tr>
     <tr><td class="paramname">initFn</td><td>module initialization function pointer </td></tr>
     <tr><td class="paramname">sleepEnter</td><td>module sleep-enter function pointer </td></tr>
     <tr><td class="paramname">sleepExit</td><td>module sleep-exit function pointer </td></tr>

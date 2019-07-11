@@ -45,7 +45,8 @@ $(function() {
 : <a class="el" href="ketCube__terminal_8c.html#a46ba52011f0d57b7223f103cdcb5075c">ketCube_terminal.c</a>
 </li>
 <li>commandErrorCode
-: <a class="el" href="ketCube__terminal_8c.html#af805326ead66e2273452b8f170c6ba67">ketCube_terminal.c</a>
+: <a class="el" href="group__KETCube__terminal__common__var.html#gaf805326ead66e2273452b8f170c6ba67">ketCube_terminal_common.c</a>
+, <a class="el" href="group__KETCube__terminal__common__var.html#gaf805326ead66e2273452b8f170c6ba67">ketCube_terminal_common.h</a>
 </li>
 <li>commandHistory
 : <a class="el" href="ketCube__terminal_8c.html#a60950cc0c06325db190689659b06a8ae">ketCube_terminal.c</a>
@@ -54,7 +55,8 @@ $(function() {
 : <a class="el" href="ketCube__terminal_8c.html#aa363b9828a3f31f5606a0b6cc61f484e">ketCube_terminal.c</a>
 </li>
 <li>commandIOParams
-: <a class="el" href="ketCube__terminal_8c.html#a96d3892ed9f5dbdd2a6685919ce90a7b">ketCube_terminal.c</a>
+: <a class="el" href="group__KETCube__terminal__common__var.html#ga96d3892ed9f5dbdd2a6685919ce90a7b">ketCube_terminal_common.c</a>
+, <a class="el" href="group__KETCube__terminal__common__var.html#ga96d3892ed9f5dbdd2a6685919ce90a7b">ketCube_terminal_common.h</a>
 </li>
 <li>commandParamsPos
 : <a class="el" href="ketCube__terminal_8c.html#a7b56a33f5f15fb1a7951428afc8cd010">ketCube_terminal.c</a>
@@ -66,11 +68,11 @@ $(function() {
 
 
 <h3><a id="index_d"></a>- d -</h3><ul>
-<li>dataBuffer
-: <a class="el" href="ketCube__lora_8c.html#a54aefba7f330b07a06f4c9447e582f09">ketCube_lora.c</a>
+<li>deferCmdBuf
+: <a class="el" href="ketCube__remote__terminal_8c.html#a24cf17cbc6c4938fc5c0a835368cb7dc">ketCube_remote_terminal.c</a>
 </li>
-<li>dataBufferLen
-: <a class="el" href="ketCube__lora_8c.html#af0b80f82d280da2570e375948f1f3d79">ketCube_lora.c</a>
+<li>deferCmdBufLen
+: <a class="el" href="ketCube__remote__terminal_8c.html#a4be35cfa333b7b4754f945e3d9f97ec5">ketCube_remote_terminal.c</a>
 </li>
 </ul>
 
@@ -78,6 +80,9 @@ $(function() {
 <h3><a id="index_i"></a>- i -</h3><ul>
 <li>InterModMsgBuffer
 : <a class="el" href="ketCube__modules_8c.html#a0f82e86167536685940dd65ec724556f">ketCube_modules.c</a>
+</li>
+<li>isCmdDefered
+: <a class="el" href="ketCube__remote__terminal_8c.html#a0a42f5657f5bb1abd525e378cede68ae">ketCube_remote_terminal.c</a>
 </li>
 </ul>
 
@@ -114,10 +119,6 @@ $(function() {
 <li>ketCube_coreCfg
 : <a class="el" href="group__KETCube__coreCfg.html#ga580758eb16acbc6294f152d988866bb3">ketCube_coreCfg.c</a>
 , <a class="el" href="group__KETCube__coreCfg.html#ga580758eb16acbc6294f152d988866bb3">ketCube_coreCfg.h</a>
-</li>
-<li>ketCube_fdc2214_moduleCfg
-: <a class="el" href="group__KETCube__FDC2214.html#gab4095678dd0e1d57719c1f2812e1e081">ketCube_fdc2214.c</a>
-, <a class="el" href="group__KETCube__FDC2214.html#gab4095678dd0e1d57719c1f2812e1e081">ketCube_fdc2214.h</a>
 </li>
 <li>ketCube_GPIO_IrqHandlers
 : <a class="el" href="ketCube__gpio_8c.html#adeb5118028bccb4532bc519edc6e0c0d">ketCube_gpio.c</a>
@@ -156,10 +157,6 @@ $(function() {
 : <a class="el" href="group__KETCube__cfg.html#gab76e17cc9964172aa1f2ba1c10d2644d">ketCube_cfg.c</a>
 , <a class="el" href="group__KETCube__cfg.html#gab76e17cc9964172aa1f2ba1c10d2644d">ketCube_cfg.h</a>
 </li>
-<li>ketCube_starNet_moduleCfg
-: <a class="el" href="group__KETCube__StarNet.html#ga04fcdf1f53f1cf607115425ad2a38fa1">ketCube_starNet.c</a>
-, <a class="el" href="group__KETCube__StarNet.html#ga04fcdf1f53f1cf607115425ad2a38fa1">ketCube_starNet.h</a>
-</li>
 <li>ketCube_starNet_nodeType
 : <a class="el" href="group__KETCube__StarNet.html#gaffe859c925612b36b06e0e0ac8bdae04">ketCube_starNet.c</a>
 , <a class="el" href="group__KETCube__StarNet.html#gaffe859c925612b36b06e0e0ac8bdae04">ketCube_starNet.h</a>
@@ -182,9 +179,17 @@ $(function() {
 <li>ketCube_starNet_snrMsgBuff
 : <a class="el" href="ketCube__starNet_8c.html#a28b30787d6c7e84823e442b1b3edd25c">ketCube_starNet.c</a>
 </li>
+<li>ketCube_starNetConcentrator_moduleCfg
+: <a class="el" href="group__KETCube__StarNet.html#ga037905b56c328f4b8e5c77f405fae721">ketCube_starNet.c</a>
+, <a class="el" href="group__KETCube__StarNet.html#ga037905b56c328f4b8e5c77f405fae721">ketCube_starNet.h</a>
+</li>
+<li>ketCube_starNetNode_moduleCfg
+: <a class="el" href="group__KETCube__StarNet.html#ga7acaf5508a6549dd7a78d56eec5a3f3f">ketCube_starNet.c</a>
+, <a class="el" href="group__KETCube__StarNet.html#ga7acaf5508a6549dd7a78d56eec5a3f3f">ketCube_starNet.h</a>
+</li>
 <li>ketCube_terminal_commands
-: <a class="el" href="group__KETCube__Terminal.html#ga71a70f3bdea71679b9c33cefd27b3f19">ketCube_terminal.h</a>
-, <a class="el" href="group__KETCube__Terminal.html#ga71a70f3bdea71679b9c33cefd27b3f19">ketCube_cmdList.c</a>
+: <a class="el" href="ketCube__terminal__common_8h.html#a71a70f3bdea71679b9c33cefd27b3f19">ketCube_terminal_common.h</a>
+, <a class="el" href="ketCube__cmdList_8c.html#a71a70f3bdea71679b9c33cefd27b3f19">ketCube_cmdList.c</a>
 </li>
 <li>ketCube_terminal_commands_core
 : <a class="el" href="group__KETCube__core__CMD.html#gac070910682b5f179794b087a82162f77">ketCube_core_cmd.c</a>
@@ -211,6 +216,9 @@ $(function() {
 
 
 <h3><a id="index_l"></a>- l -</h3><ul>
+<li>LoraMacProcessRequest
+: <a class="el" href="ketCube__lora_8c.html#a1224d85bc832fbfcde245b5fb2626138">ketCube_lora.c</a>
+</li>
 <li>LoRaMainCallbacks
 : <a class="el" href="ketCube__lora_8c.html#a79936f3677c8247e073e64561bb5b832">ketCube_lora.c</a>
 </li>
@@ -221,9 +229,6 @@ $(function() {
 
 
 <h3><a id="index_m"></a>- m -</h3><ul>
-<li>mean
-: <a class="el" href="ketCube__fdc2214_8c.html#a0ff30e78a8536908f2b65e1286bdb825">ketCube_fdc2214.c</a>
-</li>
 <li>modMsgQueue
 : <a class="el" href="ketCube__lora_8c.html#a58eb380ae60008b6453ab5b7985e04e4">ketCube_lora.c</a>
 , <a class="el" href="ketCube__starNet_8c.html#a3fdce5669cfe8bd572e6de38d9827504">ketCube_starNet.c</a>
@@ -239,9 +244,6 @@ $(function() {
 
 
 <h3><a id="index_p"></a>- p -</h3><ul>
-<li>pastValue
-: <a class="el" href="ketCube__fdc2214_8c.html#ac7be7cf227d105fca672aa92238beaaf">ketCube_fdc2214.c</a>
-</li>
 <li>pinUsage
 : <a class="el" href="ketCube__gpio_8c.html#a038b7b03f6c2a60cef99fbc6f0f7816a">ketCube_gpio.c</a>
 </li>
@@ -251,6 +253,12 @@ $(function() {
 <h3><a id="index_r"></a>- r -</h3><ul>
 <li>RadioEvents
 : <a class="el" href="ketCube__starNet_8c.html#ab2d43d0043628b27fcec8e64b0e86086">ketCube_starNet.c</a>
+</li>
+<li>responseBuf
+: <a class="el" href="ketCube__remote__terminal_8c.html#aa74e3fe725f65e72419f30ef04d3a23e">ketCube_remote_terminal.c</a>
+</li>
+<li>responseFnc
+: <a class="el" href="ketCube__remote__terminal_8c.html#a6bd6b388c40af7613230445d6be74271">ketCube_remote_terminal.c</a>
 </li>
 <li>rxDone
 : <a class="el" href="ketCube__starNet_8c.html#a1ec62df7579432dcd175353010d5889c">ketCube_starNet.c</a>
@@ -278,9 +286,6 @@ $(function() {
 <li>TxLedTimer
 : <a class="el" href="ketCube__lora_8c.html#a79ff84ab1f68d1ffa42bd132e5d6e2f3">ketCube_lora.c</a>
 </li>
-<li>txPort
-: <a class="el" href="ketCube__lora_8c.html#a1e8c4ebb9f8925e27a75b489a893c961">ketCube_lora.c</a>
-</li>
 </ul>
 
 
@@ -296,23 +301,6 @@ $(function() {
 </li>
 <li>usartTxBuffer
 : <a class="el" href="ketCube__terminal_8c.html#a0af6b6a19a807c678289f816801954a9">ketCube_terminal.c</a>
-</li>
-</ul>
-
-
-<h3><a id="index_v"></a>- v -</h3><ul>
-<li>valuePtr
-: <a class="el" href="ketCube__fdc2214_8c.html#af29afcecbbb237d99ec0a5272cdb509b">ketCube_fdc2214.c</a>
-</li>
-<li>values
-: <a class="el" href="ketCube__fdc2214_8c.html#ac50d8582fb4aaee896f3a79125bb3922">ketCube_fdc2214.c</a>
-</li>
-</ul>
-
-
-<h3><a id="index_w"></a>- w -</h3><ul>
-<li>wait
-: <a class="el" href="ketCube__fdc2214_8c.html#a6a4518434d14d396809c8539390750e4">ketCube_fdc2214.c</a>
 </li>
 </ul>
 </div><!-- contents -->

@@ -41,14 +41,14 @@ $(function() {
   <div class="summary">
 <a href="#pub-attribs">Data Fields</a>  </div>
   <div class="headertitle">
-<div class="title">ketCube_terminal_cmd_t Struct Reference<div class="ingroups"><a class="el" href="group__KETCube__Core.html">KETCube Core</a> &raquo; <a class="el" href="group__KETCube__Terminal.html">KETCube Terminal</a></div></div>  </div>
+<div class="title">ketCube_terminal_cmd_t Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p>KETCube terminal command definition.  
  <a href="structketCube__terminal__cmd__t.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="ketCube__terminal_8h_source.html">ketCube_terminal.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="ketCube__terminal__common_8h_source.html">ketCube_terminal_common.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Data Fields</h2></td></tr>
@@ -61,25 +61,27 @@ Data Fields</h2></td></tr>
 <tr class="memitem:a199a5fdc865c5ff584ae37849e70549e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__terminal__command__flags__t.html">ketCube_terminal_command_flags_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#a199a5fdc865c5ff584ae37849e70549e">flags</a></td></tr>
 <tr class="memdesc:a199a5fdc865c5ff584ae37849e70549e"><td class="mdescLeft">&#160;</td><td class="mdescRight">command flags  <a href="#a199a5fdc865c5ff584ae37849e70549e">More...</a><br /></td></tr>
 <tr class="separator:a199a5fdc865c5ff584ae37849e70549e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac074bf13405c260d7ca4ca76131f3c16"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__Terminal.html#gaaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#ac074bf13405c260d7ca4ca76131f3c16">outputSetType</a></td></tr>
+<tr class="memitem:ac074bf13405c260d7ca4ca76131f3c16"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ketCube__terminal__common_8h.html#aaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#ac074bf13405c260d7ca4ca76131f3c16">outputSetType</a></td></tr>
 <tr class="memdesc:ac074bf13405c260d7ca4ca76131f3c16"><td class="mdescLeft">&#160;</td><td class="mdescRight">cmd output parameter type  <a href="#ac074bf13405c260d7ca4ca76131f3c16">More...</a><br /></td></tr>
 <tr class="separator:ac074bf13405c260d7ca4ca76131f3c16"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab858503427b72edc84944ea716c5b486"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__Terminal.html#gaaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#ab858503427b72edc84944ea716c5b486">paramSetType</a></td></tr>
+<tr class="memitem:ab858503427b72edc84944ea716c5b486"><td class="memItemLeft" align="right" valign="top"><a class="el" href="ketCube__terminal__common_8h.html#aaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#ab858503427b72edc84944ea716c5b486">paramSetType</a></td></tr>
 <tr class="memdesc:ab858503427b72edc84944ea716c5b486"><td class="mdescLeft">&#160;</td><td class="mdescRight">cmd input parameter type  <a href="#ab858503427b72edc84944ea716c5b486">More...</a><br /></td></tr>
 <tr class="separator:ab858503427b72edc84944ea716c5b486"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd5dc263cc657b422a75288b3fbe5a57"><td class="memItemLeft" >union {</td></tr>
-<tr class="memitem:a97761d0dd1a127fc3c2bf906eb6bebd7"><td class="memItemLeft" >&#160;&#160;&#160;void(*&#160;&#160;&#160;<a class="el" href="structketCube__terminal__cmd__t.html#adcdaa1a5cca2d4a9645856d0ac4af6c8">callback</a> )(void)</td></tr>
-<tr class="memdesc:a97761d0dd1a127fc3c2bf906eb6bebd7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ptr to a custom callback.  <a href="#a97761d0dd1a127fc3c2bf906eb6bebd7">More...</a><br /></td></tr>
-<tr class="separator:a97761d0dd1a127fc3c2bf906eb6bebd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad18eb92fad5c9761f61c1099d13e8d02"><td class="memItemLeft" >&#160;&#160;&#160;struct <a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;&#160;&#160;<a class="el" href="structketCube__terminal__cmd__t.html#adf50311cc67450b1329316644a5fcc3e">subCmdList</a></td></tr>
-<tr class="memdesc:ad18eb92fad5c9761f61c1099d13e8d02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ptr to a subcommand list (if this is root command)  <a href="#ad18eb92fad5c9761f61c1099d13e8d02">More...</a><br /></td></tr>
-<tr class="separator:ad18eb92fad5c9761f61c1099d13e8d02"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3c3f17f23769af539e972e18a8268c3"><td class="memItemLeft" >&#160;&#160;&#160;struct <a class="el" href="structketCube__cfg__varDescr__t.html">ketCube_cfg_varDescr_t</a> *&#160;&#160;&#160;<a class="el" href="structketCube__terminal__cmd__t.html#af1fb897eb0606a5967dd6c9c0ee6e796">cfgVarPtr</a></td></tr>
-<tr class="memdesc:af3c3f17f23769af539e972e18a8268c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The configuration variable descriptor - RAM/EEPROM (use for generic commands)  <a href="#af3c3f17f23769af539e972e18a8268c3">More...</a><br /></td></tr>
-<tr class="separator:af3c3f17f23769af539e972e18a8268c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acd5dc263cc657b422a75288b3fbe5a57"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#acd5dc263cc657b422a75288b3fbe5a57">settingsPtr</a></td></tr>
-<tr class="memdesc:acd5dc263cc657b422a75288b3fbe5a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command settings - depends on flags.  <a href="#acd5dc263cc657b422a75288b3fbe5a57">More...</a><br /></td></tr>
-<tr class="separator:acd5dc263cc657b422a75288b3fbe5a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2999480ee79644dd98a17d88fcd5486"><td class="memItemLeft" >union {</td></tr>
+<tr class="memitem:a32fb7219752fb8fb87b0d4bfe82f700b"><td class="memItemLeft" >&#160;&#160;&#160;void(*&#160;&#160;&#160;<a class="el" href="structketCube__terminal__cmd__t.html#adcdaa1a5cca2d4a9645856d0ac4af6c8">callback</a> )(void)</td></tr>
+<tr class="memdesc:a32fb7219752fb8fb87b0d4bfe82f700b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ptr to a custom callback.  <a href="#a32fb7219752fb8fb87b0d4bfe82f700b">More...</a><br /></td></tr>
+<tr class="separator:a32fb7219752fb8fb87b0d4bfe82f700b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2a0591e517d9cf2725dc58cd326c2a5e"><td class="memItemLeft" >&#160;&#160;&#160;struct <a class="el" href="structketCube__terminal__cmd__t.html">ketCube_terminal_cmd_t</a> *&#160;&#160;&#160;<a class="el" href="structketCube__terminal__cmd__t.html#adf50311cc67450b1329316644a5fcc3e">subCmdList</a></td></tr>
+<tr class="memdesc:a2a0591e517d9cf2725dc58cd326c2a5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ptr to a subcommand list (if this is root command)  <a href="#a2a0591e517d9cf2725dc58cd326c2a5e">More...</a><br /></td></tr>
+<tr class="separator:a2a0591e517d9cf2725dc58cd326c2a5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3d8445431daf7ea748653feac92c17d"><td class="memItemLeft" >&#160;&#160;&#160;struct <a class="el" href="structketCube__cfg__varDescr__t.html">ketCube_cfg_varDescr_t</a> *&#160;&#160;&#160;<a class="el" href="structketCube__terminal__cmd__t.html#af1fb897eb0606a5967dd6c9c0ee6e796">cfgVarPtr</a></td></tr>
+<tr class="memdesc:ad3d8445431daf7ea748653feac92c17d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The configuration variable descriptor - RAM/EEPROM (use for generic commands)  <a href="#ad3d8445431daf7ea748653feac92c17d">More...</a><br /></td></tr>
+<tr class="separator:ad3d8445431daf7ea748653feac92c17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2999480ee79644dd98a17d88fcd5486"><td class="memItemLeft" valign="top">}&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#af2999480ee79644dd98a17d88fcd5486">settingsPtr</a></td></tr>
+<tr class="memdesc:af2999480ee79644dd98a17d88fcd5486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command settings - depends on flags.  <a href="#af2999480ee79644dd98a17d88fcd5486">More...</a><br /></td></tr>
+<tr class="separator:af2999480ee79644dd98a17d88fcd5486"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46ad8d1c56f7c81c40d196efcd4167b8"><td class="memItemLeft" align="right" valign="top">ketCube_moduleID_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structketCube__terminal__cmd__t.html#a46ad8d1c56f7c81c40d196efcd4167b8">moduleId</a></td></tr>
+<tr class="separator:a46ad8d1c56f7c81c40d196efcd4167b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>KETCube terminal command definition. </p>
@@ -164,6 +166,20 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
+<a id="a46ad8d1c56f7c81c40d196efcd4167b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a46ad8d1c56f7c81c40d196efcd4167b8">&#9670;&nbsp;</a></span>moduleId</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">ketCube_moduleID_t ketCube_terminal_cmd_t::moduleId</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac074bf13405c260d7ca4ca76131f3c16"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac074bf13405c260d7ca4ca76131f3c16">&#9670;&nbsp;</a></span>outputSetType</h2>
 
@@ -171,7 +187,7 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__KETCube__Terminal.html#gaaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a> ketCube_terminal_cmd_t::outputSetType</td>
+          <td class="memname"><a class="el" href="ketCube__terminal__common_8h.html#aaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a> ketCube_terminal_cmd_t::outputSetType</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -187,7 +203,7 @@ Data Fields</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__KETCube__Terminal.html#gaaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a> ketCube_terminal_cmd_t::paramSetType</td>
+          <td class="memname"><a class="el" href="ketCube__terminal__common_8h.html#aaceae25f8bc3a5ce0a6bcc5d82889f19">ketCube_terminal_paramSet_type_t</a> ketCube_terminal_cmd_t::paramSetType</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -196,8 +212,8 @@ Data Fields</h2></td></tr>
 
 </div>
 </div>
-<a id="acd5dc263cc657b422a75288b3fbe5a57"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acd5dc263cc657b422a75288b3fbe5a57">&#9670;&nbsp;</a></span>settingsPtr</h2>
+<a id="af2999480ee79644dd98a17d88fcd5486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2999480ee79644dd98a17d88fcd5486">&#9670;&nbsp;</a></span>settingsPtr</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -229,7 +245,7 @@ Data Fields</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>KETCube/core/<a class="el" href="ketCube__terminal_8h_source.html">ketCube_terminal.h</a></li>
+<li>KETCube/core/<a class="el" href="ketCube__terminal__common_8h_source.html">ketCube_terminal_common.h</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->

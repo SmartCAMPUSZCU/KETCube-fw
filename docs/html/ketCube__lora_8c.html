@@ -59,6 +59,7 @@ $(function() {
 <code>#include &quot;<a class="el" href="ketCube__cfg_8h_source.html">ketCube_cfg.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__common_8h_source.html">ketCube_common.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__terminal_8h_source.html">ketCube_terminal.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="ketCube__remote__terminal_8h_source.html">ketCube_remote_terminal.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__modules_8h_source.html">ketCube_modules.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ketCube__rxDisplay_8h_source.html">ketCube_rxDisplay.h</a>&quot;</code><br />
 <code>#include &quot;hw.h&quot;</code><br />
@@ -73,33 +74,56 @@ $(function() {
 Macros</h2></td></tr>
 <tr class="memitem:adac4009d9987bc72cbd980c1cfed9d65"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#adac4009d9987bc72cbd980c1cfed9d65">LORAWAN_ADR_ON</a>&#160;&#160;&#160;1</td></tr>
 <tr class="separator:adac4009d9987bc72cbd980c1cfed9d65"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adec7998dab8757be490ccc5460bb9f8a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#adec7998dab8757be490ccc5460bb9f8a">LORAWAN_CONFIRMED_MSG</a>&#160;&#160;&#160;DISABLE</td></tr>
-<tr class="separator:adec7998dab8757be490ccc5460bb9f8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1baf489c13bd5f856d63321474d8009a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a1baf489c13bd5f856d63321474d8009a">LORAWAN_DEFAULT_CONFIRM_MSG_STATE</a>&#160;&#160;&#160;LORAWAN_UNCONFIRMED_MSG</td></tr>
+<tr class="separator:a1baf489c13bd5f856d63321474d8009a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeaa33cf62bb1976e47fefbc1526a2bff"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#aeaa33cf62bb1976e47fefbc1526a2bff">LORAWAN_APP_PORT</a>&#160;&#160;&#160;2</td></tr>
 <tr class="separator:aeaa33cf62bb1976e47fefbc1526a2bff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac184c56817f4cc178dc83837d01711e1"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#ac184c56817f4cc178dc83837d01711e1">LORAWAN_ASYNCAPP_PORT</a>&#160;&#160;&#160;3</td></tr>
 <tr class="separator:ac184c56817f4cc178dc83837d01711e1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90590e66c5663f124e6d6cb5deb87bb9"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a90590e66c5663f124e6d6cb5deb87bb9">LORAWAN_HEX_DISPLAY_PORT</a>&#160;&#160;&#160;10</td></tr>
+<tr class="separator:a90590e66c5663f124e6d6cb5deb87bb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab108726c96003935ede2a2a80dc8b00e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#ab108726c96003935ede2a2a80dc8b00e">LORAWAN_STRING_DISPLAY_PORT</a>&#160;&#160;&#160;11</td></tr>
+<tr class="separator:ab108726c96003935ede2a2a80dc8b00e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae86a6819c8c7ab7ff811f8b94c5b876b"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#ae86a6819c8c7ab7ff811f8b94c5b876b">LORAWAN_CUSTOM_DATA_PORT</a>&#160;&#160;&#160;12</td></tr>
+<tr class="separator:ae86a6819c8c7ab7ff811f8b94c5b876b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9bb5ca1593187c3ea2319499c3ec735"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#ab9bb5ca1593187c3ea2319499c3ec735">LORAWAN_REMOTE_TERMINAL_PORT</a>&#160;&#160;&#160;13</td></tr>
+<tr class="separator:ab9bb5ca1593187c3ea2319499c3ec735"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a24793b3d8b6c4ab86752c6ccfc5f49c6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a24793b3d8b6c4ab86752c6ccfc5f49c6">ketCube_lora_TxData</a> (lora_AppData_t *AppData, FunctionalState *IsTxConfirmed)</td></tr>
-<tr class="memdesc:a24793b3d8b6c4ab86752c6ccfc5f49c6"><td class="mdescLeft">&#160;</td><td class="mdescRight">LoRa Tx Data callback ...  <a href="#a24793b3d8b6c4ab86752c6ccfc5f49c6">More...</a><br /></td></tr>
-<tr class="separator:a24793b3d8b6c4ab86752c6ccfc5f49c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1e4e6007061c81ec0cfb0dea6c60a89"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#ae1e4e6007061c81ec0cfb0dea6c60a89">ketCube_lora_TxNeeded</a> (void)</td></tr>
+<tr class="separator:ae1e4e6007061c81ec0cfb0dea6c60a89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e919a8ccbb324f02c37fba575302de1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a5e919a8ccbb324f02c37fba575302de1">ketCube_lora_RxData</a> (lora_AppData_t *AppData)</td></tr>
 <tr class="memdesc:a5e919a8ccbb324f02c37fba575302de1"><td class="mdescLeft">&#160;</td><td class="mdescRight">LoRa Rx Data callback ...  <a href="#a5e919a8ccbb324f02c37fba575302de1">More...</a><br /></td></tr>
 <tr class="separator:a5e919a8ccbb324f02c37fba575302de1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1613cd9100a3863ffb65b117895515b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#ae1613cd9100a3863ffb65b117895515b">ketCube_lora_OnTimerLed</a> (void)</td></tr>
-<tr class="memdesc:ae1613cd9100a3863ffb65b117895515b"><td class="mdescLeft">&#160;</td><td class="mdescRight">LoRa Tx LED callback ...  <a href="#ae1613cd9100a3863ffb65b117895515b">More...</a><br /></td></tr>
-<tr class="separator:ae1613cd9100a3863ffb65b117895515b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07e587c626199463189fc86f837bc4f8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a07e587c626199463189fc86f837bc4f8">ketCube_lora_HasJoined</a> (void)</td></tr>
+<tr class="separator:a07e587c626199463189fc86f837bc4f8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2ebec6b914e278172faf75b0ca151809"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a2ebec6b914e278172faf75b0ca151809">ketCube_lora_ConfirmClass</a> (DeviceClass_t Class)</td></tr>
+<tr class="separator:a2ebec6b914e278172faf75b0ca151809"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6d2b66b08190646978bc588df4ff97fd"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a6d2b66b08190646978bc588df4ff97fd">ketCube_lora_OnTimerLed</a> (void *context)</td></tr>
+<tr class="memdesc:a6d2b66b08190646978bc588df4ff97fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">LoRa Tx LED callback ...  <a href="#a6d2b66b08190646978bc588df4ff97fd">More...</a><br /></td></tr>
+<tr class="separator:a6d2b66b08190646978bc588df4ff97fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36e82be3fb7d05e36b6c9d8ec1fe31a8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a36e82be3fb7d05e36b6c9d8ec1fe31a8">ketCube_lora_MacProcessNotify</a> (void)</td></tr>
+<tr class="separator:a36e82be3fb7d05e36b6c9d8ec1fe31a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6076b69ac47bad04908931d8cb92b957"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a6076b69ac47bad04908931d8cb92b957">ketCube_lora_McpsDataConfirm</a> (void)</td></tr>
+<tr class="separator:a6076b69ac47bad04908931d8cb92b957"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40e6f022adc818c32c9e73ad879fc137"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a40e6f022adc818c32c9e73ad879fc137">ketCube_lora_SendData</a> (lora_AppData_t *AppData)</td></tr>
+<tr class="separator:a40e6f022adc818c32c9e73ad879fc137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga305c26bb98612c142aba6a8e41819464"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#ga305c26bb98612c142aba6a8e41819464">ketCube_lora_Init</a> (<a class="el" href="structketCube__InterModMsg__t.html">ketCube_InterModMsg_t</a> ***msg)</td></tr>
 <tr class="memdesc:ga305c26bb98612c142aba6a8e41819464"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load basic module configuration data from EEPROM.  <a href="group__KETCube__LoRa.html#ga305c26bb98612c142aba6a8e41819464">More...</a><br /></td></tr>
 <tr class="separator:ga305c26bb98612c142aba6a8e41819464"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a07cffe8787773c5c5714367481e55149"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a07cffe8787773c5c5714367481e55149">ketCube_lora_Send_To</a> (uint8_t port, uint8_t *buffer, uint8_t *len)</td></tr>
+<tr class="memdesc:a07cffe8787773c5c5714367481e55149"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process lora state and prepare data...  <a href="#a07cffe8787773c5c5714367481e55149">More...</a><br /></td></tr>
+<tr class="separator:a07cffe8787773c5c5714367481e55149"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga0c656dfa22c2429c16b37b51b2b74b63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#ga0c656dfa22c2429c16b37b51b2b74b63">ketCube_lora_Send</a> (uint8_t *buffer, uint8_t *len)</td></tr>
 <tr class="memdesc:ga0c656dfa22c2429c16b37b51b2b74b63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process lora state and prepare data...  <a href="group__KETCube__LoRa.html#ga0c656dfa22c2429c16b37b51b2b74b63">More...</a><br /></td></tr>
 <tr class="separator:ga0c656dfa22c2429c16b37b51b2b74b63"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:gab64f898e7bf0a1feeace8359c8a676c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#gab64f898e7bf0a1feeace8359c8a676c3">ketCube_lora_AsyncSend</a> (uint8_t *buffer, uint8_t *len)</td></tr>
 <tr class="memdesc:gab64f898e7bf0a1feeace8359c8a676c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process lora state and prepare data (for asynchronous send)...  <a href="group__KETCube__LoRa.html#gab64f898e7bf0a1feeace8359c8a676c3">More...</a><br /></td></tr>
 <tr class="separator:gab64f898e7bf0a1feeace8359c8a676c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abe416bba8146fef9b1648157295341db"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#abe416bba8146fef9b1648157295341db">ketCube_lora_RemoteTerminalSend</a> (uint8_t *buffer, uint8_t *len)</td></tr>
+<tr class="memdesc:abe416bba8146fef9b1648157295341db"><td class="mdescLeft">&#160;</td><td class="mdescRight">Process lora state and prepare data for remote terminal sending.  <a href="#abe416bba8146fef9b1648157295341db">More...</a><br /></td></tr>
+<tr class="separator:abe416bba8146fef9b1648157295341db"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga290e3e7929ea86d64a3614a3b6be293e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa.html#ga290e3e7929ea86d64a3614a3b6be293e">ketCube_lora_SleepEnter</a> (void)</td></tr>
 <tr class="memdesc:ga290e3e7929ea86d64a3614a3b6be293e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prepare sleep mode.  <a href="group__KETCube__LoRa.html#ga290e3e7929ea86d64a3614a3b6be293e">More...</a><br /></td></tr>
 <tr class="separator:ga290e3e7929ea86d64a3614a3b6be293e"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -115,6 +139,8 @@ Variables</h2></td></tr>
 <tr class="separator:a79ff84ab1f68d1ffa42bd132e5d6e2f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79936f3677c8247e073e64561bb5b832"><td class="memItemLeft" align="right" valign="top">static LoRaMainCallback_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a79936f3677c8247e073e64561bb5b832">LoRaMainCallbacks</a></td></tr>
 <tr class="separator:a79936f3677c8247e073e64561bb5b832"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1224d85bc832fbfcde245b5fb2626138"><td class="memItemLeft" align="right" valign="top">LoraFlagStatus&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a1224d85bc832fbfcde245b5fb2626138">LoraMacProcessRequest</a> = LORA_RESET</td></tr>
+<tr class="separator:a1224d85bc832fbfcde245b5fb2626138"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a36e11dc118d0a0d89c57d65274e67771"><td class="memItemLeft" align="right" valign="top">static LoRaParam_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a36e11dc118d0a0d89c57d65274e67771">LoRaParamInit</a></td></tr>
 <tr class="separator:a36e11dc118d0a0d89c57d65274e67771"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a496475f7c31ef83ee8748ab29caddb60"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structketCube__InterModMsg__t.html">ketCube_InterModMsg_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a496475f7c31ef83ee8748ab29caddb60">ketCube_lora_rxData</a></td></tr>
@@ -123,18 +149,12 @@ Variables</h2></td></tr>
 <tr class="separator:ac3e612a00cd805a09e341ba1de9c4f03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a58eb380ae60008b6453ab5b7985e04e4"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structketCube__InterModMsg__t.html">ketCube_InterModMsg_t</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a58eb380ae60008b6453ab5b7985e04e4">modMsgQueue</a> [2]</td></tr>
 <tr class="separator:a58eb380ae60008b6453ab5b7985e04e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54aefba7f330b07a06f4c9447e582f09"><td class="memItemLeft" align="right" valign="top">static uint8_t *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a54aefba7f330b07a06f4c9447e582f09">dataBuffer</a></td></tr>
-<tr class="separator:a54aefba7f330b07a06f4c9447e582f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0b80f82d280da2570e375948f1f3d79"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#af0b80f82d280da2570e375948f1f3d79">dataBufferLen</a></td></tr>
-<tr class="separator:af0b80f82d280da2570e375948f1f3d79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1e8c4ebb9f8925e27a75b489a893c961"><td class="memItemLeft" align="right" valign="top">static uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="ketCube__lora_8c.html#a1e8c4ebb9f8925e27a75b489a893c961">txPort</a></td></tr>
-<tr class="separator:a1e8c4ebb9f8925e27a75b489a893c961"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>This file contains the KETCube module wrapper for Semtech's LoRa. </p>
-<dl class="section author"><dt>Author</dt><dd>Jan Belohoubek </dd></dl>
+<dl class="section author"><dt>Author</dt><dd>Jan Belohoubek, Jan Zaruba </dd></dl>
 <dl class="section version"><dt>Version</dt><dd>0.2 </dd></dl>
-<dl class="section date"><dt>Date</dt><dd>2018-11-20 </dd></dl>
+<dl class="section date"><dt>Date</dt><dd>2019-05-15 </dd></dl>
 <dl class="section attention"><dt>Attention</dt><dd></dd></dl>
 <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen All rights reserved.</center></h2>
 <p>Developed by: The SmartCampus Team Department of Technologies and Measurement www.smartcampus.cz | www.zcu.cz</p>
@@ -191,24 +211,80 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="adec7998dab8757be490ccc5460bb9f8a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adec7998dab8757be490ccc5460bb9f8a">&#9670;&nbsp;</a></span>LORAWAN_CONFIRMED_MSG</h2>
+<a id="ae86a6819c8c7ab7ff811f8b94c5b876b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae86a6819c8c7ab7ff811f8b94c5b876b">&#9670;&nbsp;</a></span>LORAWAN_CUSTOM_DATA_PORT</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define LORAWAN_CONFIRMED_MSG&#160;&#160;&#160;DISABLE</td>
+          <td class="memname">#define LORAWAN_CUSTOM_DATA_PORT&#160;&#160;&#160;12</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>LoRaWAN confirmed messages </p>
+
+</div>
+</div>
+<a id="a1baf489c13bd5f856d63321474d8009a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1baf489c13bd5f856d63321474d8009a">&#9670;&nbsp;</a></span>LORAWAN_DEFAULT_CONFIRM_MSG_STATE</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LORAWAN_DEFAULT_CONFIRM_MSG_STATE&#160;&#160;&#160;LORAWAN_UNCONFIRMED_MSG</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>LoRaWAN default confirm state </p>
+
+</div>
+</div>
+<a id="a90590e66c5663f124e6d6cb5deb87bb9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a90590e66c5663f124e6d6cb5deb87bb9">&#9670;&nbsp;</a></span>LORAWAN_HEX_DISPLAY_PORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LORAWAN_HEX_DISPLAY_PORT&#160;&#160;&#160;10</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab9bb5ca1593187c3ea2319499c3ec735"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9bb5ca1593187c3ea2319499c3ec735">&#9670;&nbsp;</a></span>LORAWAN_REMOTE_TERMINAL_PORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LORAWAN_REMOTE_TERMINAL_PORT&#160;&#160;&#160;13</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ab108726c96003935ede2a2a80dc8b00e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab108726c96003935ede2a2a80dc8b00e">&#9670;&nbsp;</a></span>LORAWAN_STRING_DISPLAY_PORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define LORAWAN_STRING_DISPLAY_PORT&#160;&#160;&#160;11</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ae1613cd9100a3863ffb65b117895515b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1613cd9100a3863ffb65b117895515b">&#9670;&nbsp;</a></span>ketCube_lora_OnTimerLed()</h2>
+<a id="a2ebec6b914e278172faf75b0ca151809"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ebec6b914e278172faf75b0ca151809">&#9670;&nbsp;</a></span>ketCube_lora_ConfirmClass()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -217,7 +293,33 @@ Variables</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void ketCube_lora_OnTimerLed </td>
+          <td class="memname">static void ketCube_lora_ConfirmClass </td>
+          <td>(</td>
+          <td class="paramtype">DeviceClass_t&#160;</td>
+          <td class="paramname"><em>Class</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a07e587c626199463189fc86f837bc4f8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07e587c626199463189fc86f837bc4f8">&#9670;&nbsp;</a></span>ketCube_lora_HasJoined()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_lora_HasJoined </td>
           <td>(</td>
           <td class="paramtype">void&#160;</td>
           <td class="paramname"></td><td>)</td>
@@ -231,7 +333,115 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+</div>
+</div>
+<a id="a36e82be3fb7d05e36b6c9d8ec1fe31a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36e82be3fb7d05e36b6c9d8ec1fe31a8">&#9670;&nbsp;</a></span>ketCube_lora_MacProcessNotify()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_lora_MacProcessNotify </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6076b69ac47bad04908931d8cb92b957"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6076b69ac47bad04908931d8cb92b957">&#9670;&nbsp;</a></span>ketCube_lora_McpsDataConfirm()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_lora_McpsDataConfirm </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a6d2b66b08190646978bc588df4ff97fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d2b66b08190646978bc588df4ff97fd">&#9670;&nbsp;</a></span>ketCube_lora_OnTimerLed()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_lora_OnTimerLed </td>
+          <td>(</td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>context</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 <p>LoRa Tx LED callback ... </p>
+
+</div>
+</div>
+<a id="abe416bba8146fef9b1648157295341db"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe416bba8146fef9b1648157295341db">&#9670;&nbsp;</a></span>ketCube_lora_RemoteTerminalSend()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_lora_RemoteTerminalSend </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Process lora state and prepare data for remote terminal sending. </p>
 
 </div>
 </div>
@@ -263,26 +473,29 @@ Variables</h2></td></tr>
 
 </div>
 </div>
-<a id="a24793b3d8b6c4ab86752c6ccfc5f49c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24793b3d8b6c4ab86752c6ccfc5f49c6">&#9670;&nbsp;</a></span>ketCube_lora_TxData()</h2>
+<a id="a07cffe8787773c5c5714367481e55149"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a07cffe8787773c5c5714367481e55149">&#9670;&nbsp;</a></span>ketCube_lora_Send_To()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void ketCube_lora_TxData </td>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_lora_Send_To </td>
           <td>(</td>
-          <td class="paramtype">lora_AppData_t *&#160;</td>
-          <td class="paramname"><em>AppData</em>, </td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>port</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">FunctionalState *&#160;</td>
-          <td class="paramname"><em>IsTxConfirmed</em>&#160;</td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t *&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -290,6 +503,29 @@ Variables</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+<p>Process lora state and prepare data... </p>
+
+</div>
+</div>
+<a id="a40e6f022adc818c32c9e73ad879fc137"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40e6f022adc818c32c9e73ad879fc137">&#9670;&nbsp;</a></span>ketCube_lora_SendData()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__KETCube__cfg.html#ga7f84d5889652a062630abad7168ade61">ketCube_cfg_ModError_t</a> ketCube_lora_SendData </td>
+          <td>(</td>
+          <td class="paramtype">lora_AppData_t *&#160;</td>
+          <td class="paramname"><em>AppData</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel">static</span></span>  </td>
@@ -297,55 +533,35 @@ Variables</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>LoRa Tx Data callback ... </p>
+</div>
+</div>
+<a id="ae1e4e6007061c81ec0cfb0dea6c60a89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1e4e6007061c81ec0cfb0dea6c60a89">&#9670;&nbsp;</a></span>ketCube_lora_TxNeeded()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ketCube_lora_TxNeeded </td>
+          <td>(</td>
+          <td class="paramtype">void&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <h2 class="groupheader">Variable Documentation</h2>
-<a id="a54aefba7f330b07a06f4c9447e582f09"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54aefba7f330b07a06f4c9447e582f09">&#9670;&nbsp;</a></span>dataBuffer</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t* dataBuffer</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="af0b80f82d280da2570e375948f1f3d79"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af0b80f82d280da2570e375948f1f3d79">&#9670;&nbsp;</a></span>dataBufferLen</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t dataBufferLen</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
 <a id="a496475f7c31ef83ee8748ab29caddb60"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a496475f7c31ef83ee8748ab29caddb60">&#9670;&nbsp;</a></span>ketCube_lora_rxData</h2>
 
@@ -374,6 +590,20 @@ Variables</h2></td></tr>
 
 </div>
 </div>
+<a id="a1224d85bc832fbfcde245b5fb2626138"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1224d85bc832fbfcde245b5fb2626138">&#9670;&nbsp;</a></span>LoraMacProcessRequest</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">LoraFlagStatus LoraMacProcessRequest = LORA_RESET</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a79936f3677c8247e073e64561bb5b832"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a79936f3677c8247e073e64561bb5b832">&#9670;&nbsp;</a></span>LoRaMainCallbacks</h2>
 
@@ -393,9 +623,13 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= { HW_GetBatteryLevel,</div><div class="line">    <a class="code" href="group__KETCube__LoRa__CMD.html#ga5256ed7f349b8c486e4d493481605dc6">HW_GetUniqueId</a>,</div><div class="line">    HW_GetRandomSeed,</div><div class="line">    <a class="code" href="ketCube__lora_8c.html#a24793b3d8b6c4ab86752c6ccfc5f49c6">ketCube_lora_TxData</a>,</div><div class="line">    <a class="code" href="ketCube__lora_8c.html#a5e919a8ccbb324f02c37fba575302de1">ketCube_lora_RxData</a></div><div class="line">}</div><div class="ttc" id="ketCube__lora_8c_html_a5e919a8ccbb324f02c37fba575302de1"><div class="ttname"><a href="ketCube__lora_8c.html#a5e919a8ccbb324f02c37fba575302de1">ketCube_lora_RxData</a></div><div class="ttdeci">static void ketCube_lora_RxData(lora_AppData_t *AppData)</div><div class="ttdoc">LoRa Rx Data callback ... </div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:255</div></div>
+<b>Initial value:</b><div class="fragment"><div class="line">= {HW_GetBatteryLevel,</div><div class="line">                                                HW_GetTemperatureLevel,</div><div class="line">                                                <a class="code" href="group__KETCube__LoRa__CMD.html#ga5256ed7f349b8c486e4d493481605dc6">HW_GetUniqueId</a>,</div><div class="line">                                                HW_GetRandomSeed,</div><div class="line">                                                <a class="code" href="ketCube__lora_8c.html#a5e919a8ccbb324f02c37fba575302de1">ketCube_lora_RxData</a>,</div><div class="line">                                                <a class="code" href="ketCube__lora_8c.html#a07e587c626199463189fc86f837bc4f8">ketCube_lora_HasJoined</a>,</div><div class="line">                                                <a class="code" href="ketCube__lora_8c.html#a2ebec6b914e278172faf75b0ca151809">ketCube_lora_ConfirmClass</a>,</div><div class="line">                                                <a class="code" href="ketCube__lora_8c.html#ae1e4e6007061c81ec0cfb0dea6c60a89">ketCube_lora_TxNeeded</a>,</div><div class="line">                                                <a class="code" href="ketCube__lora_8c.html#a36e82be3fb7d05e36b6c9d8ec1fe31a8">ketCube_lora_MacProcessNotify</a>,</div><div class="line">                                                <a class="code" href="ketCube__lora_8c.html#a6076b69ac47bad04908931d8cb92b957">ketCube_lora_McpsDataConfirm</a>}</div><div class="ttc" id="ketCube__lora_8c_html_a2ebec6b914e278172faf75b0ca151809"><div class="ttname"><a href="ketCube__lora_8c.html#a2ebec6b914e278172faf75b0ca151809">ketCube_lora_ConfirmClass</a></div><div class="ttdeci">static void ketCube_lora_ConfirmClass(DeviceClass_t Class)</div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:392</div></div>
+<div class="ttc" id="ketCube__lora_8c_html_a6076b69ac47bad04908931d8cb92b957"><div class="ttname"><a href="ketCube__lora_8c.html#a6076b69ac47bad04908931d8cb92b957">ketCube_lora_McpsDataConfirm</a></div><div class="ttdeci">static void ketCube_lora_McpsDataConfirm(void)</div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:416</div></div>
+<div class="ttc" id="ketCube__lora_8c_html_ae1e4e6007061c81ec0cfb0dea6c60a89"><div class="ttname"><a href="ketCube__lora_8c.html#ae1e4e6007061c81ec0cfb0dea6c60a89">ketCube_lora_TxNeeded</a></div><div class="ttdeci">static void ketCube_lora_TxNeeded(void)</div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:405</div></div>
+<div class="ttc" id="ketCube__lora_8c_html_a36e82be3fb7d05e36b6c9d8ec1fe31a8"><div class="ttname"><a href="ketCube__lora_8c.html#a36e82be3fb7d05e36b6c9d8ec1fe31a8">ketCube_lora_MacProcessNotify</a></div><div class="ttdeci">static void ketCube_lora_MacProcessNotify(void)</div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:377</div></div>
+<div class="ttc" id="ketCube__lora_8c_html_a5e919a8ccbb324f02c37fba575302de1"><div class="ttname"><a href="ketCube__lora_8c.html#a5e919a8ccbb324f02c37fba575302de1">ketCube_lora_RxData</a></div><div class="ttdeci">static void ketCube_lora_RxData(lora_AppData_t *AppData)</div><div class="ttdoc">LoRa Rx Data callback ... </div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:314</div></div>
+<div class="ttc" id="ketCube__lora_8c_html_a07e587c626199463189fc86f837bc4f8"><div class="ttname"><a href="ketCube__lora_8c.html#a07e587c626199463189fc86f837bc4f8">ketCube_lora_HasJoined</a></div><div class="ttdeci">static void ketCube_lora_HasJoined(void)</div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:382</div></div>
 <div class="ttc" id="group__KETCube__LoRa__CMD_html_ga5256ed7f349b8c486e4d493481605dc6"><div class="ttname"><a href="group__KETCube__LoRa__CMD.html#ga5256ed7f349b8c486e4d493481605dc6">HW_GetUniqueId</a></div><div class="ttdeci">void HW_GetUniqueId(uint8_t *id)</div></div>
-<div class="ttc" id="ketCube__lora_8c_html_a24793b3d8b6c4ab86752c6ccfc5f49c6"><div class="ttname"><a href="ketCube__lora_8c.html#a24793b3d8b6c4ab86752c6ccfc5f49c6">ketCube_lora_TxData</a></div><div class="ttdeci">static void ketCube_lora_TxData(lora_AppData_t *AppData, FunctionalState *IsTxConfirmed)</div><div class="ttdoc">LoRa Tx Data callback ... </div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:220</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -418,8 +652,9 @@ Variables</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= { TX_ON_TIMER,</div><div class="line">    10000,                      </div><div class="line">    CLASS_A,</div><div class="line">    <a class="code" href="ketCube__lora_8c.html#adac4009d9987bc72cbd980c1cfed9d65">LORAWAN_ADR_ON</a>,</div><div class="line">    DR_0,</div><div class="line">    LORAWAN_PUBLIC_NETWORK</div><div class="line">}</div><div class="ttc" id="ketCube__lora_8c_html_adac4009d9987bc72cbd980c1cfed9d65"><div class="ttname"><a href="ketCube__lora_8c.html#adac4009d9987bc72cbd980c1cfed9d65">LORAWAN_ADR_ON</a></div><div class="ttdeci">#define LORAWAN_ADR_ON</div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:70</div></div>
-</div><!-- fragment -->
+<b>Initial value:</b><div class="fragment"><div class="line">= {<a class="code" href="ketCube__lora_8c.html#adac4009d9987bc72cbd980c1cfed9d65">LORAWAN_ADR_ON</a>,</div><div class="line">                                    DR_0,</div><div class="line">                                    LORAWAN_PUBLIC_NETWORK}</div><div class="ttc" id="ketCube__lora_8c_html_adac4009d9987bc72cbd980c1cfed9d65"><div class="ttname"><a href="ketCube__lora_8c.html#adac4009d9987bc72cbd980c1cfed9d65">LORAWAN_ADR_ON</a></div><div class="ttdeci">#define LORAWAN_ADR_ON</div><div class="ttdef"><b>Definition:</b> ketCube_lora.c:71</div></div>
+</div><!-- fragment --><p>Initialises the Lora Parameters </p>
+
 </div>
 </div>
 <a id="a58eb380ae60008b6453ab5b7985e04e4"></a>
@@ -455,28 +690,6 @@ Variables</h2></td></tr>
       <table class="memname">
         <tr>
           <td class="memname">TimerEvent_t TxLedTimer</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a1e8c4ebb9f8925e27a75b489a893c961"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1e8c4ebb9f8925e27a75b489a893c961">&#9670;&nbsp;</a></span>txPort</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint8_t txPort</td>
         </tr>
       </table>
   </td>

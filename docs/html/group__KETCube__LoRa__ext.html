@@ -50,18 +50,18 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga2493ece6739bea6c26b03c4825365f18"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa__ext.html#ga2493ece6739bea6c26b03c4825365f18">ketCube_lora_OTAAJoin</a> (ApplyCFListParams_t *applyCFList)</td></tr>
-<tr class="memdesc:ga2493ece6739bea6c26b03c4825365f18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print OTAA Join-related info.  <a href="#ga2493ece6739bea6c26b03c4825365f18">More...</a><br /></td></tr>
-<tr class="separator:ga2493ece6739bea6c26b03c4825365f18"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga4255f3c9b79c793c80a3c7c88fc7644c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa__ext.html#ga4255f3c9b79c793c80a3c7c88fc7644c">ketCube_lora_PrintCFList</a> (ApplyCFListParams_t *applyCFList)</td></tr>
-<tr class="memdesc:ga4255f3c9b79c793c80a3c7c88fc7644c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print Cf list as received in a LoRaWAN Join response.  <a href="#ga4255f3c9b79c793c80a3c7c88fc7644c">More...</a><br /></td></tr>
-<tr class="separator:ga4255f3c9b79c793c80a3c7c88fc7644c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga9fff58dd17a20e025a55ef68b61ea388"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa__ext.html#ga9fff58dd17a20e025a55ef68b61ea388">ketCube_lora_OTAAJoin</a> (LoRaMacNvmCtx_t *NvmCtx, ApplyCFListParams_t *CFList)</td></tr>
+<tr class="memdesc:ga9fff58dd17a20e025a55ef68b61ea388"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print OTAA Join-related info.  <a href="#ga9fff58dd17a20e025a55ef68b61ea388">More...</a><br /></td></tr>
+<tr class="separator:ga9fff58dd17a20e025a55ef68b61ea388"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga1fb00eea8c45456a519880527a460ff7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__LoRa__ext.html#ga1fb00eea8c45456a519880527a460ff7">ketCube_lora_PrintCFList</a> (ApplyCFListParams_t *CFList)</td></tr>
+<tr class="memdesc:ga1fb00eea8c45456a519880527a460ff7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print Cf list as received in a LoRaWAN Join response.  <a href="#ga1fb00eea8c45456a519880527a460ff7">More...</a><br /></td></tr>
+<tr class="separator:ga1fb00eea8c45456a519880527a460ff7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>KETCube LoRaWAN stack Extensions. </p>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga2493ece6739bea6c26b03c4825365f18"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga2493ece6739bea6c26b03c4825365f18">&#9670;&nbsp;</a></span>ketCube_lora_OTAAJoin()</h2>
+<a id="ga9fff58dd17a20e025a55ef68b61ea388"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga9fff58dd17a20e025a55ef68b61ea388">&#9670;&nbsp;</a></span>ketCube_lora_OTAAJoin()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -69,19 +69,36 @@ Functions</h2></td></tr>
         <tr>
           <td class="memname">void ketCube_lora_OTAAJoin </td>
           <td>(</td>
-          <td class="paramtype">ApplyCFListParams_t *&#160;</td>
-          <td class="paramname"><em>applyCFList</em></td><td>)</td>
+          <td class="paramtype">LoRaMacNvmCtx_t *&#160;</td>
+          <td class="paramname"><em>NvmCtx</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">ApplyCFListParams_t *&#160;</td>
+          <td class="paramname"><em>CFList</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
 </div><div class="memdoc">
 
 <p>Print OTAA Join-related info. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">LoRaMacRxPayload</td><td>LoRaWAN MAC join RX payload </td></tr>
+    <tr><td class="paramname">CFList</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="ga4255f3c9b79c793c80a3c7c88fc7644c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga4255f3c9b79c793c80a3c7c88fc7644c">&#9670;&nbsp;</a></span>ketCube_lora_PrintCFList()</h2>
+<a id="ga1fb00eea8c45456a519880527a460ff7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga1fb00eea8c45456a519880527a460ff7">&#9670;&nbsp;</a></span>ketCube_lora_PrintCFList()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -90,7 +107,7 @@ Functions</h2></td></tr>
           <td class="memname">void ketCube_lora_PrintCFList </td>
           <td>(</td>
           <td class="paramtype">ApplyCFListParams_t *&#160;</td>
-          <td class="paramname"><em>applyCFList</em></td><td>)</td>
+          <td class="paramname"><em>CFList</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

@@ -77,6 +77,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga5b75cd493a6c60461b0cf2be879c4382"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__EEPROM.html#gaabe40c2b465efb7244e52b5fd9e1a53c">ketCube_EEPROM_Error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__EEPROM.html#ga5b75cd493a6c60461b0cf2be879c4382">ketCube_EEPROM_WriteBuffer</a> (uint32_t addr, uint8_t *data, uint8_t len)</td></tr>
 <tr class="memdesc:ga5b75cd493a6c60461b0cf2be879c4382"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write Buffer to the EEPROM.  <a href="#ga5b75cd493a6c60461b0cf2be879c4382">More...</a><br /></td></tr>
 <tr class="separator:ga5b75cd493a6c60461b0cf2be879c4382"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga153bc7d4102bb19b74139df1e746eef8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__EEPROM.html#gaabe40c2b465efb7244e52b5fd9e1a53c">ketCube_EEPROM_Error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__EEPROM.html#ga153bc7d4102bb19b74139df1e746eef8">ketCube_EEPROM_Erase</a> (uint32_t addr, uint8_t len)</td></tr>
+<tr class="memdesc:ga153bc7d4102bb19b74139df1e746eef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erase block of the EEPROM memory.  <a href="#ga153bc7d4102bb19b74139df1e746eef8">More...</a><br /></td></tr>
+<tr class="separator:ga153bc7d4102bb19b74139df1e746eef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <p>KETCube EEPROM driver for STM32L082. </p>
@@ -147,6 +150,49 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ga153bc7d4102bb19b74139df1e746eef8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga153bc7d4102bb19b74139df1e746eef8">&#9670;&nbsp;</a></span>ketCube_EEPROM_Erase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__EEPROM.html#gaabe40c2b465efb7244e52b5fd9e1a53c">ketCube_EEPROM_Error_t</a> ketCube_EEPROM_Erase </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Erase block of the EEPROM memory. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">addr</td><td>EEPROM offset (from the base address) </td></tr>
+    <tr><td class="paramname">len</td><td>data buffer length</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">error</td><td>code, KETCUBE_EEPROM_OK if success </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="gadba376c860eb573916279bf4f0f8f1df"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gadba376c860eb573916279bf4f0f8f1df">&#9670;&nbsp;</a></span>ketCube_EEPROM_ReadBuffer()</h2>
 

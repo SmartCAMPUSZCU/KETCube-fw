@@ -68,12 +68,15 @@
 #define KETCUBE_TERMINAL_HISTORY_LEN     3      /*!< Remember last 3 commands */
 #define KETCUBE_TERMINAL_CMD_MAX_LEN     128    /*!< Max command length */
 
-#define KETCUBE_TERMINAL_PRINTF(...)     ketCube_terminal_UsartPrint(__VA_ARGS__)
+#define KETCUBE_TERMINAL_PRINTF(...)     ketCube_terminal_UsartPrint(__VA_ARGS__)    /*!< Printf wrapper */
 
-#define KETCUBE_TERMINAL_PROMPT()        KETCUBE_TERMINAL_PRINTF(">> ")
-#define KETCUBE_TERMINAL_ENDL()          KETCUBE_TERMINAL_PRINTF("\n\r")
-#define KETCUBE_TERMINAL_CLR_LINE()      ketCube_terminal_ClearCmdLine()
+#define KETCUBE_TERMINAL_PROMPT()        KETCUBE_TERMINAL_PRINTF(">> ")              /*!< Print command line PROMPT */
+#define KETCUBE_TERMINAL_ENDL()          KETCUBE_TERMINAL_PRINTF("\n\r")             /*!< Print ASCI terminal ENDL */
+#define KETCUBE_TERMINAL_CLR_LINE()      ketCube_terminal_ClearCmdLine()             /*!< Clear ASCI terminal line */
 
+/**
+ * @brief Terminal user input item
+ */
 typedef struct {
     char buffer[KETCUBE_TERMINAL_CMD_MAX_LEN + 1];
     uint8_t ptr;

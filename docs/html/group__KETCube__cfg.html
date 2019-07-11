@@ -97,7 +97,8 @@ Typedefs</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:ga3a4d793e4316c6ac968fa54222f97c40"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> { <a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a7cf05885191bc5133efd45657d1dceae">KETCUBE_EEPROM_ALLOC_CORE</a> = 0, 
-<a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a215945d9302f2217830156920376d863">KETCUBE_EEPROM_ALLOC_MODULES</a> = 0
+<a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a215945d9302f2217830156920376d863">KETCUBE_EEPROM_ALLOC_MODULES</a> = 0, 
+<a class="el" href="group__KETCube__cfg.html#gga3a4d793e4316c6ac968fa54222f97c40a6d12328d695316fcb1d16dd890ae4a91">KETCUBE_EEPROM_ALLOC_LAST</a> = 2048
  }</td></tr>
 <tr class="memdesc:ga3a4d793e4316c6ac968fa54222f97c40"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allocated CFG EEPROM addreses.  <a href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">More...</a><br /></td></tr>
 <tr class="separator:ga3a4d793e4316c6ac968fa54222f97c40"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -150,6 +151,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga9d7fc7d9ac7a4755a67744059a1865f6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga8263966b13dc1b740c0ec0288f8e1f00">ketCube_cfg_Error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__cfg.html#ga9d7fc7d9ac7a4755a67744059a1865f6">ketCube_cfg_SaveStr</a> (char *data, ketCube_cfg_moduleIDs_t id, <a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> addr, <a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a> len)</td></tr>
 <tr class="memdesc:ga9d7fc7d9ac7a4755a67744059a1865f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save configuration data to EEPROM from string.  <a href="#ga9d7fc7d9ac7a4755a67744059a1865f6">More...</a><br /></td></tr>
 <tr class="separator:ga9d7fc7d9ac7a4755a67744059a1865f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga10e09ce8978cc6f2294a5d87be61dcf1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__KETCube__cfg.html#ga8263966b13dc1b740c0ec0288f8e1f00">ketCube_cfg_Error_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__KETCube__cfg.html#ga10e09ce8978cc6f2294a5d87be61dcf1">ketCube_cfg_SetDefaults</a> (ketCube_cfg_moduleIDs_t id, <a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a> addr, <a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a> len)</td></tr>
+<tr class="memdesc:ga10e09ce8978cc6f2294a5d87be61dcf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Erase configuration from EEPROM.  <a href="#ga10e09ce8978cc6f2294a5d87be61dcf1">More...</a><br /></td></tr>
+<tr class="separator:ga10e09ce8978cc6f2294a5d87be61dcf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
@@ -317,6 +321,8 @@ Variables</h2></td></tr>
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="gga3a4d793e4316c6ac968fa54222f97c40a7cf05885191bc5133efd45657d1dceae"></a>KETCUBE_EEPROM_ALLOC_CORE&#160;</td><td class="fielddoc"><p>KETCube core configuration base address &ndash; core configuration is located in module configuration area </p>
 </td></tr>
 <tr><td class="fieldname"><a id="gga3a4d793e4316c6ac968fa54222f97c40a215945d9302f2217830156920376d863"></a>KETCUBE_EEPROM_ALLOC_MODULES&#160;</td><td class="fielddoc"><p>Module configuration base address </p>
+</td></tr>
+<tr><td class="fieldname"><a id="gga3a4d793e4316c6ac968fa54222f97c40a6d12328d695316fcb1d16dd890ae4a91"></a>KETCUBE_EEPROM_ALLOC_LAST&#160;</td><td class="fielddoc"><p>Module configuration base address </p>
 </td></tr>
 </table>
 
@@ -660,6 +666,57 @@ Variables</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">data</td><td>pointer to a string </td></tr>
+    <tr><td class="paramname">id</td><td>module ID </td></tr>
+    <tr><td class="paramname">addr</td><td>EEPROM address </td></tr>
+    <tr><td class="paramname">len</td><td>EEPROM data length</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="retval"><dt>Return values</dt><dd>
+  <table class="retval">
+    <tr><td class="paramname">KETCUBE_CFG_OK</td><td>in case of success </td></tr>
+    <tr><td class="paramname">ketCube_cfg_Load_ERROR</td><td>in case of failure </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ga10e09ce8978cc6f2294a5d87be61dcf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga10e09ce8978cc6f2294a5d87be61dcf1">&#9670;&nbsp;</a></span>ketCube_cfg_SetDefaults()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__KETCube__cfg.html#ga8263966b13dc1b740c0ec0288f8e1f00">ketCube_cfg_Error_t</a> ketCube_cfg_SetDefaults </td>
+          <td>(</td>
+          <td class="paramtype">ketCube_cfg_moduleIDs_t&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__KETCube__cfg.html#ga3a4d793e4316c6ac968fa54222f97c40">ketCube_cfg_AllocEEPROM_t</a>&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__KETCube__cfg.html#ga11b71f9679c0c8f662a7bbc31f6dcb54">ketCube_cfg_LenEEPROM_t</a>&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Erase configuration from EEPROM. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
     <tr><td class="paramname">id</td><td>module ID </td></tr>
     <tr><td class="paramname">addr</td><td>EEPROM address </td></tr>
     <tr><td class="paramname">len</td><td>EEPROM data length</td></tr>
