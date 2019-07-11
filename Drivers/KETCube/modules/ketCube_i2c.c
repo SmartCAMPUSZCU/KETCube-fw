@@ -223,6 +223,10 @@ static void ketCube_I2C_Error()
 
 /* Deprecated functions below ... */
 
+/**
+  * @note This function is deprecated and will be removed in the next release(s)
+  * @todo This is a deprecated function
+  */
 uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                              uint16_t Size)
 {
@@ -245,6 +249,10 @@ uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
     }
 }
 
+/**
+  * @note This function is deprecated and will be removed in the next release(s)
+  * @todo This is a deprecated function
+  */
 uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                               uint16_t Size)
 {
@@ -267,6 +275,10 @@ uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
     }
 }
 
+/**
+  * @note This function is deprecated and will be removed in the next release(s)
+  * @todo This is a deprecated function
+  */
 uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
                                  uint16_t Size)
 {
@@ -287,6 +299,10 @@ uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
     }
 }
 
+/**
+  * @note This function is deprecated and will be removed in the next release(s)
+  * @todo This is a deprecated function
+  */
 uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
                                 uint16_t Size)
 {
@@ -312,6 +328,9 @@ uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
  * @param  devAddr I2C Address
  * @param  regAddr register address
  * @param  data pointer to 16-bit value
+ * 
+ * @note This function is deprecated and will be removed in the next release(s)
+ * @todo This is a deprecated function
  * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
@@ -347,6 +366,9 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data pointer to 16-bit value
  * 
+ * @note This function is deprecated and will be removed in the next release(s)
+ * @todo This is a deprecated function
+ * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
  */
@@ -371,6 +393,9 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data pointer to 8-bit value
  * @param  try # of tries when I2C failed
+ * 
+ * @note This function is deprecated and will be removed in the next release(s)
+ * @todo This is a deprecated function
  * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
@@ -410,6 +435,9 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data 8-bit register value
  * 
+ * @note This function is deprecated and will be removed in the next release(s)
+ * @todo This is a deprecated function
+ * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
  */
@@ -431,6 +459,9 @@ ketCube_cfg_ModError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
  * @param  data pointer to 8-bit value
  * @param  len data length to read
  * @param  try # of tries when I2C failed
+ * 
+ * @note This function is deprecated and will be removed in the next release(s)
+ * @todo This is a deprecated function
  * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
@@ -470,6 +501,9 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data pointer to 8-bit value
  * @param  try # of tries when I2C failed
+ * 
+ * @note This function is deprecated and will be removed in the next release(s)
+ * @todo This is a deprecated function
  * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
