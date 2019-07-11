@@ -66,6 +66,11 @@ ketCube_batMeas_moduleCfg_t ketCube_batMeas_moduleCfg; /*!< Module configuration
   *
   */
 ketCube_batMeas_battery_t ketCube_batMeas_batList[] = {
+    {((char *) &("PLUG")),
+     ((char *) &("External power source")),
+     0,  /* Undefined */
+     0}, /* Undefined */
+     
     {((char *) &("CR2032")),
      ((char *) &("Up to 560mAh battery")),
      3300,
@@ -118,7 +123,7 @@ ketCube_cfg_ModError_t ketCube_batMeas_DeInit(ketCube_InterModMsg_t ***
   */
 uint8_t ketcube_batLevel_GetBattery(void)
 {
-    uint8_t batteryLevel = 0;
+    uint8_t batteryLevel = 255;
     uint16_t measuredLevel = 0;
     uint32_t batteryLevelmV;
 
@@ -129,6 +134,11 @@ uint8_t ketcube_batLevel_GetBattery(void)
         ketCube_batMeas_batList
         [ketCube_batMeas_moduleCfg.selectedBattery].batDischarged;
 
+    if ((batMax == 0) && (batMin == 0)) {
+        /* The end-device is connected to an external power source */
+        return 0;
+    }
+        
     measuredLevel = HW_AdcReadChannel(ADC_CHANNEL_VREFINT);
 
     if (measuredLevel == 0) {
@@ -139,13 +149,15 @@ uint8_t ketcube_batLevel_GetBattery(void)
               (*KETCUBE_BATMEAS_VREFINT_CAL)) / measuredLevel);
     }
 
-    if (batteryLevelmV > batMax) {
+    if (batteryLevelmV == 0) {
+        batteryLevel = 255;  // The end-device was not able to measure the battery level
+    } else if (batteryLevelmV > batMax) {
         batteryLevel = 254;
     } else if (batteryLevelmV < batMin) {
-        batteryLevel = 0;
+        batteryLevel = 1;
     } else {
         batteryLevel =
-            (((uint32_t) (batteryLevelmV - batMin) * 254) /
+            (((uint32_t) (batteryLevelmV - batMin) * 253) /
              (batMax - batMin));
     }
 
