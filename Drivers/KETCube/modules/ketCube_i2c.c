@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_i2c.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-01-04
+ * @version 0.2
+ * @date    2019-07-11
  * @brief   This file contains the ketCube I2C driver
  *
  * @attention
@@ -140,6 +140,89 @@ ketCube_cfg_ModError_t ketCube_I2C_UnInit(void)
     return KETCUBE_CFG_MODULE_OK;
 }
 
+/**
+ * @brief  Read data
+ *
+ * @param addr I2C address
+ * @param buffer data buffer
+ * @param size buffer size 
+ * 
+ * @retval TRUE in case of success, FALSE in case of error
+ */
+bool ketCube_I2C_Read(uint8_t addr, uint8_t * buffer, uint16_t size)
+{
+    HAL_StatusTypeDef status = HAL_OK;
+
+    status =
+        HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, addr, buffer, size,
+                               KETCUBE_I2C_TIMEOUT);
+
+    /* Check the communication status */
+    if (status == HAL_OK) {
+        return TRUE;
+    } else if (status == HAL_ERROR) {
+        ketCube_I2C_Error();
+        return FALSE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * @brief  Write data
+ *
+ * @param addr I2C address
+ * @param buffer data buffer
+ * @param size buffer size
+ * 
+ * @retval TRUE in case of success, FALSE in case of error
+ */
+bool ketCube_I2C_Write(uint8_t addr, uint8_t * buffer, uint16_t size)
+{
+    HAL_StatusTypeDef status = HAL_OK;
+
+    status =
+        HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, addr, buffer, size,
+                                KETCUBE_I2C_TIMEOUT);
+
+    /* Check the communication status */
+    if (status == HAL_OK) {
+        return TRUE;
+    } else if (status == HAL_ERROR) {
+        ketCube_I2C_Error();
+        return FALSE;
+    } else {
+        return FALSE;
+    }
+}
+
+/**
+ * @brief  Manages error callback by re-initializing I2C
+ * @retval None
+ */
+static void ketCube_I2C_Error()
+{
+    uint8_t i;
+    uint8_t tmpInitRuns = initRuns;
+
+    ketCube_terminal_DriverSeverityPrintln(KETCUBE_I2C_NAME, KETCUBE_CFG_SEVERITY_DEBUG, "Re-Initialize()");
+
+    /* De-initialize the I2C comunication bus */
+    for (i = tmpInitRuns; i > 0; i--) {
+        ketCube_I2C_UnInit();
+    }
+    /* De-initialize the I2C comunication bus */
+    // HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
+
+    /* Re-Initiaize the I2C comunication bus */
+    for (i = tmpInitRuns; i > 0; i--) {
+        ketCube_I2C_Init();
+    }
+}
+
+
+/* Deprecated functions below ... */
+
 uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                              uint16_t Size)
 {
@@ -184,7 +267,6 @@ uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
     }
 }
 
-
 uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
                                  uint16_t Size)
 {
@@ -222,30 +304,6 @@ uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
         return 1;
     } else {
         return 1;
-    }
-}
-
-/**
- * @brief  Manages error callback by re-initializing I2C
- * @retval None
- */
-static void ketCube_I2C_Error()
-{
-    uint8_t i;
-    uint8_t tmpInitRuns = initRuns;
-
-    ketCube_terminal_DriverSeverityPrintln(KETCUBE_I2C_NAME, KETCUBE_CFG_SEVERITY_DEBUG, "Re-Initialize()");
-
-    /* De-initialize the I2C comunication bus */
-    for (i = tmpInitRuns; i > 0; i--) {
-        ketCube_I2C_UnInit();
-    }
-    /* De-initialize the I2C comunication bus */
-    // HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
-
-    /* Re-Initiaize the I2C comunication bus */
-    for (i = tmpInitRuns; i > 0; i--) {
-        ketCube_I2C_Init();
     }
 }
 

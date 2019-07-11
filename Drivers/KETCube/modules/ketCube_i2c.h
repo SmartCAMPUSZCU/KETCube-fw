@@ -2,7 +2,7 @@
  * @file    ketCube_i2c.h
  * @author  Jan Belohoubek
  * @version 0.2
- * @date    2018-07-12
+ * @date    2019-07-11
  * @brief   This file contains definitions for the ketCube I2C driver
  *
  * @attention
@@ -93,12 +93,29 @@ typedef enum {
 
 extern ketCube_cfg_ModError_t ketCube_I2C_Init(void);
 extern ketCube_cfg_ModError_t ketCube_I2C_UnInit(void);
+
+extern bool ketCube_I2C_Read(uint8_t addr, uint8_t * buffer, uint16_t size);
+extern bool ketCube_I2C_Write(uint8_t addr, uint8_t * buffer, uint16_t size);
+
+/**
+* @}
+*/
+
+
+/** @defgroup KETCube_I2C_DeprecatedFn Public deprecated Functions
+  * @brief Those functions will be removed in the next releases
+  * @{
+  */
+
 extern uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg,
                                     uint8_t * pBuffer, uint16_t Size);
+
 extern uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg,
                                      uint8_t * pBuffer, uint16_t Size);
+
 extern uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
                                         uint16_t Size);
+
 extern uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
                                        uint16_t Size);
 
@@ -129,6 +146,7 @@ extern ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
 extern ketCube_cfg_ModError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
                                                          uint8_t regAddr,
                                                          uint8_t data);
+
 /**
 * @}
 */

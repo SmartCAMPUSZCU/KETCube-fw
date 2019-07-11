@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_hdc1080.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-01-04
+ * @version 0.2
+ * @date    2019-07-11
  * @brief   This file contains the HDC1080 driver
  * 
  * HDC1080 Datasheet:
@@ -63,6 +63,40 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value);
 ketCube_cfg_ModError_t setHeaterState(ketCube_hdc1080_Htr_t status);
 ketCube_cfg_ModError_t getHeaterState(ketCube_hdc1080_Htr_t * status);
 
+
+/**
+ * @brief read HDC1080 register
+ *
+ * @param  regAddr register address
+ * @param  data pointer to 16-bit value
+ * 
+ * @retval TRUE in case of success, FALSE in case of error
+ */
+bool ketCube_hdc1080_readReg(uint8_t regAddr, uint16_t * data)
+{
+    uint8_t buffer[2];
+    
+    if (ketCube_I2C_Write
+        (KETCUBE_HDC1080_I2C_ADDRESS, (uint8_t *) & regAddr, 1) == FALSE) {
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "Write register address 0x%02X failed!", regAddr);
+        return FALSE;
+    }
+    
+    HAL_Delay(50);
+    
+    if (ketCube_I2C_Read
+        (KETCUBE_HDC1080_I2C_ADDRESS, (uint8_t *) & (buffer[0]), 2) == FALSE) {
+        ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
+                                      "Read register 0x%02X failed!", regAddr);
+        return FALSE;
+    }
+    
+    *data = (((uint16_t) buffer[0]) << 8) | buffer[1];
+    
+    return TRUE;
+}
+
 /**
  * @brief Initialize the HDC1080 sensor
  *
@@ -80,13 +114,13 @@ ketCube_cfg_ModError_t ketCube_hdc1080_Init(ketCube_InterModMsg_t *** msg)
     }
 
     ketCube_hdc1080_Init_t pxInit;
+    pxInit.i2c_address = KETCUBE_HDC1080_CONFIGURATION_REG;
     pxInit.TemperatureMeasurementResolution = KETCUBE_HDC1080_TRES_14BIT;
     pxInit.HumidityMeasurementResolution = KETCUBE_HDC1080_HRES_14BIT;
     pxInit.ModeOfAcquisition = KETCUBE_HDC1080_AQ_SEPARATE;
-
-    if (ketCube_I2C_TexasWriteReg
-        (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_CONFIGURATION_REG,
-         (uint16_t *) & pxInit)) {
+    
+    if (ketCube_I2C_Write
+        (KETCUBE_HDC1080_I2C_ADDRESS, (uint8_t *) & pxInit, 3) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
                                       "HDC1080 initialization failed");
         return KETCUBE_CFG_MODULE_ERROR;
@@ -118,9 +152,7 @@ ketCube_cfg_ModError_t getHumidity(uint16_t * value)
 {
     uint16_t rawH;
 
-    if (ketCube_I2C_TexasReadReg
-        (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_HUMIDITY_REG,
-         &rawH)) {
+    if (ketCube_hdc1080_readReg(KETCUBE_HDC1080_HUMIDITY_REG, &rawH) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
                                       "Read humidity failed!");
         return KETCUBE_CFG_MODULE_ERROR;
@@ -142,9 +174,7 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
 {
     uint16_t rawT;
 
-    if (ketCube_I2C_TexasReadReg
-        (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_TEMPERATURE_REG,
-         &rawT)) {
+    if (ketCube_hdc1080_readReg(KETCUBE_HDC1080_TEMPERATURE_REG, &rawT) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
                                       "Read temperature failed!");
         return KETCUBE_CFG_MODULE_ERROR;
@@ -166,11 +196,12 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
 ketCube_cfg_ModError_t setHeaterState(ketCube_hdc1080_Htr_t status)
 {
     ketCube_hdc1080_Init_t reg;
+    
+    reg.i2c_address = KETCUBE_HDC1080_CONFIGURATION_REG;
     reg.Heater = status;
-
-    if (ketCube_I2C_TexasWriteReg
-        (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_CONFIGURATION_REG,
-         (uint16_t *) & reg)) {
+    
+    if (ketCube_I2C_Write
+        (KETCUBE_HDC1080_I2C_ADDRESS, (uint8_t *) & reg, 3) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
                                       "Set heater failed!");
         return KETCUBE_CFG_MODULE_ERROR;
@@ -190,9 +221,7 @@ ketCube_cfg_ModError_t getHeaterState(ketCube_hdc1080_Htr_t * status)
 {
     ketCube_hdc1080_Init_t reg;
 
-    if (ketCube_I2C_TexasReadReg
-        (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_CONFIGURATION_REG,
-         (uint16_t *) & reg)) {
+    if (ketCube_hdc1080_readReg(KETCUBE_HDC1080_CONFIGURATION_REG, (uint16_t *) & (reg.rawData)) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDC1080,
                                       "Get heater failed!");
         return KETCUBE_CFG_MODULE_ERROR;
@@ -220,7 +249,7 @@ ketCube_cfg_ModError_t ketCube_hdc1080_ReadData(uint8_t * buffer,
     uint16_t temperature = 0;
     uint16_t humidity = 0;
 
-    /* in % * 10  */
+    /* in % * 10 */
     if (getHumidity(&humidity) == KETCUBE_CFG_MODULE_ERROR) {
         humidity = 0xFFFF;      // out-of the range value indicates error
     }

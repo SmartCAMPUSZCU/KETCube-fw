@@ -1,8 +1,8 @@
 /**
  * @file    ketCube_hdc1080.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-01-04
+ * @version 0.2
+ * @date    2019-07-11
  * @brief   This file contains definitions for the HDC1080 driver
  *
  * HDC1080 Datasheet:
@@ -147,6 +147,7 @@ extern ketCube_hdc1080_moduleCfg_t ketCube_hdc1080_moduleCfg;
 #pragma anon_unions
 #endif
 typedef struct {
+    uint8_t i2c_address;
     uint8_t rawData;
     struct {
         ketCube_hdc1080_HRes_t HumidityMeasurementResolution:2;
