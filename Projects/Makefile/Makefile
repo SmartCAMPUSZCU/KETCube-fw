@@ -228,6 +228,11 @@ $(OUTDIR)%.o: %.s
 	@echo Linking $@
 	@$(LD) $(OBJS) $(LDFLAGS) -o $@
 
+%.elf.dbg: CFLAGS  += -DDEBUG
+%.elf.dbg: $(OBJS)
+	@echo Linking $@
+	@$(LD) $(OBJS) $(LDFLAGS) -o $@
+
 %.hex: %.elf $(OBJS)
 	@echo Creating $@
 	@$(CP) -O ihex $< $@
@@ -255,21 +260,29 @@ stflash: $(OUTDIR)$(TARGET).bin
 	$(STLINK) reset
 	$(MAKE) sigdone
 
-ocd: erase
+erase:
+	$(STLINK) erase
+	$(MAKE) sigdone
+
+ocd:
+	@echo "If it is not possible to connect target, consider erasing target!"
 	openocd -f ketcube-openocd.cfg
 
 flash: $(OUTDIR)$(TARGET).elf
 	$(GDB) -x gdb_flash $(OUTDIR)$(TARGET).elf
 	$(MAKE) sigdone
-	
-erase:
-	$(STLINK) erase
-	$(MAKE) sigdone
 
-debug: CFLAGS  += -DDEBUG
-debug: $(OUTDIR)$(TARGET).elf
-	$(GDB) -x gdb_startup $(OUTDIR)$(TARGET).elf
+# This target is for commandline-based debugging
+# The "ocd" target is the prerequisity -- run it in separate terminal
+debug: $(OUTDIR)$(TARGET).elf.dbg
+	$(GDB) -x gdb_startup $(OUTDIR)$(TARGET).elf.dbg
 
+# This target is to allow interfacing with GDB clients - e.g. KDevelop
+# The "ocd" target is the prerequisity -- run it in separate terminal
+debugMI2: $(OUTDIR)$(TARGET).elf.dbg
+	$(GDB) --interpreter=mi2 -x gdb_startup $(OUTDIR)$(TARGET).elf.dbg
+
+# Signaling "DONE" on most Linux systems
 sigdone:
 	@echo "ALL DONE"
 	@paplay /usr/share/sounds/freedesktop/stereo/complete.oga
