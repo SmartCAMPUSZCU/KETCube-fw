@@ -23,5 +23,9 @@ set *0xE0042004 = (*0xE0042004) | 0x7
 # Set a breakpoint at main().
 break main
 
+# Uncomment following lines if PyCortexMDebug is pulled and installed
+# source PyCortexMDebug-master/scripts/gdb.py 
+# svd_load STM32L07x.svd
+
 # Run to the breakpoint.
 continue
