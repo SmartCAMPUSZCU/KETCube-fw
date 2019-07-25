@@ -10,12 +10,13 @@
       <TargetName>LORAWAN_DEVICE_EUIketCube</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060422::V5.06 update 4 (build 422)::ARMCC</pCCUsed>
+      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L072CZYx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.1.6.0</PackID>
+          <PackID>Keil.STM32L0xx_DFP.1.6.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x08000000,0x00030000) IRAM(0x20000000,0x00005000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -323,6 +324,7 @@
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>0</uC99>
+            <uGnu>0</uGnu>
             <useXO>0</useXO>
             <v6Lang>0</v6Lang>
             <v6LangP>0</v6LangP>
@@ -581,6 +583,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -636,6 +639,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -853,6 +857,26 @@
                 <FileArmAds/>
               </FileOption>
             </File>
+            <File>
+              <FileName>ketCube_remote_terminal.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\KETCube\core\ketCube_remote_terminal.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_remote_terminal.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\KETCube\core\ketCube_remote_terminal.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_terminal_common.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\KETCube\core\ketCube_terminal_common.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_terminal_common.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\..\KETCube\core\ketCube_terminal_common.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -908,6 +932,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
@@ -1058,6 +1083,7 @@
                     <uThumb>2</uThumb>
                     <uSurpInc>2</uSurpInc>
                     <uC99>2</uC99>
+                    <uGnu>2</uGnu>
                     <useXO>2</useXO>
                     <v6Lang>0</v6Lang>
                     <v6LangP>0</v6LangP>
