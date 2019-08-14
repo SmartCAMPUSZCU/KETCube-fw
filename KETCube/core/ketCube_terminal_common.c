@@ -58,6 +58,11 @@ static void ketCube_terminal_cmd_list(void);
 static void ketCube_terminal_cmd_enable(void);
 static void ketCube_terminal_cmd_disable(void);
 
+static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr);
+static void ketCube_terminal_setEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr);
+static void ketCube_terminal_getRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr);
+static void ketCube_terminal_setRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr);
+
 // List of KETCube commands
 #include "../../Projects/src/ketCube_cmdList.c" // include a project-specific file
 
