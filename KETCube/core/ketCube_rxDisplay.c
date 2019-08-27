@@ -78,11 +78,11 @@ ketCube_cfg_ModError_t ketCube_rxDisplay_ProcessData(ketCube_InterModMsg_t
     switch (msg->msg[0]) {
     case KETCUBE_RXDISPLAY_DATATYPE_RSSI:
         ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
-                                       "RSSI=%d; ", msg->msg[1]);
+                                       "RSSI=%d", msg->msg[1]);
         break;
     case KETCUBE_RXDISPLAY_DATATYPE_SNR:
         ketCube_terminal_AlwaysPrintln(KETCUBE_LISTS_MODULEID_RXDISPLAY,
-                                       "SNR=%d; ", msg->msg[1]);
+                                       "SNR=%d", msg->msg[1]);
         break;
     case KETCUBE_RXDISPLAY_DATATYPE_STRING:
         msg->msg[msg->msgLen - 1] = 0x00;       // to be sure ...

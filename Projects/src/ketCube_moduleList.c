@@ -205,7 +205,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                NULL,                              /* SleepExit() */
                &ketCube_ADC_ReadData,             /* GetSensorData() */
                NULL,                              /* SendData() */
-               ketCube_starNet_receiveData,       /* ReceiveData() */
+               NULL,                              /* ReceiveData() */
                NULL,                              /* ProcessData() */
                ketCube_starNetConcentrator_moduleCfg   /* Module cfg struct */
               ),

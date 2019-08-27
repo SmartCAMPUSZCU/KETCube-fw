@@ -1,9 +1,9 @@
 /**
  * @file    ketCube_starNet.c
  * @author  Jan Belohoubek
- * @version alpha
- * @date    2018-03-02
- * @brief   This file contains the KETCube starNet module
+ * @version 0.2
+ * @date    2019-08-27
+ * @brief   This file contains the KETCube starNet node and concentrator modules
  *
  * @attention
  *
@@ -60,48 +60,38 @@
 
 #ifdef KETCUBE_CFG_INC_MOD_STARNET
 
-ketCube_starNet_moduleCfg_t ketCube_starNetConcentrator_moduleCfg;       /*!< Module configuration storage */
-ketCube_starNet_moduleCfg_t ketCube_starNetNode_moduleCfg;               /*!< Module configuration storage */
+ketCube_starNet_moduleCfg_t ketCube_starNetConcentrator_moduleCfg;       /*!< Module starNetConcentrator configuration storage */
+ketCube_starNet_moduleCfg_t ketCube_starNetNode_moduleCfg;               /*!< Module starNetNode configuration storage */
 
-// Node Type
-ketCube_starNet_NodeType_t nodeType;
-
-// private functions
+/* private function prototypes */
 static void ketCube_starNet_OnRxError(void);
 static void ketCube_starNet_OnRxTimeout(void);
 static void ketCube_starNet_OnTxTimeout(void);
 static void ketCube_starNet_OnTxDone(void);
 static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
                                      int16_t rssi, int8_t snr);
-static void ketCube_starNet_OnCadDone(bool channelActivityDetected);
 
-// provate variables
+/* private variables */
 static RadioEvents_t RadioEvents;
+uint8_t txBuffer_len = 0;   /* how many bytes are ready to send */
 
-static volatile uint8_t rxDone = TRUE;
-static volatile uint8_t txDone = TRUE;
+/* State machine control */
+static ketCube_starNet_State_t moduleState;
+static uint8_t ketCube_starNet_dataBuff[KETCUBE_STARNET_DATA_BUFFER_LEN];
 
-// global variables
+/* global variables */
 ketCube_starNet_NodeType_t ketCube_starNet_nodeType;
+ketCube_starNet_NodeType_t nodeType; /*!< This device type: Node/Concentrator */
 
-// KETCube messaging
-ketCube_InterModMsg_t ketCube_starNet_rssi;
-ketCube_InterModMsg_t ketCube_starNet_snr;
-ketCube_InterModMsg_t ketCube_starNet_rxData;
-uint8_t ketCube_starNet_rxDataBuff[KETCUBE_STARNET_RX_DATA_BUFFER_LEN];
-uint8_t ketCube_starNet_snrMsgBuff[2];
-uint8_t ketCube_starNet_rssiMsgBuff[2];
-
-static ketCube_InterModMsg_t *modMsgQueue[4];
-
-
-#define FSK_FDEV                                    25e3        // Hz
-#define FSK_DATARATE                                50e3        // bps
-#define FSK_BANDWIDTH                               50e3        // Hz
-#define FSK_AFC_BANDWIDTH                           83.333e3    // Hz
-#define FSK_PREAMBLE_LENGTH                         5   // Same for Tx and Rx
+/* FSK parameters */
+#define FSK_FDEV                                    25000       /*!<  Hz */
+#define FSK_DATARATE                                50000       /*!<  bps */
+#define FSK_BANDWIDTH                               50000       /*!<  Hz */
+#define FSK_AFC_BANDWIDTH                           83333       /*!<  Hz */
+#define FSK_PREAMBLE_LENGTH                         5           /*!<  Same for Tx and Rx */
 #define FSK_FIX_LENGTH_PAYLOAD_ON                   FALSE
 #define RX_TIMEOUT_VALUE                            1000
+#define TX_TIMEOUT_VALUE                            3000
 
 /**
  * @brief Prepare sleep mode
@@ -114,8 +104,74 @@ static ketCube_InterModMsg_t *modMsgQueue[4];
 ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void)
 {
     if (ketCube_starNet_nodeType == KETCUBE_STARNET_CONCENTRATOR) {
+        
+        switch (moduleState) {
+            case KETCUBE_STARNET_STATE_RX_DONE:
+                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,
+                                             "RSSI=%d", (int16_t) (ketCube_starNet_dataBuff[0] | (uint16_t) (ketCube_starNet_dataBuff[1] << 8)));
+                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,
+                                             "SNR=%d", (int8_t) ketCube_starNet_dataBuff[2]);
+                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,
+                                             "DATA=%s", 
+                                             ketCube_common_bytes2Str(&(ketCube_starNet_dataBuff[3]), txBuffer_len-3));
+                break;
+            case KETCUBE_STARNET_STATE_RX_TIMEOUT:
+                ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Receiving data: TIMEOUT");
+                break;
+            case KETCUBE_STARNET_STATE_RX_ERROR:
+                ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Receiving data: ERROR");
+                break;
+            case KETCUBE_STARNET_STATE_RX_READY:
+                /* ready to start */
+                break;
+            case KETCUBE_STARNET_STATE_RX_PROGRESS:
+                // Do nothing -> exit!
+                
+                /* Do not enter sleep mode */
+                return KETCUBE_CFG_MODULE_ERROR;
+            default:
+                // in case of misconfiguration ... should never happen
+                break;
+        }
+        
+        /* Initialize Rx */
+        ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx START");
+        moduleState = KETCUBE_STARNET_STATE_RX_PROGRESS;        
+        Radio.Rx(RX_TIMEOUT_VALUE);
+                
+        /* Do not enter sleep mode */
         return KETCUBE_CFG_MODULE_ERROR;
     } else {
+        
+        /* State machione execution - do it periodically here*/
+        switch (moduleState) {
+            case KETCUBE_STARNET_STATE_TX_TIMEOUT:
+                ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Transmitting sensor data: TIMEOUT");
+            case KETCUBE_STARNET_STATE_TX_NEW_DATA:
+                ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE,
+                                 "Transmitting sensor data: %s",
+                                 ketCube_common_bytes2Str(&(ketCube_starNet_dataBuff[0]), txBuffer_len));
+                moduleState = KETCUBE_STARNET_STATE_TX_PROGRESS;
+                
+                Radio.Send(&(ketCube_starNet_dataBuff[0]), txBuffer_len);
+                break;
+            case KETCUBE_STARNET_STATE_TX_DONE:
+                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Transmitting sensor data: SUCCESS");
+                moduleState = KETCUBE_STARNET_STATE_TX_READY;
+                break;
+            case KETCUBE_STARNET_STATE_TX_ERROR:
+                ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Transmitting sensor data: ERROR");
+                moduleState = KETCUBE_STARNET_STATE_TX_READY;
+                break;
+            case KETCUBE_STARNET_STATE_TX_PROGRESS:
+                // do nothing
+                break;
+            default:
+                // in case of misconfiguration ... should never happen
+                moduleState = KETCUBE_STARNET_STATE_TX_READY;
+                break;
+        }
+        
         // will be changed for nodes in the future...
         return KETCUBE_CFG_MODULE_ERROR;
     }
@@ -138,73 +194,52 @@ ketCube_cfg_ModError_t ketCube_starNet_Init(ketCube_starNet_NodeType_t
     RadioEvents.RxTimeout = NULL;
     RadioEvents.RxError = NULL;
     RadioEvents.CadDone = NULL;
-    if (nodeType == KETCUBE_STARNET_CONCENTRATOR) {
-        RadioEvents.RxDone = ketCube_starNet_OnRxDone;
-        RadioEvents.RxTimeout = ketCube_starNet_OnRxTimeout;
-        RadioEvents.RxError = ketCube_starNet_OnRxError;
-        Radio.SetRxConfig(MODEM_FSK, FSK_BANDWIDTH, FSK_DATARATE,
-                          0, FSK_AFC_BANDWIDTH, FSK_PREAMBLE_LENGTH,
-                          0, FSK_FIX_LENGTH_PAYLOAD_ON, 0, TRUE,
-                          0, 0, FALSE, TRUE);
-    } else {
-        RadioEvents.TxDone = ketCube_starNet_OnTxDone;
-        RadioEvents.TxTimeout = ketCube_starNet_OnTxTimeout;
-        RadioEvents.CadDone = ketCube_starNet_OnCadDone;
-        Radio.SetTxConfig(MODEM_FSK, KETCUBE_STARNET_TX_OUTPUT_POWER,
-                          FSK_FDEV, 0, FSK_DATARATE, 0,
-                          FSK_PREAMBLE_LENGTH, FSK_FIX_LENGTH_PAYLOAD_ON,
-                          TRUE, 0, 0, 0, 10000);
-    }
 
     Radio.Init(&RadioEvents);
     Radio.SetChannel(KETCUBE_STARNET_RF_FREQUENCY);
 
+    if (nodeType == KETCUBE_STARNET_CONCENTRATOR) {
+        RadioEvents.RxDone = ketCube_starNet_OnRxDone;
+        RadioEvents.RxTimeout = ketCube_starNet_OnRxTimeout;
+        RadioEvents.RxError = ketCube_starNet_OnRxError;
+        Radio.SetRxConfig(MODEM_FSK, FSK_BANDWIDTH,
+                          FSK_DATARATE, 0, 
+                          FSK_AFC_BANDWIDTH, FSK_PREAMBLE_LENGTH,
+                          0, FSK_FIX_LENGTH_PAYLOAD_ON, 0, TRUE,
+                          0, 0, FALSE, TRUE);
+        
+        moduleState = KETCUBE_STARNET_STATE_RX_READY;
+    } else {
+        RadioEvents.TxDone = ketCube_starNet_OnTxDone;
+        RadioEvents.TxTimeout = ketCube_starNet_OnTxTimeout;
+        Radio.SetTxConfig(MODEM_FSK, KETCUBE_STARNET_TX_OUTPUT_POWER,
+                          FSK_FDEV, 0, FSK_DATARATE, 0,
+                          FSK_PREAMBLE_LENGTH, FSK_FIX_LENGTH_PAYLOAD_ON,
+                          TRUE, 0, 0, 0, TX_TIMEOUT_VALUE);
+        
+        moduleState = KETCUBE_STARNET_STATE_TX_READY;
+    }
+    
     return KETCUBE_CFG_MODULE_OK;
 }
 
 /**
   * @brief Initialize starNet Concentrator
-	* @retval KETCUBE_CFG_MODULE_OK in case of success
+  * 
+  * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
 ketCube_cfg_ModError_t
 ketCube_starNet_ConcentratorInit(ketCube_InterModMsg_t *** msg)
 {
     nodeType = KETCUBE_STARNET_CONCENTRATOR;
-
-#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
-    ketCube_starNet_rssi.msg = &(ketCube_starNet_rssiMsgBuff[0]);
-    ketCube_starNet_rssi.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_RSSI;
-    ketCube_starNet_rssi.msgLen = 0;
-    ketCube_starNet_rssi.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
-
-    ketCube_starNet_snr.msg = &(ketCube_starNet_snrMsgBuff[0]);
-    ketCube_starNet_snr.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_SNR;
-    ketCube_starNet_snr.msgLen = 0;
-    ketCube_starNet_snr.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
-
-    ketCube_starNet_rxData.msg = &(ketCube_starNet_rxDataBuff[0]);
-    ketCube_starNet_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
-    ketCube_starNet_rxData.msgLen = 0;
-    ketCube_starNet_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
-
-    modMsgQueue[0] = &ketCube_starNet_rssi;
-    modMsgQueue[1] = &ketCube_starNet_snr;
-    modMsgQueue[2] = &ketCube_starNet_rxData;
-    modMsgQueue[3] = NULL;
-#else
-    modMsgQueue[0] = NULL;
-#endif
-    
-    *msg = &(modMsgQueue[0]);
-
     return ketCube_starNet_Init(KETCUBE_STARNET_CONCENTRATOR);
 }
 
 /**
   * @brief Initialize starNet Node
   *
-	* @retval KETCUBE_CFG_MODULE_OK in case of success
+  * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
 ketCube_cfg_ModError_t ketCube_starNet_NodeInit(ketCube_InterModMsg_t ***
@@ -215,131 +250,80 @@ ketCube_cfg_ModError_t ketCube_starNet_NodeInit(ketCube_InterModMsg_t ***
 }
 
 /**
-  * @brief Receive sensor data
-  *
-  * @retval KETCUBE_CFG_MODULE_OK in case of success
-  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
-  */
-ketCube_cfg_ModError_t ketCube_starNet_receiveData(void)
-{
-    if (rxDone == TRUE) {
-        ketCube_terminal_NewDebugPrintln
-            (KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx START");
-        rxDone = FALSE;
-        Radio.Rx(RX_TIMEOUT_VALUE);
-    }
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-/**
   * @brief Send sensor data
-	*
+  *
   * @param buffer data buffer
   * @param len data length
   *
-	* @retval KETCUBE_CFG_MODULE_OK in case of success
+  * @retval KETCUBE_CFG_MODULE_OK in case of success
   * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
   */
 ketCube_cfg_ModError_t ketCube_starNet_sendData(uint8_t * buffer,
                                                 uint8_t * len)
 {
-    if (txDone != TRUE) {
+    if (moduleState != KETCUBE_STARNET_STATE_TX_READY) {
+        /* Tx in progress */
         return KETCUBE_CFG_MODULE_ERROR;
     }
-    txDone = FALSE;
-
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE,
-                                 "Tx DATA=%s",
-                                 ketCube_common_bytes2Str(&(buffer[0]), *len));
-
-    Radio.Send(buffer, *len);
-
+    
+    memcpy(&(ketCube_starNet_dataBuff[0]),  &(buffer[0]), ketCube_common_Min(*len, KETCUBE_STARNET_DATA_BUFFER_LEN));
+    txBuffer_len = ketCube_common_Min(*len, KETCUBE_STARNET_DATA_BUFFER_LEN);
+    moduleState = KETCUBE_STARNET_STATE_TX_NEW_DATA;
+    
     return KETCUBE_CFG_MODULE_OK;
 }
 
+/**
+ * @brief This function is executed on Tx Done event
+ */
 static void ketCube_starNet_OnTxDone(void)
 {
-    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE,
-                                     "Tx DONE");
-
-    txDone = TRUE;
-
+    moduleState = KETCUBE_STARNET_STATE_TX_DONE;
     Radio.Sleep();
 }
 
+/**
+ * @brief This function is executed on Rx Done event
+ */
 static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
                                      int16_t rssi, int8_t snr)
 {
-    uint16_t i;
-
     Radio.Sleep();
+    moduleState = KETCUBE_STARNET_STATE_RX_DONE;
 
-    rxDone = TRUE;
 
-    // previous msg not processed ... ignore this one
-    if ((ketCube_starNet_rssi.msgLen > 0) ||
-        (ketCube_starNet_snr.msgLen > 0) ||
-        (ketCube_starNet_rxData.msgLen > 0)) {
-        return;
-    }
+    ketCube_starNet_dataBuff[0] = (uint8_t) (rssi & 0xFF);
+    ketCube_starNet_dataBuff[1] = (uint8_t) (((uint16_t) rssi >> 8) & 0xFF);
+    ketCube_starNet_dataBuff[2] = (uint8_t) snr;
 
-    ketCube_starNet_rssi.msg[1] = rssi;
-    ketCube_starNet_snr.msg[1] = snr;
-    
-    ketCube_terminal_InfoPrintln
-        (KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR,
-         "Rx :: RSSI=%d; SNR=%d;DATA=%s", 
-         (int) rssi, (int) snr,
-         ketCube_common_bytes2Str(&(payload[0]), size));
-
-    for (i = 0;
-         (i < size) && ((i + 1) < KETCUBE_STARNET_RX_DATA_BUFFER_LEN);
-         i++) {
-        ketCube_starNet_rxData.msg[i + 1] = payload[i];
-    }
-
-    ketCube_starNet_rssi.msgLen = 2;
-    ketCube_starNet_snr.msgLen = 2;
-    ketCube_starNet_rxData.msgLen = i + 1;
+    memcpy(&(ketCube_starNet_dataBuff[3]), &(payload[0]), ketCube_common_Min(size, (KETCUBE_STARNET_DATA_BUFFER_LEN - 3)));
+    txBuffer_len = ketCube_common_Min((size + 3), KETCUBE_STARNET_DATA_BUFFER_LEN);
 }
 
+/**
+ * @brief This function is executed on radio Tx Timeout event
+ */
 static void ketCube_starNet_OnTxTimeout(void)
 {
-    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE,
-                                     "Tx TIMEOUT");
-
-    txDone = TRUE;
-
+    moduleState = KETCUBE_STARNET_STATE_TX_TIMEOUT;
     Radio.Sleep();
 }
 
+/**
+ * @brief This function is executed on radio Rx Timeout event
+ */
 static void ketCube_starNet_OnRxTimeout(void)
 {
-    ketCube_terminal_NewDebugPrintln
-        (KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx TIMEOUT");
-
-    rxDone = TRUE;
-
+    moduleState = KETCUBE_STARNET_STATE_RX_TIMEOUT;
     Radio.Sleep();
 }
 
+/**
+ * @brief This function is executed on radio Rx Error event
+ */
 static void ketCube_starNet_OnRxError(void)
 {
-    ketCube_terminal_NewDebugPrintln
-        (KETCUBE_LISTS_MODULEID_STARNET_CONCENTRATOR, "Rx :: ERROR");
-
-    rxDone = TRUE;
-
-    Radio.Sleep();
-}
-
-static void ketCube_starNet_OnCadDone(bool channelActivityDetected)
-{
-    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE,
-                                     "Tx ketCube_starNet_OnCadDone");
-
-    txDone = TRUE;
-
+    moduleState = KETCUBE_STARNET_STATE_RX_ERROR;
     Radio.Sleep();
 }
 

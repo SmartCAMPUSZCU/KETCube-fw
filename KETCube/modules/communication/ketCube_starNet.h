@@ -1,9 +1,9 @@
 /**
  * @file    ketCube_starNet.h
  * @author  Jan Belohoubek
- * @version alpha
- * @date    2018-03-02
- * @brief   This file contains definitions for the KETCube starNet module
+ * @version 0.2
+ * @date    2019-08-27
+ * @brief   This file contains definitions for the KETCube starNet node and concentrator modules
  *
  * @attention
  *
@@ -66,9 +66,54 @@ typedef struct ketCube_starNet_moduleCfg_t {
 extern ketCube_starNet_moduleCfg_t ketCube_starNetConcentrator_moduleCfg;
 extern ketCube_starNet_moduleCfg_t ketCube_starNetNode_moduleCfg;
 
-#define KETCUBE_STARNET_RF_FREQUENCY                                868000000   ///< Hz for US, define: 915000000 Hz
-#define KETCUBE_STARNET_TX_OUTPUT_POWER                             14  ///< dBm
-#define KETCUBE_STARNET_RX_DATA_BUFFER_LEN                          64  ///< Rx Data buffer length
+
+#if defined( REGION_AS923 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                923000000 // Hz
+
+#elif defined( REGION_AU915 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                915000000 // Hz
+
+#elif defined( REGION_CN470 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                470000000 // Hz
+
+#elif defined( REGION_CN779 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                779000000 // Hz
+
+#elif defined( REGION_EU433 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                433000000 // Hz
+
+#elif defined( REGION_EU868 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                868000000 // Hz
+
+#elif defined( REGION_KR920 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                920000000 // Hz
+
+#elif defined( REGION_IN865 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                865000000 // Hz
+
+#elif defined( REGION_US915 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                915000000 // Hz
+
+#elif defined( REGION_RU864 )
+
+#define KETCUBE_STARNET_RF_FREQUENCY                864000000 // Hz
+
+#else
+    #error "Define the frequency band in the compiler options."
+#endif
+
+
+#define KETCUBE_STARNET_TX_OUTPUT_POWER                             14  /*!< dBm */
+#define KETCUBE_STARNET_DATA_BUFFER_LEN                             64  /*!< Tx/Rx Data buffer length */
 
 /**
 * @brief  Error code type.
@@ -77,6 +122,24 @@ typedef enum {
     KETCUBE_STARNET_OK = (uint8_t) 0,
     KETCUBE_STARNET_ERROR = !KETCUBE_STARNET_OK
 } ketCube_starNet_Error_t;
+
+/**
+* @brief  StarNet states
+*/
+typedef enum {
+    KETCUBE_STARNET_STATE_TX_READY,
+    KETCUBE_STARNET_STATE_TX_DONE,
+    KETCUBE_STARNET_STATE_TX_NEW_DATA,
+    KETCUBE_STARNET_STATE_TX_PROGRESS,
+    KETCUBE_STARNET_STATE_TX_TIMEOUT,
+    KETCUBE_STARNET_STATE_TX_ERROR,
+    
+    KETCUBE_STARNET_STATE_RX_READY,
+    KETCUBE_STARNET_STATE_RX_DONE,
+    KETCUBE_STARNET_STATE_RX_PROGRESS,
+    KETCUBE_STARNET_STATE_RX_TIMEOUT,
+    KETCUBE_STARNET_STATE_RX_ERROR,
+} ketCube_starNet_State_t;
 
 /**
 * @brief  Node type
@@ -100,7 +163,6 @@ ketCube_starNet_ConcentratorInit(ketCube_InterModMsg_t *** msg);
 extern ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void);
 extern ketCube_cfg_ModError_t ketCube_starNet_sendData(uint8_t * buffer,
                                                        uint8_t * len);
-extern ketCube_cfg_ModError_t ketCube_starNet_receiveData(void);
 
 
 
