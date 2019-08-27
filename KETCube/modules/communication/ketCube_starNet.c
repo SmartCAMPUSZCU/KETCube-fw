@@ -172,8 +172,7 @@ ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void)
                 break;
         }
         
-        // will be changed for nodes in the future...
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_MODULE_OK;
     }
 }
 
