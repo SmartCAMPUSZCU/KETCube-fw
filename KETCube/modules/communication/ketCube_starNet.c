@@ -70,6 +70,8 @@ static void ketCube_starNet_OnTxTimeout(void);
 static void ketCube_starNet_OnTxDone(void);
 static void ketCube_starNet_OnRxDone(uint8_t * payload, uint16_t size,
                                      int16_t rssi, int8_t snr);
+ketCube_cfg_ModError_t ketCube_starNet_Init(ketCube_starNet_NodeType_t
+                                            nodeType);
 
 /* private variables */
 static RadioEvents_t RadioEvents;
@@ -91,7 +93,7 @@ ketCube_starNet_NodeType_t nodeType; /*!< This device type: Node/Concentrator */
 #define FSK_PREAMBLE_LENGTH                         5           /*!<  Same for Tx and Rx */
 #define FSK_FIX_LENGTH_PAYLOAD_ON                   FALSE
 #define RX_TIMEOUT_VALUE                            1000
-#define TX_TIMEOUT_VALUE                            3000
+#define TX_TIMEOUT_VALUE                            500         /*!< Timeout should be small, it should not occur in general, but it occurs (with some parts), see the in-code note above the woraround */
 
 /**
  * @brief Prepare sleep mode
@@ -147,11 +149,35 @@ ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void)
         switch (moduleState) {
             case KETCUBE_STARNET_STATE_TX_TIMEOUT:
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Transmitting sensor data: TIMEOUT");
+                
+                // The following note is a part of sx1276 code:
+                // ---
+                //
+                // Tx timeout shouldn't happen.
+                // But it has been observed that when it happens it is a result of a corrupted SPI transfer
+                // it depends on the platform design.
+                //
+                // The workaround is to put the radio in a known state. Thus, we re-initialize it.
+                //
+                // ---
+                // It has been observed, that Tx Timeout occurs (often) with some KETCubes, 
+                // but with other pieces of HW (from the same manufacturing serie), 
+                // it has not been observed ... it seems, that the problem is part-specific, 
+                // not design-specific ... strange!
+                //
+                HAL_Delay(10);
+                ketCube_starNet_Init(KETCUBE_STARNET_NODE);
+                HAL_Delay(10);
+                
+                moduleState = KETCUBE_STARNET_STATE_TX_READY;
+                break;
             case KETCUBE_STARNET_STATE_TX_NEW_DATA:
                 ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE,
                                  "Transmitting sensor data: %s",
                                  ketCube_common_bytes2Str(&(ketCube_starNet_dataBuff[0]), txBuffer_len));
                 moduleState = KETCUBE_STARNET_STATE_TX_PROGRESS;
+                
+                HAL_Delay(10);
                 
                 Radio.Send(&(ketCube_starNet_dataBuff[0]), txBuffer_len);
                 break;
@@ -172,7 +198,9 @@ ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void)
                 break;
         }
         
-        return KETCUBE_CFG_MODULE_OK;
+        /* Do not enter sleep mode */
+        return KETCUBE_CFG_MODULE_ERROR;
+        //return KETCUBE_CFG_MODULE_OK;
     }
 }
 
