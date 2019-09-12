@@ -52,6 +52,7 @@
 import datetime
 import sys
 import os
+import inspect
 import string
 from shutil import copyfile
 
@@ -66,7 +67,13 @@ CATEGORIES = {"sensing" : "sensing",
               "communication" : "communication", 
               "actuation" : "actuation" }
 CATEGORY="sensing"
-PATH = os.path.dirname(sys.argv[0])
+
+# Get this file PATH
+#PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+#PATH = os.path.dirname(sys.argv[0])
+PATH = os.path.dirname(os.path.realpath(__file__))
+if PATH == "":
+   raise ValueError("PATH could not be detected!")
 
 ## Create copy of the file while replacing variables
 #
