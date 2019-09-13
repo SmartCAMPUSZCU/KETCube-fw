@@ -12,11 +12,11 @@ A KDevelop IDE and Kate editor were used for user-level testing (Kate and KDevel
 ## Prerequisities
 Quick step-by-step guide:
   * Install the following packages: cmake, libusb1 (Fedora28's dnf for refference: dnf install cmake libusb-devel)
-  * Install arm-node-eabi (Fedora28's dnf for reference: dnf install arm-none-eabi-gcc-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-newlib arm-none-eabi-binutils-cs arm-none-eabi-gdb)
+  * Install arm-none-eabi (Fedora28's dnf for reference: dnf install arm-none-eabi-gcc-cs arm-none-eabi-gcc-cs-c++ arm-none-eabi-newlib arm-none-eabi-binutils-cs arm-none-eabi-gdb)
   * Install st-link (to /usr/local):
 
 ~~~bash
-git clone git@github.com:texane/stlink.git
+git clone github.com:texane/stlink.git
 cd stlink
 make release
 su
