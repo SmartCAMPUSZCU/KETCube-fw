@@ -165,6 +165,7 @@ ketCube_cfg_ModError_t ketCube_starNet_SleepEnter(void)
                 // it has not been observed ... it seems, that the problem is part-specific, 
                 // not design-specific ... strange!
                 //
+                
                 HAL_Delay(10);
                 ketCube_starNet_Init(KETCUBE_STARNET_NODE);
                 HAL_Delay(10);

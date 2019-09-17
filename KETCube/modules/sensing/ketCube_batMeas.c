@@ -98,7 +98,7 @@ ketCube_cfg_ModError_t ketCube_batMeas_Init(ketCube_InterModMsg_t *** msg)
 }
 
 /**
- * @brief  DeInit buzzer Beacon
+ * @brief  DeInit BatMeas
  * 
  * @retval KETCUBE_CFG_MODULE_OK in case of success
  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure

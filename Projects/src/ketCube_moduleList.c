@@ -203,7 +203,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                &ketCube_starNet_ConcentratorInit, /* Init() */
                &ketCube_starNet_SleepEnter,       /* SleepEnter() */
                NULL,                              /* SleepExit() */
-               &ketCube_ADC_ReadData,             /* GetSensorData() */
+               NULL,                              /* GetSensorData() */
                NULL,                              /* SendData() */
                NULL,                              /* ReceiveData() */
                NULL,                              /* ProcessData() */
