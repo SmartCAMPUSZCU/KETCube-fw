@@ -66,7 +66,7 @@
 
 /*!
  * LoRaWAN Adaptive Data Rate
- * @note Please note that when ADR is enabled the end-device should be static
+ * @note Please note that when ADR is enabled the end-device should be stationary
  */
 #define LORAWAN_ADR_ON                              1
 

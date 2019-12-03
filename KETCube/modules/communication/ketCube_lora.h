@@ -61,14 +61,19 @@ typedef int DeviceClass_t;
   */
 
 /**
-* @brief LoRa connection type
-*/
-typedef enum {
-    KETCUBE_LORA_SELCFG_KETCube = 0,    /*!< LoRa confuguration is taken from KETCube EEPROM */
-    KETCUBE_LORA_SELCFG_STATIC = 1      /*!< Static LoRa configuration as defined by SEMTECH in Comissioning.h */
-} ketCube_lora_selCfg_t;
+ * @defgroup KETCube_LoRa_selcfg KETCube LoRa
+ * @brief LoRa connection type
+ * @ingroup KETCube_LoRa
+ * @{
+ */
+#define KETCUBE_LORA_SELCFG_KETCube   0     /*!< LoRa confuguration is taken from KETCube EEPROM */
+#define KETCUBE_LORA_SELCFG_STATIC    1     /*!< Static LoRa configuration as defined by SEMTECH in Comissioning.h */
 
-#define KETCUBE_LORA_SELCFG_SELECTED     KETCUBE_LORA_SELCFG_KETCube    /*!< Which LoRa configuration USE */
+#define KETCUBE_LORA_SELCFG_SELECTED     KETCUBE_LORA_SELCFG_KETCube    /*!< Select LoRaWAN configuration in USE */
+
+/**
+* @}
+*/
 
 /**
 * @brief LoRa devAddr type
