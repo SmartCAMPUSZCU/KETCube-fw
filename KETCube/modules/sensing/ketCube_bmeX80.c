@@ -1,9 +1,10 @@
 /**
  * @file    ketCube_bmeX80.c
  * @author  Krystof Vanek
- * @version alpha
+ * @author  Jan Belohoubek
+ * @version alpha.2
  * @date    2018-09-20
- * @brief   This file contains the BMEx80 (BME280 and BME680) driver
+ * @brief   This file contains the BMEx80 (BME280 and BME680) sensor module
  *
  * @attention
  *
@@ -53,9 +54,6 @@
 #ifdef KETCUBE_CFG_INC_MOD_BMEX80
 
 ketCube_bmeX80_moduleCfg_t ketCube_bmeX80_moduleCfg; /*!< Module configuration storage */
-
-extern void bench_StoreData_BME280(int16_t temperature, uint16_t humidity,
-                                   uint16_t pressure);
 
 static ketCube_cfg_ModError_t getCalibration(ketCube_bmeX80_Calib_t *
                                              calibration);
@@ -577,9 +575,18 @@ ketCube_cfg_ModError_t ketCube_bmeX80_ReadData(uint8_t * buffer,
     int16_t temperature = 0;
     uint32_t humidity = 0;
     uint32_t pressure = 0;
+    char chipType;
 
     // Query compatible chip
     uint8_t chipID;
+    
+    /* Save error value to buffer indicating error in case of any errorneous exit*/
+    buffer[0] = 0xFF;
+    buffer[1] = 0xFF;
+    buffer[2] = 0xFF;
+    buffer[3] = 0xFF;
+    *len = 4;
+    
     if (ketCube_I2C_ReadData(KETCUBE_BMEX80_I2C_ADDRESS,
                              KETCUBE_BMEX80_CHIP_ID_REG, &chipID, 1)) {
         return KETCUBE_CFG_MODULE_ERROR;
@@ -588,12 +595,6 @@ ketCube_cfg_ModError_t ketCube_bmeX80_ReadData(uint8_t * buffer,
     if (!(chipID == KETCUBE_BMEX80_CHIP_ID)) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_BMEX80,
                                       "Invalid ChipID!");
-        buffer[i++] = 0xFF;
-        buffer[i++] = 0xFF;
-        buffer[i++] = 0xFF;
-        buffer[i++] = 0xFF;
-        *len = i;
-        //bench_StoreData_BME280(INT16_MAX,UINT16_MAX,UINT16_MAX);
         return KETCUBE_CFG_MODULE_ERROR;
     }
     //Read measurement configuration
@@ -628,27 +629,24 @@ ketCube_cfg_ModError_t ketCube_bmeX80_ReadData(uint8_t * buffer,
     getTemperature(&temperature, &calibration); /* in °C * 100   */
     getHumidity(&humidity, &calibration);       /* in % * 1000   */
     getPressure(&pressure, &calibration);       /* in hPa* 100     */
-    //temperature = (uint16_t) 10000 + ((int16_t) (temp * 10));   /*  x * 10 - 10000 in C */
 
-    buffer[i++] = (uint8_t) (humidity / 500);   //Relative humidity in 0.5*%
-    buffer[i++] = (uint8_t) (80 + temperature / 50);    //Temperature in 0.5*°C with 40°C offset
-    buffer[i++] = ((pressure / 50) >> 8) & 0xFF;        //Pressure in 0.5*hPa
+    buffer[i++] = (uint8_t) (humidity / 500);           // Relative humidity in 0.5*%
+    buffer[i++] = (uint8_t) (80 + temperature / 50);    // Temperature in 0.5*°C with 40°C offset
+    buffer[i++] = ((pressure / 50) >> 8) & 0xFF;        // Pressure in 0.5*hPa
     buffer[i++] = ((pressure / 50) & 0xFF);
 
-    *len = i;
-
 #if defined(KETCUBE_BMEX80_SENSOR_TYPE_BME280)
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BMEX80,
-                                 "BME280 ::  Temperature: %.2f, RH: %.2f, Pressure: %.2f",
-                                 temperature / 100.0, humidity / 1000.0,
-                                 pressure / 100.0);
-
+    chipType = '2';
 #elif defined(KETCUBE_BMEX80_SENSOR_TYPE_BME680)
+    chipType = '6';
+# else    
+    chipType = '?';
+#endif
+    
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BMEX80,
-                                 "BME680 :: Temperature: %.2f, RH: %.2f, Pressure: %.2f",
-                                 temperature / 100.0, humidity / 1000.0,
+                                 "Type: BME %c80,  Temperature: %.2f, RH: %.2f, Pressure: %.2f",
+                                 chipType, temperature / 100.0, humidity / 1000.0,
                                  pressure / 100.0);
-#endif                          /* KETCUBE_BMEX80_SENSOR_TYPE_BME680 */
 
     return KETCUBE_CFG_MODULE_OK;
 
