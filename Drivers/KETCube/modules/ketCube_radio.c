@@ -49,7 +49,7 @@
 #include "ketCube_gpio.h"
 #include "ketCube_terminal.h"
 
-static volatile uint8_t initRuns = 0; /* disable concurent execution of the init function body */
+static volatile bool initialized = FALSE; /* disable concurent execution of the init function body */
 
 /**
   * @brief Initializes the IO PINs
@@ -84,14 +84,14 @@ static void ketCube_Radio_IoDeInit(void) {
   * @brief Initializes the Radio hardware
   */
 ketCube_cfg_DrvError_t ketCube_Radio_Init(void) {
-    initRuns += 1;
-
-    if (initRuns > 1) {
+    if (initialized == TRUE) {
         ketCube_terminal_DriverSeverityPrintln(KETCUBE_RADIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "Unable to initialize Radio!");
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
     ketCube_Radio_IoInit();
+    
+    initialized = TRUE;
     
     return KETCUBE_CFG_MODULE_OK;
 }
@@ -100,12 +100,12 @@ ketCube_cfg_DrvError_t ketCube_Radio_Init(void) {
   * @brief Deinitializes the Radio hardware
   */
 ketCube_cfg_DrvError_t ketCube_Radio_DeInit(void) {
-    if (initRuns > 1) {
-        initRuns -= 1;
-    } else if (initRuns == 0) {
+    if (initialized == TRUE) {
         // UnInit here ...
         ketCube_Radio_IoDeInit();
     }
+    
+    initialized = FALSE;
     
     return KETCUBE_CFG_MODULE_OK;
 }
