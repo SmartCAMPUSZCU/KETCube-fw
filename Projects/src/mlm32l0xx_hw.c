@@ -178,9 +178,9 @@ void HW_Init( void )
 
     HW_AdcInit( );
 
-    Radio.IoInit( );
+    //Radio.IoInit( );
     
-    HW_SPI_Init( );
+    //HW_SPI_Init( );
 
     HW_RTC_Init( );
 
@@ -195,9 +195,9 @@ void HW_Init( void )
   */
 void HW_DeInit( void )
 {
-  HW_SPI_DeInit( );
+  //HW_SPI_DeInit( );
   
-  Radio.IoDeInit( );
+  //Radio.IoDeInit( );
   
   ketCube_UART_IoDeInitAll( );
 
@@ -211,9 +211,9 @@ void HW_DeInit( void )
   */
 static void HW_IoInit( void )
 {
-  HW_SPI_IoInit( );
+  //HW_SPI_IoInit( );
   
-  Radio.IoInit( );
+  //Radio.IoInit( );
   
   ketCube_UART_IoInitAll( );
 }
@@ -226,17 +226,17 @@ static void HW_IoInit( void )
 static void HW_IoDeInit( void )
 {
   /*  HW_SPI_IoDeInit( );*/
-  GPIO_InitTypeDef initStruct={0};
-    
-  initStruct.Mode =GPIO_MODE_ANALOG;
-  initStruct.Pull =GPIO_NOPULL;
-  HW_GPIO_Init ( RADIO_MOSI_PORT, RADIO_MOSI_PIN, &initStruct ); 
-  HW_GPIO_Init ( RADIO_MISO_PORT, RADIO_MISO_PIN, &initStruct ); 
-  HW_GPIO_Init ( RADIO_SCLK_PORT, RADIO_SCLK_PIN, &initStruct ); 
-  HW_GPIO_Init ( RADIO_NSS_PORT, RADIO_NSS_PIN , &initStruct ); 
-
-  
-  Radio.IoDeInit( );
+//   GPIO_InitTypeDef initStruct={0};
+//     
+//   initStruct.Mode =GPIO_MODE_ANALOG;
+//   initStruct.Pull =GPIO_NOPULL;
+//   HW_GPIO_Init ( RADIO_MOSI_PORT, RADIO_MOSI_PIN, &initStruct ); 
+//   HW_GPIO_Init ( RADIO_MISO_PORT, RADIO_MISO_PIN, &initStruct ); 
+//   HW_GPIO_Init ( RADIO_SCLK_PORT, RADIO_SCLK_PIN, &initStruct ); 
+//   HW_GPIO_Init ( RADIO_NSS_PORT, RADIO_NSS_PIN , &initStruct ); 
+// 
+//   
+//   Radio.IoDeInit( );
   
   ketCube_UART_IoDeInitAll( );
 }

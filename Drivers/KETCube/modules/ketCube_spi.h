@@ -1,13 +1,16 @@
 /**
- * @file    hw_spi.h
+ * @file    ketCube_spi.h
  * @author  Jan Belohoubek
- * @version 0.2
- * @date    2019-12-10
- * @brief   This is the wrapper for compatibility with the Semtech code
+ * @version alpha
+ * @date    2019-12-09
+ * @brief   This file contains definitions for the ketCube SPI driver
  *
+ * @note This code is based on Semtech and STM SPI driver implementation. 
+ * See the original file licenses in LICENSE_SEMTECH and LICENSE_STM respectively.
+ * 
  * @attention
  *
- * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
+ * <h2><center>&copy; Copyright (c) 2019 University of West Bohemia in Pilsen
  * All rights reserved.</center></h2>
  *
  * Developed by:
@@ -42,16 +45,45 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-#ifndef __HW_SPI_H__
-#define __HW_SPI_H__
+
+#ifndef __KETCUBE_SPI_H__
+#define __KETCUBE_SPI_H__
 
 #include "ketCube_cfg.h"
-#include "ketCube_spi.h"
-   
-   
-static inline uint16_t HW_SPI_InOut(uint16_t txData) {
-     return ketCube_SPI_InOut(txData);
-}
+
+/** @defgroup KETCube_SPI KETCube SPI driver
+  * @brief KETCube SPI driver
+  * @ingroup KETCube_ModuleDrivers
+  * @{
+  */
+
+/** @defgroup KETCube_SPI_fn Public Functions
+  * @brief Public functions
+  * @{
+  */
 
 
-#endif /* __HW_SPI_H__ */
+extern ketCube_cfg_DrvError_t ketCube_SPI_Init(void);
+extern ketCube_cfg_DrvError_t ketCube_SPI_DeInit(void);
+extern uint16_t ketCube_SPI_InOut(uint16_t txData);
+
+
+/**
+* @}
+*/
+
+/**
+* @}
+*/
+
+
+#endif  /* __KETCUBE_SPI_H__ */
+
+
+
+
+
+
+
+
+

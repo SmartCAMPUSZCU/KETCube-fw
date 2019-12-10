@@ -128,7 +128,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
                KETCUBE_MODULEID_LORA,
                &ketCube_lora_Init,        /* Init() */
                &ketCube_lora_SleepEnter,  /* SleepEnter() */
-               NULL,                      /* SleepExit() */
+               &ketCube_lora_SleepExit,   /* SleepExit() */
                NULL,                      /* GetSensorData() */
                &ketCube_lora_Send,        /* SendData() */
                NULL,                      /* ReceiveData() */
