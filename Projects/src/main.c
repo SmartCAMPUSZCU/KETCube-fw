@@ -44,7 +44,6 @@
 
 #include "hw.h"
 #include "low_power.h"
-#include "bsp.h"
 #include "vcom.h"
 #include "timeServer.h"
 
@@ -54,6 +53,8 @@
 #include "ketCube_modules.h"
 #include "ketCube_common.h"
 #include "ketCube_remote_terminal.h"
+#include "ketCube_mcu.h"
+#include "ketCube_rtc.h"
 
 static TimerEvent_t KETCube_PeriodTimer;
 
@@ -140,12 +141,13 @@ int main(void)
     HAL_Init();
 
     /* Configure the system clock */
-    SystemClock_Config();
+    ketCube_MCU_ClockConfig();
 
     /* Configure the debug mode */
     DBG_Init();
 
     /* Configure the hardware */
+    ketCube_RTC_Init();
     HW_Init();
 
     /* Init Terminal */
@@ -208,15 +210,8 @@ int main(void)
 
         // execute module preSleep module functions
         if (ketCube_modules_SleepEnter() == KETCUBE_CFG_OK) {
-
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
-            DISABLE_IRQ();
-
-#ifndef LOW_POWER_DISABLE
-            LowPower_Handler();
-
-#endif                          /* LOW_POWER_DISABLE */
-            ENABLE_IRQ();
+            ketCube_MCU_Sleep();
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
 
             // execute module wake-up module functions

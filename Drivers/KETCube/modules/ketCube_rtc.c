@@ -61,6 +61,7 @@
 #include "systime.h"
 
 #include "ketCube_terminal.h"
+#include "ketCube_mcu.h"
 
 
 uint32_t ketCube_RTC_GetTimerElapsedTime(void);
@@ -298,23 +299,20 @@ TimerTime_t ketCube_RTC_Tick2ms(uint32_t tick) {
  * @param timeout Duration of the Timer ticks
  */
 void ketCube_RTC_SetAlarm(uint32_t timeout) {
-  /* we don't go in Low Power mode for timeout below MIN_ALARM_DELAY */
-  if ( (MIN_ALARM_DELAY + McuWakeUpTimeCal ) < ((timeout - ketCube_RTC_GetTimerElapsedTime( ) )) )
-  {
-    LowPower_Enable( e_LOW_POWER_RTC );
-  }
-  else
-  {
-    LowPower_Disable( e_LOW_POWER_RTC );
-  }
-
-  if( LowPower_GetState() == 0 )
-  {
-    LowPower_Enable( e_LOW_POWER_RTC );
-    timeout = timeout -  McuWakeUpTimeCal;
-  }
-
-  ketCube_RTC_StartWakeUpAlarm( timeout );
+    /* we don't go in Low Power mode for timeout below MIN_ALARM_DELAY */
+    if ( (MIN_ALARM_DELAY + McuWakeUpTimeCal ) < ((timeout - ketCube_RTC_GetTimerElapsedTime( ) )) ) {
+      ketCube_MCU_EnableSleep();
+    }
+    else {
+      ketCube_MCU_DisableSleep();
+    }
+    
+    if (ketCube_MCU_IsSleepEnabled() == FALSE) {
+      ketCube_MCU_EnableSleep();
+      timeout = timeout -  McuWakeUpTimeCal;
+    }
+    
+    ketCube_RTC_StartWakeUpAlarm( timeout );
 }
 
 /**
@@ -366,7 +364,7 @@ void ketCube_RTC_StopAlarm(void) {
  */
 void ketCube_RTC_IrqHandler(void) {
   /* enable low power at irq*/
-  LowPower_Enable(e_LOW_POWER_RTC);
+  ketCube_MCU_EnableSleep();
   
   HAL_RTC_AlarmIRQHandler( &RtcHandle);
 }

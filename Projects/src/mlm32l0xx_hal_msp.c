@@ -84,7 +84,7 @@ void HAL_MspInit(void)
   HAL_PWREx_DisableFastWakeUp( );
 #endif
 
-  HW_GpioInit( );
+  ketCube_GPIO_InitDriver( );
 }
 
 /**

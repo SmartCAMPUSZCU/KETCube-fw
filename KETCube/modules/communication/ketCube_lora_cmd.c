@@ -50,6 +50,7 @@
 
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
+#include "ketCube_mcu.h"
 #include "ketCube_lora.h"
 #ifndef DESKTOP_BUILD
 #include "LoRaMac.h"
@@ -61,16 +62,13 @@
   * @{
   */
 
-// Declaring extern function HW_GetUniqueId()
-extern void HW_GetUniqueId(uint8_t * id);
-
 /**
  * @brief Show devEUI command callback
  * 
  */
 void ketCube_LoRa_cmd_show_devEUI(void)
 {
-    HW_GetUniqueId((uint8_t *) &(commandIOParams.as_byte_array.data[0]));
+    ketCube_MCU_GetUniqueId((uint8_t *) &(commandIOParams.as_byte_array.data[0]));
     commandIOParams.as_byte_array.length = KETCUBE_LORA_CFGLEN_DEVEUI;
 }
 

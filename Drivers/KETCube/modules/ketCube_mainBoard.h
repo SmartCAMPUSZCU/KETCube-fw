@@ -42,11 +42,10 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __KETCUBE_MAIN_BOARD_H
 #define __KETCUBE_MAIN_BOARD_H
 
-/* Includes ------------------------------------------------------------------*/
+
 #include "stm32l0xx_hal.h"
 #include "stm32l0xx_hal_gpio.h"
 #include "stdlib.h"

@@ -48,6 +48,7 @@
 #include "ketCube_lora.h"
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
+#include "ketCube_mcu.h"
 #include "ketCube_terminal.h"
 #include "ketCube_remote_terminal.h"
 #include "ketCube_modules.h"
@@ -56,7 +57,7 @@
 #include "hw.h"
 #include "lora.h"
 #include "timeServer.h"
-#include "version.h"
+#include "lora_mac_version.h"
 
 #include "ketCube_radio.h"
 #include "ketCube_spi.h"
@@ -124,8 +125,8 @@ static TimerEvent_t TxLedTimer;
 /* load call backs*/
 static LoRaMainCallback_t LoRaMainCallbacks = {HW_GetBatteryLevel,
                                                 HW_GetTemperatureLevel,
-                                                HW_GetUniqueId,
-                                                HW_GetRandomSeed,
+                                                ketCube_MCU_GetUniqueId,
+                                                ketCube_MCU_GetRandomSeed,
                                                 ketCube_lora_RxData,
                                                 ketCube_lora_HasJoined,
                                                 ketCube_lora_ConfirmClass,
@@ -189,7 +190,7 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN MAC version: 1.0.3");
 #endif
       
-    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN stack version: %X", VERSION);
+    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "LoRaWAN stack version: %X", LORA_MAC_VERSION);
 
     if (ketCube_lora_moduleCfg.devClass <= 2) {
        ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Device class %c", "ABC"[ketCube_lora_moduleCfg.devClass]);
