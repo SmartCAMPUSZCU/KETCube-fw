@@ -1,37 +1,59 @@
-/*
- / _____)             _              | |
-( (____  _____ ____ _| |_ _____  ____| |__
- \____ \| ___ |    (_   _) ___ |/ ___)  _ \
- _____) ) ____| | | || |_| ____( (___| | | |
-(______/|_____)_|_|_| \__)_____)\____)_| |_|
-    (C)2013 Semtech
-
-Description: MCU RTC timer
-
-License: Revised BSD License, see LICENSE.TXT file include in the project
-
-Maintainer: Miguel Luis and Gregory Cristian
-*/
 /**
-  ******************************************************************************
-  * @file    hw_rtc.c
-  * @author  MCD Application Team
-  * @brief   driver for RTC
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+ * @file    ketCube_rtc.c
+ * @author  Jan Belohoubek
+ * @version alpha
+ * @date    2019-12-10
+ * @brief   This file contains implementation of the ketCube RTC driver.
+ *
+ * @note This code is based on Semtech and STM RTC driver implementation. 
+ * See the original file Semtech licenses in LICENSE_SEMTECH. The ST Ultimate 
+ * Liberty license is dennoted SLA0044. You may not use this file except in
+ * compliance with the License. You may obtain a copy of the License at:
+ * www.st.com/SLA0044
+ * 
+ * @attention
+ * 
+ * <h2><center>&copy; Copyright (c) 2013, SEMTECH S.A.
+ * All rights reserved.</center></h2>
+ * 
+ * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
+ * <h2><center>&copy; Copyright (c) 2019 University of West Bohemia in Pilsen
+ * All rights reserved.</center></h2>
+ *
+ * Developed by:
+ * The SmartCampus Team
+ * Department of Technologies and Measurement
+ * www.smartcampus.cz | www.zcu.cz
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy 
+ * of this software and associated documentation files (the "Software"), 
+ * to deal with the Software without restriction, including without limitation 
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software 
+ * is furnished to do so, subject to the following conditions:
+ *
+ *    - Redistributions of source code must retain the above copyright notice,
+ *      this list of conditions and the following disclaimers.
+ *    
+ *    - Redistributions in binary form must reproduce the above copyright notice, 
+ *      this list of conditions and the following disclaimers in the documentation 
+ *      and/or other materials provided with the distribution.
+ *    
+ *    - Neither the names of The SmartCampus Team, Department of Technologies and Measurement
+ *      and Faculty of Electrical Engineering University of West Bohemia in Pilsen, 
+ *      nor the names of its contributors may be used to endorse or promote products 
+ *      derived from this Software without specific prior written permission. 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, 
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR 
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT HOLDERS 
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+ * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE 
+ * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
+ */
 
-/* Includes ------------------------------------------------------------------*/
 #include <math.h>
 #include <time.h>
 #include "hw.h"
@@ -40,7 +62,11 @@ Maintainer: Miguel Luis and Gregory Cristian
 
 #include "ketCube_terminal.h"
 
-/* Private typedef -----------------------------------------------------------*/
+
+uint32_t ketCube_RTC_GetTimerElapsedTime(void);
+uint32_t ketCube_RTC_SetTimerContext(void);
+
+
 typedef struct
 {
   TimerTime_t Rtc_Time; /* Reference time */
@@ -51,7 +77,6 @@ typedef struct
   
 } RtcTimerContext_t;
 
-/* Private define ------------------------------------------------------------*/
 
 /* MCU Wake Up Time */
 #define MIN_ALARM_DELAY               3 /* in ticks */
@@ -66,7 +91,7 @@ typedef struct
 #define PREDIV_A                  (1<<(15-N_PREDIV_S))-1
 
 /* Sub-second mask definition  */
-#define HW_RTC_ALARMSUBSECONDMASK (N_PREDIV_S<<RTC_ALRMASSR_MASKSS_Pos)
+#define RTC_ALARMSUBSECONDMASK (N_PREDIV_S<<RTC_ALRMASSR_MASKSS_Pos)
 
 /* RTC Time base in us */
 #define USEC_NUMBER               1000000
@@ -92,31 +117,26 @@ typedef struct
 #define DIVC(X,N)   ( ( (X) + (N) -1 ) / (N) )
 
 
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/*!
- * \brief Indicates if the RTC is already Initalized or not
- */
-static bool HW_RTC_Initalized = false;
+static volatile bool initialized = FALSE; /* disable concurent execution of the init function body */
 
-/*!
- * \brief compensates MCU wakeup time
+/**
+ * @brief compensates MCU wakeup time
  */
  
 static bool McuWakeUpTimeInitialized = false;
 
-/*!
- * \brief compensates MCU wakeup time
+/**
+ * @brief compensates MCU wakeup time
  */
  
 static int16_t McuWakeUpTimeCal = 0;
 
-/*!
+/**
  * Number of days in each month on a normal year
  */
 static const uint8_t DaysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-/*!
+/**
  * Number of days in each month on a leap year
  */
 static const uint8_t DaysInMonthLeapYear[] = { 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
@@ -125,50 +145,50 @@ static RTC_HandleTypeDef RtcHandle={0};
 
 static RTC_AlarmTypeDef RTC_AlarmStructure;
 
-/*!
+/**
  * Keep the value of the RTC timer when the RTC alarm is set
- * Set with the HW_RTC_SetTimerContext function
+ * Set with the ketCube_RTC_SetTimerContext function
  * Value is kept as a Reference to calculate alarm
  */
 static RtcTimerContext_t RtcTimerContext;
 
 /* Private function prototypes -----------------------------------------------*/
 
-static void HW_RTC_SetConfig( void );
+static void ketCube_RTC_SetConfig( void );
 
-static void HW_RTC_SetAlarmConfig( void );
+static void ketCube_RTC_SetAlarmConfig( void );
 
-static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue );
+static void ketCube_RTC_StartWakeUpAlarm( uint32_t timeoutValue );
 
-static uint64_t HW_RTC_GetCalendarValue(  RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct  );
+static uint64_t ketCube_RTC_GetCalendarValue(  RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct  );
 
 /* Exported functions ---------------------------------------------------------*/
 
-/*!
+/**
  * @brief Initializes the RTC timer
  * @note The timer is based on the RTC
  * @param none
  * @retval none
  */
-void HW_RTC_Init( void )
-{
-  if( HW_RTC_Initalized == false )
-  {
-    HW_RTC_SetConfig( );
-    HW_RTC_SetAlarmConfig( );
-    HW_RTC_SetTimerContext( );
-    HW_RTC_Initalized = true;
+ketCube_cfg_DrvError_t ketCube_RTC_Init(void) {
+  if (initialized == FALSE) {
+      ketCube_RTC_SetConfig();
+      ketCube_RTC_SetAlarmConfig();
+      ketCube_RTC_SetTimerContext();
+      initialized = TRUE;
+      return KETCUBE_CFG_MODULE_OK;
+  } else {
+      return KETCUBE_CFG_MODULE_ERROR;
   }
 }
 
-/*!
+/**
  * @brief Configures the RTC timer
  * @note The timer is based on the RTC
  * @param none
  * @retval none
  */
-static void HW_RTC_SetConfig( void )
-{
+static void ketCube_RTC_SetConfig(void) {
   RTC_TimeTypeDef RTC_TimeStruct;
   RTC_DateTypeDef RTC_DateStruct;
 
@@ -183,7 +203,7 @@ static void HW_RTC_SetConfig( void )
 
   HAL_RTC_Init( &RtcHandle );
   
-  /*Monday 1st January 2016*/
+  /* Monday 1st January 2016 */
   RTC_DateStruct.Year = 0;
   RTC_DateStruct.Month = RTC_MONTH_JANUARY;
   RTC_DateStruct.Date = 1;
@@ -202,90 +222,84 @@ static void HW_RTC_SetConfig( void )
   
   HAL_RTC_SetTime(&RtcHandle , &RTC_TimeStruct, RTC_FORMAT_BIN);
   
- /*Enable Direct Read of the calendar registers (not through Shadow) */
+  /* Enable Direct Read of the calendar registers (not through Shadow) */
   HAL_RTCEx_EnableBypassShadow(&RtcHandle);
 }
 
 
-/*!
+/**
  * @brief calculates the wake up time between wake up and mcu start
  * @note resulotion in RTC_ALARM_TIME_BASE in timer ticks
  * @param none
  * @retval none
  */
-void HW_RTC_setMcuWakeUpTime( void )
-{
-  RTC_TimeTypeDef RTC_TimeStruct;
-  RTC_DateTypeDef RTC_DateStruct;
-  
-  TimerTime_t now, hit;
-  int16_t McuWakeUpTime;
-  
-  if ((McuWakeUpTimeInitialized == false) &&
-      ( HAL_NVIC_GetPendingIRQ( RTC_Alarm_IRQn ) == 1))
-  { /* warning: works ok if now is below 30 days
-       it is ok since it's done once at first alarm wake-up*/
-    McuWakeUpTimeInitialized = true;
-    now = (uint32_t) HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
-
-    HAL_RTC_GetAlarm(&RtcHandle, &RTC_AlarmStructure, RTC_ALARM_A, RTC_FORMAT_BIN );
-    hit = RTC_AlarmStructure.AlarmTime.Seconds+
-          60*(RTC_AlarmStructure.AlarmTime.Minutes+
-          60*(RTC_AlarmStructure.AlarmTime.Hours+
-          24*(RTC_AlarmStructure.AlarmDateWeekDay)));
-    hit = ( hit << N_PREDIV_S ) + (PREDIV_S - RTC_AlarmStructure.AlarmTime.SubSeconds);
+void ketCube_RTC_setMcuWakeUpTime(void) {
+    RTC_TimeTypeDef RTC_TimeStruct;
+    RTC_DateTypeDef RTC_DateStruct;
+    
+    TimerTime_t now, hit;
+    int16_t McuWakeUpTime;
+    
+    if ((McuWakeUpTimeInitialized == false) &&
+        ( HAL_NVIC_GetPendingIRQ( RTC_Alarm_IRQn ) == 1))
+    { /* warning: works ok if now is below 30 days
+         it is ok since it's done once at first alarm wake-up*/
+        McuWakeUpTimeInitialized = true;
+        now = (uint32_t) ketCube_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
       
-    McuWakeUpTime = (int16_t) ((now-hit));
-    McuWakeUpTimeCal += McuWakeUpTime;
-  }
+        HAL_RTC_GetAlarm(&RtcHandle, &RTC_AlarmStructure, RTC_ALARM_A, RTC_FORMAT_BIN );
+        hit = RTC_AlarmStructure.AlarmTime.Seconds+
+              60*(RTC_AlarmStructure.AlarmTime.Minutes+
+              60*(RTC_AlarmStructure.AlarmTime.Hours+
+              24*(RTC_AlarmStructure.AlarmDateWeekDay)));
+        hit = ( hit << N_PREDIV_S ) + (PREDIV_S - RTC_AlarmStructure.AlarmTime.SubSeconds);
+          
+        McuWakeUpTime = (int16_t) ((now-hit));
+        McuWakeUpTimeCal += McuWakeUpTime;
+    }
 }
 
-int16_t HW_RTC_getMcuWakeUpTime( void )
-{
+int16_t ketCube_RTC_getMcuWakeUpTime(void) {
   return McuWakeUpTimeCal;
 }
 
-/*!
+/**
  * @brief returns the wake up time in ticks
  * @param none
  * @retval wake up time in ticks
  */
-uint32_t HW_RTC_GetMinimumTimeout( void )
-{
-  return( MIN_ALARM_DELAY );
+uint32_t ketCube_RTC_GetMinimumTimeout(void) {
+  return (MIN_ALARM_DELAY);
 }
 
-/*!
+/**
  * @brief converts time in ms to time in ticks
  * @param [IN] time in milliseconds
  * @retval returns time in timer ticks
  */
-uint32_t HW_RTC_ms2Tick( TimerTime_t timeMicroSec )
-{
+uint32_t ketCube_RTC_ms2Tick(TimerTime_t timeMicroSec) {
 /*return( ( timeMicroSec / RTC_ALARM_TIME_BASE ) ); */
   return ( uint32_t) ( ( ((uint64_t)timeMicroSec) * CONV_DENOM ) / CONV_NUMER );
 }
 
-/*!
+/**
  * @brief converts time in ticks to time in ms
  * @param [IN] time in timer ticks
  * @retval returns time in milliseconds
  */
-TimerTime_t HW_RTC_Tick2ms( uint32_t tick )
-{
+TimerTime_t ketCube_RTC_Tick2ms(uint32_t tick) {
 /*return( ( timeMicroSec * RTC_ALARM_TIME_BASE ) ); */
   return  ( ( (uint64_t)( tick )* CONV_NUMER ) / CONV_DENOM );
 }
 
-/*!
+/**
  * @brief Set the alarm
  * @note The alarm is set at now (read in this funtion) + timeout
  * @param timeout Duration of the Timer ticks
  */
-void HW_RTC_SetAlarm( uint32_t timeout )
-{
+void ketCube_RTC_SetAlarm(uint32_t timeout) {
   /* we don't go in Low Power mode for timeout below MIN_ALARM_DELAY */
-  if ( (MIN_ALARM_DELAY + McuWakeUpTimeCal ) < ((timeout - HW_RTC_GetTimerElapsedTime( ) )) )
+  if ( (MIN_ALARM_DELAY + McuWakeUpTimeCal ) < ((timeout - ketCube_RTC_GetTimerElapsedTime( ) )) )
   {
     LowPower_Enable( e_LOW_POWER_RTC );
   }
@@ -300,46 +314,43 @@ void HW_RTC_SetAlarm( uint32_t timeout )
     timeout = timeout -  McuWakeUpTimeCal;
   }
 
-  HW_RTC_StartWakeUpAlarm( timeout );
+  ketCube_RTC_StartWakeUpAlarm( timeout );
 }
 
-/*!
+/**
  * @brief Get the RTC timer elapsed time since the last Alarm was set
  * @param none
  * @retval RTC Elapsed time in ticks
  */
-uint32_t HW_RTC_GetTimerElapsedTime( void )
-{
+uint32_t ketCube_RTC_GetTimerElapsedTime(void) {
   RTC_TimeTypeDef RTC_TimeStruct;
   RTC_DateTypeDef RTC_DateStruct;
   
-  TimerTime_t CalendarValue = HW_RTC_GetCalendarValue(&RTC_DateStruct, &RTC_TimeStruct );
+  TimerTime_t CalendarValue = ketCube_RTC_GetCalendarValue(&RTC_DateStruct, &RTC_TimeStruct );
 
   return( ( uint32_t )( CalendarValue - RtcTimerContext.Rtc_Time ));
 }
 
-/*!
+/**
  * @brief Get the RTC timer value
  * @param none
  * @retval RTC Timer value in ticks
  */
-uint32_t HW_RTC_GetTimerValue( void )
-{
+uint32_t ketCube_RTC_GetTimerValue(void) {
   RTC_TimeTypeDef RTC_TimeStruct;
   RTC_DateTypeDef RTC_DateStruct;
   
-  uint32_t CalendarValue = (uint32_t) HW_RTC_GetCalendarValue(&RTC_DateStruct, &RTC_TimeStruct );
+  uint32_t CalendarValue = (uint32_t) ketCube_RTC_GetCalendarValue(&RTC_DateStruct, &RTC_TimeStruct );
 
   return( CalendarValue );
 }
 
-/*!
+/**
  * @brief Stop the Alarm
  * @param none
  * @retval none
  */
-void HW_RTC_StopAlarm( void )
-{
+void ketCube_RTC_StopAlarm(void) {
   /* Disable the Alarm A interrupt */
   HAL_RTC_DeactivateAlarm(&RtcHandle, RTC_ALARM_A );
   /* Clear RTC Alarm Flag */
@@ -348,89 +359,86 @@ void HW_RTC_StopAlarm( void )
   __HAL_RTC_ALARM_EXTI_CLEAR_FLAG();
 }
 
-/*!
+/**
  * @brief RTC IRQ Handler on the RTC Alarm
  * @param none
  * @retval none
  */
-void HW_RTC_IrqHandler ( void )
-{
+void ketCube_RTC_IrqHandler(void) {
   /* enable low power at irq*/
-  LowPower_Enable( e_LOW_POWER_RTC );
+  LowPower_Enable(e_LOW_POWER_RTC);
   
   HAL_RTC_AlarmIRQHandler( &RtcHandle);
 }
 
 
-/*!
+/**
  * @brief a delay of delay ms by polling RTC
  * @param delay in ms
  * @retval none
  */
-void HW_RTC_DelayMs( uint32_t delay )
-{
+void ketCube_RTC_DelayMs(uint32_t delay) {
   TimerTime_t delayValue = 0;
   TimerTime_t timeout = 0;
 
-  delayValue = HW_RTC_ms2Tick( delay );
+  delayValue = ketCube_RTC_ms2Tick( delay );
 
   /* Wait delay ms */
-  timeout = HW_RTC_GetTimerValue( );
-  while( ( ( HW_RTC_GetTimerValue( ) - timeout ) ) < delayValue )
+  timeout = ketCube_RTC_GetTimerValue( );
+  while( ( ( ketCube_RTC_GetTimerValue( ) - timeout ) ) < delayValue )
   {
     __NOP( );
   }
 }
 
-/*!
+/**
  * @brief set Time Reference set also the RTC_DateStruct and RTC_TimeStruct
  * @param none
  * @retval Timer Value
  */
-uint32_t HW_RTC_SetTimerContext( void )
-{
-  RtcTimerContext.Rtc_Time = ( uint32_t ) HW_RTC_GetCalendarValue( &RtcTimerContext.RTC_Calndr_Date, &RtcTimerContext.RTC_Calndr_Time );
+uint32_t ketCube_RTC_SetTimerContext(void) {
+  RtcTimerContext.Rtc_Time = ( uint32_t ) ketCube_RTC_GetCalendarValue( &RtcTimerContext.RTC_Calndr_Date, &RtcTimerContext.RTC_Calndr_Time );
   return ( uint32_t ) RtcTimerContext.Rtc_Time;
 }
 
-/*!
+/**
  * @brief HAL_GetTick RTC-based replacement
  * @retval current ms
  */
 uint32_t HAL_GetTick(void)
 {
-  return HW_RTC_GetTimerValue();
+  return ketCube_RTC_GetTimerValue();
 }
 
 
-/*!
+/**
  * @brief Get the RTC timer Reference
  * @param none
  * @retval Timer Value in  Ticks
  */
-uint32_t HW_RTC_GetTimerContext( void )
+uint32_t ketCube_RTC_GetTimerContext( void )
 {
   return (uint32_t) RtcTimerContext.Rtc_Time;
 }
 /* Private functions ---------------------------------------------------------*/
 
-/*!
+/**
  * @brief configure alarm at init
  * @param none
  * @retval none
  */
-static void HW_RTC_SetAlarmConfig( void )
+static void ketCube_RTC_SetAlarmConfig( void )
 {
   HAL_RTC_DeactivateAlarm(&RtcHandle, RTC_ALARM_A);
 }
 
-/*!
+/**
  * @brief start wake up alarm
  * @note  alarm in RtcTimerContext.Rtc_Time + timeoutValue
  * @param timeoutValue in ticks
  * @retval none
  */
-static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
+static void ketCube_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
 {
   uint16_t rtcAlarmSubSeconds = 0;
   uint16_t rtcAlarmSeconds = 0;
@@ -440,7 +448,7 @@ static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
   RTC_TimeTypeDef RTC_TimeStruct = RtcTimerContext.RTC_Calndr_Time;
   RTC_DateTypeDef RTC_DateStruct = RtcTimerContext.RTC_Calndr_Date;
 
-  HW_RTC_StopAlarm( );
+  ketCube_RTC_StopAlarm( );
   
   /*reverse counter */
   rtcAlarmSubSeconds =  PREDIV_S - RTC_TimeStruct.SubSeconds;
@@ -517,7 +525,7 @@ static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
 
   /* Set RTC_AlarmStructure with calculated values*/
   RTC_AlarmStructure.AlarmTime.SubSeconds = PREDIV_S-rtcAlarmSubSeconds;
-  RTC_AlarmStructure.AlarmSubSecondMask  = HW_RTC_ALARMSUBSECONDMASK; 
+  RTC_AlarmStructure.AlarmSubSecondMask  = RTC_ALARMSUBSECONDMASK; 
   RTC_AlarmStructure.AlarmTime.Seconds = rtcAlarmSeconds;
   RTC_AlarmStructure.AlarmTime.Minutes = rtcAlarmMinutes;
   RTC_AlarmStructure.AlarmTime.Hours   = rtcAlarmHours;
@@ -534,13 +542,13 @@ static void HW_RTC_StartWakeUpAlarm( uint32_t timeoutValue )
 }
 
 
-/*!
+/**
  * @brief get current time from calendar in ticks
  * @param pointer to RTC_DateStruct
  * @param pointer to RTC_TimeStruct
  * @retval time in ticks
  */
-static uint64_t HW_RTC_GetCalendarValue( RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct )
+static uint64_t ketCube_RTC_GetCalendarValue( RTC_DateTypeDef* RTC_DateStruct, RTC_TimeTypeDef* RTC_TimeStruct )
 {
   uint64_t calendarValue = 0;
   uint32_t first_read;
@@ -580,36 +588,36 @@ static uint64_t HW_RTC_GetCalendarValue( RTC_DateTypeDef* RTC_DateStruct, RTC_Ti
   return( calendarValue );
 }
 
-/*!
- * \brief Get system time
- * \param [IN]   pointer to ms 
+/**
+ * @brief Get system time
+ * @param [IN]   pointer to ms 
  *               
- * \return uint32_t seconds 
+ * @return uint32_t seconds 
  */
-uint32_t HW_RTC_GetCalendarTime( uint16_t *mSeconds)
+uint32_t ketCube_RTC_GetCalendarTime( uint16_t *mSeconds)
 {
   RTC_TimeTypeDef RTC_TimeStruct ;
   RTC_DateTypeDef RTC_DateStruct;
   uint32_t ticks;
   
-  uint64_t calendarValue = HW_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
+  uint64_t calendarValue = ketCube_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
   
   uint32_t seconds = (uint32_t) calendarValue >>N_PREDIV_S;
   
   ticks =  (uint32_t) calendarValue&PREDIV_S;
   
-  *mSeconds = HW_RTC_Tick2ms(ticks);
+  *mSeconds = ketCube_RTC_Tick2ms(ticks);
   
   return seconds;
 }
 
-void HW_RTC_BKUPWrite( uint32_t Data0, uint32_t Data1)
+void ketCube_RTC_BKUPWrite( uint32_t Data0, uint32_t Data1)
 {
   HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, Data0);
   HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR1, Data1);
 }
 
-void HW_RTC_BKUPRead( uint32_t *Data0, uint32_t *Data1)
+void ketCube_RTC_BKUPRead( uint32_t *Data0, uint32_t *Data1)
 {
   *Data0=HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR0);
   *Data1=HAL_RTCEx_BKUPRead(&RtcHandle, RTC_BKP_DR1);
@@ -649,7 +657,3 @@ TimerTime_t RtcTempCompensation( TimerTime_t period, float temperature )
     // Calculate the resulting period
     return ( TimerTime_t ) interim;
 }
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

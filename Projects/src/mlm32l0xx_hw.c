@@ -110,6 +110,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #include "ketCube_modules.h"
 #include "ketCube_terminal.h"
 #include "ketCube_uart.h"
+#include "ketCube_rtc.h"
 
 /*!
  *  \brief Unique Devices IDs register set ( STM32L0xxx )
@@ -182,7 +183,9 @@ void HW_Init( void )
     
     //HW_SPI_Init( );
 
-    HW_RTC_Init( );
+    //HW_RTC_Init( );
+    
+    ketCube_RTC_Init();
 
     McuInitialized = true;
   }
