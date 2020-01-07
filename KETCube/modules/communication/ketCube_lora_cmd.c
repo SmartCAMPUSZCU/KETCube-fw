@@ -76,6 +76,26 @@ void ketCube_LoRa_cmd_show_devEUI(void)
  * @brief Terminal command definitions 
  */
 ketCube_terminal_cmd_t ketCube_lora_commands[] = {
+#if (KETCUBE_LORA_LRWAN_VERSION == KETCUBE_LORA_LRWAN_VERSION_V11x)
+    {
+      .cmd   = "joinEUI",
+      .descr = "LoRa join EUI.",
+      .flags = {
+         .isLocal   = TRUE,
+         .isEEPROM  = TRUE,
+         .isShowCmd = TRUE,
+         .isSetCmd  = TRUE,
+         .isGeneric = TRUE,
+      },
+      .paramSetType  = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .outputSetType = KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY,
+      .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+         .moduleID = KETCUBE_LISTS_MODULEID_LORA,
+         .offset   = offsetof(ketCube_lora_moduleCfg_t, appEUI),
+         .size     = KETCUBE_LORA_CFGLEN_APPEUI,
+      }
+   },
+#else
    {
       .cmd   = "appEUI",
       .descr = "LoRa application EUI.",
@@ -94,7 +114,7 @@ ketCube_terminal_cmd_t ketCube_lora_commands[] = {
          .size     = KETCUBE_LORA_CFGLEN_APPEUI,
       }
    },
-
+#endif
    {
       .cmd   = "appKey",
       .descr = "LoRa application key.",
