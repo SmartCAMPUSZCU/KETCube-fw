@@ -56,20 +56,20 @@
 I2C_HandleTypeDef KETCUBE_I2C_Handle;
 static void ketCube_I2C_Error(void);
 
-static uint8_t initRuns = 0;    ///< This driver can be initialized in number of modules. If 0 == not initialized, else initialized
+static uint8_t initRuns = 0;    //!< This driver can be initialized in number of modules. If 0 == not initialized, else initialized
 
 /**
  * @brief  Configures I2C interface.
  *
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_Init(void)
+ketCube_cfg_DrvError_t ketCube_I2C_Init(void)
 {
     initRuns += 1;
 
     if (initRuns > 1) {
-        return KETCUBE_CFG_MODULE_OK;
+        return KETCUBE_CFG_DRV_OK;
     }
 
     if (HAL_I2C_GetState(&KETCUBE_I2C_Handle) == HAL_I2C_STATE_RESET) {
@@ -112,32 +112,32 @@ ketCube_cfg_ModError_t ketCube_I2C_Init(void)
     }
 
     if (HAL_I2C_GetState(&KETCUBE_I2C_Handle) == HAL_I2C_STATE_READY) {
-        return KETCUBE_CFG_MODULE_OK;
+        return KETCUBE_CFG_DRV_OK;
     } else {
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     }
 }
 
 /**
  * @brief  Configures I2C interface.
  *
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_UnInit(void)
+ketCube_cfg_DrvError_t ketCube_I2C_UnInit(void)
 {
     if (initRuns > 1) {
         initRuns -= 1;
-        return KETCUBE_CFG_MODULE_OK;
+        return KETCUBE_CFG_DRV_OK;
     } else if (initRuns == 0) {
         // UnInit here ...
         HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
-        return KETCUBE_CFG_MODULE_OK;
+        return KETCUBE_CFG_DRV_OK;
     }
     // Run UnInit body once only: (initRuns == 1)
     initRuns -= 1;
 
-    return KETCUBE_CFG_MODULE_OK;
+    return KETCUBE_CFG_DRV_OK;
 }
 
 uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
@@ -255,10 +255,10 @@ static void ketCube_I2C_Error()
  * @param  regAddr register address
  * @param  data pointer to 16-bit value
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
+ketCube_cfg_DrvError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
                                                 uint8_t regAddr,
                                                 uint16_t * data)
 {
@@ -268,19 +268,19 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
         HAL_I2C_Master_Transmit(&KETCUBE_I2C_Handle, devAddr, &(regAddr),
                                 1, KETCUBE_I2C_TIMEOUT);
     if (status != HAL_OK) {
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     }
     HAL_Delay(50);
     status =
         HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, devAddr, &(buffer[0]),
                                2, KETCUBE_I2C_TIMEOUT);
     if (status != HAL_OK) {
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     }
 
     *data = (((uint16_t) buffer[0]) << 8) | buffer[1];
 
-    return KETCUBE_CFG_MODULE_OK;
+    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
@@ -289,10 +289,10 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data pointer to 16-bit value
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
+ketCube_cfg_DrvError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
                                                  uint8_t regAddr,
                                                  uint16_t * data)
 {
@@ -301,9 +301,9 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
     buffer[1] = (uint8_t) (*data & 0x00FF);
 
     if (ketCube_I2C_WriteData(devAddr, regAddr, &(buffer[0]), 2)) {
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     } else {
-        return KETCUBE_CFG_MODULE_OK;
+        return KETCUBE_CFG_DRV_OK;
     }
 }
 
@@ -314,10 +314,10 @@ ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
  * @param  data pointer to 8-bit value
  * @param  try # of tries when I2C failed
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
+ketCube_cfg_DrvError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
                                                  uint8_t regAddr,
                                                  uint8_t * data,
                                                  uint8_t try)
@@ -338,12 +338,12 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
             HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, devAddr, data,
                                    1, KETCUBE_I2C_TIMEOUT);
         if (status == HAL_OK) {
-            return KETCUBE_CFG_MODULE_OK;
+            return KETCUBE_CFG_DRV_OK;
         }
         try--;
     }
 
-    return KETCUBE_CFG_MODULE_ERROR;
+    return KETCUBE_CFG_DRV_ERROR;
 }
 
 /**
@@ -352,17 +352,17 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data 8-bit register value
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
+ketCube_cfg_DrvError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
                                                   uint8_t regAddr,
                                                   uint8_t data)
 {
     if (ketCube_I2C_WriteData(devAddr, regAddr, &(data), 1)) {
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     } else {
-        return KETCUBE_CFG_MODULE_OK;
+        return KETCUBE_CFG_DRV_OK;
     }
 }
 
@@ -374,10 +374,10 @@ ketCube_cfg_ModError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
  * @param  len data length to read
  * @param  try # of tries when I2C failed
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
+ketCube_cfg_DrvError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
                                                 uint8_t regAddr,
                                                 uint8_t * data,
                                                 uint8_t len, uint8_t try)
@@ -398,12 +398,12 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
             HAL_I2C_Master_Receive(&KETCUBE_I2C_Handle, devAddr, data,
                                    len, KETCUBE_I2C_TIMEOUT);
         if (status == HAL_OK) {
-            return KETCUBE_CFG_MODULE_OK;
+            return KETCUBE_CFG_DRV_OK;
         }
         try--;
     }
 
-    return KETCUBE_CFG_MODULE_ERROR;
+    return KETCUBE_CFG_DRV_ERROR;
 }
 
 /**
@@ -413,10 +413,10 @@ ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
  * @param  data pointer to 8-bit value
  * @param  try # of tries when I2C failed
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_ModError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
+ketCube_cfg_DrvError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
                                                   uint8_t regAddr,
                                                   uint8_t * data,
                                                   uint8_t try)
@@ -425,10 +425,10 @@ ketCube_cfg_ModError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
         if (ketCube_I2C_WriteData(devAddr, (regAddr & (~0x80)), data, 1)) {
             try--;
         } else {
-            return KETCUBE_CFG_MODULE_OK;
+            return KETCUBE_CFG_DRV_OK;
         }
     }
-    return KETCUBE_CFG_MODULE_ERROR;
+    return KETCUBE_CFG_DRV_ERROR;
 }
 
 #endif // KETCUBE_CFG_INC_DRV_I2C

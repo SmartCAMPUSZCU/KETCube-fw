@@ -95,7 +95,8 @@ void KETCube_ErrorHandler(void)
 
     KETCUBE_TERMINAL_ENDL();
     
-    HAL_Delay(10000);
+    // In case of clock-related error, delay may cause problems!
+    // HAL_Delay(10000);
 
     while (TRUE) {
 
@@ -146,9 +147,13 @@ int main(void)
     /* Configure the debug mode */
     DBG_Init();
 
+#if defined(USE_BOOTLOADER)
+    /* Set the Vector Table base location at 0x3000 */
+    NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x3000 );
+#endif
+    
     /* Configure the hardware */
     ketCube_RTC_Init();
-    HW_Init();
 
     /* Init Terminal */
     ketCube_terminal_Init();
@@ -219,3 +224,4 @@ int main(void)
         }
     }
 }
+

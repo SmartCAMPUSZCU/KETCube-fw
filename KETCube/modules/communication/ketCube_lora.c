@@ -61,6 +61,8 @@
 
 #include "ketCube_radio.h"
 #include "ketCube_spi.h"
+#include "ketCube_ad.h"
+#include "ketCube_batMeas.h"
 
 #ifdef KETCUBE_CFG_INC_MOD_LORA
 
@@ -123,8 +125,8 @@ static ketCube_cfg_ModError_t ketCube_lora_SendData(lora_AppData_t * AppData);
 static TimerEvent_t TxLedTimer;
 
 /* load call backs*/
-static LoRaMainCallback_t LoRaMainCallbacks = {HW_GetBatteryLevel,
-                                                HW_GetTemperatureLevel,
+static LoRaMainCallback_t LoRaMainCallbacks =  {ketCube_batMeas_GetBatteryByte,
+                                                ketCube_AD_GetTemperature,
                                                 ketCube_MCU_GetUniqueId,
                                                 ketCube_MCU_GetRandomSeed,
                                                 ketCube_lora_RxData,
@@ -163,6 +165,7 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
     /* Initialize HW */
     ketCube_SPI_Init();
     ketCube_Radio_Init();
+    ketCube_AD_Init();
     
 #ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
     ketCube_lora_rxData.msg = &(ketCube_lora_rxDataBuff[0]);

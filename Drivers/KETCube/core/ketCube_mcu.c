@@ -53,6 +53,7 @@
 #define ENABLE_IRQ() __enable_irq()
 #define RESTORE_PRIMASK() __set_PRIMASK(primask_bit)
 
+#include "debug.h"
 #include "ketCube_mcu.h"
 
 /**
@@ -259,4 +260,37 @@ void ketCube_MCU_ClockConfig(void) {
     {
       KETCube_ErrorHandler();
     }
+}
+
+/**
+  * @brief  Initializes the MSP
+  * 
+  * @retval None
+  */
+void HAL_MspInit(void)
+{
+  __HAL_RCC_PWR_CLK_ENABLE();
+  
+  /* Disable the Power Voltage Detector */
+  HAL_PWR_DisablePVD( ); 
+
+  /* Enables the Ultra Low Power mode */
+  HAL_PWREx_EnableUltraLowPower( );
+  
+  __HAL_FLASH_SLEEP_POWERDOWN_ENABLE();
+  
+  /*In debug mode, e.g. when DBGMCU is activated, Arm core has always clocks
+   * And will not wait that the FLACH is ready to be read. It can miss in this 
+   * case the first instruction. To overcome this issue, the flash remain clcoked during sleep mode
+   */
+  DBG( __HAL_FLASH_SLEEP_POWERDOWN_DISABLE(); );
+  
+#ifdef KETCUBE_ENABLE_FAST_WAKEUP
+  /*Enable fast wakeUp*/  
+  HAL_PWREx_EnableFastWakeUp( );
+#else  
+  HAL_PWREx_DisableFastWakeUp( );
+#endif
+
+  ketCube_GPIO_InitDriver( );
 }

@@ -51,7 +51,7 @@
 #include "ketCube_cfg.h"
 
 /** @defgroup KETCube_I2S KETCube I2S
-  * @brief KETCube I2S module
+  * @brief KETCube I2S driver
   * @ingroup KETCube_ModuleDrivers
   * @{
   */

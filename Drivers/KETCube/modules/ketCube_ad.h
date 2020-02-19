@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_adc.c
+ * @file    ketCube_i2c.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-03-02
- * @brief   This file contains definitions for the KETCube PA4 ADC driver
+ * @version 0.2
+ * @date    2018-07-12
+ * @brief   This file contains definitions for the ketCube I2C driver
  *
  * @attention
  *
@@ -42,71 +42,51 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
+/* Define to prevent recursive inclusion -------------------------------------*/
+#ifndef __KETCUBE_AD_H
+#define __KETCUBE_AD_H
 
+#include "ketCube_cfg.h"
 
-#include "stm32l0xx_hal.h"
-#include <math.h>
-
-#include "hw_msp.h"
-#include "ketCube_common.h"
-#include "ketCube_adc.h"
-#include "ketCube_ad.h"
-#include "ketCube_terminal.h"
-
-#ifdef KETCUBE_CFG_INC_MOD_ADC
-
-ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg; /*!< Module configuration storage */
-
-/**
- * @brief  Configures ADC PIN
- * 
- * @retval KETCUBE_ADC_OK in case of success
- * @retval KETCUBE_ADC_ERROR in case of failure
- */
-ketCube_cfg_ModError_t ketCube_ADC_Init(ketCube_InterModMsg_t *** msg)
-{
-    // Init AD driver
-    ketCube_AD_Init();
-    
-    GPIO_InitTypeDef initStruct;
-
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    initStruct.Mode = GPIO_MODE_ANALOG;
-    initStruct.Pull = GPIO_NOPULL;
-    initStruct.Speed = GPIO_SPEED_HIGH;
-    initStruct.Pin = GPIO_PIN_4;
-
-    HAL_GPIO_Init(GPIOA, &initStruct);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-/**
-  * @brief Get milivolt value form PA4
-  *
-  * @param buffer pointer to fuffer for storing the result of milivolt mesurement
-  * @param len data len in bytes
-  *
-  * @retval KETCUBE_CFG_MODULE_OK in case of success
-  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+/** @defgroup KETCube_AD KETCube AD
+  * @brief KETCube ADC driver
+  * @ingroup KETCube_ModuleDrivers
+  * @{
   */
-ketCube_cfg_ModError_t ketCube_ADC_ReadData(uint8_t * buffer,
-                                            uint8_t * len)
-{
-    uint16_t mv;
 
-    mv = ketCube_AD_ReadChannelmV(ADC_CHANNEL_4);
+/** @defgroup KETCube_AD_defs Public Deffinitions
+  * @brief Public defines
+  * @{
+  */
 
-    // write to buffer
-    *len = 2;
-    buffer[0] = ((uint8_t) ((mv >> 8) & 0xFF));
-    buffer[1] = ((uint8_t) (mv & 0xFF));
+#define KETCUBE_AD_NAME                      "ad_drv"         ///< AD driver name
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ADC,
-                                 "Voltage@PA4: %d", mv);
+/**
+* @}
+*/
 
-    return KETCUBE_CFG_MODULE_OK;
-}
+/** @defgroup KETCube_AD_fn Public Functions
+  * @brief Public functions
+  * @{
+  */
 
-#endif                          /* KETCUBE_CFG_INC_MOD_ADC */
+extern ketCube_cfg_DrvError_t ketCube_AD_Init(void);
+extern ketCube_cfg_DrvError_t ketCube_AD_UnInit(void);
+
+/* General-purpose functions */
+extern uint16_t ketCube_AD_ReadChannel(uint32_t channel);
+extern uint16_t ketCube_AD_ReadChannelmV(uint32_t channel);
+
+/* ADC channels connected to internal MCU sensors */
+extern uint32_t ketCube_AD_GetBatLevelmV(void);
+extern uint16_t ketCube_AD_GetTemperature(void);
+
+/**
+* @}
+*/
+
+/**
+* @}
+*/
+
+#endif                          /* __KETCUBE_AD_H */

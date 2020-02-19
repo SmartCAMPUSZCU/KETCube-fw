@@ -177,9 +177,9 @@ ketCube_cfg_DrvError_t ketCube_RTC_Init(void) {
       ketCube_RTC_SetAlarmConfig();
       ketCube_RTC_SetTimerContext();
       initialized = TRUE;
-      return KETCUBE_CFG_MODULE_OK;
+      return KETCUBE_CFG_DRV_OK;
   } else {
-      return KETCUBE_CFG_MODULE_ERROR;
+      return KETCUBE_CFG_DRV_ERROR;
   }
 }
 
@@ -654,4 +654,106 @@ TimerTime_t RtcTempCompensation( TimerTime_t period, float temperature )
 
     // Calculate the resulting period
     return ( TimerTime_t ) interim;
+}
+
+
+/**
+  * @brief  Alarm A callback.
+  * @param  hrtc: RTC handle
+  * @retval None
+  */
+void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
+{
+  TimerIrqHandler( );
+}
+
+/**
+  * @brief RTC MSP Initialization
+  *        This function configures the hardware resources used in this example:
+  *           - Peripheral's clock enable
+  * @param hrtc: RTC handle pointer
+  * @note  Care must be taken when HAL_RCCEx_PeriphCLKConfig() is used to select 
+  *        the RTC clock source; in this case the Backup domain will be reset in  
+  *        order to modify the RTC Clock source, as consequence RTC registers (including 
+  *        the backup registers) and RCC_CSR register are set to their reset values.  
+  * @retval None
+  */
+void HAL_RTC_MspInit(RTC_HandleTypeDef *hrtc)
+{
+  RCC_OscInitTypeDef RCC_OscInitStruct;
+  RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
+
+  /*##-1- Configue the RTC clock soucre ######################################*/
+  /* -a- Enable LSE/LSI Oscillator */
+#ifdef USE_RTC_LSI
+  RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.LSEState = RCC_LSI_ON;
+#else
+  RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSE;
+  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;  
+#endif
+  
+  if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+    KETCube_ErrorHandler();
+  }
+
+  /* -b- Select LSI as RTC clock source */
+#ifdef USE_RTC_LSI
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+#else
+  PeriphClkInitStruct.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+#endif
+  
+  if(HAL_RCCEx_PeriphCLKConfig(&PeriphClkInitStruct) != HAL_OK) { 
+    KETCube_ErrorHandler();
+  }
+
+  /*##-2- Enable the RTC peripheral Clock ####################################*/
+  /* Enable RTC Clock */
+  __HAL_RCC_RTC_ENABLE();
+  
+  /*##-3- Configure the NVIC for RTC Alarm ###################################*/
+  HAL_NVIC_SetPriority(RTC_Alarm_IRQn, 0x0, 0);
+  HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);
+}
+
+/**
+  * @brief RTC MSP De-Initialization 
+  *        This function freeze the hardware resources used in this example:
+  *          - Disable the Peripheral's clock
+  * @param hrtc: RTC handle pointer
+  * @retval None
+  */
+void HAL_RTC_MspDeInit(RTC_HandleTypeDef *hrtc)
+{
+  /* Reset peripherals */
+  __HAL_RCC_RTC_DISABLE();
+}
+
+/**
+  * @brief This function configures the source of the time base.
+  * @brief KETCube uses RTC, so sysTick is not enabled
+  * 
+  * @param TickPriority: Tick interrupt priority.
+  * 
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority) {
+  return HAL_OK;
+}
+
+/**
+  * @brief This function redefines systick-based HAL_Delay
+  * 
+  * This function provides delay in ms
+  * 
+  * @param Delay: specifies the delay time length, in milliseconds.
+  * @retval None
+  */
+void HAL_Delay(__IO uint32_t delay) {
+  ketCube_RTC_DelayMs(delay);
 }

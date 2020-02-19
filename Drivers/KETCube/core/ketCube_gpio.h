@@ -123,6 +123,7 @@ extern void ketCube_GPIO_Write(ketCube_gpio_port_t port,
 extern bool ketCube_GPIO_Read(ketCube_gpio_port_t port,
                               ketCube_gpio_pin_t pin);
 
+extern IRQn_Type MSP_GetIRQn(uint16_t GPIO_Pin);
 extern void EXTI0_1_IRQHandler(void);
 extern void EXTI2_3_IRQHandler(void);
 extern void EXTI4_15_IRQHandler(void);

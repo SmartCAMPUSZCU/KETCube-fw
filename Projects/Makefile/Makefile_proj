@@ -1,0 +1,2 @@
+# Uncomment the following line to use LSI as RTC clock source
+#CFLAGS  += -DUSE_RTC_LSI

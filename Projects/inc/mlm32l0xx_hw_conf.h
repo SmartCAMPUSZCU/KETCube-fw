@@ -135,8 +135,7 @@ Maintainer: Miguel Luis and Gregory Cristian
 #define BAT_LEVEL_PORT  GPIOA //CRF2
 #define BAT_LEVEL_PIN  GPIO_PIN_4
 #define ADC_READ_CHANNEL                 ADC_CHANNEL_4
-#define ADCCLK_ENABLE()                 __HAL_RCC_ADC1_CLK_ENABLE() ;
-#define ADCCLK_DISABLE()                __HAL_RCC_ADC1_CLK_DISABLE() ;
+
 
 
 

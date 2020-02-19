@@ -75,11 +75,6 @@ static inline uint32_t HW_RTC_GetTimerContext(void) {
     return ketCube_RTC_GetTimerContext();
 }
 
-
-static inline void HW_RTC_DelayMs(uint32_t delay) {
-    ketCube_RTC_DelayMs(delay);
-}
-
 static inline void HW_RTC_setMcuWakeUpTime() {
      ketCube_RTC_setMcuWakeUpTime();
 }
