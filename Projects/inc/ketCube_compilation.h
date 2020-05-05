@@ -70,8 +70,28 @@
  * when fast wake up is enabled, the mcu wakes up in ~20us  * and 
  * does not wait for the VREFINT to be settled. THis is ok for 
  * most of the case except when adc must be used in this case before 
- *starting the adc, you must make sure VREFINT is settled*/
+ * starting the adc, you must make sure VREFINT is settled
+ */
 #define KETCUBE_ENABLE_FAST_WAKEUP
+
+/**
+ * @brief Enable/Disable programmable Voltage Detector (PVD)
+ * 
+ * @note If PVD is enabled, additional power consumption arises
+ * @note PVD is disabled by default
+ * 
+ */
+// #define KETCUBE_ENABLE_PVD
+
+/**
+ * @brief Enable/Disable watchdog
+ * 
+ * If enabled, watchdog checks the program flow. the watchdog reset is performed after every wake-up in the main loop.
+ * 
+ * @note the (max) wake-up period is shortened to less than 30s if watchdog is used!
+ * 
+ */
+#define KETCUBE_ENABLE_WD
 
 /** @defgroup KETCube_inc_mod Included KETCube Modules
   * Define/undefine to include/exclude KETCube modules

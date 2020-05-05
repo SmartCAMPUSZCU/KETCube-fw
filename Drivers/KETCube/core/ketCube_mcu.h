@@ -59,6 +59,8 @@
 
 #define KETCUBE_MCU_LPMODE   KETCUBE_MCU_LPMODE_STOP
 
+#define KETCUBE_MCU_WDT      30                         /*<! Watchdog reset period in (pseudo)seconds (seconds are approximated by the closest power of 2); use 30 as the maxValue ! */
+
 
 /** @defgroup KETCube_MCU_fn Public Functions
 * @{
@@ -71,6 +73,9 @@ extern void ketCube_MCU_Sleep(void);
 extern void ketCube_MCU_EnableSleep(void);
 extern void ketCube_MCU_DisableSleep(void);
 extern bool ketCube_MCU_IsSleepEnabled(void);
+
+extern void ketCube_MCU_WD_Init(void);
+extern void ketCube_MCU_WD_Reset(void);
 
 extern void ketCube_MCU_ClockConfig(void);
 

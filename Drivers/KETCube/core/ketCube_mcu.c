@@ -55,6 +55,8 @@
 
 #include "debug.h"
 #include "ketCube_mcu.h"
+#include "timeServer.h"
+#include "stm32l0xx_hal_pwr.h"
 
 /**
  *  @brief Unique Devices IDs register set ( STM32L0xxx )
@@ -65,6 +67,12 @@
 
 
 static volatile bool enableSleep = TRUE;
+
+static TimerEvent_t KETCube_WDCheckTimer;  /* Timer to check WD */
+static IWDG_HandleTypeDef hiwdg; /* IWDG handler */
+
+PWR_PVDTypeDef sConfigPVD = {0};
+volatile bool ketCube_MCU_PVD_Det = FALSE;
 
 /**
   * @brief This function return a random seed
@@ -195,7 +203,7 @@ void ketCube_MCU_Sleep(void) {
     if (enableSleep == TRUE) {
         
 #if (KETCUBE_MCU_LPMODE == KETCUBE_MCU_LPMODE_SLEEP)
-        ketCube_MCU_EnterSleepMode
+        ketCube_MCU_EnterSleepMode();
 #else 
         ketCube_MCU_EnterStopMode();
         
@@ -229,9 +237,10 @@ void ketCube_MCU_ClockConfig(void) {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     
     /* Enable HSE Oscillator and Activate PLL with HSE as source */
-    RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSI;
+    RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSI;
     RCC_OscInitStruct.HSEState            = RCC_HSE_OFF;
     RCC_OscInitStruct.HSIState            = RCC_HSI_ON;
+    RCC_OscInitStruct.LSIState            = RCC_LSI_ON;
     RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
     RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_ON;
     RCC_OscInitStruct.PLL.PLLSource       = RCC_PLLSOURCE_HSI;
@@ -263,25 +272,121 @@ void ketCube_MCU_ClockConfig(void) {
 }
 
 /**
+  * @brief KETCube Watchdog (IWDG) Setup
+  *
+  */
+void ketCube_MCU_WD_Init(void) {
+    
+#ifdef KETCUBE_ENABLE_WD
+    
+    hiwdg.Instance = IWDG;
+    /* For IoT nodes, the slowest clock are normally advantageous */
+    hiwdg.Init.Prescaler = IWDG_PRESCALER_256;
+    hiwdg.Init.Window = 4095;  // (128 << 32) - 1 == 0xFFF
+    hiwdg.Init.Reload = 4095;  // (128 << 32) - 1 == 0xFFF
+    if (HAL_IWDG_Init(&hiwdg) != HAL_OK) {
+        KETCube_ErrorHandler();
+    }
+    
+    // Initialize timer to wake-up MCU periodically
+    TimerInit(&KETCube_WDCheckTimer, NULL); // just wake-up, do not execute any callback
+    
+#endif
+    
+}
+
+/**
+  * @brief KETCube Watchdog (IWDG) Reset
+  *
+  */
+void ketCube_MCU_WD_Reset(void) {
+
+#ifdef KETCUBE_ENABLE_WD
+    
+    HAL_IWDG_Refresh(&hiwdg);
+    
+    // WD periodic reset
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "KETCube WD Reset");
+    
+    /* wake-up peridically - set the (max) wake-up alarm (race conditions are ignored!) */
+    TimerStop(&KETCube_WDCheckTimer);
+    TimerSetValue(&KETCube_WDCheckTimer, (KETCUBE_MCU_WDT * 1000));
+    TimerStart(&KETCube_WDCheckTimer);
+    
+#endif
+    
+}
+
+/**
+  * @brief KETCube Voltage Detector init
+  * 
+  * @note Below 1V9, some KETCube parts are not operational (e.g. HDC1080); 1V9 voltage drop is detected by PVD
+  *
+  */
+static void ketCube_VoltageDet_Init(void) {
+    /* Enable the PVD Output */
+    HAL_PWR_DisablePVD();
+    
+    /* PVD Configuration */
+    sConfigPVD.PVDLevel = PWR_PVDLEVEL_0;
+    sConfigPVD.Mode = PWR_PVD_MODE_IT_RISING;
+    HAL_PWR_ConfigPVD(&sConfigPVD);
+    
+    /* Enable the PVD Output */
+    HAL_PWR_EnablePVD();
+    
+    /* Enable and set PVD Interrupt to lower priority */
+    HAL_NVIC_SetPriority(PVD_IRQn, 1, 0);
+    HAL_NVIC_EnableIRQ(PVD_IRQn);
+}
+
+/**
+  * @brief Programmable Voltage Detector (PVD) IRQ
+  *
+  */
+void PVD_IRQHandler(void) {    
+    HAL_PWR_PVD_IRQHandler();
+    
+    /* to verify, that flags were cleared */
+    do {
+        __HAL_PWR_PVD_EXTI_CLEAR_FLAG();
+        HAL_NVIC_ClearPendingIRQ(PVD_IRQn);
+    } while ((HAL_NVIC_GetPendingIRQ(PVD_IRQn)) || __HAL_PWR_PVD_EXTI_GET_FLAG());
+}
+
+/**
+  * @brief Programmable Voltage Detector (PVD) Callback
+  * 
+  * @todo The ketCube_MCU_PVD_Det flag should be used to trigger an action and after triggering it, it should be cleared
+  * 
+  */
+void HAL_PWR_PVDCallback(void) {
+    ketCube_MCU_PVD_Det = TRUE;
+}
+
+/**
   * @brief  Initializes the MSP
   * 
   * @retval None
   */
-void HAL_MspInit(void)
-{
+void HAL_MspInit(void) {
   __HAL_RCC_PWR_CLK_ENABLE();
-  
-  /* Disable the Power Voltage Detector */
-  HAL_PWR_DisablePVD( ); 
 
+#ifdef KETCUBE_ENABLE_PVD
+  /* Use Voltage detector to detect "safe" voltage region */
+  ketCube_VoltageDet_Init( );
+#else
+  /* Disable the Power Voltage Detector */
+  HAL_PWR_DisablePVD( );
   /* Enables the Ultra Low Power mode */
   HAL_PWREx_EnableUltraLowPower( );
+#endif
   
   __HAL_FLASH_SLEEP_POWERDOWN_ENABLE();
   
   /*In debug mode, e.g. when DBGMCU is activated, Arm core has always clocks
-   * And will not wait that the FLACH is ready to be read. It can miss in this 
-   * case the first instruction. To overcome this issue, the flash remain clcoked during sleep mode
+   * And will not wait that the FLASH is ready to be read. It can miss in this 
+   * case the first instruction. To overcome this issue, the flash remain clocked during sleep mode
    */
   DBG( __HAL_FLASH_SLEEP_POWERDOWN_DISABLE(); );
   

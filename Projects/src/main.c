@@ -144,6 +144,9 @@ int main(void)
     /* Configure the system clock */
     ketCube_MCU_ClockConfig();
 
+    /* Init Watchdog */
+    ketCube_MCU_WD_Init();
+    
     /* Configure the debug mode */
     DBG_Init();
 
@@ -187,6 +190,9 @@ int main(void)
 
     /* main loop */
     while (TRUE) {
+        /* reset WD */
+        ketCube_MCU_WD_Reset();
+        
         /* process pendig commands */
         ketCube_terminal_ProcessCMD();
         
