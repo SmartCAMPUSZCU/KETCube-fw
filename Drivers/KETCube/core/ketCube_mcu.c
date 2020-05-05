@@ -205,6 +205,8 @@ void ketCube_MCU_Sleep(void) {
 #if (KETCUBE_MCU_LPMODE == KETCUBE_MCU_LPMODE_SLEEP)
         ketCube_MCU_EnterSleepMode();
 #else 
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Entering Stop Mode");
+        
         ketCube_MCU_EnterStopMode();
         
         // Stop mode ...
@@ -212,6 +214,9 @@ void ketCube_MCU_Sleep(void) {
         ketCube_MCU_ExitStopMode();
         
         ketCube_RTC_setMcuWakeUpTime();
+        
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Exiting Stop Mode");
+        
 #endif // (KETCUBE_MCU_LPMODE == KETCUBE_MCU_LPMODE_SLEEP)        
     }
 #endif  /* LOW_POWER_DISABLE */
@@ -320,7 +325,8 @@ void ketCube_MCU_WD_Reset(void) {
 /**
   * @brief KETCube Voltage Detector init
   * 
-  * @note Below 1V9, some KETCube parts are not operational (e.g. HDC1080); 1V9 voltage drop is detected by PVD
+  * @note Some KETCube parts are not operationalunder certain voltage. E.g. HDC1080 is not opperational below 2V7 (HDC2080 will be used in next platform release, thus 1V62 will be the minimal voltage level for RHT sensor).
+  * @note Below 1V9 is realy "dangerous" voltage, thus PWR_PVDLEVEL_0 is used as a default value
   *
   */
 static void ketCube_VoltageDet_Init(void) {
@@ -335,8 +341,8 @@ static void ketCube_VoltageDet_Init(void) {
     /* Enable the PVD Output */
     HAL_PWR_EnablePVD();
     
-    /* Enable and set PVD Interrupt to lower priority */
-    HAL_NVIC_SetPriority(PVD_IRQn, 1, 0);
+    /* Enable and set PVD Interrupt to highest priority */
+    HAL_NVIC_SetPriority(PVD_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(PVD_IRQn);
 }
 
@@ -397,5 +403,6 @@ void HAL_MspInit(void) {
   HAL_PWREx_DisableFastWakeUp( );
 #endif
 
-  ketCube_GPIO_InitDriver( );
+  /* Initialize KETCube mainBoard */
+  ketCube_mainBoard_Init();
 }

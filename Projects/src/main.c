@@ -169,7 +169,7 @@ int main(void)
 
         NVIC_SystemReset();
     }
-
+    
     /* Init KETCube modules */
     if (ketCube_modules_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();

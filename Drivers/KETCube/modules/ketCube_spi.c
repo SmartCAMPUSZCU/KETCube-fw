@@ -142,20 +142,21 @@ static void ketCube_SPI_IoInit(void)
 {
   GPIO_InitTypeDef initStruct={0};
 
+  initStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  initStruct.Pull = GPIO_PULLUP;
+  initStruct.Speed = GPIO_SPEED_LOW;
+
+  ketCube_GPIO_ReInit(RADIO_NSS_PORT, RADIO_NSS_PIN, &initStruct);
+  ketCube_GPIO_Write(RADIO_NSS_PORT, RADIO_NSS_PIN, 1);
+  
   initStruct.Mode = GPIO_MODE_AF_PP;
   initStruct.Pull = GPIO_PULLDOWN;
   initStruct.Speed = GPIO_SPEED_HIGH;
-  initStruct.Alternate= SPI1_AF ;
+  initStruct.Alternate= SPI1_AF;
 
   ketCube_GPIO_ReInit(RADIO_SCLK_PORT, RADIO_SCLK_PIN, &initStruct);
   ketCube_GPIO_ReInit(RADIO_MISO_PORT, RADIO_MISO_PIN, &initStruct);
   ketCube_GPIO_ReInit(RADIO_MOSI_PORT, RADIO_MOSI_PIN, &initStruct);
-
-  initStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  initStruct.Pull = GPIO_PULLUP;
-
-  ketCube_GPIO_ReInit(RADIO_NSS_PORT, RADIO_NSS_PIN, &initStruct);
-  ketCube_GPIO_Write(RADIO_NSS_PORT, RADIO_NSS_PIN, 1);
 }
 
 static void ketCube_SPI_IoDeInit(void) {

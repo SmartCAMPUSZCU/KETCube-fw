@@ -52,6 +52,14 @@
 #include "ketCube_i2c.h"
 #include "ketCube_terminal.h"
 
+#include "ketCube_gpio.h"
+#include "ketCube_mainBoard.h"
+
+// Local defines
+#define KETCUBE_I2C_CLK_ENABLE()               __I2C1_CLK_ENABLE()
+#define KETCUBE_I2C_FORCE_RESET()              __I2C1_FORCE_RESET()
+#define KETCUBE_I2C_RELEASE_RESET()            __I2C1_RELEASE_RESET()
+
 // local fn declarations
 I2C_HandleTypeDef KETCUBE_I2C_Handle;
 static void ketCube_I2C_Error(void);
@@ -64,8 +72,10 @@ static uint8_t initRuns = 0;    //!< This driver can be initialized in number of
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
  */
-ketCube_cfg_DrvError_t ketCube_I2C_Init(void)
-{
+ketCube_cfg_DrvError_t ketCube_I2C_Init(void) {
+    GPIO_InitTypeDef GPIO_InitStruct;
+    
+    /* Initialize once only! */
     initRuns += 1;
 
     if (initRuns > 1) {
@@ -82,19 +92,16 @@ ketCube_cfg_DrvError_t ketCube_I2C_Init(void)
         KETCUBE_I2C_Handle.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
         KETCUBE_I2C_Handle.Instance = KETCUBE_I2C_HANDLE;
 
-        /* Init the I2C */
-        GPIO_InitTypeDef GPIO_InitStruct;
-        /* Enable I2C GPIO clocks */
-        KETCUBE_I2C_SCL_SDA_GPIO_CLK_ENABLE();
+        /* Init the I2C PINs */
 
         /* I2C_EXPBD SCL and SDA pins configuration ------------------------------------- */
-        GPIO_InitStruct.Pin = KETCUBE_I2C_SCL_PIN | KETCUBE_I2C_SDA_PIN;
         GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
         GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
         GPIO_InitStruct.Pull = GPIO_NOPULL;
-        GPIO_InitStruct.Alternate = KETCUBE_I2C_SCL_SDA_AF;
-
-        HAL_GPIO_Init(KETCUBE_I2C_SCL_SDA_GPIO_PORT, &GPIO_InitStruct);
+        GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
+        
+        ketCube_GPIO_Init(KETCUBE_MAIN_BOARD_PIN_SCL_PORT, KETCUBE_MAIN_BOARD_PIN_SCL_PIN, &GPIO_InitStruct);
+        ketCube_GPIO_Init(KETCUBE_MAIN_BOARD_PIN_SDA_PORT, KETCUBE_MAIN_BOARD_PIN_SDA_PIN, &GPIO_InitStruct);
 
         /* Enable the I2C_EXPBD peripheral clock */
         KETCUBE_I2C_CLK_ENABLE();
@@ -104,9 +111,10 @@ ketCube_cfg_DrvError_t ketCube_I2C_Init(void)
         /* Release the I2C peripheral clock reset */
         KETCUBE_I2C_RELEASE_RESET();
 
+        // NOTE IRQ is not useful in most I2C master (pooling) applications
         /* Enable and set I2C_EXPBD Interrupt to the highest priority */
-        HAL_NVIC_SetPriority(KETCUBE_I2C_EV_IRQn, 0, 0);
-        HAL_NVIC_EnableIRQ(KETCUBE_I2C_EV_IRQn);
+        // HAL_NVIC_SetPriority(I2C1_IRQn, 0, 0);
+        // HAL_NVIC_EnableIRQ(I2C1_IRQn);
 
         HAL_I2C_Init(&KETCUBE_I2C_Handle);
     }
@@ -132,6 +140,8 @@ ketCube_cfg_DrvError_t ketCube_I2C_UnInit(void)
     } else if (initRuns == 0) {
         // UnInit here ...
         HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
+        ketCube_GPIO_Release(KETCUBE_MAIN_BOARD_PIN_SCL_PORT, KETCUBE_MAIN_BOARD_PIN_SCL_PIN);
+        ketCube_GPIO_Release(KETCUBE_MAIN_BOARD_PIN_SDA_PORT, KETCUBE_MAIN_BOARD_PIN_SDA_PIN);
         return KETCUBE_CFG_DRV_OK;
     }
     // Run UnInit body once only: (initRuns == 1)
