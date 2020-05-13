@@ -51,6 +51,8 @@
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
 
+#include "ketCube_rtc.h"
+
 /** @defgroup KETCube_core_CMD KETCube core CMD
   * @brief KETCube core commandline definitions
   * @ingroup KETCube_Terminal
@@ -174,6 +176,28 @@ void ketCube_core_CMD_startBootloader(void) {
     NVIC_SystemReset();
 }
 
+/**
+ * @brief Show KETCube version and build info
+ * 
+ */
+void ketCube_core_CMD_showVersion(void) {
+#ifdef KETCUBE_VERSION
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Version: %s (build: %s)", KETCUBE_VERSION, KETCUBE_BUILD_ID);
+#else
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Version info not available!");
+#endif
+}
+
+/**
+ * @brief Show KETCube uptime
+ * 
+ * Time in seconds since last reset
+ * 
+ */
+void ketCube_core_CMD_showUptime(void) {
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Uptime: %d", ketCube_RTC_GetSysTime());
+}
+
 /* Terminal command definitions */
 ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     {
@@ -198,17 +222,6 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     },
     
     {
-        .cmd   = "startBootloader",
-        .descr = "Initialize MCU to allow STM bootloader startup.",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isSetCmd  = TRUE,
-        },
-        .settingsPtr.callback = &ketCube_core_CMD_startBootloader,
-    },
-    
-    {
         .cmd   = "factoryDefaults",
         .descr = "Erase EEPROM configuration.",
         .flags = {
@@ -217,6 +230,40 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
             .isSetCmd  = TRUE,
         },
         .settingsPtr.callback = &ketCube_core_CMD_FactoryDefaults,
+    },
+    
+    {
+        .cmd   = "remoteTerminalCounter",
+        .descr = "If set to value > 0, no application data is sent through"
+                 " radio, but rather just remote terminal commands and"
+                 " responses",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isRAM     = TRUE,
+            .isEEPROM  = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, remoteTerminalCounter),
+            .size     = sizeof(uint16_t)
+        }
+    },
+    
+    {
+        .cmd   = "startBootloader",
+        .descr = "Initialize MCU to allow STM bootloader startup.",
+        .flags = {
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isSetCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_core_CMD_startBootloader,
     },
     
     {
@@ -263,26 +310,29 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     },
     
     {
-        .cmd   = "remoteTerminalCounter",
-        .descr = "If set to value > 0, no application data is sent through"
-                 " radio, but rather just remote terminal commands and"
-                 " responses",
+        .cmd   = "uptime",
+        .descr = "Show KETCube uptime.",
         .flags = {
-            .isLocal   = TRUE,
-            .isRemote  = TRUE,
-            .isRAM     = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
+            .isLocal    = TRUE,
+            .isRemote   = TRUE,
+            .isRAM      = TRUE,
+            .isShowCmd  = TRUE,
         },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_ID_CORE,
-            .offset   = offsetof(ketCube_coreCfg_t, remoteTerminalCounter),
-            .size     = sizeof(uint16_t)
-        }
+        
+        .settingsPtr.callback = &ketCube_core_CMD_showUptime,
+    },
+    
+    {
+        .cmd   = "version",
+        .descr = "Show KETCube version info.",
+        .flags = {
+            .isLocal    = TRUE,
+            .isRemote   = TRUE,
+            .isRAM      = TRUE,
+            .isShowCmd  = TRUE,
+        },
+        
+        .settingsPtr.callback = &ketCube_core_CMD_showVersion,
     },
     
     DEF_TERMINATE()

@@ -609,6 +609,23 @@ uint32_t ketCube_RTC_GetCalendarTime( uint16_t *mSeconds)
   return seconds;
 }
 
+/**
+ * @brief Get system time
+ * 
+ * @return uint32_t seconds 
+ */
+uint32_t ketCube_RTC_GetSysTime(void)
+{
+  RTC_TimeTypeDef RTC_TimeStruct;
+  RTC_DateTypeDef RTC_DateStruct;
+  
+  uint64_t calendarValue = ketCube_RTC_GetCalendarValue( &RTC_DateStruct, &RTC_TimeStruct );
+  
+  uint32_t seconds = (uint32_t) calendarValue >>N_PREDIV_S;
+  
+  return seconds;
+}
+
 void ketCube_RTC_BKUPWrite( uint32_t Data0, uint32_t Data1)
 {
   HAL_RTCEx_BKUPWrite(&RtcHandle, RTC_BKP_DR0, Data0);
