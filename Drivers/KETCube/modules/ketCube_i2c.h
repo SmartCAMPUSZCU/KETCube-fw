@@ -2,7 +2,7 @@
  * @file    ketCube_i2c.h
  * @author  Jan Belohoubek
  * @version 0.2
- * @date    2018-07-12
+ * @date    2020-05-05
  * @brief   This file contains definitions for the ketCube I2C driver
  *
  * @attention
@@ -49,7 +49,7 @@
 #include "ketCube_cfg.h"
 
 /** @defgroup KETCube_I2C KETCube I2C
-  * @brief KETCube I2C module
+  * @brief KETCube I2C driver
   * @ingroup KETCube_ModuleDrivers
   * @{
   */
@@ -60,7 +60,7 @@
   */
 
 #define KETCUBE_I2C_NAME                      "i2c_drv"         ///< I2C driver name
-#define KETCUBE_I2C_ADDRESS                   (uint8_t)0x33     ///< KETCube I2C address
+#define KETCUBE_I2C_ADDRESS                   (uint8_t)0x33     ///< KETCube I2C address (KETCube is normally master and acts on a single-master I2C bus, thus this address has almost no meaning)
 #define KETCUBE_I2C_HANDLE                     I2C1
 #define KETCUBE_I2C_TIMEOUT                    0x5000           ///< The value of the maximal timeout for BUS waiting loops
 
@@ -72,16 +72,6 @@ typedef enum {
     KETCUBE_I2C_SPEED_400KHZ = 0x00B1112E       /*!< Analog Filter ON, Rise Time 250ns, Fall Time 100ns */
 } ketCube_I2C_SPEED_t;
 
-#define KETCUBE_I2C_CLK_ENABLE()               __I2C1_CLK_ENABLE()
-#define KETCUBE_I2C_SCL_SDA_GPIO_CLK_ENABLE()  __GPIOB_CLK_ENABLE()
-#define KETCUBE_I2C_FORCE_RESET()              __I2C1_FORCE_RESET()
-#define KETCUBE_I2C_RELEASE_RESET()            __I2C1_RELEASE_RESET()
-#define KETCUBE_I2C_SCL_SDA_AF                 GPIO_AF4_I2C1
-#define KETCUBE_I2C_SCL_SDA_GPIO_PORT          GPIOB
-#define KETCUBE_I2C_SCL_PIN                    GPIO_PIN_8
-#define KETCUBE_I2C_SDA_PIN                    GPIO_PIN_9
-#define KETCUBE_I2C_EV_IRQn                    I2C1_IRQn
-
 /**
 * @}
 */
@@ -91,8 +81,8 @@ typedef enum {
   * @{
   */
 
-extern ketCube_cfg_ModError_t ketCube_I2C_Init(void);
-extern ketCube_cfg_ModError_t ketCube_I2C_UnInit(void);
+extern ketCube_cfg_DrvError_t ketCube_I2C_Init(void);
+extern ketCube_cfg_DrvError_t ketCube_I2C_UnInit(void);
 extern uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg,
                                     uint8_t * pBuffer, uint16_t Size);
 extern uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg,
@@ -102,31 +92,32 @@ extern uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
 extern uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
                                        uint16_t Size);
 
-extern ketCube_cfg_ModError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
+// Deprecated I2C functions are below
+extern ketCube_cfg_DrvError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
                                                         uint8_t regAddr,
                                                         uint16_t * data);
 
-extern ketCube_cfg_ModError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
+extern ketCube_cfg_DrvError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
                                                        uint8_t RegAddr,
                                                        uint16_t * data);
 
-extern ketCube_cfg_ModError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
+extern ketCube_cfg_DrvError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
                                                          uint8_t regAddr,
                                                          uint8_t * data,
                                                          uint8_t try);
 
-extern ketCube_cfg_ModError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
+extern ketCube_cfg_DrvError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
                                                         uint8_t RegAddr,
                                                         uint8_t * data,
                                                         uint8_t try);
 
-extern ketCube_cfg_ModError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
+extern ketCube_cfg_DrvError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
                                                        uint8_t regAddr,
                                                        uint8_t * data,
                                                        uint8_t len,
                                                        uint8_t try);
 
-extern ketCube_cfg_ModError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
+extern ketCube_cfg_DrvError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
                                                          uint8_t regAddr,
                                                          uint8_t data);
 /**

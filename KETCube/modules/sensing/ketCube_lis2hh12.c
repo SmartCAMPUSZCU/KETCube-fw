@@ -62,7 +62,7 @@ ketCube_cfg_ModError_t ketCube_lis2hh12_Init(ketCube_InterModMsg_t *** msg)
 {
 
     // Init drivers
-    if (ketCube_I2C_Init() != KETCUBE_CFG_MODULE_OK) {
+    if (ketCube_I2C_Init() != KETCUBE_CFG_DRV_OK) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_LIS2HH12,
                                       "Initialisation failure! - I2C Driver");
         return KETCUBE_CFG_MODULE_ERROR;

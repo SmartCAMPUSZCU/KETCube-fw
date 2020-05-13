@@ -1,15 +1,13 @@
 /**
- * @file    ketCube_adc.h
+ * @file    ketCube_semtechWrappers.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-03-02
- * @brief   This file contains definitions for the KETCube PA4 ADC driver
+ * @version alpha
+ * @date    2019-12-10
+ * @brief   This file contains wrappers for KETCube drivers used in Semtech code.
  *
+ * 
  * @attention
- *
- * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
- * All rights reserved.</center></h2>
- *
+ * 
  * Developed by:
  * The SmartCampus Team
  * Department of Technologies and Measurement
@@ -42,45 +40,18 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __KETCUBE_ADC_H
-#define __KETCUBE_ADC_H
 
-#include "ketCube_cfg.h"
+#ifndef __KETCUBE_SEMTECH_WRAPPERS_H
+#define __KETCUBE_SEMTECH_WRAPPERS_H
 
-/** @defgroup KETCube_ADC KETCube ADC
-  * @brief KETCube ADC module
-  * @ingroup KETCube_SensMods
-  * @{
-  */
+#include "ketcube_mcu.h"
 
-/**
-* @brief  KETCube module configuration
-*/
-typedef struct ketCube_ADC_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
-} ketCube_ADC_moduleCfg_t;
+static inline uint32_t HW_GetRandomSeed(void) {
+     return ketCube_GetRandomSeed();
+}
 
-extern ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg;
+static inline void HW_GetUniqueId(uint8_t *id) {
+    ketCube_MCU_GetUniqueId(*id);
+}
 
-
-/** @defgroup KETCube_ADC_fn Public Functions
-* @{
-*/
-
-extern ketCube_cfg_ModError_t ketCube_ADC_Init(ketCube_InterModMsg_t ***
-                                               msg);
-extern ketCube_cfg_ModError_t ketCube_ADC_ReadData(uint8_t * buffer,
-                                                   uint8_t * len);
-
-
-/**
-* @}
-*/
-
-
-/**
-* @}
-*/
-
-#endif                          /* __KETCUBE_ADC_H */
+#endif // __KETCUBE_SEMTECH_WRAPPERS_H

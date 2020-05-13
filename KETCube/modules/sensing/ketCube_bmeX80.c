@@ -77,7 +77,7 @@ ketCube_cfg_ModError_t ketCube_bmeX80_Init(ketCube_InterModMsg_t *** msg)
 {
 
     // Init drivers
-    if (ketCube_I2C_Init() != KETCUBE_CFG_MODULE_OK) {
+    if (ketCube_I2C_Init() != KETCUBE_CFG_DRV_OK) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_BMEX80,
                                       "I2C Driver initialisation failure!");
         return KETCUBE_CFG_MODULE_ERROR;

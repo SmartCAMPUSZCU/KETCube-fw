@@ -290,13 +290,17 @@ void ketCube_terminal_Init(void)
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF("-----------------------------------------");
     KETCUBE_TERMINAL_ENDL();
+#ifdef KETCUBE_VERSION
+    KETCUBE_TERMINAL_PRINTF("Version: %s (build: %s)", KETCUBE_VERSION, KETCUBE_BUILD_ID);
+    KETCUBE_TERMINAL_ENDL();
+#endif
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF
         ("Use [TAB] key to show build-in help for current command");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_PRINTF("Use [ENTER] key to execute current command");
     KETCUBE_TERMINAL_ENDL();
-    KETCUBE_TERMINAL_PRINTF("Use [+]/[-] keys to browse command hostory");
+    KETCUBE_TERMINAL_PRINTF("Use [+]/[-] keys to browse command history");
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
 

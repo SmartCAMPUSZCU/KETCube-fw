@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_adc.c
+ * @file    ketCube_radio.c
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-03-02
- * @brief   This file contains definitions for the KETCube PA4 ADC driver
+ * @version alpha
+ * @date    2019-12-09
+ * @brief   This file contains the ketCube Radio driver
  *
  * @attention
  *
@@ -43,70 +43,69 @@
  */
 
 
+#include "radio.h"
 
-#include "stm32l0xx_hal.h"
-#include <math.h>
-
-#include "hw_msp.h"
-#include "ketCube_common.h"
-#include "ketCube_adc.h"
-#include "ketCube_ad.h"
+#include "ketCube_radio.h"
+#include "ketCube_gpio.h"
 #include "ketCube_terminal.h"
 
-#ifdef KETCUBE_CFG_INC_MOD_ADC
-
-ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg; /*!< Module configuration storage */
+static volatile bool initialized = FALSE; /* disable concurent execution of the init function body */
 
 /**
- * @brief  Configures ADC PIN
- * 
- * @retval KETCUBE_ADC_OK in case of success
- * @retval KETCUBE_ADC_ERROR in case of failure
- */
-ketCube_cfg_ModError_t ketCube_ADC_Init(ketCube_InterModMsg_t *** msg)
-{
-    // Init AD driver
-    ketCube_AD_Init();
-    
-    GPIO_InitTypeDef initStruct;
-
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    initStruct.Mode = GPIO_MODE_ANALOG;
-    initStruct.Pull = GPIO_NOPULL;
-    initStruct.Speed = GPIO_SPEED_HIGH;
-    initStruct.Pin = GPIO_PIN_4;
-
-    HAL_GPIO_Init(GPIOA, &initStruct);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-/**
-  * @brief Get milivolt value form PA4
-  *
-  * @param buffer pointer to fuffer for storing the result of milivolt mesurement
-  * @param len data len in bytes
-  *
-  * @retval KETCUBE_CFG_MODULE_OK in case of success
-  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+  * @brief Initializes the IO PINs
+  * 
+  * This function should be executed when exiting sleep mode
+  * 
+  * @param None
+  * @retval None
   */
-ketCube_cfg_ModError_t ketCube_ADC_ReadData(uint8_t * buffer,
-                                            uint8_t * len)
-{
-    uint16_t mv;
+static void ketCube_Radio_IoInit(void) {
+    Radio.IoInit();
+}
 
-    mv = ketCube_AD_ReadChannelmV(ADC_CHANNEL_4);
+/**
+  * @brief Deinitializes the IO PINs
+  * 
+  * This function should be executed prior entering sleep mode
+  * 
+  * @param None
+  * @retval None
+  */
+static void ketCube_Radio_IoDeInit(void) {
+    ketCube_GPIO_Release(RADIO_MOSI_PORT, RADIO_MOSI_PIN); 
+    ketCube_GPIO_Release(RADIO_MISO_PORT, RADIO_MISO_PIN); 
+    ketCube_GPIO_Release(RADIO_SCLK_PORT, RADIO_SCLK_PIN); 
+    ketCube_GPIO_Release(RADIO_NSS_PORT, RADIO_NSS_PIN); 
+    
+    Radio.IoDeInit( );
+}
 
-    // write to buffer
-    *len = 2;
-    buffer[0] = ((uint8_t) ((mv >> 8) & 0xFF));
-    buffer[1] = ((uint8_t) (mv & 0xFF));
+/**
+  * @brief Initializes the Radio hardware
+  */
+ketCube_cfg_DrvError_t ketCube_Radio_Init(void) {
+    if (initialized == TRUE) {
+        ketCube_terminal_DriverSeverityPrintln(KETCUBE_RADIO_NAME, KETCUBE_CFG_SEVERITY_ERROR, "Unable to initialize Radio!");
+        return KETCUBE_CFG_MODULE_ERROR;
+    }
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ADC,
-                                 "Voltage@PA4: %d", mv);
-
+    ketCube_Radio_IoInit();
+    
+    initialized = TRUE;
+    
     return KETCUBE_CFG_MODULE_OK;
 }
 
-#endif                          /* KETCUBE_CFG_INC_MOD_ADC */
+/**
+  * @brief Deinitializes the Radio hardware
+  */
+ketCube_cfg_DrvError_t ketCube_Radio_DeInit(void) {
+    if (initialized == TRUE) {
+        // UnInit here ...
+        ketCube_Radio_IoDeInit();
+    }
+    
+    initialized = FALSE;
+    
+    return KETCUBE_CFG_MODULE_OK;
+}

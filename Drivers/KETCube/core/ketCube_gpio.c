@@ -75,7 +75,6 @@ do {                                                    \
   } while(0)
 
 
-extern IRQn_Type MSP_GetIRQn(uint16_t GPIO_Pin);
 static ketCube_GPIO_VoidFn_t ketCube_GPIO_IrqHandlers[16] = { NULL };
 
 /**
@@ -149,6 +148,41 @@ void ketCube_GPIO_noneIrqHandler()
 {
     // this function exist
     // just to have valid function pointer ... 
+}
+
+/**
+ * @brief Initializes the GPIO driver
+ * 
+ * @note this sets all PINs into initial state
+ * 
+ */
+void ketCube_GPIO_InitDriver(void) {
+    GPIO_InitTypeDef GPIO_InitStruct={0};
+    
+    /* Configure all GPIO as analog to reduce current consumption on non used IOs */
+    /* Enable GPIOs clock */
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOH_CLK_ENABLE();
+    
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    /* All GPIOs except debug pins (SWCLK and SWD) */
+    GPIO_InitStruct.Pin = GPIO_PIN_All & (~( GPIO_PIN_13 | GPIO_PIN_14) );
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    
+    /* All GPIOs */
+    GPIO_InitStruct.Pin = GPIO_PIN_All;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOH, &GPIO_InitStruct);
+    
+    /* Disable GPIOs clock */
+    __HAL_RCC_GPIOA_CLK_DISABLE();
+    __HAL_RCC_GPIOB_CLK_DISABLE();
+    __HAL_RCC_GPIOC_CLK_DISABLE();
+    __HAL_RCC_GPIOH_CLK_DISABLE();
 }
 
 /**
@@ -387,4 +421,33 @@ void EXTI4_15_IRQHandler(void)
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_14);
 
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_15);
+}
+
+/**
+  * @brief  Gets IRQ number as a function of the GPIO_Pin.
+  * @param  GPIO_Pin: Specifies the pins connected to the EXTI line.
+  * @retval IRQ number
+  */
+IRQn_Type MSP_GetIRQn( uint16_t GPIO_Pin)
+{
+  switch( GPIO_Pin )
+  {
+    case GPIO_PIN_0:  
+    case GPIO_PIN_1:  return EXTI0_1_IRQn;
+    case GPIO_PIN_2: 
+    case GPIO_PIN_3:  return EXTI2_3_IRQn;
+    case GPIO_PIN_4:  
+    case GPIO_PIN_5:  
+    case GPIO_PIN_6:
+    case GPIO_PIN_7:
+    case GPIO_PIN_8:
+    case GPIO_PIN_9:  
+    case GPIO_PIN_10:
+    case GPIO_PIN_11:
+    case GPIO_PIN_12:
+    case GPIO_PIN_13:
+    case GPIO_PIN_14:
+    case GPIO_PIN_15: 
+    default: return EXTI4_15_IRQn;
+  }
 }

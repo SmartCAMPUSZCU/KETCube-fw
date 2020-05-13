@@ -42,11 +42,10 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __KETCUBE_MAIN_BOARD_H
 #define __KETCUBE_MAIN_BOARD_H
 
-/* Includes ------------------------------------------------------------------*/
+
 #include "stm32l0xx_hal.h"
 #include "stm32l0xx_hal_gpio.h"
 #include "stdlib.h"
@@ -216,6 +215,25 @@
   * @}
   */
 
+/**
+ * @brief Initialize KETCube mainBoard
+ *
+ */
+static inline void ketCube_mainBoard_Init(void) {
+  GPIO_InitTypeDef initStruct={0};
+  
+  /* Init GPIO driver */
+  ketCube_GPIO_InitDriver();
+
+  /* Init radio SS */ 
+  initStruct.Mode = GPIO_MODE_AF_PP;
+  initStruct.Pull = GPIO_NOPULL;
+  initStruct.Speed = GPIO_SPEED_LOW;
+
+  // Radio chip SS should be specified. Otherwise, the power consumption may increase
+  ketCube_GPIO_ReInit(KETCUBE_GPIO_PA, KETCUBE_GPIO_PIN_15, &initStruct);
+  ketCube_GPIO_Write(KETCUBE_GPIO_PA, KETCUBE_GPIO_PIN_15, 1);
+}
 
 /**
   * @}

@@ -114,6 +114,7 @@ extern ketCube_cfg_ModError_t ketCube_batMeas_Init(ketCube_InterModMsg_t
 extern ketCube_cfg_ModError_t ketCube_batMeas_ReadData(uint8_t * buffer,
                                                        uint8_t * len);
 
+extern uint8_t ketCube_batMeas_GetBatteryByte(void);
 
 /**
 * @}

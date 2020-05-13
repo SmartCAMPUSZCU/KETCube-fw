@@ -44,7 +44,6 @@
 
 #include "hw.h"
 #include "low_power.h"
-#include "bsp.h"
 #include "vcom.h"
 #include "timeServer.h"
 
@@ -54,6 +53,8 @@
 #include "ketCube_modules.h"
 #include "ketCube_common.h"
 #include "ketCube_remote_terminal.h"
+#include "ketCube_mcu.h"
+#include "ketCube_rtc.h"
 
 static TimerEvent_t KETCube_PeriodTimer;
 
@@ -94,7 +95,8 @@ void KETCube_ErrorHandler(void)
 
     KETCUBE_TERMINAL_ENDL();
     
-    HAL_Delay(10000);
+    // In case of clock-related error, delay may cause problems!
+    // HAL_Delay(10000);
 
     while (TRUE) {
 
@@ -140,13 +142,21 @@ int main(void)
     HAL_Init();
 
     /* Configure the system clock */
-    SystemClock_Config();
+    ketCube_MCU_ClockConfig();
 
+    /* Init Watchdog */
+    ketCube_MCU_WD_Init();
+    
     /* Configure the debug mode */
     DBG_Init();
 
+#if defined(USE_BOOTLOADER)
+    /* Set the Vector Table base location at 0x3000 */
+    NVIC_SetVectorTable( NVIC_VectTab_FLASH, 0x3000 );
+#endif
+    
     /* Configure the hardware */
-    HW_Init();
+    ketCube_RTC_Init();
 
     /* Init Terminal */
     ketCube_terminal_Init();
@@ -159,7 +169,7 @@ int main(void)
 
         NVIC_SystemReset();
     }
-
+    
     /* Init KETCube modules */
     if (ketCube_modules_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();
@@ -180,6 +190,9 @@ int main(void)
 
     /* main loop */
     while (TRUE) {
+        /* reset WD */
+        ketCube_MCU_WD_Reset();
+        
         /* process pendig commands */
         ketCube_terminal_ProcessCMD();
         
@@ -208,15 +221,8 @@ int main(void)
 
         // execute module preSleep module functions
         if (ketCube_modules_SleepEnter() == KETCUBE_CFG_OK) {
-
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
-            DISABLE_IRQ();
-
-#ifndef LOW_POWER_DISABLE
-            LowPower_Handler();
-
-#endif                          /* LOW_POWER_DISABLE */
-            ENABLE_IRQ();
+            ketCube_MCU_Sleep();
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
 
             // execute module wake-up module functions
@@ -224,3 +230,4 @@ int main(void)
         }
     }
 }
+

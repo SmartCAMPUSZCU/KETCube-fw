@@ -1,4 +1,4 @@
-# Copyright (c) 2018 University of West Bohemia in Pilsen
+# Copyright (c) 2018 - 2020 University of West Bohemia in Pilsen
 # All rights reserved.
 #
 # Developed by:
@@ -36,6 +36,9 @@
 TARGET=KETCube
 COREDIR=../../
 OUTDIR = ./build/
+
+BUILD_ID = $(shell git rev-parse --short HEAD)
+VERSION  = $(shell cat ../../VERSION | head -n 1)
 
 ###################################################
 
@@ -97,13 +100,15 @@ INCLUDE = $(addprefix -I, $(INC_DIRS))
 CFLAGS   = -Wall  -Wno-missing-braces -g -mthumb -mcpu=cortex-m0plus -fdiagnostics-color=auto $(OPTIMIZE)
 CFLAGS  += -march=armv6-m -mlittle-endian -Wl,--gc-sections -TSTM32L072CZYx_FLASH.ld $(DEBUG)
 CFLAGS  += -DSTM32L082xx -DUSE_B_L082Z_KETCube -DUSE_HAL_DRIVER -DREGION_EU868
+CFLAGS  += -DKETCUBE_BUILD_ID="\"$(BUILD_ID)\"" -DKETCUBE_VERSION="\"$(VERSION)\""
 
 ASFLAGS = -mcpu=cortex-m0plus -march=armv6-m -mthumb -mthumb-interwork
 
-LDFLAGS  = -mcpu=cortex-m0 -march=armv6-m -TSTM32L072CZYx_FLASH.ld -Wl,-Map=$(TARGET).map
+LDFLAGS  = -mcpu=cortex-m0 -march=armv6-m -TSTM32L072CZYx_FLASH.ld -Wl,-Map=$(TARGET).map,--gc-sections
 LDFLAGS += -mthumb -mfloat-abi=soft -specs=nano.specs -specs=nosys.specs
 LDFLAGS += -lc -lrdimon -u _printf_float
 
+ALDFLAGS = 
 
 ###################################################
 
@@ -132,12 +137,9 @@ SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2c.c
 SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_i2s.c
 SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash.c
 SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_flash_ex.c
+SRCS += $(COREDIR)Drivers/STM32L0xx_HAL_Driver/Src/stm32l0xx_hal_iwdg.c
 SRCS += $(COREDIR)Projects/src/debug.c
-SRCS += $(COREDIR)Projects/src/hw_rtc.c
-SRCS += $(COREDIR)Projects/src/hw_spi.c
 SRCS += $(COREDIR)Projects/src/main.c
-SRCS += $(COREDIR)Projects/src/mlm32l0xx_hal_msp.c
-SRCS += $(COREDIR)Projects/src/mlm32l0xx_hw.c
 SRCS += $(COREDIR)Projects/src/mlm32l0xx_it.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Core/lora.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Core/lora-test.c
@@ -161,7 +163,6 @@ SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Mac/region/RegionEU868.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Mac/region/RegionIN865.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Mac/region/RegionKR920.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Mac/region/RegionUS915.c
-SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Utilities/low_power.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Utilities/systime.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Crypto/aes.c
 SRCS += $(COREDIR)Middlewares/Third_Party/Lora/Crypto/cmac.c
@@ -188,8 +189,13 @@ SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_bmeX80.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_lis2hh12.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_ics43432.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_eeprom.c
+SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_mcu.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_uart.c
 SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_gpio.c
+SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_rtc.c
+SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_spi.c
+SRCS += $(COREDIR)Drivers/KETCube/core/ketCube_radio.c
+SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_ad.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2c.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2s.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_timer.c
@@ -207,7 +213,7 @@ OBJS  = $(addprefix $(OUTDIR),$(notdir $(SRCS:.c=.o)))
 OBJS += $(addprefix $(OUTDIR),$(notdir $(ASSRCS:.s=.o)))
 
 OUTFILES = $(OUTDIR)$(TARGET).elf $(OUTDIR)$(TARGET).hex \
-$(OUTDIR)$(TARGET).bin
+$(OUTDIR)$(TARGET).bin $(OUTDIR)lib$(TARGET).a
 SRCPATHS = $(sort $(dir $(SRCS)))
 
 VPATH = $(SRCPATHS)
@@ -241,15 +247,26 @@ $(OUTDIR)%.o: %.s
 	@echo Creating $@
 	@$(CP) -O binary -S $< $@
 
+## Library linked in this way contains weak and non-weak symbols in the same time. This may lead to errorneous selection of weak symbl depending on the ordering in the library. If the library created in this way is used, it is recommended to link in the following way: "-Wl,--whole-archive -lKETCube -Wl,--no-whole-archive"; "-Wl,--gc-sections" will reduce binary size signifficantly, as this library contains number of unnecessary code
+# %.a: $(OBJS)
+# 	@echo Creating static library $@
+# 	@$(AR) rcs $@ $(OBJS)
+
+# Partial linking may be used as a workaround because objects contain number of weak and non-weak symbol pairs, whose leads to wrong symbol selection during the link process, when symbol ordering is weak, non-weak (in libraries, firs-hit symbol search strategy is used)
+%.a: $(OBJS)
+	@echo Creating static library $@
+	@$(LD) $(OBJS) $(ALDFLAGS) -r -o $(@:.a=.o)
+	@$(AR) rcs $@ $(@:.a=.o)
+
 all: $(OBJS) $(OUTFILES)
-	$(MAKE) sigdone
+	$(MAKE) size
 
 size:
 	@$(SE) $(OUTDIR)$(TARGET).elf
 	$(MAKE) sigdone
 
 clean:
-	rm -f $(OUTDIR)*.o $(OUTDIR)$(TARGET).elf $(OUTDIR)$(TARGET).hex $(OUTDIR)$(TARGET).bin
+	rm -f $(OUTDIR)*.o $(OUTDIR)$(TARGET).elf $(OUTDIR)lib$(TARGET).a $(OUTDIR)$(TARGET).hex $(OUTDIR)$(TARGET).bin
 	$(MAKE) sigdone
 
 chipinfo:

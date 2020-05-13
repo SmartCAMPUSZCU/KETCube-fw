@@ -51,6 +51,8 @@
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
 
+#include "ketCube_rtc.h"
+
 /** @defgroup KETCube_core_CMD KETCube core CMD
   * @brief KETCube core commandline definitions
   * @ingroup KETCube_Terminal
@@ -74,7 +76,8 @@ void ketCube_core_CMD_FactoryDefaults(void)
                                     (ketCube_cfg_AllocEEPROM_t) 0,
                                     ketCube_modules_List[i].cfgLen) == KETCUBE_CFG_OK) {
         } else {
-             ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to restore factory defaults!");
+             KETCUBE_TERMINAL_PRINTF("Unable to restore factory defaults!");
+             KETCUBE_TERMINAL_ENDL();
             return;
         }
         
@@ -82,8 +85,10 @@ void ketCube_core_CMD_FactoryDefaults(void)
         addr += ketCube_modules_List[i].cfgLen;
     }
     
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "KETCube was set to factory defaults!");
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Reload to apply new settings!");
+    KETCUBE_TERMINAL_PRINTF("KETCube was set to factory defaults!");
+    KETCUBE_TERMINAL_ENDL();
+    KETCUBE_TERMINAL_PRINTF("Reload to apply new settings!");
+    KETCUBE_TERMINAL_ENDL();
 }
 
 /**
@@ -99,7 +104,8 @@ void ketCube_core_CMD_startBootloader(void) {
     uint32_t SECTORError = 0;
     FLASH_AdvOBProgramInitTypeDef pAdvOBInit;
     
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Note, that this operation causes firmware malfunction!");
+    KETCUBE_TERMINAL_PRINTF("Note, that this operation causes firmware malfunction!");
+    KETCUBE_TERMINAL_ENDL();
     
     /* Introduce small amount of delay here to be sure, that above note will successfully print */
     HAL_Delay(2000);
@@ -113,13 +119,15 @@ void ketCube_core_CMD_startBootloader(void) {
     EraseInitStruct.NbPages = 1;
     
     if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK) {
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to erase BANK 2 START!");
+        KETCUBE_TERMINAL_PRINTF("Unable to erase BANK 2 START!");
+        KETCUBE_TERMINAL_ENDL();
         return;
     }
     
     /* Write invalid data to BANK START addresses */
     if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_BANK2_BASE, 0xFFFFFFFF) != HAL_OK) {
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to init BANK 1!");
+        KETCUBE_TERMINAL_PRINTF("Unable to init BANK 1!");
+        KETCUBE_TERMINAL_ENDL();
         HAL_FLASH_Lock();
         return;
     }
@@ -130,14 +138,16 @@ void ketCube_core_CMD_startBootloader(void) {
     EraseInitStruct.NbPages = 1;
     
     if (HAL_FLASHEx_Erase(&EraseInitStruct, &SECTORError) != HAL_OK) {
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to erase BANK 1 START!");
+        KETCUBE_TERMINAL_PRINTF("Unable to erase BANK 1 START!");
+        KETCUBE_TERMINAL_ENDL();
         HAL_FLASH_Lock();
         return;
     }
     
     /* Write invalid data to BANK START addresses */
     if (HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, FLASH_BASE, 0xFFFFFFFF) != HAL_OK) {
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to init BANK 1!");
+        KETCUBE_TERMINAL_PRINTF("Unable to init BANK 1!");
+        KETCUBE_TERMINAL_ENDL();
         HAL_FLASH_Lock();
         return;
     }
@@ -151,7 +161,8 @@ void ketCube_core_CMD_startBootloader(void) {
     HAL_FLASH_OB_Unlock();
     if (HAL_FLASHEx_AdvOBProgram(&pAdvOBInit) != HAL_OK) {
         HAL_FLASH_OB_Lock();
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_ERROR, "Unable to change BOOT settings (BFB2)!");
+        KETCUBE_TERMINAL_PRINTF("Unable to change BOOT settings (BFB2)!");
+        KETCUBE_TERMINAL_ENDL();
         HAL_FLASH_Lock();
         return;
     }
@@ -164,14 +175,63 @@ void ketCube_core_CMD_startBootloader(void) {
     HAL_FLASH_Lock();
     
     /* Report ... */
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Memory BANKs invalidated!");
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "");
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Starting STM32 Bootloader ...");
+    KETCUBE_TERMINAL_PRINTF("Memory BANKs invalidated!");
+    KETCUBE_TERMINAL_ENDL();
+    KETCUBE_TERMINAL_PRINTF("");
+    KETCUBE_TERMINAL_ENDL();
+    KETCUBE_TERMINAL_PRINTF("Starting STM32 Bootloader ...");
+    KETCUBE_TERMINAL_ENDL();
     
     HAL_Delay(2000);
     
     /* Start bootloader */
     NVIC_SystemReset();
+}
+
+/**
+ * @brief Show KETCube version and build info
+ * 
+ */
+void ketCube_core_CMD_showVersion(void) {
+#ifdef KETCUBE_VERSION
+    KETCUBE_TERMINAL_PRINTF("Version: %s (build: %s)", KETCUBE_VERSION, KETCUBE_BUILD_ID);
+#else
+    KETCUBE_TERMINAL_PRINTF("Version info not available!");
+#endif
+    KETCUBE_TERMINAL_ENDL();
+}
+
+/**
+ * @brief Show KETCube uptime
+ * 
+ * Time in seconds since last reset
+ * 
+ */
+void ketCube_core_CMD_showUptime(void) {
+    uint32_t uptime, tmp;
+    uint8_t hours, minutes, seconds, years;
+    uint16_t days;
+    
+    uptime = ketCube_RTC_GetSysTime();
+    seconds = uptime % 60;
+    
+    // To minutes
+    tmp = uptime / 60;
+    minutes = tmp % 60;
+    
+    // To hours
+    tmp = tmp / 60;
+    hours = tmp % 24;
+    
+    // To days
+    tmp = tmp / 24;
+    days = tmp % 365;
+    
+    // To years
+    years = tmp / 365;
+    
+    KETCUBE_TERMINAL_PRINTF("%d years, %d days, %02d:%02d:%02d (%d seconds since last reboot)", years, days, hours, minutes, seconds, uptime);
+    KETCUBE_TERMINAL_ENDL();
 }
 
 /* Terminal command definitions */
@@ -198,17 +258,6 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     },
     
     {
-        .cmd   = "startBootloader",
-        .descr = "Initialize MCU to allow STM bootloader startup.",
-        .flags = {
-            .isLocal   = TRUE,
-            .isEEPROM  = TRUE,
-            .isSetCmd  = TRUE,
-        },
-        .settingsPtr.callback = &ketCube_core_CMD_startBootloader,
-    },
-    
-    {
         .cmd   = "factoryDefaults",
         .descr = "Erase EEPROM configuration.",
         .flags = {
@@ -217,6 +266,40 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
             .isSetCmd  = TRUE,
         },
         .settingsPtr.callback = &ketCube_core_CMD_FactoryDefaults,
+    },
+    
+    {
+        .cmd   = "remoteTerminalCounter",
+        .descr = "If set to value > 0, no application data is sent through"
+                 " radio, but rather just remote terminal commands and"
+                 " responses",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isRAM     = TRUE,
+            .isEEPROM  = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, remoteTerminalCounter),
+            .size     = sizeof(uint16_t)
+        }
+    },
+    
+    {
+        .cmd   = "startBootloader",
+        .descr = "Initialize MCU to allow STM bootloader startup.",
+        .flags = {
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isSetCmd  = TRUE,
+        },
+        .settingsPtr.callback = &ketCube_core_CMD_startBootloader,
     },
     
     {
@@ -263,26 +346,29 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     },
     
     {
-        .cmd   = "remoteTerminalCounter",
-        .descr = "If set to value > 0, no application data is sent through"
-                 " radio, but rather just remote terminal commands and"
-                 " responses",
+        .cmd   = "uptime",
+        .descr = "Show KETCube uptime.",
         .flags = {
-            .isLocal   = TRUE,
-            .isRemote  = TRUE,
-            .isRAM     = TRUE,
-            .isEEPROM  = TRUE,
-            .isShowCmd = TRUE,
-            .isSetCmd  = TRUE,
-            .isGeneric = TRUE,
+            .isLocal    = TRUE,
+            .isRemote   = TRUE,
+            .isRAM      = TRUE,
+            .isShowCmd  = TRUE,
         },
-        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
-        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
-            .moduleID = KETCUBE_LISTS_ID_CORE,
-            .offset   = offsetof(ketCube_coreCfg_t, remoteTerminalCounter),
-            .size     = sizeof(uint16_t)
-        }
+        
+        .settingsPtr.callback = &ketCube_core_CMD_showUptime,
+    },
+    
+    {
+        .cmd   = "version",
+        .descr = "Show KETCube version info.",
+        .flags = {
+            .isLocal    = TRUE,
+            .isRemote   = TRUE,
+            .isRAM      = TRUE,
+            .isShowCmd  = TRUE,
+        },
+        
+        .settingsPtr.callback = &ketCube_core_CMD_showVersion,
     },
     
     DEF_TERMINATE()

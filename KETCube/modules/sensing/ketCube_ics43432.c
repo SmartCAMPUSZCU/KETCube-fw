@@ -46,7 +46,7 @@
 #include "ketCube_terminal.h"
 #include "ketCube_i2s.h"
 #include "ketCube_ics43432.h"
-#include "hw.h"
+#include "ketCube_gpio.h"
 
 #ifdef KETCUBE_CFG_INC_MOD_ICS43432
 
@@ -70,8 +70,8 @@ ketCube_cfg_ModError_t ketCube_ics43432_Init(ketCube_InterModMsg_t *** msg)
     initStruct.Speed = GPIO_SPEED_LOW;
     initStruct.Pin = KETCUBE_ICS43432_NOISE_LED_PIN;
 
-    HW_GPIO_Init(KETCUBE_ICS43432_NOISE_LED_PORT,
-                 KETCUBE_ICS43432_NOISE_LED_PIN, &initStruct);
+    ketCube_GPIO_ReInit(KETCUBE_ICS43432_NOISE_LED_PORT,
+                        KETCUBE_ICS43432_NOISE_LED_PIN, &initStruct);
 
     /* Enable and set I2S Interrupt to lower priority */
     HAL_NVIC_SetPriority(KETCUBE_I2S_EV_IRQn, 1, 0);
@@ -141,13 +141,13 @@ void SPI2_IRQHandler()
                     if (noiseCnt < UINT32_MAX) {
                         noiseCnt += 1;
                     }
-                    HAL_GPIO_WritePin(KETCUBE_ICS43432_NOISE_LED_PORT,
-                                      KETCUBE_ICS43432_NOISE_LED_PIN,
-                                      GPIO_PIN_RESET);
+                    ketCube_GPIO_Write(KETCUBE_ICS43432_NOISE_LED_PORT,
+                                       KETCUBE_ICS43432_NOISE_LED_PIN,
+                                       FALSE);
                 } else {
-                    HAL_GPIO_WritePin(KETCUBE_ICS43432_NOISE_LED_PORT,
-                                      KETCUBE_ICS43432_NOISE_LED_PIN,
-                                      GPIO_PIN_SET);
+                    ketCube_GPIO_Write(KETCUBE_ICS43432_NOISE_LED_PORT,
+                                       KETCUBE_ICS43432_NOISE_LED_PIN,
+                                       TRUE);
                 }
             }
         }

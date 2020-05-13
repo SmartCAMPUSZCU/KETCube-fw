@@ -1,13 +1,13 @@
 /**
- * @file    ketCube_adc.c
+ * @file    ketCube_mcu.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-03-02
- * @brief   This file contains definitions for the KETCube PA4 ADC driver
+ * @version alpha
+ * @date    2019-12-10
+ * @brief   This file contains the KETCube MCU defs
  *
  * @attention
  *
- * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
+ * <h2><center>&copy; Copyright (c) 2019 University of West Bohemia in Pilsen
  * All rights reserved.</center></h2>
  *
  * Developed by:
@@ -42,71 +42,51 @@
  * OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE. 
  */
 
+#ifndef __KETCUBE_MCU_H
+#define __KETCUBE_MCU_H
 
+#include "ketCube_cfg.h"
 
-#include "stm32l0xx_hal.h"
-#include <math.h>
-
-#include "hw_msp.h"
-#include "ketCube_common.h"
-#include "ketCube_adc.h"
-#include "ketCube_ad.h"
-#include "ketCube_terminal.h"
-
-#ifdef KETCUBE_CFG_INC_MOD_ADC
-
-ketCube_ADC_moduleCfg_t ketCube_ADC_moduleCfg; /*!< Module configuration storage */
-
-/**
- * @brief  Configures ADC PIN
- * 
- * @retval KETCUBE_ADC_OK in case of success
- * @retval KETCUBE_ADC_ERROR in case of failure
- */
-ketCube_cfg_ModError_t ketCube_ADC_Init(ketCube_InterModMsg_t *** msg)
-{
-    // Init AD driver
-    ketCube_AD_Init();
-    
-    GPIO_InitTypeDef initStruct;
-
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-
-    initStruct.Mode = GPIO_MODE_ANALOG;
-    initStruct.Pull = GPIO_NOPULL;
-    initStruct.Speed = GPIO_SPEED_HIGH;
-    initStruct.Pin = GPIO_PIN_4;
-
-    HAL_GPIO_Init(GPIOA, &initStruct);
-
-    return KETCUBE_CFG_MODULE_OK;
-}
-
-/**
-  * @brief Get milivolt value form PA4
-  *
-  * @param buffer pointer to fuffer for storing the result of milivolt mesurement
-  * @param len data len in bytes
-  *
-  * @retval KETCUBE_CFG_MODULE_OK in case of success
-  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+/** @defgroup KETCube_MCU KETCube MCU
+  * @brief KETCube MCU
+  * @ingroup KETCube_Core
+  * @{
   */
-ketCube_cfg_ModError_t ketCube_ADC_ReadData(uint8_t * buffer,
-                                            uint8_t * len)
-{
-    uint16_t mv;
 
-    mv = ketCube_AD_ReadChannelmV(ADC_CHANNEL_4);
+/* Low Power modes selection */
+#define KETCUBE_MCU_LPMODE_STOP   0
+#define KETCUBE_MCU_LPMODE_SLEEP  1
 
-    // write to buffer
-    *len = 2;
-    buffer[0] = ((uint8_t) ((mv >> 8) & 0xFF));
-    buffer[1] = ((uint8_t) (mv & 0xFF));
+#define KETCUBE_MCU_LPMODE   KETCUBE_MCU_LPMODE_STOP
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_ADC,
-                                 "Voltage@PA4: %d", mv);
+#define KETCUBE_MCU_WDT      30                         /*<! Watchdog reset period in (pseudo)seconds (seconds are approximated by the closest power of 2); use 30 as the maxValue ! */
 
-    return KETCUBE_CFG_MODULE_OK;
-}
 
-#endif                          /* KETCUBE_CFG_INC_MOD_ADC */
+/** @defgroup KETCube_MCU_fn Public Functions
+* @{
+*/
+
+extern uint32_t ketCube_MCU_GetRandomSeed(void);
+extern void ketCube_MCU_GetUniqueId(uint8_t *id);
+
+extern void ketCube_MCU_Sleep(void);
+extern void ketCube_MCU_EnableSleep(void);
+extern void ketCube_MCU_DisableSleep(void);
+extern bool ketCube_MCU_IsSleepEnabled(void);
+
+extern void ketCube_MCU_WD_Init(void);
+extern void ketCube_MCU_WD_Reset(void);
+
+extern void ketCube_MCU_ClockConfig(void);
+
+/**
+* @}
+*/
+
+
+
+/**
+* @}
+*/
+
+#endif                          /* __KETCUBE_MCU_H */

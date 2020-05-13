@@ -118,15 +118,7 @@ do {                                                    \
  * \retval value  temperature in degreeCelcius( q7.8 )
  */
 uint16_t HW_GetTemperatureLevel( void );
-/*!
- * \brief Get the current battery level
- *
- * \retval value  battery level ( 0: very low, 254: fully charged )
- */
-uint8_t HW_GetBatteryLevel( void );
-	
-ketCube_cfg_ModError_t HW_ketCube_getBatLevel(uint8_t * buffer, uint8_t * len);
-	
+
 /*!
  * \brief Initializes the boards peripherals.
  */

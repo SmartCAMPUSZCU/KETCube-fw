@@ -50,13 +50,10 @@
 #include "ketCube_common.h"
 #include "ketCube_timer.h"
 #include "ketCube_batMeas.h"
+#include "ketCube_ad.h"
 #include "ketCube_terminal.h"
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS
-
-#define KETCUBE_BATMEAS_VDDA_VREFINT_CAL            ((uint32_t) 3000)
-#define KETCUBE_BATMEAS_VREFINT_CAL                 ((uint16_t*) ((uint32_t) 0x1FF80078))
-
 
 ketCube_batMeas_moduleCfg_t ketCube_batMeas_moduleCfg; /*!< Module configuration storage */
 
@@ -85,6 +82,9 @@ ketCube_batMeas_battery_t ketCube_batMeas_batList[] = {
  */
 ketCube_cfg_ModError_t ketCube_batMeas_Init(ketCube_InterModMsg_t *** msg)
 {
+    // Init AD driver
+    ketCube_AD_Init();
+    
     // check if selected battery is legal
     if (ketCube_batMeas_moduleCfg.selectedBattery >= KETCUBE_BATMEAS_BATLIST_LAST) {
         ketCube_batMeas_moduleCfg.selectedBattery = KETCUBE_BATMEAS_BATLIST_CR2032;
@@ -109,18 +109,16 @@ ketCube_cfg_ModError_t ketCube_batMeas_DeInit(ketCube_InterModMsg_t ***
     return KETCUBE_CFG_MODULE_OK;
 }
 
-
 /**
   * @brief This function returns the battery level
   * @param none
   
   * @retval battery level scaled to 1B - 1 (very low) to 254 (fully charged)
   */
-uint8_t ketcube_batLevel_GetBattery(void)
+uint8_t ketCube_batMeas_GetBatteryByte(void)
 {
     uint8_t batteryLevel = 0;
-    uint16_t measuredLevel = 0;
-    uint32_t batteryLevelmV;
+    uint32_t batteryLevelmV = ketCube_AD_GetBatLevelmV();
 
     uint16_t batMax =
         ketCube_batMeas_batList
@@ -128,16 +126,6 @@ uint8_t ketcube_batLevel_GetBattery(void)
     uint16_t batMin =
         ketCube_batMeas_batList
         [ketCube_batMeas_moduleCfg.selectedBattery].batDischarged;
-
-    measuredLevel = HW_AdcReadChannel(ADC_CHANNEL_VREFINT);
-
-    if (measuredLevel == 0) {
-        batteryLevelmV = 0;
-    } else {
-        batteryLevelmV =
-            (((uint32_t) KETCUBE_BATMEAS_VDDA_VREFINT_CAL *
-              (*KETCUBE_BATMEAS_VREFINT_CAL)) / measuredLevel);
-    }
 
     if (batteryLevelmV > batMax) {
         batteryLevel = 254;
@@ -166,7 +154,7 @@ ketCube_cfg_ModError_t ketCube_batMeas_ReadData(uint8_t * buffer,
 {
     // write to buffer
     *len = 1;
-    buffer[0] = ketcube_batLevel_GetBattery();
+    buffer[0] = ketCube_batMeas_GetBatteryByte();
 
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "%d",
                                  buffer[0]);
