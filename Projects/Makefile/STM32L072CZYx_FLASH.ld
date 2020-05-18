@@ -142,6 +142,16 @@ SECTIONS
     __bss_end__ = _ebss;
   } >RAM
 
+  /* KETCube core config section - not filled by zeroes - follows the BSS section definition */
+  . = ALIGN(4);
+  .KETCubeCoreCfg_NoInit :
+  {
+    _KETCubeCoreCfg_NoInit_start = .;         /* define a global symbol at section start */
+    __bss_start__ = _sbss;
+    . = ALIGN(4);
+    _KETCubeCoreCfg_NoInit_end = .;         /* define a global symbol at section end */
+  } >RAM
+  
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack :
   {
@@ -152,7 +162,6 @@ SECTIONS
     . = . + _Min_Stack_Size;
     . = ALIGN(8);
   } >RAM
-
   
 
   /* Remove information from the standard libraries */

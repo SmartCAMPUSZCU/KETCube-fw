@@ -50,6 +50,7 @@
 
 #include "ketCube_cfg.h"
 #include "ketCube_common.h"
+#include "ketCube_resetMan.h"
 
 #include "ketCube_rtc.h"
 
@@ -185,7 +186,7 @@ void ketCube_core_CMD_startBootloader(void) {
     HAL_Delay(2000);
     
     /* Start bootloader */
-    NVIC_SystemReset();
+    ketCube_resetMan_requestReset(KETCUBE_RESETMAN_REASON_USER_RQ);
 }
 
 /**

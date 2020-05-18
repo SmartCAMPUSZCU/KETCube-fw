@@ -52,6 +52,7 @@
 #include "ketCube_terminal.h"
 #include "ketCube_modules.h"
 #include "ketCube_common.h"
+#include "ketCube_resetMan.h"
 #include "ketCube_remote_terminal.h"
 #include "ketCube_mcu.h"
 #include "ketCube_rtc.h"
@@ -143,9 +144,6 @@ int main(void)
 
     /* Configure the system clock */
     ketCube_MCU_ClockConfig();
-
-    /* Init Watchdog */
-    ketCube_MCU_WD_Init();
     
     /* Configure the debug mode */
     DBG_Init();
@@ -170,6 +168,8 @@ int main(void)
         NVIC_SystemReset();
     }
     
+    ketCube_resetMan_info();
+    
     /* Init KETCube modules */
     if (ketCube_modules_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();
@@ -177,6 +177,9 @@ int main(void)
 
     // Initialize periodic timer
     TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
+    
+    /* Init Watchdog */
+    ketCube_MCU_WD_Init();
     
     // KETCube is initialized
     KETCube_Initialized = TRUE;
@@ -190,9 +193,6 @@ int main(void)
 
     /* main loop */
     while (TRUE) {
-        /* reset WD */
-        ketCube_MCU_WD_Reset();
-        
         /* process pendig commands */
         ketCube_terminal_ProcessCMD();
         
@@ -225,6 +225,9 @@ int main(void)
             ketCube_MCU_Sleep();
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
 
+            /* reset WD */
+            ketCube_MCU_WD_Reset();
+            
             // execute module wake-up module functions
             ketCube_modules_SleepExit();
         }

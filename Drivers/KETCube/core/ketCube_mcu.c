@@ -55,6 +55,8 @@
 
 #include "debug.h"
 #include "ketCube_mcu.h"
+#include "ketCube_resetMan.h"
+#include "ketCube_coreCfg.h"
 #include "timeServer.h"
 #include "stm32l0xx_hal_pwr.h"
 
@@ -73,6 +75,8 @@ static IWDG_HandleTypeDef hiwdg; /* IWDG handler */
 
 PWR_PVDTypeDef sConfigPVD = {0};
 volatile bool ketCube_MCU_PVD_Det = FALSE;
+
+static volatile bool ketCube_MCU_WD_timWake = FALSE;
 
 /**
   * @brief This function return a random seed
@@ -277,6 +281,16 @@ void ketCube_MCU_ClockConfig(void) {
 }
 
 /**
+  * @brief Monitor WakeUp reasoning
+  *
+  * @note Do not remove this function, as it prevents optimization of safe-timer
+  * 
+  */
+void ketCube_MCU_WD_Monitor(void* context) {
+    ketCube_MCU_WD_timWake = TRUE;
+}
+
+/**
   * @brief KETCube Watchdog (IWDG) Setup
   *
   */
@@ -294,8 +308,9 @@ void ketCube_MCU_WD_Init(void) {
     }
     
     // Initialize timer to wake-up MCU periodically
-    TimerInit(&KETCube_WDCheckTimer, NULL); // just wake-up, do not execute any callback
-    
+    TimerInit(&KETCube_WDCheckTimer, &ketCube_MCU_WD_Monitor);
+    TimerSetValue(&KETCube_WDCheckTimer, 1000 * KETCUBE_MCU_WD_SAFE_TIMER_CNT);
+    TimerStart(&KETCube_WDCheckTimer);
 #endif
     
 }
@@ -311,11 +326,17 @@ void ketCube_MCU_WD_Reset(void) {
     HAL_IWDG_Refresh(&hiwdg);
     
     // WD periodic reset
-    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "KETCube WD Reset");
+    if (ketCube_MCU_WD_timWake == TRUE) {
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "KETCube WD Reset - safe-counter");
+    } else {
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "KETCube WD Reset - application flow");
+    }
+    
+    ketCube_MCU_WD_timWake = FALSE;
     
     /* wake-up peridically - set the (max) wake-up alarm (race conditions are ignored!) */
     TimerStop(&KETCube_WDCheckTimer);
-    TimerSetValue(&KETCube_WDCheckTimer, (KETCUBE_MCU_WDT * 1000));
+    TimerSetValue(&KETCube_WDCheckTimer, 1000 * KETCUBE_MCU_WD_SAFE_TIMER_CNT);
     TimerStart(&KETCube_WDCheckTimer);
     
 #endif
@@ -405,4 +426,126 @@ void HAL_MspInit(void) {
 
   /* Initialize KETCube mainBoard */
   ketCube_mainBoard_Init();
+}
+
+/* --- Advanced Hard Fault handling --- */
+
+#define SYSHND_CTRL  (*(volatile unsigned int*)  (0xE000ED24u))  // System Handler Control and State Register
+
+#define NVIC_MFSR    (*(volatile unsigned char*) (0xE000ED28u))  // Memory Management Fault Status Register
+#define NVIC_BFSR    (*(volatile unsigned char*) (0xE000ED29u))  // Bus Fault Status Register
+#define NVIC_UFSR    (*(volatile unsigned short*)(0xE000ED2Au))  // Usage Fault Status Register
+#define NVIC_HFSR    (*(volatile unsigned int*)  (0xE000ED2Cu))  // Hard Fault Status Register
+#define NVIC_DFSR    (*(volatile unsigned int*)  (0xE000ED30u))  // Debug Fault Status Register
+#define NVIC_BFAR    (*(volatile unsigned int*)  (0xE000ED38u))  // Bus Fault Manage Address Register
+#define NVIC_AFSR    (*(volatile unsigned int*)  (0xE000ED3Cu))  // Auxiliary Fault Status Register
+
+static volatile bool HardFaultHandler_ContinueA = TRUE; ///< Set THIS variables to FALSE if you would like to debug HardFault with debug probe instead of using KETCube's way
+static volatile bool HardFaultHandler_ContinueB = TRUE; ///< Set THIS variables to FALSE if you would like to debug HardFault with debug probe instead of using KETCube's way
+
+/**
+ * @brief Advanced HardFault handler
+ * 
+ * @note The Segger's appnote https://www.segger.com/downloads/application-notes/AN00016 has been used to define this handler
+ * 
+ */
+void HardFaultHandler(unsigned int* pStack) {
+    // In case we received a hard fault because of a breakpoint instruction, we return.
+    // This may happen when using semihosting for printf outputs and no debugger is connected,
+    // i.e. when running a "Debug" configuration in release mode.
+    //
+    if (NVIC_HFSR & (1u << 31)) {
+        NVIC_HFSR |=  (1u << 31);     // Reset Hard Fault status
+        *(pStack + 6u) += 2u;         // PC is located on stack at SP + 24 bytes. Increment PC by 2 to skip break instruction.
+        return;                       // Return to interrupted application
+    }
+    
+    // DBG-info structure 
+    ketCube_MCU_HardFaultRegs_t * HardFaultRegs = &(ketCube_coreCfg.volatileData.resetInfo.info.dbg.hardFault);
+    
+    //
+    // Store NVIC registers
+    (*HardFaultRegs).syshndctrl.word = SYSHND_CTRL;  // System Handler Control and State Register
+    (*HardFaultRegs).mfsr.word       = NVIC_MFSR;    // Memory Fault Status Register
+    (*HardFaultRegs).bfsr.word       = NVIC_BFSR;    // Bus Fault Status Register
+    (*HardFaultRegs).bfar            = NVIC_BFAR;    // Bus Fault Manage Address Register
+    (*HardFaultRegs).ufsr.word       = NVIC_UFSR;    // Usage Fault Status Register
+    (*HardFaultRegs).hfsr.word       = NVIC_HFSR;    // Hard Fault Status Register
+    (*HardFaultRegs).dfsr.word       = NVIC_DFSR;    // Debug Fault Status Register
+    (*HardFaultRegs).afsr            = NVIC_AFSR;    // Auxiliary Fault Status Register
+    
+    
+    // Halt execution
+    // When using debbuger to investigate HardFault reasoning, you can modify this variable to stay in HardFault, then recompile and you will suck here
+    while (HardFaultHandler_ContinueA == FALSE) {
+        
+    }
+    
+    //
+    // Read saved registers from the stack.
+    //
+    (*HardFaultRegs).SavedRegs.r0       = pStack[0];  // Register R0
+    (*HardFaultRegs).SavedRegs.r1       = pStack[1];  // Register R1
+    (*HardFaultRegs).SavedRegs.r2       = pStack[2];  // Register R2
+    (*HardFaultRegs).SavedRegs.r3       = pStack[3];  // Register R3
+    (*HardFaultRegs).SavedRegs.r12      = pStack[4];  // Register R12
+    (*HardFaultRegs).SavedRegs.lr       = pStack[5];  // Link register LR
+    (*HardFaultRegs).SavedRegs.pc       = pStack[6];  // Program counter PC
+    (*HardFaultRegs).SavedRegs.psr.word = pStack[7];  // Program status word PSR
+    
+    // Halt execution
+    // When using debbuger to investigate HardFault reasoning, you can modify this variable to stay in HardFault, then recompile and you will suck here
+    while (HardFaultHandler_ContinueB == FALSE) {
+        
+    }
+    
+    // Invoke reset 
+    // Rely on KETCube's reset reasoning method - HardFault reasons SHOULD be printed (if the fault source is not related to critical part of KETCube core itself, which is the common case)
+    ketCube_resetMan_requestReset(KETCUBE_RESETMAN_REASON_HARDFAULT);
+}
+
+/**
+ * @brief Dump HardFault Register Content
+ * 
+ */
+void ketCube_MCU_DumpHardFaultRegs(ketCube_MCU_HardFaultRegs_t * HardFaultRegs) {
+    KETCUBE_TERMINAL_CLR_LINE();
+    
+    KETCUBE_TERMINAL_PRINTF("System Control Block Registers:");
+    KETCUBE_TERMINAL_ENDL(); 
+    KETCUBE_TERMINAL_PRINTF("  - SHCSR  = %08X  // System Handler Control and State Register", (*HardFaultRegs).syshndctrl.word);
+    KETCUBE_TERMINAL_ENDL(); 
+
+// following registers are not implemented in ARM M0+
+#ifndef USE_B_L082Z_KETCube    
+    KETCUBE_TERMINAL_ENDL();    
+    
+    KETCUBE_TERMINAL_PRINTF("NVIC Registers:");
+    KETCUBE_TERMINAL_ENDL(); 
+    KETCUBE_TERMINAL_PRINTF("  - MFSR   = %08X  // Memory Fault Status Register",              (*HardFaultRegs).mfsr.word      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - BFSR   = %08X  // Bus Fault Status Register",                 (*HardFaultRegs).bfsr.word      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - BFAR   = %08X  // Bus Fault Manage Address Register",         (*HardFaultRegs).bfar           ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - UFSR   = %08X  // Usage Fault Status Register",               (*HardFaultRegs).ufsr.word      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - HFSR   = %08X  // Hard Fault Status Register",                (*HardFaultRegs).hfsr.word      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - DFSR   = %08X  // Debug Fault Status Register",               (*HardFaultRegs).dfsr.word      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - AFSR   = %08X  // Auxiliary Fault Status Register",           (*HardFaultRegs).afsr           ); KETCUBE_TERMINAL_ENDL();    
+#endif
+
+// following registers are not very useful for HardFault investigation, remove #ifndef directive if needed for ARM M0+ debugging
+#ifndef USE_B_L082Z_KETCube   
+    KETCUBE_TERMINAL_ENDL();  
+    
+    KETCUBE_TERMINAL_PRINTF("Saved registers from the stack:");
+    KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - R0     = %08X  // Register R0",                     (*HardFaultRegs).SavedRegs.r0      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - R1     = %08X  // Register R1",                     (*HardFaultRegs).SavedRegs.r1      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - R2     = %08X  // Register R2",                     (*HardFaultRegs).SavedRegs.r2      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - R3     = %08X  // Register R3",                     (*HardFaultRegs).SavedRegs.r3      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - R12    = %08X  // Register R12",                    (*HardFaultRegs).SavedRegs.r12     ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - LR     = %08X  // Link register LR",                (*HardFaultRegs).SavedRegs.lr      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - PC     = %08X  // Program counter PC",              (*HardFaultRegs).SavedRegs.pc      ); KETCUBE_TERMINAL_ENDL();    
+    KETCUBE_TERMINAL_PRINTF("  - PSR    = %08X  // Program status word PSR",         (*HardFaultRegs).SavedRegs.psr.word); KETCUBE_TERMINAL_ENDL();    
+    
+#endif
+    
 }

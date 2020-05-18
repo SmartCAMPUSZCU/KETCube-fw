@@ -70,16 +70,14 @@ void NMI_Handler(void)
   * @param  None
   * @retval None
   */
-
-
-void HardFault_Handler(void)
+/*void HardFault_Handler(void)
 {
   while(1)
   {
     __NOP();
   }
 
-}
+}*/
 
 
 /**

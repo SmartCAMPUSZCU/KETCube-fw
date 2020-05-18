@@ -73,6 +73,9 @@ typedef enum {
 
 /**
 * @brief  Length of CFG EEPROM data
+* 
+* @deprecated This enum provides no real borders any more
+* 
 */
 typedef enum {
     KETCUBE_EEPROM_LEN_CORE    = 64,    /*!< Core max configuration len in bytes */

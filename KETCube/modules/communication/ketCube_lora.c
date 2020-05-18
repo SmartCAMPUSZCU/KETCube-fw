@@ -268,8 +268,8 @@ ketCube_cfg_ModError_t ketCube_lora_SleepEnter(void)
    }
 
    if (LoraMacProcessRequest != LORA_SET) {
-      ketCube_SPI_DeInit();
-      ketCube_Radio_DeInit();
+      /*ketCube_SPI_DeInit();
+      ketCube_Radio_DeInit();*/
       return KETCUBE_CFG_MODULE_OK;
    }   
 
@@ -284,8 +284,8 @@ ketCube_cfg_ModError_t ketCube_lora_SleepEnter(void)
  */
 ketCube_cfg_ModError_t ketCube_lora_SleepExit(void)
 {
-    ketCube_SPI_Init();
-    ketCube_Radio_Init();
+    /*ketCube_SPI_Init();
+    ketCube_Radio_Init();*/
    
     return KETCUBE_CFG_MODULE_OK;  
 }

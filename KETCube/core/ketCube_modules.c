@@ -47,6 +47,7 @@
 #include "ketCube_common.h"
 #include "ketCube_modules.h"
 #include "ketCube_terminal.h"
+#include "ketCube_resetMan.h"
 
 // List of KETCube modules
 #include "../../Projects/src/ketCube_moduleList.c"      // include a project-specific file
@@ -173,7 +174,7 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
         ketCube_coreCfg.remoteTerminalCounter--;
         /* when timeout elapsed, automatically reload the node */
         if (ketCube_coreCfg.remoteTerminalCounter == 0) {
-            NVIC_SystemReset();
+            ketCube_resetMan_requestReset(KETCUBE_RESETMAN_REASON_USER_REMOTE_TERM);
         }
         
         ketCube_terminal_CoreSeverityPrintln

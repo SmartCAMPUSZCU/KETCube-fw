@@ -124,7 +124,7 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
 	
 #ifdef KETCUBE_CFG_INC_MOD_LORA
     DEF_MODULE("LoRa",
-               "LoRa radio",
+               "LoRaWAN module",
                KETCUBE_MODULEID_LORA,
                &ketCube_lora_Init,        /* Init() */
                &ketCube_lora_SleepEnter,  /* SleepEnter() */

@@ -42,7 +42,7 @@ VERSION  = $(shell cat ../../VERSION | head -n 1)
 
 ###################################################
 
-DEBUG = -g3
+DEBUG = -g3 -DDEBUG
 OPTIMIZE = -Os
 
 ###################################################
@@ -58,6 +58,8 @@ SF=st-flash
 
 GDB = arm-none-eabi-gdb
 STLINK = /usr/local/bin/st-flash
+# Note, that it must be inclued in the $PATH variable; default in Linux is: $HOME/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
+STCUBEPROG = STM32_Programmer.sh
 
 ###################################################
 
@@ -179,6 +181,7 @@ SRCS += $(COREDIR)KETCube/core/ketCube_rxDisplay.c
 SRCS += $(COREDIR)KETCube/core/ketCube_asyncTx.c
 SRCS += $(COREDIR)KETCube/core/ketCube_txDisplay.c
 SRCS += $(COREDIR)KETCube/core/ketCube_coreCfg.c
+SRCS += $(COREDIR)KETCube/core/ketCube_resetMan.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora_ext.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_starNet.c
@@ -200,6 +203,8 @@ SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2c.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_i2s.c
 SRCS += $(COREDIR)Drivers/KETCube/modules/ketCube_timer.c
 
+ASSRCSC  = $(COREDIR)Projects/src/hardFaultHandler.S
+
 ASSRCS  = ./startup_stm32l082xx.s
 
 ###################################################
@@ -211,6 +216,7 @@ include Makefile_proj
 
 OBJS  = $(addprefix $(OUTDIR),$(notdir $(SRCS:.c=.o)))
 OBJS += $(addprefix $(OUTDIR),$(notdir $(ASSRCS:.s=.o)))
+OBJS += $(addprefix $(OUTDIR),$(notdir $(ASSRCSC:.S=.o)))
 
 OUTFILES = $(OUTDIR)$(TARGET).elf $(OUTDIR)$(TARGET).hex \
 $(OUTDIR)$(TARGET).bin $(OUTDIR)lib$(TARGET).a
@@ -223,6 +229,10 @@ VPATH = $(SRCPATHS)
 .PHONY: all size clean chipinfo flash erase debug sigdone
 
 $(OUTDIR)%.o: %.c
+	@echo Compiling $<
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
+	
+$(OUTDIR)%.o: %.S
 	@echo Compiling $<
 	@$(CC) -c $(CFLAGS) $(INCLUDE) $< -o $@
 
@@ -289,6 +299,15 @@ flash: $(OUTDIR)$(TARGET).elf
 	$(GDB) -x gdb_flash $(OUTDIR)$(TARGET).elf
 	$(MAKE) sigdone
 
+eraseCubeProg:
+	$(STCUBEPROG) -c port=SWD mode=UR -e all -q
+	$(MAKE) sigdone
+	
+flashCubeProg: $(OUTDIR)$(TARGET).bin
+	$(STCUBEPROG) -c port=SWD mode=UR -e all -q -d $(OUTDIR)$(TARGET).bin 0x8000000
+	$(STCUBEPROG) -c port=SWD mode=UR -ob bfb2=0x0 #make sure, that BFB2 bit is 0
+	$(MAKE) sigdone
+	
 # This target is for commandline-based debugging
 # The "ocd" target is the prerequisity -- run it in separate terminal
 debug: $(OUTDIR)$(TARGET).elf.dbg
@@ -303,3 +322,7 @@ debugMI2: $(OUTDIR)$(TARGET).elf.dbg
 sigdone:
 	@echo "ALL DONE"
 	@paplay /usr/share/sounds/freedesktop/stereo/complete.oga
+	
+# Include project-specific targets
+include Makefile_proj_targets
+

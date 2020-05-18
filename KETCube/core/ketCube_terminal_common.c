@@ -51,6 +51,7 @@
 #include "ketCube_terminal_common.h"
 #include "ketCube_modules.h"
 #include "ketCube_coreCfg.h"
+#include "ketCube_resetMan.h"
 
 /* Core command callback prototypes */
 static void ketCube_terminal_cmd_reload(void);
@@ -226,7 +227,7 @@ void ketCube_terminal_cmd_reload(void)
     KETCUBE_TERMINAL_ENDL();
     KETCUBE_TERMINAL_ENDL();
 
-    NVIC_SystemReset();
+    ketCube_resetMan_requestReset(KETCUBE_RESETMAN_REASON_USER_RQ);
 }
 
 /**

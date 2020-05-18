@@ -48,7 +48,7 @@
 /**
  * KETCube core configuration
  */
-ketCube_coreCfg_t ketCube_coreCfg;
+ketCube_coreCfg_t ketCube_coreCfg  __attribute__((section (".KETCubeCoreCfg_NoInit")));
 
 /**
   * @brief Initialize rxDisplay module

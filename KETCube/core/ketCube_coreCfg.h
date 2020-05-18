@@ -1,13 +1,13 @@
 /**
  * @file    ketCube_coreCfg.h
  * @author  Jan Belohoubek
- * @version 0.1
- * @date    2018-04-27
+ * @version 0.2
+ * @date    2020-05-15
  * @brief   This file contains the KETCube core configuration defs
  *
  * @attention
  *
- * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
+ * <h2><center>&copy; Copyright (c) 2018 - 2020 University of West Bohemia in Pilsen
  * All rights reserved.</center></h2>
  *
  * Developed by:
@@ -47,6 +47,7 @@
 #define __KETCUBE_CORECFG_H
 
 #include "ketCube_cfg.h"
+#include "ketCube_resetMan.h"
 
 /** @defgroup KETCube_coreCfg KETCube CfgCore
   * @brief KETCube Core configuration
@@ -61,6 +62,9 @@
 
 /**
 * @brief  KETCube core configuration
+* 
+* @note 128B is reserved for CORE configuration in EEPROM - see the summary size of the fields and RFU
+* 
 */
 typedef struct ketCube_coreCfg_t {
     ketCube_cfg_ModuleCfgByte_t coreCfg; ///< KETCube core cfg byte
@@ -70,6 +74,11 @@ typedef struct ketCube_coreCfg_t {
     ketCube_severity_t severity;         ///< Core messages severity
     ketCube_severity_t driverSeverity;   ///< Driver(s) messages severity
     uint16_t remoteTerminalCounter;      ///< Is currently in remote terminal mode (value > 0)? If so, how many basePeriods to reload?
+    
+    union {
+        ketCube_resetMan_t resetInfo;    ///< Reset Reasoning
+        uint8_t RFU[115];                ///< This part of EEPROM is RFU, when adding new field into this struct, decrease the size of this field to preserve configuration padding for module(s) configuration; 128B is reserved for CORE in total
+    } volatileData;                      ///< This union should aggregate volatile data, whose require no fixed location over KETCube releases
 } ketCube_coreCfg_t;
 
 extern ketCube_coreCfg_t ketCube_coreCfg;
