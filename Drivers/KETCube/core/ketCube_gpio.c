@@ -366,6 +366,60 @@ bool ketCube_GPIO_Read(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin)
 }
 
 /**
+ * @brief Set-UP GPIO befere sleep enter
+ * 
+ * Set unused GPIO PINs to analog
+ * 
+ * @note This function should be called by KETCube core
+ * 
+ */
+ketCube_cfg_DrvError_t ketCube_GPIO_SleepEnter(void) {
+    GPIO_InitTypeDef GPIO_InitStruct={0};
+    uint8_t portIndex;
+    
+    // process portA
+    portIndex = getPortIndex(KETCUBE_GPIO_PA);
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    /* All GPIOs except used PINs */
+    GPIO_InitStruct.Pin = GPIO_PIN_All & (~(pinUsage[portIndex]) );
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    if (pinUsage[portIndex] == 0) {
+        // no PINs used!
+        __HAL_RCC_GPIOA_CLK_DISABLE();
+    }
+    
+    // process portB
+    portIndex = getPortIndex(KETCUBE_GPIO_PB);
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    /* All GPIOs except used PINs */
+    GPIO_InitStruct.Pin = GPIO_PIN_All & (~(pinUsage[portIndex]) );
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    if (pinUsage[portIndex] == 0) {
+        // no PINs used!
+        __HAL_RCC_GPIOB_CLK_DISABLE();
+    }
+    
+    // process portC
+    portIndex = getPortIndex(KETCUBE_GPIO_PC);
+    __HAL_RCC_GPIOC_CLK_ENABLE();
+    GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    /* All GPIOs except used PINs */
+    GPIO_InitStruct.Pin = GPIO_PIN_All & (~(pinUsage[portIndex]) );
+    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    if (pinUsage[portIndex] == 0) {
+        // no PINs used!
+        __HAL_RCC_GPIOC_CLK_DISABLE();
+    }
+    
+    return KETCUBE_CFG_DRV_OK;
+}
+
+/**
  * @brief Execute the irqHandler
  * This function redefines a weak deffinition from stm32l0xx_hal_gpio.c
  *

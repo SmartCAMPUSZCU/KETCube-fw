@@ -60,6 +60,12 @@
 #include "timeServer.h"
 #include "stm32l0xx_hal_pwr.h"
 
+// Drivers
+#include "ketCube_gpio.h"
+#include "ketCube_spi.h"
+#include "ketCube_uart.h"
+#include "ketCube_radio.h"
+
 /**
  *  @brief Unique Devices IDs register set ( STM32L0xxx )
  */
@@ -139,7 +145,7 @@ static void ketCube_MCU_ExitStopMode(void) {
 
   BACKUP_PRIMASK();
   
-  DISABLE_IRQ( );
+  DISABLE_IRQ();
 
   /* After wake-up from STOP reconfigure the system clock */
   /* Enable HSI */
@@ -159,10 +165,14 @@ static void ketCube_MCU_ExitStopMode(void) {
   /* Wait till PLL is used as system clock source */ 
   while( __HAL_RCC_GET_SYSCLK_SOURCE( ) != RCC_SYSCLKSOURCE_STATUS_PLLCLK ) {}
     
-  /*initilizes the peripherals*/
+  /* Init drivers */
+  ketCube_SPI_SleepExit();
+  
+  ketCube_Radio_SleepExit();
+  
   ketCube_UART_IoInitAll();
 
-  RESTORE_PRIMASK( );
+  RESTORE_PRIMASK();
 }
 
 /**
@@ -176,8 +186,14 @@ void ketCube_MCU_EnterStopMode(void) {
 
   DISABLE_IRQ( );
 
-  /* DeIntit peripherals ... */
+  /* DeIntit drivers */
+  ketCube_SPI_SleepEnter();
+  
+  ketCube_Radio_SleepEnter();
+  
   ketCube_UART_IoDeInitAll();
+  
+  ketCube_GPIO_SleepEnter();
   
   /*clear wake up flag*/
   SET_BIT(PWR->CR, PWR_CR_CWUF);
@@ -193,8 +209,7 @@ void ketCube_MCU_EnterStopMode(void) {
   * 
   * @note ARM exits the function when waking up
   */
-void ketCube_MCU_EnterSleepMode( void)
-{
+void ketCube_MCU_EnterSleepMode( void) {
     HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
 }
 
@@ -424,8 +439,6 @@ void HAL_MspInit(void) {
   HAL_PWREx_DisableFastWakeUp( );
 #endif
 
-  /* Initialize KETCube mainBoard */
-  ketCube_mainBoard_Init();
 }
 
 /* --- Advanced Hard Fault handling --- */

@@ -102,6 +102,7 @@ typedef void (*ketCube_GPIO_VoidFn_t) (void* context);
   * @{
   */
 extern void ketCube_GPIO_InitDriver(void);
+extern ketCube_cfg_DrvError_t ketCube_GPIO_SleepEnter(void);
 
 extern ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
                                                 uint16_t pin,

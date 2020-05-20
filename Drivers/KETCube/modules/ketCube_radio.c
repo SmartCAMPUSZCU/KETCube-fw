@@ -45,43 +45,37 @@
 
 #include "radio.h"
 
+#include "ketCube_cfg.h"
 #include "ketCube_radio.h"
 #include "ketCube_gpio.h"
+#include "ketCube_spi.h"
+
 #include "ketCube_terminal.h"
+
+#include "sx1276Regs-Fsk.h"
 
 static volatile bool initialized = FALSE; /* disable concurent execution of the init function body */
 
 /**
-  * @brief Initializes the IO PINs
-  * 
-  * This function should be executed when exiting sleep mode
-  * 
-  * @param None
-  * @retval None
-  */
-static void ketCube_Radio_IoInit(void) {
+ * @brief Set-UP Radio befere sleep enter
+ * 
+ * @note This function should be called by KETCube core
+ * 
+ */
+ketCube_cfg_DrvError_t ketCube_Radio_InitDriver(void) {
     Radio.IoInit();
-}
-
-/**
-  * @brief Deinitializes the IO PINs
-  * 
-  * This function should be executed prior entering sleep mode
-  * 
-  * @param None
-  * @retval None
-  */
-static void ketCube_Radio_IoDeInit(void) {
-    ketCube_GPIO_Release(RADIO_MOSI_PORT, RADIO_MOSI_PIN); 
-    ketCube_GPIO_Release(RADIO_MISO_PORT, RADIO_MISO_PIN); 
-    ketCube_GPIO_Release(RADIO_SCLK_PORT, RADIO_SCLK_PIN); 
-    ketCube_GPIO_Release(RADIO_NSS_PORT, RADIO_NSS_PIN); 
+    ketCube_SPI_Init();
+    SX1276SetXO(SET);
+    Radio.Sleep();
+    SX1276SetXO(RESET);
+    ketCube_SPI_DeInit();
     
-    Radio.IoDeInit( );
+    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
   * @brief Initializes the Radio hardware
+  * 
   */
 ketCube_cfg_DrvError_t ketCube_Radio_Init(void) {
     if (initialized == TRUE) {
@@ -89,7 +83,7 @@ ketCube_cfg_DrvError_t ketCube_Radio_Init(void) {
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
-    ketCube_Radio_IoInit();
+    Radio.IoInit();
     
     initialized = TRUE;
     
@@ -102,10 +96,39 @@ ketCube_cfg_DrvError_t ketCube_Radio_Init(void) {
 ketCube_cfg_DrvError_t ketCube_Radio_DeInit(void) {
     if (initialized == TRUE) {
         // UnInit here ...
-        ketCube_Radio_IoDeInit();
+        Radio.IoDeInit();
     }
     
     initialized = FALSE;
+    
+    return KETCUBE_CFG_MODULE_OK;
+}
+
+
+/**
+ * @brief Set-UP Radio befere sleep enter
+ * 
+ * @note This function should be called by KETCube core
+ * 
+ */
+ketCube_cfg_DrvError_t ketCube_Radio_SleepEnter(void) {
+    if (initialized == TRUE) {
+        //Radio.IoDeInit(); // Interrupts must continue to work
+    }
+    
+    return KETCUBE_CFG_MODULE_OK;
+}
+
+/**
+ * @brief Set-UP radio after sleep exit
+ * 
+ * @note This function should be called by KETCube core
+ * 
+ */
+ketCube_cfg_DrvError_t ketCube_Radio_SleepExit(void) {
+    if (initialized == TRUE) {
+        Radio.IoInit();
+    }
     
     return KETCUBE_CFG_MODULE_OK;
 }

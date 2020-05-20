@@ -155,6 +155,13 @@ int main(void)
     
     /* Configure the hardware */
     ketCube_RTC_Init();
+    
+    /* Initialize KETCube mainBoard */
+    ketCube_mainBoard_Init();
+  
+    /* Initialize drivers (if needed to do independently on modules) */
+    ketCube_Radio_InitDriver();
+    ketCube_GPIO_InitDriver();
 
     /* Init Terminal */
     ketCube_terminal_Init();
@@ -165,7 +172,7 @@ int main(void)
         ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                              "POR detected - reseting!");
 
-        NVIC_SystemReset();
+        ketCube_resetMan_requestReset(KETCUBE_RESETMAN_REASON_PORSW);
     }
     
     ketCube_resetMan_info();
@@ -224,12 +231,12 @@ int main(void)
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
             ketCube_MCU_Sleep();
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
-
+           
+            // execute module wake-up functions
+            ketCube_modules_SleepExit();
+            
             /* reset WD */
             ketCube_MCU_WD_Reset();
-            
-            // execute module wake-up module functions
-            ketCube_modules_SleepExit();
         }
     }
 }

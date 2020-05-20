@@ -111,6 +111,10 @@ typedef enum {
 extern ketCube_cfg_DrvError_t ketCube_Radio_Init(void);
 extern ketCube_cfg_DrvError_t ketCube_Radio_DeInit(void);
 
+extern ketCube_cfg_DrvError_t ketCube_Radio_InitDriver(void);
+extern ketCube_cfg_DrvError_t ketCube_Radio_SleepEnter(void);
+extern ketCube_cfg_DrvError_t ketCube_Radio_SleepExit(void);
+
 /**
 * @}
 */

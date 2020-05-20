@@ -57,6 +57,8 @@
   * @{
   */
 
+#define KETCUBE_SPI_NAME               "spi_drv"         ///< Radio driver name
+
 /** @defgroup KETCube_SPI_fn Public Functions
   * @brief Public functions
   * @{
@@ -66,6 +68,9 @@
 extern ketCube_cfg_DrvError_t ketCube_SPI_Init(void);
 extern ketCube_cfg_DrvError_t ketCube_SPI_DeInit(void);
 extern uint16_t ketCube_SPI_InOut(uint16_t txData);
+
+extern ketCube_cfg_DrvError_t ketCube_SPI_SleepEnter(void);
+extern ketCube_cfg_DrvError_t ketCube_SPI_SleepExit(void);
 
 
 /**
