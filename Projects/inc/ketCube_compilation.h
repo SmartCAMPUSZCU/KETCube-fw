@@ -7,7 +7,7 @@
  *
  * @attention
  *
- * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
+ * <h2><center>&copy; Copyright (c) 2018 - 2020 University of West Bohemia in Pilsen
  * All rights reserved.</center></h2>
  *
  * Developed by:

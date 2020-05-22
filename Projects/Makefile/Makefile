@@ -106,7 +106,7 @@ CFLAGS  += -DKETCUBE_BUILD_ID="\"$(BUILD_ID)\"" -DKETCUBE_VERSION="\"$(VERSION)\
 
 ASFLAGS = -mcpu=cortex-m0plus -march=armv6-m -mthumb -mthumb-interwork
 
-LDFLAGS  = -mcpu=cortex-m0 -march=armv6-m -TSTM32L072CZYx_FLASH.ld -Wl,-Map=$(TARGET).map,--gc-sections
+LDFLAGS  = -mcpu=cortex-m0 -march=armv6-m -TSTM32L072CZYx_FLASH.ld -Wl,-Map=$(OUTDIR)/$(TARGET).map,--gc-sections
 LDFLAGS += -mthumb -mfloat-abi=soft -specs=nano.specs -specs=nosys.specs
 LDFLAGS += -lc -lrdimon -u _printf_float
 
