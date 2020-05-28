@@ -55,7 +55,7 @@
 
 #include "ketCube_i2c.h"
 #include "ketCube_adc.h"
-#include "ketCube_hdc1080.h"
+#include "ketCube_hdcX080.h"
 #include "ketCube_rxDisplay.h"
 
 #ifdef KETCUBE_CFG_INC_MOD_STARNET

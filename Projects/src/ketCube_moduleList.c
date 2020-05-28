@@ -54,7 +54,7 @@
 #include "hw_msp.h"
 #include "ketCube_lora.h"
 #include "ketCube_i2c.h"
-#include "ketCube_hdc1080.h"
+#include "ketCube_hdcX080.h"
 #include "ketCube_batMeas.h"
 #include "ketCube_adc.h"
 #include "ketCube_starNet.h"
@@ -142,30 +142,30 @@ ketCube_cfg_Module_t ketCube_modules_List[ketCube_modules_CNT] = {
     {((char *) &("DebugDisplay")),
      ((char *) &("Display debug output on serial line")),
      KETCUBE_MODULEID_DEBUGDISPLAY,
-     (ketCube_cfg_ModInitFn_t) NULL,    /*稭odule Init() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*稴leepEnter() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*稴leepExit() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*稧etSensorData() */
-     (ketCube_cfg_ModDataFn_t) NULL,    /*稴endData() */
-     (ketCube_cfg_ModVoidFn_t) NULL,    /*稲eceiveData() */
-     (ketCube_cfg_ModDataPtrFn_t) NULL, /*稰rocessData() */
-     0,                         /*稢FG base addr -- set dynamicaly */
-     1,                         /*稢FG len in bytes */
-     TRUE                       /*穖odule CFG byte -- set dynamically */
+     (ketCube_cfg_ModInitFn_t) NULL,    /*路Module Init() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*路SleepEnter() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*路SleepExit() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*路GetSensorData() */
+     (ketCube_cfg_ModDataFn_t) NULL,    /*路SendData() */
+     (ketCube_cfg_ModVoidFn_t) NULL,    /*路ReceiveData() */
+     (ketCube_cfg_ModDataPtrFn_t) NULL, /*路ProcessData() */
+     0,                         /*路CFG base addr -- set dynamicaly */
+     1,                         /*路CFG len in bytes */
+     TRUE                       /*路module CFG byte -- set dynamically */
      },
 #endif
-#ifdef KETCUBE_CFG_INC_MOD_HDC1080
-    DEF_MODULE("HDC1080",
-               "On-board RHT sensor based on TI HDC1080",
-               KETCUBE_MODULEID_HDC1080,
-               &ketCube_hdc1080_Init,     /* Init() */
+#ifdef KETCUBE_CFG_INC_MOD_HDCX080
+    DEF_MODULE("HDCX080",
+               "On-board RHT sensor - TI HDCX080",
+               KETCUBE_MODULEID_HDCX080,
+               &ketCube_hdcX080_Init,     /* Init() */
                NULL,                      /* SleepEnter() */
                NULL,                      /* SleepExit() */
-               &ketCube_hdc1080_ReadData, /* GetSensorData() */
+               &ketCube_hdcX080_ReadData, /* GetSensorData() */
                NULL,                      /* SendData() */
                NULL,                      /* ReceiveData() */
                NULL,                      /* ProcessData() */
-               ketCube_hdc1080_moduleCfg  /* Module cfg struct */
+               ketCube_hdcX080_moduleCfg  /* Module cfg struct */
               ),
 #endif
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS

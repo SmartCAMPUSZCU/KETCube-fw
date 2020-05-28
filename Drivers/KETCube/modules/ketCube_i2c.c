@@ -150,7 +150,13 @@ ketCube_cfg_DrvError_t ketCube_I2C_UnInit(void)
     return KETCUBE_CFG_DRV_OK;
 }
 
-uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
+/**
+ * @brief  Read I2C data
+ *
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ */
+ketCube_cfg_DrvError_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                              uint16_t Size)
 {
 
@@ -163,16 +169,22 @@ uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
 
     /* Check the communication status */
     if (status == HAL_OK) {
-        return 0;
+        return KETCUBE_CFG_DRV_OK;
     } else if (status == HAL_ERROR) {
         ketCube_I2C_Error();
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     } else {
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     }
 }
 
-uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
+/**
+ * @brief  Read I2C data
+ *
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ */
+ketCube_cfg_DrvError_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                               uint16_t Size)
 {
 
@@ -185,17 +197,22 @@ uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
 
     /* Check the communication status */
     if (status == HAL_OK) {
-        return 0;
+        return KETCUBE_CFG_DRV_OK;
     } else if (status == HAL_ERROR) {
         ketCube_I2C_Error();
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     } else {
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     }
 }
 
-
-uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
+/**
+ * @brief  Read I2C data
+ *
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ */
+ketCube_cfg_DrvError_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
                                  uint16_t Size)
 {
     HAL_StatusTypeDef status = HAL_OK;
@@ -206,16 +223,22 @@ uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
 
     /* Check the communication status */
     if (status == HAL_OK) {
-        return 0;
+        return KETCUBE_CFG_DRV_OK;
     } else if (status == HAL_ERROR) {
         ketCube_I2C_Error();
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     } else {
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     }
 }
 
-uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
+/**
+ * @brief  Read I2C data
+ *
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ */
+ketCube_cfg_DrvError_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
                                 uint16_t Size)
 {
     HAL_StatusTypeDef status = HAL_OK;
@@ -226,12 +249,12 @@ uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
 
     /* Check the communication status */
     if (status == HAL_OK) {
-        return 0;
+        return KETCUBE_CFG_DRV_OK;
     } else if (status == HAL_ERROR) {
         ketCube_I2C_Error();
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     } else {
-        return 1;
+        return KETCUBE_CFG_DRV_ERROR;
     }
 }
 

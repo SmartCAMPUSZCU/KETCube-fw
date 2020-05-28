@@ -100,7 +100,7 @@
 
 #define KETCUBE_CFG_INC_MOD_LORA        ///< Include LoRa module; undef to disable module
 //#define KETCUBE_CFG_INC_MOD_DEBUGDISPLAY        ///< Include SerialDisplay module; undef to disable module; this module is deprecated and will be (completely) removed in the next release
-#define KETCUBE_CFG_INC_MOD_HDC1080     ///< Include HDC1080 module; undef to disable module
+#define KETCUBE_CFG_INC_MOD_HDCX080     ///< Include HDCx080 module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_BATMEAS     ///< Include batMeas module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_ADC         ///< Include ADC module; undef to disable module
 #define KETCUBE_CFG_INC_MOD_STARNET     ///< Include StarNet module(s); undef to disable module
@@ -140,8 +140,8 @@ typedef enum {
     KETCUBE_LISTS_MODULEID_DEBUGDISPLAY,          /*!< Module DebugDisplay */
 #endif
 
-#ifdef KETCUBE_CFG_INC_MOD_HDC1080
-    KETCUBE_LISTS_MODULEID_HDC1080,               /*!< Module HDC1080 */
+#ifdef KETCUBE_CFG_INC_MOD_HDCX080
+    KETCUBE_LISTS_MODULEID_HDCX080,               /*!< Module HDCX080 */
 #endif
 
 #ifdef KETCUBE_CFG_INC_MOD_BATMEAS

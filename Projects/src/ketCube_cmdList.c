@@ -63,6 +63,10 @@
 #include "ketCube_batMeas_cmd.c"
 #endif
 
+#ifdef KETCUBE_CFG_INC_MOD_HDCX080
+#include "ketCube_hdcX080_cmd.c"
+#endif
+
 #ifdef KETCUBE_CFG_INC_MOD_LORA
 #include "ketCube_lora_cmd.c"
 #endif
@@ -123,6 +127,25 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
         .moduleId = KETCUBE_MODULEID_BATMEAS
     },
 #endif /* KETCUBE_CFG_INC_MOD_BATMEAS */
+    
+#ifdef KETCUBE_CFG_INC_MOD_HDCX080
+    {
+        .cmd   = "HDCX080",
+        .descr = "HDCX080 parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_hdcX080_commands,
+        .moduleId = KETCUBE_MODULEID_HDCX080
+    },
+#endif /* KETCUBE_CFG_INC_MOD_HDCX080 */
      
 #ifdef KETCUBE_CFG_INC_MOD_LORA
     {

@@ -83,13 +83,13 @@ typedef enum {
 
 extern ketCube_cfg_DrvError_t ketCube_I2C_Init(void);
 extern ketCube_cfg_DrvError_t ketCube_I2C_UnInit(void);
-extern uint8_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg,
+extern ketCube_cfg_DrvError_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg,
                                     uint8_t * pBuffer, uint16_t Size);
-extern uint8_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg,
+extern ketCube_cfg_DrvError_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg,
                                      uint8_t * pBuffer, uint16_t Size);
-extern uint8_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
+extern ketCube_cfg_DrvError_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
                                         uint16_t Size);
-extern uint8_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
+extern ketCube_cfg_DrvError_t ketCube_I2C_ReadRawData(uint8_t Addr, uint8_t * pBuffer,
                                        uint16_t Size);
 
 // Deprecated I2C functions are below

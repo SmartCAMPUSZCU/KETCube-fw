@@ -98,7 +98,7 @@ typedef enum {
     KETCUBE_MODULEID_UPSTREAM_BEGIN         = 128,  /*!< Upstream modules BEGIN */
     KETCUBE_MODULEID_LORA                   = 128,  /*!< Module LoRa */
     KETCUBE_MODULEID_DEBUGDISPLAY           = 129,  /*!< Module DebugDisplay */
-    KETCUBE_MODULEID_HDC1080                = 130,  /*!< Module HDC1080 */
+    KETCUBE_MODULEID_HDCX080                = 130,  /*!< Module HDCX080 (HDC1080 and HDC2080 support) */
     KETCUBE_MODULEID_BATMEAS                = 131,  /*!< Module MeasBattery */
     KETCUBE_MODULEID_ADC                    = 132,  /*!< Module ADC */
     KETCUBE_MODULEID_STARNET_CONCENTRATOR   = 133,  /*!< Module starNet */
