@@ -183,6 +183,7 @@ ketCube_cfg_DrvError_t ketCube_I2C_ReadData(uint8_t Addr, uint8_t Reg, uint8_t *
  *
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * 
  */
 ketCube_cfg_DrvError_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t * pBuffer,
                               uint16_t Size)
@@ -207,7 +208,7 @@ ketCube_cfg_DrvError_t ketCube_I2C_WriteData(uint8_t Addr, uint8_t Reg, uint8_t 
 }
 
 /**
- * @brief  Read I2C data
+ * @brief  Standard I2C WRITE transaction
  *
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
@@ -233,7 +234,7 @@ ketCube_cfg_DrvError_t ketCube_I2C_WriteRawData(uint8_t Addr, uint8_t * pBuffer,
 }
 
 /**
- * @brief  Read I2C data
+ * @brief  Standard I2C READ transaction
  *
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
@@ -290,6 +291,9 @@ static void ketCube_I2C_Error()
  * 
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * 
+ * @deprecated This function will be removed in the next release
+ * 
  */
 ketCube_cfg_DrvError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
                                                 uint8_t regAddr,
@@ -324,6 +328,9 @@ ketCube_cfg_DrvError_t ketCube_I2C_TexasReadReg(uint8_t devAddr,
  * 
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * 
+ * @deprecated This function will be removed in the next release
+ * 
  */
 ketCube_cfg_DrvError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
                                                  uint8_t regAddr,
@@ -349,6 +356,9 @@ ketCube_cfg_DrvError_t ketCube_I2C_TexasWriteReg(uint8_t devAddr,
  * 
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * 
+ * @deprecated This function will be removed in the next release
+ * 
  */
 ketCube_cfg_DrvError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
                                                  uint8_t regAddr,
@@ -387,6 +397,9 @@ ketCube_cfg_DrvError_t ketCube_I2C_STMReadSingle(uint8_t devAddr,
  * 
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * 
+ * @deprecated This function will be removed in the next release
+ * 
  */
 ketCube_cfg_DrvError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
                                                   uint8_t regAddr,
@@ -409,6 +422,9 @@ ketCube_cfg_DrvError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
  * 
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * 
+ * @deprecated This function will be removed in the next release
+ * 
  */
 ketCube_cfg_DrvError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
                                                 uint8_t regAddr,
@@ -448,6 +464,9 @@ ketCube_cfg_DrvError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
  * 
  * @retval KETCUBE_CFG_DRV_OK in case of success
  * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * 
+ * @deprecated This function will be removed in the next release
+ * 
  */
 ketCube_cfg_DrvError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
                                                   uint8_t regAddr,

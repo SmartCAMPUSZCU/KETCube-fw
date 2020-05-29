@@ -206,7 +206,7 @@ ketCube_cfg_ModError_t ketCube_hdc2080_Init(void)
     pxInit.AutoMeasMode = KETCUBE_HDC2080_AMM_DIS;
     pxInit.Heater = KETCUBE_HDCX080_HTR_OFF;
     pxInit.IntEn = KETCUBE_HDC2080_INTEN_HZ;
-
+    
     if (ketCube_I2C_HDC2080WriteReg
         (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_CFG_REG,
          ((uint8_t *) &pxInit)[0] )) {
@@ -304,16 +304,17 @@ ketCube_cfg_ModError_t getHumidity(uint16_t * value)
             }
             break;
         case KETCUBE_HDCX080_TYPE_HDC2080:
+            /* Read LSB first! */
             if (ketCube_I2C_HDC2080ReadReg
-                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_HUMIDITY_REG_H,
-                 (uint8_t *) &rawH)) {
+                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_HUMIDITY_REG_L,
+                 &(((uint8_t *) &rawH)[0]))) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
                                               "Read humidity failed!");
                 return KETCUBE_CFG_MODULE_ERROR;
             }
             if (ketCube_I2C_HDC2080ReadReg
-                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_HUMIDITY_REG_L,
-                 (uint8_t *) (&rawH + 1))) {
+                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_HUMIDITY_REG_H,
+                 &(((uint8_t *) &rawH)[1]))) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
                                               "Read humidity failed!");
                 return KETCUBE_CFG_MODULE_ERROR;
@@ -321,8 +322,7 @@ ketCube_cfg_ModError_t getHumidity(uint16_t * value)
             break;
         default:
             return KETCUBE_CFG_MODULE_ERROR;
-    }
-    
+    }    
     
     *value = (uint16_t) (((float) (((float) rawH) / pow(2, 16))) * 1000.0);
 
@@ -351,16 +351,17 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
             }
             break;
         case KETCUBE_HDCX080_TYPE_HDC2080:
+            /* Read LSB first! */
             if (ketCube_I2C_HDC2080ReadReg
-                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_TEMPERATURE_REG_H,
-                 (uint8_t *) &rawT)) {
+                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_TEMPERATURE_REG_L,
+                 &(((uint8_t *) (&rawT))[0]))) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
                                               "Read temperature failed!");
                 return KETCUBE_CFG_MODULE_ERROR;
             }
             if (ketCube_I2C_HDC2080ReadReg
-                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_TEMPERATURE_REG_L,
-                 (uint8_t *) (&rawT + 1))) {
+                (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_TEMPERATURE_REG_H,
+                 &(((uint8_t *) &rawT)[1]))) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
                                               "Read temperature failed!");
                 return KETCUBE_CFG_MODULE_ERROR;
@@ -368,8 +369,8 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
             break;
         default:
             return KETCUBE_CFG_MODULE_ERROR;
-    }
-
+    }    
+    
     *value =
         (int16_t) (10.0 *
                    (((((float) rawT) / pow(2, 16)) * 165.0) - 40.0));
@@ -394,7 +395,7 @@ ketCube_cfg_ModError_t ketCube_hdcX080_ReadData(uint8_t * buffer,
     uint16_t temperature = 0;
     uint16_t humidity = 0;
     
-    ketCube_hdc2080_Init_t pxInit;
+    ketCube_hdc2080_Init_t pxInit = { 0 };
     
     switch (ketCube_hdcX080_moduleCfg.sensType) {
         case KETCUBE_HDCX080_TYPE_HDC2080:
@@ -403,6 +404,7 @@ ketCube_cfg_ModError_t ketCube_hdcX080_ReadData(uint8_t * buffer,
             pxInit.HumidityMeasurementResolution = KETCUBE_HDCX080_HRES_14BIT;
             pxInit.MeasCfg = KETCUBE_HDC2080_MEASCFG_RHT;
             pxInit.MeasTrig = KETCUBE_HDC2080_MEASTRIG_START;
+            
             if (ketCube_I2C_HDC2080WriteReg
                 (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_MEASCFG_REG,
                  ((uint8_t *) &pxInit)[1] )) {
@@ -421,16 +423,16 @@ ketCube_cfg_ModError_t ketCube_hdcX080_ReadData(uint8_t * buffer,
             break;
     }
 
-    /* in % * 10  */
-    if (getHumidity(&humidity) == KETCUBE_CFG_MODULE_ERROR) {
-        humidity = 0xFFFF;      // out-of the range value indicates error
-    }
-
     /* in °C * 10 */
     if (getTemperature(&temp) == KETCUBE_CFG_MODULE_OK) {
         temperature = (uint16_t) (10000 + ((int16_t) (temp)));  /*  x * 10 - 10000 in C */
     } else {
         temperature = 0xFFFF;   // out-of the range value indicates error
+    }
+    
+    /* in % * 10  */
+    if (getHumidity(&humidity) == KETCUBE_CFG_MODULE_ERROR) {
+        humidity = 0xFFFF;      // out-of the range value indicates error
     }
 
     buffer[i++] = (temperature >> 8) & 0xFF;
@@ -441,7 +443,7 @@ ketCube_cfg_ModError_t ketCube_hdcX080_ReadData(uint8_t * buffer,
     *len = i;
 
     ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                 "Temperature: %d °C, RH: %d",
+                                 "Temperature: %d °C, RH: %d %%",
                                  (((int) temperature - 10000) / 10),
                                  (humidity / 10));
 

@@ -257,7 +257,7 @@ $(OUTDIR)%.o: %.s
 	@echo Creating $@
 	@$(CP) -O binary -S $< $@
 
-## Library linked in this way contains weak and non-weak symbols in the same time. This may lead to errorneous selection of weak symbl depending on the ordering in the library. If the library created in this way is used, it is recommended to link in the following way: "-Wl,--whole-archive -lKETCube -Wl,--no-whole-archive"; "-Wl,--gc-sections" will reduce binary size signifficantly, as this library contains number of unnecessary code
+## Library linked in this way contains weak and non-weak symbols in the same time. This may lead to errorneous selection of weak symbol depending on the ordering in the library. If the library created in this way is used, it is recommended to link in the following way: "-Wl,--whole-archive -lKETCube -Wl,--no-whole-archive"; "-Wl,--gc-sections" will reduce binary size signifficantly, as this library contains number of unnecessary code
 # %.a: $(OBJS)
 # 	@echo Creating static library $@
 # 	@$(AR) rcs $@ $(OBJS)
