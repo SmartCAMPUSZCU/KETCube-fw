@@ -71,6 +71,10 @@
 #include "ketCube_lora_cmd.c"
 #endif
 
+#ifdef KETCUBE_CFG_INC_MOD_TEST_RADIO
+#include "ketCube_testRadio_cmd.c"
+#endif
+
 /**
  * @brief SET/SHOW command group(s)
  */
@@ -165,7 +169,26 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_setShow[] = {
         .moduleId = KETCUBE_MODULEID_LORA,
     },
 #endif /* KETCUBE_CFG_INC_MOD_LORA */
-
+    
+#ifdef KETCUBE_CFG_INC_MOD_TEST_RADIO
+    {
+        .cmd   = "testRadio",
+        .descr = "testRadio parameters",
+        .flags = {
+            .isGroup   = TRUE,
+            .isLocal   = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isGeneric = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isEnvCmd  = TRUE,
+        },
+        .settingsPtr.subCmdList = ketCube_testRadio_commands,
+        .moduleId = KETCUBE_MODULEID_TEST_RADIO,
+    },
+#endif /* KETCUBE_CFG_INC_MOD_TEST_RADIO */
+    
     DEF_TERMINATE()
 };
 

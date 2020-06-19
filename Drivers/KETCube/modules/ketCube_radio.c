@@ -57,7 +57,7 @@
 static volatile bool initialized = FALSE; /* disable concurent execution of the init function body */
 
 /**
- * @brief Set-UP Radio befere sleep enter
+ * @brief Set-UP Radio before sleep enter
  * 
  * @note This function should be called by KETCube core
  * 
