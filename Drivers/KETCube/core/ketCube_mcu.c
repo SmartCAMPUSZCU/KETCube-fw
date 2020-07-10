@@ -315,9 +315,9 @@ void ketCube_MCU_WD_Init(void) {
     
     hiwdg.Instance = IWDG;
     /* For IoT nodes, the slowest clock are normally advantageous */
-    hiwdg.Init.Prescaler = IWDG_PRESCALER_256;
-    hiwdg.Init.Window = 4095;  // (128 << 32) - 1 == 0xFFF
-    hiwdg.Init.Reload = 4095;  // (128 << 32) - 1 == 0xFFF
+    hiwdg.Init.Prescaler = IWDG_PRESCALER_256; // set MAX value
+    hiwdg.Init.Window = 4095; // set MAX value
+    hiwdg.Init.Reload = 4095; // set MAX value
     if (HAL_IWDG_Init(&hiwdg) != HAL_OK) {
         KETCube_ErrorHandler();
     }
@@ -556,9 +556,9 @@ void ketCube_MCU_DumpHardFaultRegs(ketCube_MCU_HardFaultRegs_t * HardFaultRegs) 
     KETCUBE_TERMINAL_PRINTF("  - R3     = %08X  // Register R3",                     (*HardFaultRegs).SavedRegs.r3      ); KETCUBE_TERMINAL_ENDL();    
     KETCUBE_TERMINAL_PRINTF("  - R12    = %08X  // Register R12",                    (*HardFaultRegs).SavedRegs.r12     ); KETCUBE_TERMINAL_ENDL();    
     KETCUBE_TERMINAL_PRINTF("  - LR     = %08X  // Link register LR",                (*HardFaultRegs).SavedRegs.lr      ); KETCUBE_TERMINAL_ENDL();    
-    KETCUBE_TERMINAL_PRINTF("  - PC     = %08X  // Program counter PC",              (*HardFaultRegs).SavedRegs.pc      ); KETCUBE_TERMINAL_ENDL();    
     KETCUBE_TERMINAL_PRINTF("  - PSR    = %08X  // Program status word PSR",         (*HardFaultRegs).SavedRegs.psr.word); KETCUBE_TERMINAL_ENDL();    
-    
 #endif
+    KETCUBE_TERMINAL_PRINTF("  - PC     = %08X  // Program counter PC",              (*HardFaultRegs).SavedRegs.pc      ); KETCUBE_TERMINAL_ENDL();    
     
 }
+

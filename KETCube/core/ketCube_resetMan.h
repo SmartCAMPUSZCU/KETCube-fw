@@ -58,16 +58,27 @@
 
 /**
 * @brief  KETCube reset reason list
+* 
+* @note HW reset causes are taken from HW flags, SW reset causes are handled by a custom mechanism
+* 
 */
 typedef enum ketCube_resetMan_reason_t {
-    KETCUBE_RESETMAN_REASON_UNKNOWN,             ///< Unknown RESET reason
+    KETCUBE_RESETMAN_REASON_UNKNOWN,              ///< Unknown RESET reason
+                                                  
+    KETCUBE_RESETMAN_REASON_LOW_POWER,            ///< LP reset
+    KETCUBE_RESETMAN_REASON_WWDG,                 ///< window watchdog
+    KETCUBE_RESETMAN_REASON_IWDG,                 ///< independent watchdog
+    KETCUBE_RESETMAN_REASON_EXTPIN,               ///< external reset PIN
+    KETCUBE_RESETMAN_REASON_POR,                  ///< POR
+    KETCUBE_RESETMAN_REASON_BOR,                  ///< BOR
     
-    KETCUBE_RESETMAN_REASON_USER_RQ,             ///< RESET requested by USER (e.g. reload command)
-    KETCUBE_RESETMAN_REASON_USER_REMOTE_TERM,    ///< RESET requested by USER (e.g. reload command)
+    /* software resets are handled depper */
     
-    KETCUBE_RESETMAN_REASON_POR,                 ///< POR
-    KETCUBE_RESETMAN_REASON_PORSW,               ///< automatic RESET rerquested by core after POR
-    KETCUBE_RESETMAN_REASON_HARDFAULT            ///< automatic RESET after HardFault with debugInfo included
+    KETCUBE_RESETMAN_REASON_USER_RQ,              ///< RESET requested by USER (e.g. reload command)
+    KETCUBE_RESETMAN_REASON_USER_REMOTE_TERM,     ///< RESET requested by USER (e.g. reload command)
+    
+    KETCUBE_RESETMAN_REASON_PORSW,                ///< automatic (SW) RESET rerquested by core after POR
+    KETCUBE_RESETMAN_REASON_HARDFAULT             ///< automatic (SW) RESET after HardFault with debugInfo included
 } ketCube_resetMan_reason_t;
 
 /**
@@ -98,6 +109,7 @@ typedef struct ketCube_resetMan_t {
 
 extern void ketCube_resetMan_requestReset(ketCube_resetMan_reason_t reason);
 extern void ketCube_resetMan_info(void);
+extern void ketCube_resetMan_getResetCause(void);
 
 
 /**

@@ -60,6 +60,46 @@ void ketCube_resetMan_requestReset(ketCube_resetMan_reason_t reason) {
     NVIC_SystemReset();
 }
 
+/**
+ * @brief Get RESET reason
+ * 
+ * This function saves reset cause into core's configuration structure
+ * 
+ */
+void ketCube_resetMan_getResetCause(void) {
+    if (__HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST))
+    {
+        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_LOW_POWER;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST))
+    {
+        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_WWDG;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST))
+    {
+        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_IWDG;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST))
+    {
+        // this is handled by SW mechanism !
+        // !!! do not modify ketCube_coreCfg.volatileData.resetInfo.reason variable here !!!
+        // !!! Flags arealready set !!!
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST))
+    {
+        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_POR;
+    }
+    else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST))
+    {
+        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_EXTPIN;
+    }
+    else
+    {
+        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_UNKNOWN;
+    }
+
+    __HAL_RCC_CLEAR_RESET_FLAGS();
+}
 
 /**
  * @brief Provide reset reasoning to user if necessary
@@ -101,17 +141,43 @@ void ketCube_resetMan_info(void) {
             ketCube_MCU_DumpHardFaultRegs(&(ketCube_coreCfg.volatileData.resetInfo.info.dbg.hardFault));
             KETCUBE_TERMINAL_ENDL();
             break;
+            
+        case KETCUBE_RESETMAN_REASON_LOW_POWER:
+            KETCUBE_TERMINAL_CLR_LINE();
+            KETCUBE_TERMINAL_PRINTF("!!! The reset reason is LOW POWER !!!");
+            KETCUBE_TERMINAL_ENDL();
+            KETCUBE_TERMINAL_ENDL();
+            break;
+        case KETCUBE_RESETMAN_REASON_WWDG:
+            KETCUBE_TERMINAL_CLR_LINE();
+            KETCUBE_TERMINAL_PRINTF("!!! The reset reason is WINDOW WATCHDOG !!!");
+            KETCUBE_TERMINAL_ENDL();
+            KETCUBE_TERMINAL_ENDL();
+            break;
+        case KETCUBE_RESETMAN_REASON_IWDG:
+            KETCUBE_TERMINAL_CLR_LINE();
+            KETCUBE_TERMINAL_PRINTF("!!! The reset reason is INDEPENDENT WATCHDOG !!!");
+            KETCUBE_TERMINAL_ENDL();
+            KETCUBE_TERMINAL_ENDL();
+            break;
+        case KETCUBE_RESETMAN_REASON_EXTPIN:
+            // maybe ignore this message ? as it should be normal state -> reset button
+            KETCUBE_TERMINAL_CLR_LINE();
+            KETCUBE_TERMINAL_PRINTF("!!! The reset reason is EXTERNAL PIN !!!");
+            KETCUBE_TERMINAL_ENDL();
+            KETCUBE_TERMINAL_ENDL();
+            break;
+        case KETCUBE_RESETMAN_REASON_BOR:
+            KETCUBE_TERMINAL_CLR_LINE();
+            KETCUBE_TERMINAL_PRINTF("!!! The reset reason is BROWN-OUT !!!");
+            KETCUBE_TERMINAL_ENDL();
+            KETCUBE_TERMINAL_ENDL();
+            break;
         case KETCUBE_RESETMAN_REASON_UNKNOWN:
         default:
             // something goes wrong! This should never happen!
             KETCUBE_TERMINAL_CLR_LINE();
-            KETCUBE_TERMINAL_PRINTF("The RESET was invoked by HW. This may be caused by:");
-            KETCUBE_TERMINAL_ENDL();
-            KETCUBE_TERMINAL_PRINTF("  - the watchdog");
-            KETCUBE_TERMINAL_ENDL();
-            KETCUBE_TERMINAL_PRINTF("  - the reset button");
-            KETCUBE_TERMINAL_ENDL();
-            KETCUBE_TERMINAL_PRINTF("  - unknown error");
+            KETCUBE_TERMINAL_PRINTF("!!! The RESET reason is unknown !!!");
             KETCUBE_TERMINAL_ENDL();
             KETCUBE_TERMINAL_ENDL();
             break;

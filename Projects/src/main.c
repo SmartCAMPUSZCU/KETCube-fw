@@ -63,17 +63,6 @@ static TimerEvent_t KETCube_PeriodTimer;
 volatile static bool KETCube_PeriodTimerElapsed = FALSE;
 volatile static bool KETCube_Initialized = FALSE;
 
-bool KETCube_wasResetPOR;
-void KETCube_getResetFlags(void)
-{
-    if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST) == TRUE) {
-        KETCube_wasResetPOR = TRUE;
-    } else {
-        KETCube_wasResetPOR = FALSE;
-    }
-    __HAL_RCC_CLEAR_RESET_FLAGS();
-}
-
 /*!
  * @brief Function executed on TxNextPacket Timeout event
  */
@@ -167,14 +156,13 @@ int main(void)
     ketCube_terminal_Init();
 
     // A hot fix for non-operational RTC after POR - this should be removed in the future
-    if (KETCube_wasResetPOR == TRUE) {
+    if (ketCube_coreCfg.volatileData.resetInfo.reason == KETCUBE_RESETMAN_REASON_POR) {
         //perform SW reset
         ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                              "POR detected - reseting!");
 
         ketCube_resetMan_requestReset(KETCUBE_RESETMAN_REASON_PORSW);
     }
-    
     ketCube_resetMan_info();
     
     /* Init KETCube modules */

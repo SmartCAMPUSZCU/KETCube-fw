@@ -97,7 +97,8 @@ LoopFillZerobss:
   cmp  r2, r3
   bcc  FillZerobss
 
-  bl KETCube_getResetFlags
+  /* bl KETCube_getResetFlags */
+  bl ketCube_resetMan_getResetCause
   
 /* Call the clock system intitialization function.*/
   bl  SystemInit

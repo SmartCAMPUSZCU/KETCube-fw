@@ -7,7 +7,7 @@
  *
  * @attention
  *
- * <h2><center>&copy; Copyright (c) 2019 University of West Bohemia in Pilsen
+ * <h2><center>&copy; Copyright (c) 2020 University of West Bohemia in Pilsen
  * All rights reserved.</center></h2>
  *
  * Developed by:
@@ -59,7 +59,13 @@
 
 #define KETCUBE_MCU_LPMODE   KETCUBE_MCU_LPMODE_STOP
 
-#define KETCUBE_MCU_WD_SAFE_TIMER_CNT      25                         /*<! Watchdog reset period in (pseudo)seconds (seconds are approximated by the closest power of 2); use 30 as the maxValue ! */
+/**
+  * @brief Watchdog reset period in seconds
+  * @warning Use 17 as the maxValue
+  * @note the nominal frequency of IWDG clock (LSI) is 37 kHz and thus 28s
+  * @note due to LSI watchdog clock scatter, the maximal guaranted period for every part is 17.4 seconds
+  */
+#define KETCUBE_MCU_WD_SAFE_TIMER_CNT      15
 
 /**
  * @brief HardFault registers should be dumped to investigate reset reason
