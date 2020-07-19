@@ -1202,6 +1202,46 @@ int16_t SX1276ReadRssi( RadioModems_t modem )
     return rssi;
 }
 
+int16_t SX1276ReadTemperature( void )
+{
+    int16_t temperature = 0;
+    uint8_t regImageCal = 0;
+
+    RadioModems_t modem = (SX1276Read( REG_OPMODE ) & 0x80) >> 7;
+    
+    switch( modem )
+    {
+    case MODEM_FSK:
+        // check if device is in any meaningful mode - all except Sleep and Standby
+        if( ( SX1276Read( REG_OPMODE ) & 0x07 ) <= 1 ) {
+            temperature = -2000;
+            break;
+        }
+        
+        // set tempSensor On
+        regImageCal = SX1276Read( REG_IMAGECAL );
+        regImageCal &= ~(0x01);
+        SX1276Write( REG_IMAGECAL, regImageCal );
+        
+        // wait for 140 us (if not enabled before)
+        HAL_Delay(1);
+        
+        // setTempSensor off
+        regImageCal |= 0x01;
+        SX1276Write( REG_IMAGECAL, regImageCal );
+        
+        // read temp
+        temperature = -1 * ((int16_t) ((int8_t) ( SX1276Read( REG_TEMP ) )));
+        break;
+    case MODEM_LORA:
+        /* temperature measurement not available */
+    default:
+        temperature = -1000;
+    }
+    
+    return temperature;
+}
+
 void SX1276Reset( void )
 {
     GPIO_InitTypeDef initStruct = { 0 };

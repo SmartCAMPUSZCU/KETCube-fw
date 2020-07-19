@@ -469,6 +469,18 @@ void SX1276SetTxContinuousWave( uint32_t freq, int8_t power, uint16_t time );
  */
 int16_t SX1276ReadRssi( RadioModems_t modem );
 
+/** 
+ * @brief Reads temperature in the FSK mode
+ * 
+ * @note this function is available in FSK mode only
+ * @note in LoRa mode, it returns temperature -1000, which does not make any physical sense :-)
+ * @note if there is wrong opmode, -2000 is returned
+ * 
+ * @retval temperature in degree of Celsius
+ * 
+ */
+int16_t SX1276ReadTemperature( void );
+
 /*!
  * Performs the Rx chain calibration for LF and HF bands
  * \remark Must be called just after the reset so all registers are at their

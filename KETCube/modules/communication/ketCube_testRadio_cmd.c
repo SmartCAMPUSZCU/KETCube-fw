@@ -52,18 +52,6 @@
 #include "ketCube_testRadio.h"
 
 
-/** 
-  * @brief Get radio temperature
-  * 
-  * @todo Not ready yet!
-  * 
-  */
-void ketCube_terminal_cmd_testRadio_getRadioTemperature(void)
-{
-    commandIOParams.as_uint32 = 0;
-
-}
-
 /* Terminal command definitions */
 ketCube_terminal_cmd_t ketCube_testRadio_commands[] = {
     {
@@ -139,8 +127,8 @@ ketCube_terminal_cmd_t ketCube_testRadio_commands[] = {
             .isGeneric = FALSE,
         },
         .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
-        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
-        .settingsPtr.callback = &ketCube_terminal_cmd_testRadio_getRadioTemperature
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_INT32,
+        .settingsPtr.callback = &ketCube_testRadio_cmd_getTemp
     },
     
     {
@@ -157,7 +145,7 @@ ketCube_terminal_cmd_t ketCube_testRadio_commands[] = {
         },
         .paramSetType  = KETCUBE_TERMINAL_PARAMS_NONE,
         .outputSetType = KETCUBE_TERMINAL_PARAMS_NONE,
-        .settingsPtr.callback = &ketCube_testRadio_cmd_GoSleep
+        .settingsPtr.callback = &ketCube_testRadio_cmd_GoCW
     },
     
     {

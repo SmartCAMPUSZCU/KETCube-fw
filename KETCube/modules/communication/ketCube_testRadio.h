@@ -101,6 +101,7 @@ extern ketCube_cfg_ModError_t ketCube_testRadio_SleepEnter(void);
 
 extern void ketCube_testRadio_cmd_GoSleep(void);
 extern void ketCube_testRadio_cmd_GoCW(void);
+extern void ketCube_testRadio_cmd_getTemp(void);
 
 
 /**

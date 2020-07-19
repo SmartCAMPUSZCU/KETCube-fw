@@ -107,26 +107,26 @@ ketCube_cfg_ModError_t ketCube_testRadio_SleepEnter(void)
         case KETCUBE_TEST_RADIO_STATE_SLEEP:
             break;
         case KETCUBE_TEST_RADIO_STATE_CW:
-            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "CW mode");
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "CW mode");
             break;
         case KETCUBE_TEST_RADIO_STATE_TX_TIMEOUT:
             newState = KETCUBE_TEST_RADIO_STATE_SLEEP;
-            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "TX timeout");
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "TX timeout");
             break;
         case KETCUBE_TEST_RADIO_STATE_TX_DONE:
             newState = KETCUBE_TEST_RADIO_STATE_SLEEP;
-            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "TX done");
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "TX done");
             break;
         case KETCUBE_TEST_RADIO_STATE_RX_TIMEOUT:
             newState = KETCUBE_TEST_RADIO_STATE_SLEEP;
-            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "RX timeout");
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "RX timeout");
             break;
         case KETCUBE_TEST_RADIO_STATE_RX_DONE:
             newState = KETCUBE_TEST_RADIO_STATE_SLEEP;
-            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "RX done");
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "RX done");
             break;
         case KETCUBE_TEST_RADIO_STATE_RX_ERROR:
-            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "RX error");
+            ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "RX error");
             break;
         default:
             newState = KETCUBE_TEST_RADIO_STATE_SLEEP;
@@ -151,7 +151,7 @@ ketCube_cfg_ModError_t ketCube_testRadio_SleepEnter(void)
                 }
                 
                 /* start CW */
-                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_STARNET_NODE, "Start CW: %d Hz; %d dBm; %d s", ketCube_testRadio_moduleCfg.cwFreq, ketCube_testRadio_moduleCfg.cwPwr, ketCube_testRadio_moduleCfg.cwDur);
+                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "Start CW: %d Hz; %d dBm; %d s", ketCube_testRadio_moduleCfg.cwFreq, ketCube_testRadio_moduleCfg.cwPwr, ketCube_testRadio_moduleCfg.cwDur);
                 Radio.SetTxContinuousWave(ketCube_testRadio_moduleCfg.cwFreq, ketCube_testRadio_moduleCfg.cwPwr, ketCube_testRadio_moduleCfg.cwDur);
                 break;
             case KETCUBE_TEST_RADIO_STATE_TX_TIMEOUT:
@@ -229,6 +229,15 @@ void ketCube_testRadio_cmd_GoCW(void)
     newState = KETCUBE_TEST_RADIO_STATE_CW;
 }
 
+extern int16_t SX1276ReadTemperature(void);
+/**
+ * @brief Get temperature of the radio chip
+ */
+void ketCube_testRadio_cmd_getTemp(void)
+{
+    commandIOParams.as_int32 = (int32_t) SX1276ReadTemperature();
+}
+
 /**
  * @brief This function is executed on Tx Done event
  */
@@ -269,5 +278,6 @@ static void ketCube_testRadio_OnRxError(void)
 {
     newState = KETCUBE_TEST_RADIO_STATE_RX_ERROR;
 }
+
 
 #endif                          /* KETCUBE_CFG_INC_MOD_TEST_RADIO */
