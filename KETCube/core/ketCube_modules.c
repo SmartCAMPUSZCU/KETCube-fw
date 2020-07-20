@@ -128,6 +128,11 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
 {
     uint8_t len;
     uint8_t i;
+    ketCube_cfg_ModError_t retval;
+    
+    /* initialize error indication counters to 0*/
+    ketCube_coreCfg.volatileData.moduleSendErrorCnt = 0;
+    ketCube_coreCfg.volatileData.modulePerErrorCnt = 0;
     
     // remote terminal mode allows silencing sensor modules, and reserves all
     // traffic just for remote terminal
@@ -145,11 +150,13 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
                          ketCube_modules_List[i].name);
 
                     len = 0;
-                    (ketCube_modules_List[i].fnGetSensorData) (&
-                                                               (SensorBuffer
-                                                                [SensorBufferSize]),
-                                                               &len);
-                    SensorBufferSize += len;
+                    retval = (ketCube_modules_List[i].fnGetSensorData) (&(SensorBuffer[SensorBufferSize]),
+                                                                        &len);
+                    if (retval != KETCUBE_CFG_MODULE_OK) {
+                        ketCube_coreCfg.volatileData.modulePerErrorCnt++;
+                    } else {
+                        SensorBufferSize += len;
+                    }
                 }
             }
         }
@@ -163,8 +170,11 @@ ketCube_cfg_Error_t ketCube_modules_ExecutePeriodic(void)
                          "Module \"%s\" SendData()",
                          ketCube_modules_List[i].name);
 
-                    (ketCube_modules_List[i].fnSendData) (&(SensorBuffer[0]),
-                                                          &SensorBufferSize);
+                    retval = (ketCube_modules_List[i].fnSendData) (&(SensorBuffer[0]),
+                                                                   &SensorBufferSize);
+                    if (retval != KETCUBE_CFG_MODULE_OK) {
+                        ketCube_coreCfg.volatileData.moduleSendErrorCnt++;
+                    }
                 }
             }
         }

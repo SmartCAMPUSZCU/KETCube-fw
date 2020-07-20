@@ -65,6 +65,12 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
     if (ketCube_coreCfg.startDelay < KETCUBE_CORECFG_MIN_STARTDELAY) {
         ketCube_coreCfg.startDelay = KETCUBE_CORECFG_MIN_STARTDELAY;
     }
+    
+    if (ketCube_coreCfg.repeatDelay == 0) {
+        // repeat is disabled ...
+    } else if (ketCube_coreCfg.repeatDelay < KETCUBE_CORECFG_MIN_REPEATDELAY) {
+        ketCube_coreCfg.repeatDelay = KETCUBE_CORECFG_MIN_REPEATDELAY;
+    }
 
     if (ketCube_coreCfg.severity > KETCUBE_CFG_SEVERITY_DEBUG) {
         ketCube_coreCfg.severity = KETCUBE_CORECFG_DEFAULT_SEVERITY;
@@ -76,7 +82,12 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                          "KETCube start delay set to: %d ms",
                                          ketCube_coreCfg.startDelay);
-
+    if (ketCube_coreCfg.repeatDelay != 0) {
+        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
+                                             "KETCube repeat delay set to: %d ms",
+                                             ketCube_coreCfg.repeatDelay);
+    }
+    
     ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                              "KETCube core severity level: %s", ketCube_severity_strAlias[ketCube_coreCfg.severity]);
     

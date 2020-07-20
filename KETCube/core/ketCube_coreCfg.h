@@ -58,12 +58,13 @@
 #define KETCUBE_CORECFG_SKIP_SLEEP_PERIOD          FALSE        ///< Skip sleep period (perform sensing at maximum speed)
 #define KETCUBE_CORECFG_MIN_BASEPERIOD             500          ///< Minimal period for periodic events
 #define KETCUBE_CORECFG_MIN_STARTDELAY             1000         ///< Minimal delay - the first periodic action is run at this time after power-on
+#define KETCUBE_CORECFG_MIN_REPEATDELAY            500          ///< Minimal delay between the original and repeated/enforced basePeriod - should be equal to KETCUBE_CORECFG_MIN_BASEPERIOD
 #define KETCUBE_CORECFG_DEFAULT_SEVERITY           KETCUBE_CFG_SEVERITY_ERROR   ///< Default KETCube core severity
 
 /**
 * @brief  KETCube core configuration
 * 
-* @note 128B is reserved for CORE configuration in EEPROM - see the summary size of the fields and RFU
+* @note 128B is reserved for CORE configuration in EEPROM - decrease RFU when adding new fields to the non-volatile part of the scructure - see the summary size of the fields and RFU
 * 
 */
 typedef struct ketCube_coreCfg_t {
@@ -71,13 +72,19 @@ typedef struct ketCube_coreCfg_t {
     
     uint32_t basePeriod;                 ///< This period is used by KETCube core to run periodic events
     uint32_t startDelay;                 ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
+    uint32_t repeatDelay;                 ///< In case of error during the periodic action, the periodic action is repeated after this delay; if 0, it is not applicable
+    
     ketCube_severity_t severity;         ///< Core messages severity
     ketCube_severity_t driverSeverity;   ///< Driver(s) messages severity
     uint16_t remoteTerminalCounter;      ///< Is currently in remote terminal mode (value > 0)? If so, how many basePeriods to reload?
     
     union {
+        uint16_t moduleSendErrorCnt;     ///< Module periodic-send function error counter
+        uint16_t modulePerErrorCnt;      ///< Module periodic-get function error counter
+        
         ketCube_resetMan_t resetInfo;    ///< Reset Reasoning
-        uint8_t RFU[115];                ///< This part of EEPROM is RFU, when adding new field into this struct, decrease the size of this field to preserve configuration padding for module(s) configuration; 128B is reserved for CORE in total
+        
+        uint8_t RFU[111];                ///< This part of EEPROM is RFU, when adding new field into coreCfg, decrease the size of this field to preserve configuration padding for module(s) configuration; 128B is reserved for CORE in total
     } volatileData;                      ///< This union should aggregate volatile data, whose require no fixed location over KETCube releases
 } ketCube_coreCfg_t;
 

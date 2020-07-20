@@ -304,6 +304,27 @@ ketCube_terminal_cmd_t ketCube_terminal_commands_core[] = {
     },
     
     {
+        .cmd   = "repeatDelay",
+        .descr = "In case of error during the periodic action, the periodic action is repeated after this delay; set to 0 if not applicable",
+        .flags = {
+            .isLocal   = TRUE,
+            .isRemote  = TRUE,
+            .isEEPROM  = TRUE,
+            .isRAM     = TRUE,
+            .isShowCmd = TRUE,
+            .isSetCmd  = TRUE,
+            .isGeneric = TRUE,
+        },
+        .paramSetType  = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .outputSetType = KETCUBE_TERMINAL_PARAMS_UINT32,
+        .settingsPtr.cfgVarPtr = &(ketCube_cfg_varDescr_t) {
+            .moduleID = KETCUBE_LISTS_ID_CORE,
+            .offset   = offsetof(ketCube_coreCfg_t, repeatDelay),
+            .size     = sizeof(uint32_t)
+        }
+    },
+    
+    {
         .cmd   = "startDelay",
         .descr = "First periodic action is delayed after power-up and initialization",
         .flags = {

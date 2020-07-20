@@ -77,6 +77,34 @@ void KETCube_PeriodElapsed(void* context)
     TimerStart(&KETCube_PeriodTimer);
 }
 
+/*!
+ * @brief Repeat base period if error ocured during last basePeriod
+ * 
+ */
+void KETCube_PeriodRepeatIfNeeded(void)
+{
+    if (ketCube_coreCfg.repeatDelay == 0) {
+        return;
+    }
+    
+    if (ketCube_coreCfg.repeatDelay > ketCube_coreCfg.basePeriod) {
+        return;
+    }
+    
+    if ((ketCube_coreCfg.volatileData.moduleSendErrorCnt == 0) &&
+        (ketCube_coreCfg.volatileData.modulePerErrorCnt == 0)) {
+        return;        
+    }
+        
+    ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO, "Module error detected - basePeriod repeat planed after %d ms", ketCube_coreCfg.repeatDelay);
+        
+    TimerStop(&KETCube_PeriodTimer);
+
+    TimerSetValue(&KETCube_PeriodTimer, ketCube_coreCfg.repeatDelay);
+
+    TimerStart(&KETCube_PeriodTimer);
+}
+
 void KETCube_ErrorHandler(void)
 {
     KETCUBE_TERMINAL_ENDL();
@@ -206,6 +234,9 @@ int main(void)
                  "--- KETCube base period # %d ---", basePeriodCnt++);
 
             ketCube_modules_ExecutePeriodic();
+            
+            /* check if we should repeat "last" basePeriod */
+            KETCube_PeriodRepeatIfNeeded();
 
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
         }
