@@ -759,6 +759,7 @@ void ketCube_terminal_execCMD(void)
             return;
         }
         cmdIndex++;
+        cmdBuffIndex -= j; /* for concurent command names - to resolve different parameter settings */
     }
     
     /* check if command was not found or error raised during command parsing */
@@ -989,7 +990,9 @@ void ketCube_terminal_ProcessCMD(void)
             || ((tmpchar >= 'A') && (tmpchar <= 'Z'))
             || ((tmpchar >= '0') && (tmpchar <= '9'))
             || (tmpchar == ' ')
-            || (tmpchar == ',')) {
+            || (tmpchar == ',')
+            || (tmpchar == '+')
+            || (tmpchar == '-')) {
             if (*commandPtr > KETCUBE_TERMINAL_CMD_MAX_LEN) {
                 KETCUBE_TERMINAL_PRINTF
                     ("Command too long, remove characters or press [ENTER] to exec command!");
@@ -1015,7 +1018,7 @@ void ketCube_terminal_ProcessCMD(void)
             ketCube_terminal_execCMD();
         } else if (tmpchar == '\t') {   // display help
             ketCube_terminal_printCMDHelp();
-        } else if (tmpchar == '+') {    // up history
+        } else if (tmpchar == '>') {    // up history
             KETCUBE_TERMINAL_PRINTF("\r");
             for (i = 0; i < *commandPtr; i++) {
                 KETCUBE_TERMINAL_PRINTF(" ");
@@ -1033,7 +1036,7 @@ void ketCube_terminal_ProcessCMD(void)
                 (uint8_t *) & (commandHistory[commandHistoryPtr].ptr);
             KETCUBE_TERMINAL_PROMPT();
             KETCUBE_TERMINAL_PRINTF("%s", commandBuffer);
-        } else if (tmpchar == '-') {    // down history
+        } else if (tmpchar == '<') {    // down history
             KETCUBE_TERMINAL_PRINTF("\r");
             for (i = 0; i < *commandPtr; i++) {
                 KETCUBE_TERMINAL_PRINTF(" ");
