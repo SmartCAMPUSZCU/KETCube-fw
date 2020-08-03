@@ -44,6 +44,7 @@
 
 #include "ketCube_coreCfg.h"
 #include "ketCube_terminal.h"
+#include "ketCube_mcu.h"
 
 /**
  * KETCube core configuration
@@ -62,7 +63,10 @@ ketCube_cfg_Error_t ketCube_coreCfg_Init(void)
         ketCube_coreCfg.basePeriod = KETCUBE_CORECFG_MIN_BASEPERIOD;
     }
 
-    if (ketCube_coreCfg.startDelay < KETCUBE_CORECFG_MIN_STARTDELAY) {
+    if (ketCube_coreCfg.startDelay == 0) {
+        // get deterministic random number based on devID
+        ketCube_coreCfg.startDelay = KETCUBE_CORECFG_MIN_STARTDELAY + 1000 * (ketCube_MCU_GetRandomSeed() % (KETCUBE_CORECFG_MAX_STARTDELAY_RND/1000));
+    } else if (ketCube_coreCfg.startDelay < KETCUBE_CORECFG_MIN_STARTDELAY) {
         ketCube_coreCfg.startDelay = KETCUBE_CORECFG_MIN_STARTDELAY;
     }
     
