@@ -64,7 +64,8 @@ def _openRecipe(recipePath):
     try:  
         recipe = open(recipePath)
     except:
-         common.exitError()
+        print("Error when openning recipe \'" + recipePath + "\'!")
+        common.exitError()
 
 ## Close text file containing recipe (list of KETCube commands)
 #
@@ -94,3 +95,64 @@ def processSimpleRecipe(simpleRecipe):
         term.getCmdResp()
 
     _closeRecipe()
+
+
+## Process data recipe - get/set values from KETCube
+#
+# @param setShow - set or show string to decide if set or show will be executed; set expects 4 records in the recipe
+# @param simpleRecipe file containing KETCube storage, command sub-tree and data type delimited by ";" - one record per line
+#
+# @retval recipe - returns SET-type recipe: for setShow == "set", the recipe is equal to input recipe; for "show", it contains current values read from device
+#
+def processSetShowRecipe(setShow, dataRecipe):
+    
+    # set recipe generated from input recipe
+    newSetRecipe = ""
+    
+    _openRecipe(dataRecipe)
+    
+    if (recipe == None):
+        return
+    
+    if (setShow != "show") and (setShow != "set"):
+        return
+    
+    for line in recipe:
+        line = line.rstrip() # remove newline
+        records = (line.split(';'))
+        
+        if ((len(records) < 3) and (setShow == "show")) or ((len(records) < 4) and (setShow == "set")):
+            print("Record \'" + line + "\'in source recipe malformed!")
+            print("Recipe record format: {RAM|EEPROM}; {RETVAL DATA TYPE}; {CMD}; {CMD PARAM};")
+            _closeRecipe()
+            common.exitError()
+        
+        records[0] = records[0].strip()
+        if   (records[0] == "EEPROM"):
+            rootCmd = setShow
+        elif (records[0] == "RAM"):
+            rootCmd = setShow + "r"
+        else:
+            print("Unknown storageType \'" + records[0] + "\'")
+            _closeRecipe()
+            common.exitError()
+        
+        records[1] = records[1].strip()
+        dataType = common.strToType(records[1])
+        if (dataType  == None):
+            print("Unknown dataType \'" + records[1] + "\'")
+            _closeRecipe()
+            common.exitError()
+        
+        cmd = records[2].strip()
+        
+        if (setShow == "set"):
+            cmd = cmd + " " + records[3].strip()
+        
+        term.sendCommand(rootCmd + " " + cmd)
+        
+        newSetRecipe = newSetRecipe + records[0] + "; " + records[1] + "; " + records[2] + "; " + term.getCmdResp(dataType) + ";\n"
+
+    _closeRecipe()
+    
+    return newSetRecipe

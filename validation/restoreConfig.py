@@ -2,19 +2,19 @@
 # -*- coding: utf-8 -*-
 #
 
-## @file common.py
+## @file saveConfig.py
 #
 # @author Jan Belohoubek
-# @version 0.1
-# @date    2019-03-02
-# @brief   The KETCube common deffinitions
+# @version 0.2
+# @date    2020-08-10
+# @brief   This script is intended to restore KETCube configuration from a file
 #
 # @note Requirements:
 #    Standard Python3 installation (Tested Fedora ...)
 #
 # @attention
 # 
-#  <h2><center>&copy; Copyright (c) 2019 University of West Bohemia in Pilsen
+#  <h2><center>&copy; Copyright (c) 2020 University of West Bohemia in Pilsen
 #  All rights reserved.</center></h2>
 # 
 #  Developed by:
@@ -49,62 +49,29 @@
 #  OR THE USE OR OTHER DEALINGS WITH THE SOFTWARE.
 
 ### Imports
-from enum import IntEnum
-import signal
 
-class SeverityLevels(IntEnum):
-    NONE   = 0
-    ERROR  = 1
-    INFO   = 2
-    DEBUG  = 3
+import sys
 
-# Global severity level    
-SEVERITY_LEVEL = SeverityLevels.ERROR
+### TestBench imports
 
-class Types(IntEnum):
-    PARAMS_BOOLEAN    =  1
-    PARAMS_STRING     =  2
-    PARAMS_BYTE       =  3
-    PARAMS_INT32      =  4
-    PARAMS_UINT32     =  5
-    PARAMS_INT32_PAIR =  6
-    PARAMS_BYTE_ARRAY =  7
+import common.common as common
+import common.terminal as term
+import common.recipe as recipe
 
 
-## Converts string to data type
-#
-# @param typeStr - string representation of Types
-#
-# @retval type
-#
-def strToType(typeStr):
-    if   typeStr == "PARAMS_BOOLEAN":
-        return Types.PARAMS_BOOLEAN
-    elif typeStr == "PARAMS_STRING":   
-        return Types.PARAMS_STRING
-    elif typeStr == "PARAMS_BYTE":   
-        return Types.PARAMS_BYTE
-    elif typeStr == "PARAMS_INT32":     
-        return Types.PARAMS_INT32
-    elif typeStr == "PARAMS_UINT32":
-        return Types.PARAMS_UINT32
-    elif typeStr == "PARAMS_INT32_PAIR":
-        return Types.PARAMS_INT32_PAIR
-    elif typeStr == "PARAMS_BYTE_ARRAY":
-        return Types.PARAMS_BYTE_ARRAY
-    else:
-        return None
+# --- MAIN ---
 
-# Correct exit
-def exitGracefully(signum, frame):
-    exit(0)
-    
-def exitError():
-    print("Fatal Error!")
-    exitGracefully(None, None)
+common.initEnv()
 
-# Initialize testbench enviroment
-def initEnv():
-    signal.signal(signal.SIGINT, exitGracefully)
-    signal.signal(signal.SIGTERM, exitGracefully)
+term.selectComPort()
+term.initCOM()
 
+term.sendCommand("show LoRa devEUIBoard")
+devEUI = term.getCmdResp(common.Types.PARAMS_BYTE_ARRAY)
+print("DevEUI:", devEUI)
+
+setRecipe = recipe.processSetShowRecipe("set", devEUI)
+
+# do nothing with setRecipe ...
+
+term.unInitCOM()

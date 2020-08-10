@@ -61,15 +61,6 @@ from . import common as common
 
 ### Defines
 
-class ParamReturnTypes(IntEnum):
-    PARAMS_BOOLEAN    =  1
-    PARAMS_STRING     =  2
-    PARAMS_BYTE       =  3
-    PARAMS_INT32      =  4
-    PARAMS_UINT32     =  5
-    PARAMS_INT32_PAIR =  6
-    PARAMS_BYTE_ARRAY =  7
-
 ### Connection options
 COM="COM8"
 BAUD_SPEED=9600 
@@ -249,12 +240,21 @@ def _parseParams(paramType = None, line = None):
     line = line[index:]
     print("Parameter found: " + line)
     
-    if (ParamReturnTypes.PARAMS_BYTE_ARRAY):
+    if (paramType == common.Types.PARAMS_BYTE_ARRAY):
         # remove byte delimiters
         line = line.replace('-', '')
         line = line.replace(' ', '')
         print("ByteArray parsed: " + line)
         return line
+    elif (paramType == common.Types.PARAMS_BOOLEAN):
+        if (line.find("TRUE") >= 0):
+            return "1"
+        else:
+            return "0"
+    else:
+        return line
+    
+    return ""
 
 ## Get command response
 #
