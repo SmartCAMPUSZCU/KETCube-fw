@@ -74,6 +74,8 @@ static void ketCube_testRadio_OnTxDone(void);
 static void ketCube_testRadio_OnRxDone(uint8_t * payload, uint16_t size,
                                      int16_t rssi, int8_t snr);
 
+/* extern function prototypes */
+extern int16_t SX1276ReadTemperature(void);
 
 /* private variables */
 static RadioEvents_t RadioEvents;
@@ -153,6 +155,7 @@ ketCube_cfg_ModError_t ketCube_testRadio_SleepEnter(void)
                 /* start CW */
                 ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "Start CW: %d Hz; %d dBm; %d s", ketCube_testRadio_moduleCfg.cwFreq, ketCube_testRadio_moduleCfg.cwPwr, ketCube_testRadio_moduleCfg.cwDur);
                 Radio.SetTxContinuousWave(ketCube_testRadio_moduleCfg.cwFreq, ketCube_testRadio_moduleCfg.cwPwr, ketCube_testRadio_moduleCfg.cwDur);
+                ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_TEST_RADIO, "Temperature: %d °C", SX1276ReadTemperature());
                 break;
             case KETCUBE_TEST_RADIO_STATE_TX_TIMEOUT:
             case KETCUBE_TEST_RADIO_STATE_TX_DONE:
@@ -229,7 +232,6 @@ void ketCube_testRadio_cmd_GoCW(void)
     newState = KETCUBE_TEST_RADIO_STATE_CW;
 }
 
-extern int16_t SX1276ReadTemperature(void);
 /**
  * @brief Get temperature of the radio chip
  */
