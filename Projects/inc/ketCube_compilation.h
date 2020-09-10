@@ -86,9 +86,9 @@
 /**
  * @brief Enable/Disable watchdog
  * 
- * If enabled, watchdog checks the program flow. the watchdog reset is performed after every wake-up in the main loop.
+ * If enabled, watchdog checks the program flow. The watchdog reset is performed after every wake-up in the main loop.
  * 
- * @note the (max) wake-up period is shortened to less than 30s if watchdog is used!
+ * @note the (max) wake-up period is shortened to less than 15s (@see KETCUBE_MCU_WD_SAFE_TIMER_CNT) if watchdog is used!
  * 
  */
 #define KETCUBE_ENABLE_WD

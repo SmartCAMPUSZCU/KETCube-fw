@@ -84,6 +84,8 @@ volatile bool ketCube_MCU_PVD_Det = FALSE;
 
 static volatile bool ketCube_MCU_WD_timWake = FALSE;
 
+volatile ketCube_mcu_LPMode_t ketCube_MCU_LPMode = KETCUBE_MCU_LPMODE_SLEEP;
+
 /**
   * @brief This function return a random seed
   * @note Seed is Based on the device unique ID
@@ -108,6 +110,26 @@ void ketCube_MCU_GetUniqueId(uint8_t *id) {
     id[2] = ( ( *( uint32_t* )ID2 ) ) >> 16;
     id[1] = ( ( *( uint32_t* )ID2 ) ) >> 8;
     id[0] = ( ( *( uint32_t* )ID2 ) );
+}
+
+/**
+ * @brief Select sleep mode
+ * 
+ * @param mode sleep mode
+ * 
+ */
+void ketCube_MCU_SetSleepMode(ketCube_mcu_LPMode_t mode) {
+    ketCube_MCU_LPMode = mode;
+}
+
+/**
+ * @brief Get current sleep mode
+ * 
+ * @retval mode current sleep mode
+ * 
+ */
+ketCube_mcu_LPMode_t ketCube_MCU_GetSleepMode(void) {
+    return ketCube_MCU_LPMode;
 }
 
 /**
@@ -148,22 +170,7 @@ static void ketCube_MCU_ExitStopMode(void) {
   DISABLE_IRQ();
 
   /* After wake-up from STOP reconfigure the system clock */
-  /* Enable HSI */
-  __HAL_RCC_HSI_ENABLE();
-
-  /* Wait till HSI is ready */
-  while( __HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) == RESET ) {}
-  
-  /* Enable PLL */
-  __HAL_RCC_PLL_ENABLE();
-  /* Wait till PLL is ready */
-  while( __HAL_RCC_GET_FLAG( RCC_FLAG_PLLRDY ) == RESET ) {}
-  
-  /* Select PLL as system clock source */
-  __HAL_RCC_SYSCLK_CONFIG ( RCC_SYSCLKSOURCE_PLLCLK );
-  
-  /* Wait till PLL is used as system clock source */ 
-  while( __HAL_RCC_GET_SYSCLK_SOURCE( ) != RCC_SYSCLKSOURCE_STATUS_PLLCLK ) {}
+  ketCube_MCU_RunClockConfig();
     
   /* Init drivers */
   ketCube_SPI_SleepExit();
@@ -209,8 +216,59 @@ void ketCube_MCU_EnterStopMode(void) {
   * 
   * @note ARM exits the function when waking up
   */
-void ketCube_MCU_EnterSleepMode( void) {
-    HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+void ketCube_MCU_EnterSleepMode(void) {    
+    BACKUP_PRIMASK();
+
+    DISABLE_IRQ();
+    /* DeIntit drivers */
+    ketCube_SPI_SleepEnter();
+    
+    ketCube_Radio_SleepEnter();
+    
+    ketCube_UART_IoDeInitAll();
+    
+    ketCube_GPIO_SleepEnter();
+    
+    /*clear wake up flag*/
+    SET_BIT(PWR->CR, PWR_CR_CWUF);
+    
+    ketCube_MCU_SleepClockConfig();
+    
+    RESTORE_PRIMASK();
+    
+    /* enable flash power-down */
+    __HAL_FLASH_SLEEP_POWERDOWN_ENABLE();
+    
+    HAL_PWREx_EnableLowPowerRunMode();
+    
+    //HAL_PWR_EnterSLEEPMode(PWR_MAINREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    HAL_PWR_EnterSLEEPMode(PWR_LOWPOWERREGULATOR_ON, PWR_SLEEPENTRY_WFI);
+    
+    if (HAL_PWREx_DisableLowPowerRunMode() != HAL_OK) {
+        KETCube_ErrorHandler();
+    }
+}
+
+/**
+  * @brief Exit Low Power Sleep Mode
+  * 
+  */
+void ketCube_MCU_ExitSleepMode(void) {
+    BACKUP_PRIMASK();
+    
+    DISABLE_IRQ();
+    
+    /* After wake-up from STOP reconfigure the system clock */
+    ketCube_MCU_RunClockConfig();
+    
+    /* Init drivers */
+    ketCube_SPI_SleepExit();
+    
+    ketCube_Radio_SleepExit();
+    
+    ketCube_UART_IoInitAll();
+    
+    RESTORE_PRIMASK();
 }
 
 /**
@@ -221,22 +279,32 @@ void ketCube_MCU_Sleep(void) {
 #ifndef LOW_POWER_DISABLE
     if (enableSleep == TRUE) {
         
-#if (KETCUBE_MCU_LPMODE == KETCUBE_MCU_LPMODE_SLEEP)
-        ketCube_MCU_EnterSleepMode();
-#else 
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Entering Stop Mode");
-        
-        ketCube_MCU_EnterStopMode();
-        
-        // Stop mode ...
-        
-        ketCube_MCU_ExitStopMode();
-        
-        ketCube_RTC_setMcuWakeUpTime();
-        
-        ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Exiting Stop Mode");
-        
-#endif // (KETCUBE_MCU_LPMODE == KETCUBE_MCU_LPMODE_SLEEP)        
+        if (ketCube_MCU_LPMode == KETCUBE_MCU_LPMODE_SLEEP) {
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Entering Sleep Mode");
+            
+            ketCube_MCU_EnterSleepMode();
+            
+            // Sleep mode ...
+            
+            ketCube_MCU_ExitSleepMode();
+            
+            ketCube_RTC_setMcuWakeUpTime();
+            
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Exiting Sleep Mode");
+        } else {
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Entering Stop Mode");
+            
+            ketCube_MCU_EnterStopMode();
+            
+            // Stop mode ...
+            
+            ketCube_MCU_ExitStopMode();
+            
+            ketCube_RTC_setMcuWakeUpTime();
+            
+            ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Exiting Stop Mode");
+                
+        }
     }
 #endif  /* LOW_POWER_DISABLE */
 }
@@ -272,7 +340,7 @@ void ketCube_MCU_ClockConfig(void) {
     RCC_OscInitStruct.PLL.PLLDIV          = RCC_PLLDIV_3;
     
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-      KETCube_ErrorHandler();
+        KETCube_ErrorHandler();
     }
     
     /* Set Voltage scale1 as MCU will run at 32MHz */
@@ -291,8 +359,84 @@ void ketCube_MCU_ClockConfig(void) {
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
     if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_1) != HAL_OK)
     {
-      KETCube_ErrorHandler();
+        KETCube_ErrorHandler();
     }
+}
+
+/**
+  * @brief  Clock Configuration
+  *         The system Clock is configured as follows:
+  *            System Clock source            = MSI
+  *            MSI(Hz)                        = 65000
+  *
+  */
+void ketCube_MCU_SleepClockConfig(void)
+{   
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+    RCC_OscInitStruct.MSIState = RCC_MSI_ON;
+    RCC_OscInitStruct.MSICalibrationValue = 0;
+    RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_0;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
+    {
+        KETCube_ErrorHandler();
+    }
+    
+    /* Enable MSI */
+    __HAL_RCC_MSI_ENABLE();
+    /* Wait till HSI is ready */
+    while( __HAL_RCC_GET_FLAG(RCC_FLAG_MSIRDY) == RESET ) {}
+    
+    /* Select MSI as system clock source */
+    __HAL_RCC_SYSCLK_CONFIG ( RCC_SYSCLKSOURCE_MSI );
+    
+    /* Wait till MSI is used as system clock source */ 
+    while( __HAL_RCC_GET_SYSCLK_SOURCE( ) != RCC_SYSCLKSOURCE_STATUS_MSI ) {}
+	
+	/* Disable HS clock(s) */
+    __HAL_RCC_PLL_DISABLE();
+    __HAL_RCC_HSI_DISABLE();
+    
+    /* Set Voltage scale2 as MCU will run below 4.2MHz */
+    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE3);
+    
+	SystemCoreClockUpdate();
+}
+
+/**
+  * @brief  Clock Configuration
+  *         The system Clock is configured as follows:
+  *            System Clock source            = MSI
+  *            HSI(Hz)                        = 32000000
+  *
+  */
+void ketCube_MCU_RunClockConfig(void)
+{
+    /* Set Voltage scale1 as MCU will run at 32MHz */
+    __HAL_RCC_PWR_CLK_ENABLE();
+    __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
+    
+   /* Enable HSI */
+   __HAL_RCC_HSI_ENABLE();
+  
+   /* Wait till HSI is ready */
+   while( __HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) == RESET ) {}
+
+   /* Enable PLL */
+   __HAL_RCC_PLL_ENABLE();
+   /* Wait till PLL is ready */
+   while( __HAL_RCC_GET_FLAG( RCC_FLAG_PLLRDY ) == RESET ) {}
+   
+   /* Select PLL as system clock source */
+   __HAL_RCC_SYSCLK_CONFIG ( RCC_SYSCLKSOURCE_PLLCLK );
+
+  /* Wait till PLL is used as system clock source */ 
+  while( __HAL_RCC_GET_SYSCLK_SOURCE( ) != RCC_SYSCLKSOURCE_STATUS_PLLCLK ) {}
+    
+    SystemCoreClockUpdate();
 }
 
 /**
@@ -314,7 +458,7 @@ void ketCube_MCU_WD_Init(void) {
 #ifdef KETCUBE_ENABLE_WD
     
     hiwdg.Instance = IWDG;
-    /* For IoT nodes, the slowest clock are normally advantageous */
+    /* For IoT nodes, the slowest clock is normally advantageous */
     hiwdg.Init.Prescaler = IWDG_PRESCALER_256; // set MAX value
     hiwdg.Init.Window = 4095; // set MAX value
     hiwdg.Init.Reload = 4095; // set MAX value

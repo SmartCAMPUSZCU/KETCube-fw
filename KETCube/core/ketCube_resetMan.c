@@ -131,6 +131,12 @@ void ketCube_resetMan_info(void) {
 //             KETCUBE_TERMINAL_ENDL();
 //             KETCUBE_TERMINAL_ENDL();
             break;
+        case KETCUBE_RESETMAN_REASON_ERROR_HANDLER:
+            KETCUBE_TERMINAL_CLR_LINE();
+            KETCUBE_TERMINAL_PRINTF("!!! The reset caused by KETCube_ErrorHandler() !!!");
+            KETCUBE_TERMINAL_ENDL();
+            KETCUBE_TERMINAL_ENDL();
+            break;
         case KETCUBE_RESETMAN_REASON_HARDFAULT:
             // hard faul - this requires user attention!
             // this may arise during SWD connector (dis)connecting - probably as a result of bounces @reset PIN

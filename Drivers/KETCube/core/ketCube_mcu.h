@@ -53,11 +53,18 @@
   * @{
   */
 
-/* Low Power modes selection */
-#define KETCUBE_MCU_LPMODE_STOP   0
-#define KETCUBE_MCU_LPMODE_SLEEP  1
+/**
+* @brief  Low Power modes
+*/
+typedef enum ketCube_mcu_LPMode_t {
+    KETCUBE_MCU_LPMODE_STOP  = 0x0,    /*!< STM32L0 STOP mode */
+    KETCUBE_MCU_LPMODE_SLEEP = 0x1     /*!< STM32L0 LP sleep mode */
+} ketCube_mcu_LPMode_t;
 
-#define KETCUBE_MCU_LPMODE   KETCUBE_MCU_LPMODE_STOP
+/**
+  * @brief Low-Power mode selection
+  */
+extern volatile ketCube_mcu_LPMode_t ketCube_MCU_LPMode;
 
 /**
   * @brief Watchdog reset period in seconds
@@ -192,10 +199,15 @@ extern void ketCube_MCU_EnableSleep(void);
 extern void ketCube_MCU_DisableSleep(void);
 extern bool ketCube_MCU_IsSleepEnabled(void);
 
+extern void ketCube_MCU_SetSleepMode(ketCube_mcu_LPMode_t mode);
+extern ketCube_mcu_LPMode_t ketCube_MCU_GetSleepMode(void);
+
 extern void ketCube_MCU_WD_Init(void);
 extern void ketCube_MCU_WD_Reset(void);
 
 extern void ketCube_MCU_ClockConfig(void);
+extern void ketCube_MCU_SleepClockConfig(void);
+extern void ketCube_MCU_RunClockConfig(void);
 
 extern void ketCube_MCU_DumpHardFaultRegs(ketCube_MCU_HardFaultRegs_t * HardFaultRegs);
 

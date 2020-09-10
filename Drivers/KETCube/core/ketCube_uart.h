@@ -118,6 +118,9 @@ extern void ketCube_UART_IoDeInitCallback(ketCube_UART_ChannelNo_t
 extern void ketCube_UART_IoInitAll(void);
 extern void ketCube_UART_IoDeInitAll(void);
 
+extern void ketCube_UART_EnableAll(void);
+extern void ketCube_UART_DisableAll(void);
+
 /**
 * @}
 */

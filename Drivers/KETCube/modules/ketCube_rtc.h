@@ -116,6 +116,8 @@ extern uint32_t HAL_GetTick(void);
 
 extern void ketCube_RTC_IrqHandler(void);
 
+void ketCube_RTC_AlarmAEventExec(void);
+
 /**
 * @}
 */

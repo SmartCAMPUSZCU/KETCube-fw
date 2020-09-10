@@ -674,6 +674,8 @@ TimerTime_t RtcTempCompensation( TimerTime_t period, float temperature )
 }
 
 
+static volatile bool executeAlarmOutOfISR = FALSE;
+
 /**
   * @brief  Alarm A callback.
   * @param  hrtc: RTC handle
@@ -681,7 +683,21 @@ TimerTime_t RtcTempCompensation( TimerTime_t period, float temperature )
   */
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
-  TimerIrqHandler( );
+    executeAlarmOutOfISR = TRUE;
+    // TimerIrqHandler( );
+}
+
+/**
+  * @brief  Alarm A callback.
+  * @param  hrtc: RTC handle
+  * @retval None
+  */
+void ketCube_RTC_AlarmAEventExec(void)
+{
+    if (executeAlarmOutOfISR == TRUE) {
+        TimerIrqHandler();
+        executeAlarmOutOfISR = FALSE;
+    }
 }
 
 /**

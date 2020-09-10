@@ -221,3 +221,31 @@ ketCube_cfg_DrvError_t ketCube_UART_SetupPin(ketCube_gpio_port_t port,
 
     return ketCube_GPIO_Init(port, pin, &GPIO_InitStruct);
 }
+
+/**
+ * @brief Disable All UART Instances
+ * 
+ */
+void ketCube_UART_DisableAll(void) {
+    
+    int i;
+    for (i = 0; i < KETCUBE_UART_CHANNEL_COUNT; i++) {
+        if (ketCube_UART_descriptors[i] != NULL){
+            __HAL_UART_DISABLE(ketCube_UART_descriptors[i]->handle);
+        }
+    }
+}
+
+/**
+ * @brief Enable All Registered UART Instances
+ * 
+ */
+void ketCube_UART_EnableAll(void) {
+    
+    int i;
+    for (i = 0; i < KETCUBE_UART_CHANNEL_COUNT; i++) {
+        if (ketCube_UART_descriptors[i] != NULL){
+            __HAL_UART_ENABLE(ketCube_UART_descriptors[i]->handle);
+        }
+    }
+}

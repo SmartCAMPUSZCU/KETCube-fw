@@ -116,9 +116,11 @@ void KETCube_ErrorHandler(void)
     // In case of clock-related error, delay may cause problems!
     // HAL_Delay(10000);
 
-    while (TRUE) {
-
-    }
+//     while (TRUE) {
+// 
+//     }
+    
+    ketCube_resetMan_requestReset(KETCUBE_RESETMAN_REASON_ERROR_HANDLER);
 }
 
 /**
@@ -197,7 +199,7 @@ int main(void)
     if (ketCube_modules_Init() != KETCUBE_CFG_OK) {
         KETCube_ErrorHandler();
     }
-
+    
     // Initialize periodic timer
     TimerInit(&KETCube_PeriodTimer, KETCube_PeriodElapsed);
     
@@ -213,7 +215,7 @@ int main(void)
 
     TimerStart(&KETCube_PeriodTimer);
 #endif                          /*  */
-
+    
     /* main loop */
     while (TRUE) {
         /* process pendig commands */
@@ -250,12 +252,14 @@ int main(void)
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
             ketCube_MCU_Sleep();
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
-           
-            // execute module wake-up functions
-            ketCube_modules_SleepExit();
-            
             /* reset WD */
             ketCube_MCU_WD_Reset();
+            
+            /* execute RTC alarms */
+            ketCube_RTC_AlarmAEventExec();
+            
+            // execute module wake-up functions
+            ketCube_modules_SleepExit();
         }
     }
 }

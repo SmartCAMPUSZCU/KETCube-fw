@@ -76,6 +76,7 @@ typedef enum ketCube_resetMan_reason_t {
     
     KETCUBE_RESETMAN_REASON_USER_RQ,              ///< RESET requested by USER (e.g. reload command)
     KETCUBE_RESETMAN_REASON_USER_REMOTE_TERM,     ///< RESET requested by USER (e.g. reload command)
+    KETCUBE_RESETMAN_REASON_ERROR_HANDLER,        ///< RESET caused by call from KETCube_ErrorHandler()
     
     KETCUBE_RESETMAN_REASON_PORSW,                ///< automatic (SW) RESET rerquested by core after POR
     KETCUBE_RESETMAN_REASON_HARDFAULT             ///< automatic (SW) RESET after HardFault with debugInfo included
