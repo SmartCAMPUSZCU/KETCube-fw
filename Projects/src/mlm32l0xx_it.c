@@ -50,6 +50,7 @@
 #include "low_power.h"
 #include "stm32l0xx_hal.h"
 
+#include "ketCube_cfg.h"
 #include "ketCube_uart.h"
 #include "ketCube_rtc.h"
 
@@ -168,6 +169,7 @@ void SysTick_Handler(void)
 
 #define DEFINE_USART_IRQ_HANDLER(channel) void USART##channel##_IRQHandler(void)\
 {\
+    KETCube_eventsProcessed = FALSE; /* Possible pending events */ \
 	UART_HandleTypeDef* huart = ketCube_UART_GetHandle(KETCUBE_UART_CHANNEL_##channel );\
 	if (huart != NULL)\
 	{\
@@ -294,6 +296,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 
 void RTC_IRQHandler( void )
 {
+     KETCube_eventsProcessed = FALSE; /* Possible pending events */
+    
      ketCube_RTC_IrqHandler();
 }
 

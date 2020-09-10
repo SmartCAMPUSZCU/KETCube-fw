@@ -437,6 +437,8 @@ void HAL_GPIO_EXTI_Callback(ketCube_gpio_pin_t pin)
 
 void EXTI0_1_IRQHandler(void)
 {
+    KETCube_eventsProcessed = FALSE; /* Possible pending events */
+    
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
 
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
@@ -444,6 +446,8 @@ void EXTI0_1_IRQHandler(void)
 
 void EXTI2_3_IRQHandler(void)
 {
+    KETCube_eventsProcessed = FALSE; /* Possible pending events */
+    
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2);
 
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3);
@@ -452,6 +456,8 @@ void EXTI2_3_IRQHandler(void)
 
 void EXTI4_15_IRQHandler(void)
 {
+    KETCube_eventsProcessed = FALSE; /* Possible pending events */
+    
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4);
 
     HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_5);

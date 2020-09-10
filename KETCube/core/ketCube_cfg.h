@@ -178,6 +178,9 @@ typedef struct ketCube_cfg_Module_t {
     ketCube_cfg_AllocEEPROM_t EEpromBase;       /*!< EEPROM base for module configuration */
 } ketCube_cfg_Module_t;
 
+/* Indicate pending events */
+extern volatile bool KETCube_eventsProcessed;
+
 extern ketCube_cfg_Error_t ketCube_cfg_Load(uint8_t * data,
                                             ketCube_cfg_moduleIDs_t id,
                                             ketCube_cfg_AllocEEPROM_t addr,

@@ -62,6 +62,7 @@ static TimerEvent_t KETCube_PeriodTimer;
 
 volatile static bool KETCube_PeriodTimerElapsed = FALSE;
 volatile static bool KETCube_Initialized = FALSE;
+volatile bool KETCube_eventsProcessed = TRUE;  /* If TRUE, then there are no pending events */
 
 /*!
  * @brief Function executed on TxNextPacket Timeout event
@@ -158,6 +159,9 @@ int main(void)
 {
     uint32_t basePeriodCnt = 0;
     
+    /* This variable indicates if pending event is possible */
+    KETCube_eventsProcessed = TRUE;
+    
     /* STM32 HAL library initialization */
     HAL_Init();
 
@@ -248,19 +252,23 @@ int main(void)
         ketCube_modules_ProcessMsgs();
 
         // execute module preSleep module functions
-        if (ketCube_modules_SleepEnter() == KETCUBE_CFG_OK) {
+        if ((ketCube_modules_SleepEnter() == KETCUBE_CFG_OK) && (KETCube_eventsProcessed == TRUE)) {
 #if (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE)
             ketCube_MCU_Sleep();
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
-            /* reset WD */
-            ketCube_MCU_WD_Reset();
-            
-            /* execute RTC alarms */
-            ketCube_RTC_AlarmAEventExec();
-            
-            // execute module wake-up functions
-            ketCube_modules_SleepExit();
         }
+        
+        /* execute RTC alarms */
+        ketCube_RTC_AlarmAEventExec();
+        
+        /* reset WD  !!! Must be after RTC Timer !!! */
+        ketCube_MCU_WD_Reset();
+        
+        /* Events could be processed in SleepExit() functions first, thus reset here */
+        KETCube_eventsProcessed = TRUE;
+        
+        // execute module wake-up functions
+        ketCube_modules_SleepExit();
     }
 }
 

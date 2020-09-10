@@ -68,9 +68,11 @@ extern volatile ketCube_mcu_LPMode_t ketCube_MCU_LPMode;
 
 /**
   * @brief Watchdog reset period in seconds
-  * @warning Use 17 as the maxValue
+  * @warning Use 17 as the maxValue (this value is tricky especialy when KETCUBE_MCU_LPMODE_SLEEP mode is used!)
   * @note the nominal frequency of IWDG clock (LSI) is 37 kHz and thus 28s
   * @note due to LSI watchdog clock scatter, the maximal guaranted period for every part is 17.4 seconds
+  * 
+  * @note 15 is safe value
   */
 #define KETCUBE_MCU_WD_SAFE_TIMER_CNT      15
 
