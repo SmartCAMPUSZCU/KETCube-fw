@@ -258,14 +258,14 @@ int main(void)
 #endif                          /* (KETCUBE_CORECFG_SKIP_SLEEP_PERIOD != TRUE) */
         }
         
+        /* If IRQ occurs after this flag setting, sleep is skipped once until no IRQ is generated in run-time */
+        KETCube_eventsProcessed = TRUE;
+        
         /* execute RTC alarms */
         ketCube_RTC_AlarmAEventExec();
         
         /* reset WD  !!! Must be after RTC Timer !!! */
         ketCube_MCU_WD_Reset();
-        
-        /* Events could be processed in SleepExit() functions first, thus reset here */
-        KETCube_eventsProcessed = TRUE;
         
         // execute module wake-up functions
         ketCube_modules_SleepExit();
