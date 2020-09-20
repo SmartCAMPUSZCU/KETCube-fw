@@ -36,6 +36,8 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
 #include "timeServer.h"
 //#include "low_power.h"
 
+#include "ketCube_cfg.h"
+
 
 /*!
  * safely execute call back
@@ -49,6 +51,7 @@ Maintainer: Miguel Luis, Gregory Cristian and Wael Guibene
       else                        \
       {                           \
         _callback_( context );               \
+        KETCube_eventsProcessed = FALSE; /* Possible pending events */ \
       }                           \
   } while(0);                   
 
