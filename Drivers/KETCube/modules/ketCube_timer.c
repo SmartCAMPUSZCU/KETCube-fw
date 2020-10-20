@@ -58,52 +58,52 @@ static volatile bool KETCube_Timer_Timer2_IC = FALSE;
  *
  * @param tim requested timer
  * 
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure -- requested timer already used; resource not available
+ * @retval KETCUBE_CFG_DRV_OK in case of success
+ * @retval KETCUBE_CFG_DRV_ERROR in case of failure -- requested timer already used; resource not available
  */
-ketCube_cfg_ModError_t ketCube_Timer_Init(ketCube_Timer_list_t tim)
+ketCube_cfg_DrvError_t ketCube_Timer_Init(ketCube_Timer_list_t tim)
 {
     switch (tim) {
     case KETCUBE_TIMER_LIST_TIM2:
         if (timerUsed.tim2 == TRUE) {
-            return KETCUBE_CFG_MODULE_ERROR;
+            return KETCUBE_CFG_DRV_ERROR;
         }
         break;
     case KETCUBE_TIMER_LIST_TIM3:
         if (timerUsed.tim2 == TRUE) {
-            return KETCUBE_CFG_MODULE_ERROR;
+            return KETCUBE_CFG_DRV_ERROR;
         }
         break;
     case KETCUBE_TIMER_LIST_TIM21:
         if (timerUsed.tim21 == TRUE) {
-            return KETCUBE_CFG_MODULE_ERROR;
+            return KETCUBE_CFG_DRV_ERROR;
         }
         break;
     case KETCUBE_TIMER_LIST_TIM22:
         if (timerUsed.tim22 == TRUE) {
-            return KETCUBE_CFG_MODULE_ERROR;
+            return KETCUBE_CFG_DRV_ERROR;
         }
         break;
     case KETCUBE_TIMER_LIST_TIM6:
         if (timerUsed.tim6 == TRUE) {
-            return KETCUBE_CFG_MODULE_ERROR;
+            return KETCUBE_CFG_DRV_ERROR;
         }
         break;
     case KETCUBE_TIMER_LIST_TIM7:
         if (timerUsed.tim7 == TRUE) {
-            return KETCUBE_CFG_MODULE_ERROR;
+            return KETCUBE_CFG_DRV_ERROR;
         }
         break;
     case KETCUBE_TIMER_LIST_LPTIM:
         if (timerUsed.lptim == TRUE) {
-            return KETCUBE_CFG_MODULE_ERROR;
+            return KETCUBE_CFG_DRV_ERROR;
         }
         break;
     default:
-        return KETCUBE_CFG_MODULE_ERROR;
+        return KETCUBE_CFG_DRV_ERROR;
     }
 
-    return KETCUBE_CFG_MODULE_OK;
+    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
@@ -128,7 +128,7 @@ bool ketCube_Timer_Timer2_IsICEvent(void) {
   */
 void TIM2_IRQHandler(void)
 {
-  HAL_TIM_IRQHandler(&KETCube_Timer_Htim2);
+    HAL_TIM_IRQHandler(&KETCube_Timer_Htim2);
 }
 
 /**
@@ -143,6 +143,8 @@ void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
     if (htim->Instance != TIM2) {
         return;
     }
+    
+    KETCube_eventsProcessed = FALSE; /* Possible pending events */
     
     KETCube_Timer_Timer2_IC = TRUE;
 }

@@ -153,6 +153,12 @@ typedef void (*ketCube_GPIO_VoidFn_t) (void* context);
   * @{
   */
 
+/* Init functions called by KETCube core */
+extern void ketCube_GPIO_InitDriver(void);
+extern ketCube_cfg_DrvError_t ketCube_GPIO_SleepEnter(void);
+
+
+/* Init functions called by modules */
 extern ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
                                                 uint16_t pin,
                                                 GPIO_InitTypeDef *
@@ -163,10 +169,11 @@ extern ketCube_cfg_DrvError_t ketCube_GPIO_InitLED(ketCube_gpio_port_t port,
 extern ketCube_cfg_DrvError_t ketCube_GPIO_ReInit(ketCube_gpio_port_t port,
                                                   uint16_t pin,
                                                   GPIO_InitTypeDef * initStruct);
-
 extern ketCube_cfg_DrvError_t ketCube_GPIO_Release(ketCube_gpio_port_t port,
                                                    ketCube_gpio_pin_t pin);
 
+
+/* Interrupt-related functions */
 extern ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port,
                                                   ketCube_gpio_pin_t pin,
                                                   uint32_t prio,
@@ -175,6 +182,7 @@ extern ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port,
 extern ketCube_cfg_DrvError_t ketCube_GPIO_ClearIrq(ketCube_gpio_port_t port,
                                                     ketCube_gpio_pin_t pin);
 
+/* Read/Write functions */
 extern void ketCube_GPIO_Write(ketCube_gpio_port_t port,
                                ketCube_gpio_pin_t pin, bool bit);
 extern bool ketCube_GPIO_Read(ketCube_gpio_port_t port,
@@ -183,6 +191,7 @@ extern void ketCube_GPIO_SetLED(ketCube_gpio_port_t port,
                                 ketCube_gpio_pin_t pin,
                                 ketCube_gpio_LEDState_t state);
 
+/* Handlers */
 extern void EXTI0_1_IRQHandler(void);
 extern void EXTI2_3_IRQHandler(void);
 extern void EXTI4_15_IRQHandler(void);

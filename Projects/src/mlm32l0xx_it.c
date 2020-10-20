@@ -52,6 +52,7 @@
 
 #include "ketCube_cfg.h"
 #include "ketCube_uart.h"
+#include "ketCube_timer.h"
 #include "ketCube_rtc.h"
 
 
@@ -80,61 +81,12 @@ void NMI_Handler(void)
 
 }*/
 
-
-/**
-  * @brief  This function handles Memory Manage exception.
-  * @param  None
-  * @retval None
-  */
-void MemManage_Handler(void)
-{
-  /* Go to infinite loop when Memory Manage exception occurs */
-  while (1)
-  {
-  }
-}
-
-/**
-  * @brief  This function handles Bus Fault exception.
-  * @param  None
-  * @retval None
-  */
-void BusFault_Handler(void)
-{
-  /* Go to infinite loop when Bus Fault exception occurs */
-  while (1)
-  {
-  }
-}
-
-/**
-  * @brief  This function handles Usage Fault exception.
-  * @param  None
-  * @retval None
-  */
-void UsageFault_Handler(void)
-{
-  /* Go to infinite loop when Usage Fault exception occurs */
-  while (1)
-  {
-  }
-}
-
 /**
   * @brief  This function handles SVCall exception.
   * @param  None
   * @retval None
   */
 void SVC_Handler(void)
-{
-}
-
-/**
-  * @brief  This function handles Debug Monitor exception.
-  * @param  None
-  * @retval None
-  */
-void DebugMon_Handler(void)
 {
 }
 
@@ -208,7 +160,7 @@ DEFINE_USART_IRQ_HANDLER(5);
  * @param instance	USART instance (address of base register set)
  * @return valid channel number or KETCUBE_UART_CHANNEL_COUNT if not found
  */
-static ketCube_UART_ChannelNo_t HAL_UART_MapInstanceToChannel(uintptr_t instance)
+static ketCube_UART_ChannelNo_t mapInstanceToChannel(uintptr_t instance)
 {
     switch (instance)
     {
@@ -228,7 +180,7 @@ static ketCube_UART_ChannelNo_t HAL_UART_MapInstanceToChannel(uintptr_t instance
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    ketCube_UART_ChannelNo_t channel = mapInstanceToChannel((uintptr_t)huart->Instance);
     if (channel != KETCUBE_UART_CHANNEL_COUNT) {
         ketCube_UART_ReceiveCallback(channel);
     }
@@ -240,7 +192,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
  */
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    ketCube_UART_ChannelNo_t channel = mapInstanceToChannel((uintptr_t)huart->Instance);
     if (channel != KETCUBE_UART_CHANNEL_COUNT) {
         ketCube_UART_TransmitCallback(channel);
     }
@@ -252,7 +204,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
  */
 void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
 {
-    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    ketCube_UART_ChannelNo_t channel = mapInstanceToChannel((uintptr_t)huart->Instance);
     if (channel != KETCUBE_UART_CHANNEL_COUNT) {
         ketCube_UART_ErrorCallback(channel);
     }
@@ -264,7 +216,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef *huart)
  */
 void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
 {
-    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    ketCube_UART_ChannelNo_t channel = mapInstanceToChannel((uintptr_t)huart->Instance);
     if (channel != KETCUBE_UART_CHANNEL_COUNT) {
         ketCube_UART_WakeupCallback(channel);
     }
@@ -276,7 +228,7 @@ void HAL_UARTEx_WakeupCallback(UART_HandleTypeDef *huart)
  */
 void HAL_UART_MspInit(UART_HandleTypeDef *huart)
 {
-    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    ketCube_UART_ChannelNo_t channel = mapInstanceToChannel((uintptr_t)huart->Instance);
     if (channel != KETCUBE_UART_CHANNEL_COUNT) {
         ketCube_UART_IoInitCallback(channel);
     }
@@ -288,7 +240,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef *huart)
  */
 void HAL_UART_MspDeInit(UART_HandleTypeDef *huart)
 {
-    ketCube_UART_ChannelNo_t channel = HAL_UART_MapInstanceToChannel((uintptr_t)huart->Instance);
+    ketCube_UART_ChannelNo_t channel = mapInstanceToChannel((uintptr_t)huart->Instance);
     if (channel != KETCUBE_UART_CHANNEL_COUNT) {
 	    ketCube_UART_IoDeInitCallback(channel);
     }
