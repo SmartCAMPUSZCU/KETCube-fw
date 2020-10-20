@@ -50,6 +50,9 @@
 
 ketCube_Timer_usage_t timerUsed = { 0, 0, 0, 0, 0, 0, 0 };
 
+TIM_HandleTypeDef KETCube_Timer_Htim2;
+static volatile bool KETCube_Timer_Timer2_IC = FALSE;
+
 /**
  * @brief  Configures Timer(s)
  *
@@ -101,4 +104,45 @@ ketCube_cfg_ModError_t ketCube_Timer_Init(ketCube_Timer_list_t tim)
     }
 
     return KETCUBE_CFG_MODULE_OK;
+}
+
+/**
+  * @brief  Mark IC event as processed @ Timer 2
+  * 
+  */
+void ketCube_Timer_Timer2_ResetICEvent(void) {
+    KETCube_Timer_Timer2_IC = FALSE;
+}
+
+
+/**
+  * @brief  Return IC Event state @ Timer 2
+  * 
+  */
+bool ketCube_Timer_Timer2_IsICEvent(void) {
+    return KETCube_Timer_Timer2_IC;
+}
+
+/**
+  * @brief This function handles TIM2 global interrupt.
+  */
+void TIM2_IRQHandler(void)
+{
+  HAL_TIM_IRQHandler(&KETCube_Timer_Htim2);
+}
+
+/**
+  * @brief  Input Capture callback in non-blocking mode
+  * 
+  * @brief Only Timer2 is currently supported
+  * 
+  */
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+{
+    // Timer checking
+    if (htim->Instance != TIM2) {
+        return;
+    }
+    
+    KETCube_Timer_Timer2_IC = TRUE;
 }

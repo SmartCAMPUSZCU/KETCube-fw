@@ -56,6 +56,8 @@
 
 #define KETCUBE_TIMER_NAME                      "timer_drv"         ///< TIMER driver name
 
+extern TIM_HandleTypeDef KETCube_Timer_Htim2;
+
 /**
 * @brief List of available timers
 */
@@ -90,6 +92,9 @@ typedef struct {
   */
 
 extern ketCube_cfg_ModError_t ketCube_Timer_Init(ketCube_Timer_list_t tim);
+
+extern bool ketCube_Timer_Timer2_IsICEvent();
+extern void ketCube_Timer_Timer2_ResetICEvent();
 
 /**
 * @}

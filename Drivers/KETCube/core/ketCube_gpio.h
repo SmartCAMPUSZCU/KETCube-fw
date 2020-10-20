@@ -57,6 +57,8 @@
 
 #define KETCUBE_GPIO_NAME               "gpio_drv"         ///< GPIO driver name
 
+#define KETCUBE_GPIO_LED_PERIOD         500                ///< LED driver blink period in ms
+
 /**
 * @brief List of GPIO PINs
 */
@@ -93,6 +95,55 @@ typedef enum {
 } ketCube_gpio_port_t;
 
 /**
+* @brief LED States
+*/
+typedef enum {
+    KETCUBE_GPIO_FUNCTION_GPIO = 0,    /*!< Function is defined by user */  
+    KETCUBE_GPIO_FUNCTION_LED,         /*!< LED function is handled by driver */  
+    KETCUBE_GPIO_FUNCTION_BUTTON,      /*!< BUTTON function is handled by driver TODO: not implemented yet */  
+} ketCube_gpio_function_t;
+
+/**
+* @brief GPIO polarity
+*/
+typedef enum {
+    KETCUBE_GPIO_POLARITY_ON  = TRUE,   /*!< ON polarity (e.g. for LEDs) */  
+    KETCUBE_GPIO_POLARITY_OFF = FALSE,  /*!< OFF polarity (e.g. for LEDs) */
+} ketCube_gpio_polarity_t;
+
+/**
+* @brief LED States
+*/
+typedef enum {
+    KETCUBE_GPIO_LED_OFF = 0,        /*!< LED OFF */  
+    KETCUBE_GPIO_LED_ON,             /*!< LED ON */  
+    KETCUBE_GPIO_LED_BLINK_SINGLE,   /*!< LED BLINK - single */  
+    KETCUBE_GPIO_LED_BLINK_CONT      /*!< LED BLINK - continuous */  
+} ketCube_gpio_LEDState_t;
+
+
+/**
+* @brief GPIO PIN descriptor
+*/
+#ifdef __ARMCC_VERSION
+#pragma anon_unions
+#endif
+typedef struct {
+    bool used:1;   /*!< PIN used */
+    ketCube_gpio_function_t function:2;  /*!< PIN function */
+    
+    /* settings */
+    union {
+        uint8_t value:4;  /*!< value access */
+        struct {
+            ketCube_gpio_LEDState_t LED_state:3; /*!< LED state if function is KETCUBE_GPIO_FUNCTION_LED */
+            ketCube_gpio_polarity_t polarity:1;  /*!< LED ON polarity */
+        };
+    } settings;
+} ketCube_gpio_descriptor_t;
+
+
+/**
 * @brief Pointer to a IRQ Handler Function
 */
 typedef void (*ketCube_GPIO_VoidFn_t) (void* context);
@@ -101,30 +152,37 @@ typedef void (*ketCube_GPIO_VoidFn_t) (void* context);
   * @brief Public functions
   * @{
   */
-extern void ketCube_GPIO_InitDriver(void);
-extern ketCube_cfg_DrvError_t ketCube_GPIO_SleepEnter(void);
 
 extern ketCube_cfg_DrvError_t ketCube_GPIO_Init(ketCube_gpio_port_t port,
                                                 uint16_t pin,
                                                 GPIO_InitTypeDef *
                                                 initStruct);
+extern ketCube_cfg_DrvError_t ketCube_GPIO_InitLED(ketCube_gpio_port_t port,
+                                                   uint16_t pin,
+                                                   ketCube_gpio_polarity_t polarity);
 extern ketCube_cfg_DrvError_t ketCube_GPIO_ReInit(ketCube_gpio_port_t port,
                                                   uint16_t pin,
                                                   GPIO_InitTypeDef * initStruct);
+
 extern ketCube_cfg_DrvError_t ketCube_GPIO_Release(ketCube_gpio_port_t port,
                                                    ketCube_gpio_pin_t pin);
+
 extern ketCube_cfg_DrvError_t ketCube_GPIO_SetIrq(ketCube_gpio_port_t port,
                                                   ketCube_gpio_pin_t pin,
                                                   uint32_t prio,
                                                   ketCube_GPIO_VoidFn_t
                                                   irqHandler);
+extern ketCube_cfg_DrvError_t ketCube_GPIO_ClearIrq(ketCube_gpio_port_t port,
+                                                    ketCube_gpio_pin_t pin);
 
 extern void ketCube_GPIO_Write(ketCube_gpio_port_t port,
                                ketCube_gpio_pin_t pin, bool bit);
 extern bool ketCube_GPIO_Read(ketCube_gpio_port_t port,
                               ketCube_gpio_pin_t pin);
+extern void ketCube_GPIO_SetLED(ketCube_gpio_port_t port,
+                                ketCube_gpio_pin_t pin,
+                                ketCube_gpio_LEDState_t state);
 
-extern IRQn_Type MSP_GetIRQn(uint16_t GPIO_Pin);
 extern void EXTI0_1_IRQHandler(void);
 extern void EXTI2_3_IRQHandler(void);
 extern void EXTI4_15_IRQHandler(void);
