@@ -110,6 +110,7 @@ typedef enum {
     KETCUBE_MODULEID_LIS2HH12               = 139,  /*!< Module LIS2HH12 */
     KETCUBE_MODULEID_ICS43432               = 140,  /*!< Module ICS43432 */
     KETCUBE_MODULEID_TEST_RADIO             = 141,  /*!< Module testRadio */
+    KETCUBE_MODULEID_UART2WAN               = 142,  /*!< Module uart2WAN */
 
     /* category 3 - third party modules - ID range 1024 - 65534 */
     

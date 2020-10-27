@@ -93,6 +93,7 @@
 #define LORAWAN_STRING_DISPLAY_PORT                 11
 #define LORAWAN_CUSTOM_DATA_PORT                    12
 #define LORAWAN_REMOTE_TERMINAL_PORT                13
+#define LORAWAN_UART2WAN_PORT                       14
 
 /**
  *  LoRa module configuration storage
@@ -389,6 +390,8 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
       // NOTE: Continue below this conditional block; do not return!
    } else if (AppData->Port == LORAWAN_STRING_DISPLAY_PORT) {
       // NOTE: Continue below this conditional block; do not return!
+   } else if (AppData->Port == LORAWAN_UART2WAN_PORT) {
+      // NOTE: Continue below this conditional block; do not return!
    } else {
       // unknown port
       return;
@@ -420,7 +423,18 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
          ketCube_lora_rxData.msg[i - 1] = (char) 0;
       }
       ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
+   } 
+#ifdef KETCUBE_CFG_INC_MOD_UART2WAN
+   else if (AppData->Port == LORAWAN_UART2WAN_PORT) {
+        if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
+            ketCube_lora_rxData.msg[i] = (char) 0;
+            i++;
+        } else {
+            ketCube_lora_rxData.msg[i - 1] = (char) 0;
+        }
+        ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_UART2WAN;
    }
+#endif
 
    ketCube_lora_rxData.msgLen = i;
 }

@@ -60,6 +60,7 @@ GDB = arm-none-eabi-gdb
 STLINK = /usr/local/bin/st-flash
 # Note, that it must be inclued in the $PATH variable; default in Linux is: $HOME/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
 STCUBEPROG = STM32_Programmer.sh
+UARTPORT = /dev/ttyUSB0
 
 ###################################################
 
@@ -186,6 +187,7 @@ SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_lora_ext.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_starNet.c
 SRCS += $(COREDIR)KETCube/modules/communication/ketCube_testRadio.c
+SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_uart2WAN.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_adc.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_hdcX080.c
 SRCS += $(COREDIR)KETCube/modules/sensing/ketCube_batMeas.c
@@ -277,7 +279,7 @@ size:
 	$(MAKE) sigdone
 
 clean:
-	rm -f $(OUTDIR)*.o $(OUTDIR)$(TARGET).elf $(OUTDIR)lib$(TARGET).a $(OUTDIR)$(TARGET).hex $(OUTDIR)$(TARGET).bin
+	rm -f $(OUTDIR)*.o $(OUTDIR)$(TARGET).elf $(OUTDIR)$(TARGET).elf.dbg $(OUTDIR)lib$(TARGET).a $(OUTDIR)$(TARGET).hex $(OUTDIR)$(TARGET).bin
 	$(MAKE) sigdone
 
 chipinfo:
@@ -308,7 +310,14 @@ flashCubeProg: $(OUTDIR)$(TARGET).bin
 	$(STCUBEPROG) -c port=SWD mode=UR -e all -q -d $(OUTDIR)$(TARGET).bin 0x8000000
 	$(STCUBEPROG) -c port=SWD mode=UR -ob bfb2=0x0 #make sure, that BFB2 bit is 0
 	$(MAKE) sigdone
-	
+
+# run set "core startBootloader" command @ KETCube Terminal prior this target
+# close $UARTPORT prior running this target
+flashCubeProgUART:
+	$(STCUBEPROG) -c port=$(UARTPORT) -w $(OUTDIR)$(TARGET).bin 0x8000000 -ob bfb2=0x0
+	-$(STCUBEPROG) -c port=$(UARTPORT) -s
+	$(MAKE) sigdone
+
 # This target is for commandline-based debugging
 # The "ocd" target is the prerequisity -- run it in separate terminal
 debug: $(OUTDIR)$(TARGET).elf.dbg
