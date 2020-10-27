@@ -5,7 +5,7 @@
  * @date    2018-08-09
  * @brief   This file contains definitions for the KETCube batMeas module
  *
-* @attention
+ * @attention
  *
  * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
  * All rights reserved.</center></h2>

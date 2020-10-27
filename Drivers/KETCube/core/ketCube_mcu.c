@@ -291,7 +291,7 @@ void ketCube_MCU_Sleep(void) {
             ketCube_RTC_setMcuWakeUpTime();
             
             ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Exiting Sleep Mode");
-        } else {
+        } else if (ketCube_MCU_LPMode == KETCUBE_MCU_LPMODE_STOP) {
             ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Entering Stop Mode");
             
             ketCube_MCU_EnterStopMode();
@@ -304,6 +304,8 @@ void ketCube_MCU_Sleep(void) {
             
             ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_DEBUG, "Exiting Stop Mode");
                 
+        } else {
+            ketCube_RTC_setMcuWakeUpTime();
         }
     }
 #endif  /* LOW_POWER_DISABLE */

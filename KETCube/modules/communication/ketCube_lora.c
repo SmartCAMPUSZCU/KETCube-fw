@@ -120,6 +120,7 @@ static ketCube_cfg_ModError_t ketCube_lora_SendData(lora_AppData_t * AppData);
 
 /* Events - move println from ISR */
 static volatile bool evntJoined = FALSE;
+static volatile bool isJoined = FALSE;
 static volatile bool evntClassSwitched = FALSE;
 static volatile bool evntTxNeeded = FALSE;
 static volatile bool evntACKRx = FALSE;
@@ -274,7 +275,12 @@ ketCube_cfg_ModError_t ketCube_lora_SleepEnter(void)
        LoRaMacProcess();
     }
     
-    if (LoraMacProcessRequest != LORA_SET) {
+    if (ketCube_MCU_GetSleepMode() == KETCUBE_MCU_LPMODE_SLEEP) {
+        if (isJoined == FALSE) {
+            // do not enter SLEEP
+            return KETCUBE_CFG_MODULE_ERROR;  
+        }
+    } else if (LoraMacProcessRequest != LORA_SET) {
         
         return KETCUBE_CFG_MODULE_OK;
     }   
@@ -299,9 +305,10 @@ ketCube_cfg_ModError_t ketCube_lora_SleepExit(void)
     }
  
     // Event Handling
-    if (evntJoined) {
+    if (evntJoined == TRUE) {
         evntJoined = FALSE;
         ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Joined");
+        isJoined = TRUE;
     }
     
     if (evntClassSwitched) {

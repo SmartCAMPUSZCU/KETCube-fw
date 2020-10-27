@@ -58,7 +58,8 @@
 */
 typedef enum ketCube_mcu_LPMode_t {
     KETCUBE_MCU_LPMODE_STOP  = 0x0,    /*!< STM32L0 STOP mode */
-    KETCUBE_MCU_LPMODE_SLEEP = 0x1     /*!< STM32L0 LP sleep mode */
+    KETCUBE_MCU_LPMODE_SLEEP = 0x1,    /*!< STM32L0 LP sleep mode */
+    KETCUBE_MCU_LPMODE_NONE  = 0x0     /*!< STM32L0 NONE sleep mode */
 } ketCube_mcu_LPMode_t;
 
 /**

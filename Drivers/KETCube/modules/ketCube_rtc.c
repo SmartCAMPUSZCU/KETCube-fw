@@ -695,8 +695,8 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 void ketCube_RTC_AlarmAEventExec(void)
 {
     if (executeAlarmOutOfISR == TRUE) {
-        TimerIrqHandler();
         executeAlarmOutOfISR = FALSE;
+        TimerIrqHandler();
     }
 }
 
