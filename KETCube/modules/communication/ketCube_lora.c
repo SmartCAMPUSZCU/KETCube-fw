@@ -357,6 +357,13 @@ static ketCube_cfg_ModError_t ketCube_lora_SendData(lora_AppData_t * AppData)
       LORA_Join();
       return KETCUBE_CFG_MODULE_ERROR;
    }
+   
+   if (isJoined == TRUE ) {
+        /* Initiate Re-join if needed */
+        if (LORA_ReJoin() == LORA_SUCCESS){
+            return KETCUBE_CFG_MODULE_ERROR;
+        }
+    }
 
    if (LORA_send(AppData, LORAWAN_DEFAULT_CONFIRM_MSG_STATE) == LORA_SUCCESS) {
       ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Transmitting sensor data: SUCCESS");

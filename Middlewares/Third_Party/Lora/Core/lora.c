@@ -80,6 +80,8 @@ static lora_configuration_t lora_config =
   .McpsConfirm = NULL
 };
 
+static uint16_t reJoinIterrationCounter = 0;
+
 /*!
  *  Select either Device_Time_req or Beacon_Time_Req following LoRaWAN version 
  *  - Device_Time_req   Available for V1.0.3 or later                          
@@ -311,6 +313,8 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
                   LORA_BeaconTimeReq();
    #endif /* USE_DEVICE_TIMING */
    #endif /* LORAMAC_CLASSB_ENABLED */
+                  /* reset re-join counter */
+                  reJoinIterrationCounter = 0;
                }
                else
                {
@@ -546,6 +550,46 @@ void LORA_Init (LoRaMainCallback_t *callbacks, LoRaParam_t* LoRaParam )
 
   /*set Mac statein Idle*/
   LoRaMacStart( );
+}
+
+/**
+ *
+ * ReJoin after certain time to reset couners
+ * 
+ * @todo to be validated
+ *
+ */
+LoraErrorStatus LORA_ReJoin(void)
+{
+   MlmeReq_t mlmeReq;
+
+   // mlmeReq.Type = MLME_REJOIN_0; // Rejoin is not supported
+   mlmeReq.Type = MLME_JOIN;
+   mlmeReq.Req.Join.DevEui = lora_config.DevEui;
+   mlmeReq.Req.Join.JoinEui = lora_config.JoinEui;
+   mlmeReq.Req.Join.Datarate = LoRaParamInit->TxDatarate;
+
+   /* only for OTAA */
+   if (lora_config.otaa != LORA_ENABLE) {
+      return LORA_ERROR;
+   }
+   
+   reJoinIterrationCounter++;
+   /* set bound staticaly here to 2^16/2*/
+   if (reJoinIterrationCounter < 0x8FFF) {
+       return LORA_ERROR;
+   }
+   
+   /* take some minimal rest between re-join requests */
+   if ((reJoinIterrationCounter % 8) != 0) {
+       return LORA_ERROR;
+   }
+   
+   // Do it
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Re-Join in progress");
+   LoRaMacMlmeRequest( &mlmeReq );
+   
+   return LORA_SUCCESS;
 }
 
 LoraErrorStatus LORA_Join( void)

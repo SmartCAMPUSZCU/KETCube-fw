@@ -249,6 +249,8 @@ LoraErrorStatus LORA_send(lora_AppData_t* AppData, LoraConfirm_t IsTxConfirmed);
  */
 LoraErrorStatus LORA_Join( void);
 
+LoraErrorStatus LORA_ReJoin(void);
+
 /**
  * @brief Check whether the Device is joined to the network
  * @param [IN] none
