@@ -50,6 +50,7 @@
 #include "stm32l0xx_hal_i2c.h"
 
 #include "ketCube_ad.h"
+#include "ketCube_rtc.h"
 #include "ketCube_terminal.h"
 
 #define KETCUBE_AD_VDDA_VREFINT_CAL       ((uint32_t) 3000)       /*!< Internal voltage reference was calibrated at 3V */
@@ -119,13 +120,12 @@ ketCube_cfg_DrvError_t ketCube_AD_UnInit(void) {
     if (initRuns > 1) {
         initRuns -= 1;
         return KETCUBE_CFG_DRV_OK;
-    } else if (initRuns == 0) {
+    } else if (initRuns == 1) {
+        // Run UnInit body once only: (initRuns == 1)
+        initRuns = 0;
         // UnInit here ...
         HAL_ADC_DeInit(&hadc);
-        return KETCUBE_CFG_DRV_OK;
     }
-    // Run UnInit body once only: (initRuns == 1)
-    initRuns -= 1;
 
     return KETCUBE_CFG_DRV_OK;
 }
@@ -141,10 +141,16 @@ ketCube_cfg_DrvError_t ketCube_AD_UnInit(void) {
 uint16_t ketCube_AD_ReadChannel(uint32_t channel) {
     ADC_ChannelConfTypeDef adcConf;
     uint16_t adcData = 0;
+    TimerTime_t timeout = 0;
     
     if (initRuns > 0) {
-        /* wait the the Vrefint used by adc is set */
-        while (__HAL_PWR_GET_FLAG(PWR_FLAG_VREFINTRDY) == RESET) {};
+        /* wait the Vrefint used by adc is set */
+        timeout = ketCube_RTC_GetTimerValue( );
+        while (__HAL_PWR_GET_FLAG(PWR_FLAG_VREFINTRDY) == RESET) {
+            if( ((ketCube_RTC_GetTimerValue( ) - timeout)) < ketCube_RTC_ms2Tick(KETCUBE_AD_VREFINT_MAX_TIMEOUT_MS) ) {
+                break;
+            }
+        }
           
         __HAL_RCC_ADC1_CLK_ENABLE();
         
@@ -166,7 +172,7 @@ uint16_t ketCube_AD_ReadChannel(uint32_t channel) {
           
         /* Wait for the end of conversion */
         HAL_ADC_PollForConversion( &hadc, HAL_MAX_DELAY );
-          
+        
         /* Get the converted value of regular channel */
         adcData = HAL_ADC_GetValue(&hadc);
         

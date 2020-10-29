@@ -5,7 +5,7 @@
  * @date    2018-08-19
  * @brief   This file contains definitions for the KETCube batMeas module
  *
- * @attention
+* @attention
  *
  * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
  * All rights reserved.</center></h2>
@@ -127,6 +127,8 @@ uint8_t ketCube_batMeas_GetBatteryByte(void)
         ketCube_batMeas_batList
         [ketCube_batMeas_moduleCfg.selectedBattery].batDischarged;
 
+    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "Value %d mV", batteryLevelmV);
+        
     if (batteryLevelmV > batMax) {
         batteryLevel = 254;
     } else if (batteryLevelmV < batMin) {
@@ -156,7 +158,7 @@ ketCube_cfg_ModError_t ketCube_batMeas_ReadData(uint8_t * buffer,
     *len = 1;
     buffer[0] = ketCube_batMeas_GetBatteryByte();
 
-    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "%d",
+    ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_BATMEAS, "Encoded value: %d",
                                  buffer[0]);
 
     return KETCUBE_CFG_MODULE_OK;

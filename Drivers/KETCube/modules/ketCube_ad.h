@@ -61,6 +61,8 @@
 
 #define KETCUBE_AD_NAME                      "ad_drv"         ///< AD driver name
 
+#define KETCUBE_AD_VREFINT_MAX_TIMEOUT_MS     10              ///< Max timeout to stabilize vrefint
+
 /**
 * @}
 */
