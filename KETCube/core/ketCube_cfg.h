@@ -175,7 +175,7 @@ typedef struct ketCube_cfg_Module_t {
     ketCube_cfg_ModDataPtrFn_t fnProcessMsg;    /*!< Module function to process data by this module */
     ketCube_cfg_ModuleCfgByte_t * cfgPtr;       /*!< Pointer to actual/running KETCube configuration */
     ketCube_cfg_LenEEPROM_t cfgLen;             /*!< # of module configuration bytes: min = 1; max = 255; note that the first configuration byte is always set to TRUE when module is enabled and to FALSE when disabled (all bits are cleared) */
-    ketCube_cfg_AllocEEPROM_t EEpromBase;       /*!< EEPROM base for module configuration */
+    uint16_t EEpromBase;                        /*!< EEPROM base for module configuration */
 } ketCube_cfg_Module_t;
 
 /* Indicate pending events */

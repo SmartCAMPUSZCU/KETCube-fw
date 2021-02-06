@@ -132,10 +132,10 @@ ketCube_cfg_DrvError_t ketCube_AD_UnInit(void) {
 
 /**
   * @brief Read ADC channel single-conversion result
-  
+  *
   * @param channel ADC channel
   * 
-  * @retval value connversion result
+  * @retval value conversion result
   *
   */
 uint16_t ketCube_AD_ReadChannel(uint32_t channel) {
@@ -187,7 +187,7 @@ uint16_t ketCube_AD_ReadChannel(uint32_t channel) {
 
 /**
   * @brief Read ADC channel single-conversion value in mV
-  
+  *
   * @param channel ADC channel
   * 
   * @retval value connversion value in mV
@@ -222,7 +222,7 @@ uint16_t ketCube_AD_ReadChannelmV(uint32_t channel)
 /**
   * @brief This function returns the battery level in mV
   * @param none
-  
+  *
   * @retval battery level in mV
   */
 uint32_t ketCube_AD_GetBatLevelmV(void) {

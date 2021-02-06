@@ -2,3 +2,9 @@
 ### Project-Specific Targets
 ########################################################
 
+# Arduino version
+arduino: CFLAGS  += -DKETCUBE_USE_MAKEFILE_MOD_DEFINES
+arduino: CFLAGS  += -DKETCUBE_CFG_INC_MOD_LORA -DKETCUBE_CFG_INC_MOD_HDCX080 -DKETCUBE_CFG_INC_MOD_ADC -DKETCUBE_CFG_INC_MOD_BATMEAS -DKETCUBE_CFG_INC_MOD_ARDUINO
+arduino: $(OBJS) $(OUTFILES)
+	$(MAKE) sigdone
+

@@ -120,6 +120,7 @@ extern ketCube_cfg_DrvError_t ketCube_I2C_STMReadBlock(uint8_t devAddr,
 extern ketCube_cfg_DrvError_t ketCube_I2C_AnalogWriteReg(uint8_t devAddr,
                                                          uint8_t regAddr,
                                                          uint8_t data);
+
 /**
 * @}
 */

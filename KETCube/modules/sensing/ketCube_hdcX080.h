@@ -66,6 +66,19 @@
   * @{
   */
 
+/**
+* @brief  List of sensors supported by this driver
+*/
+typedef enum {
+    KETCUBE_HDCX080_RESULT_OK = 0x00,                  /*!< No error */
+    
+    KETCUBE_HDCX080_RESULT_ERROR_SENSDET = 0x01,       /*!< sensor detection failed */
+    
+    KETCUBE_HDCX080_RESULT_ERROR_I2CWRITE = 0x11,      /*!< generic I2C write error */
+    KETCUBE_HDCX080_RESULT_ERROR_I2CWRITEADDR = 0x12,  /*!< I2C write address error */
+    
+    KETCUBE_HDCX080_RESULT_ERROR_I2CREAD = 0x21,       /*!< generic I2C read error */
+} ketCube_hdcX080_result_t;
 
 /**
 * @brief  List of sensors supported by this driver
@@ -78,11 +91,21 @@ typedef enum {
 
 /**
 * @brief  KETCube module configuration
+* 
+* @note anonymous union is used; the Keil C compiler requires pragma
 */
+#ifdef __ARMCC_VERSION
+#pragma anon_unions
+#endif
 typedef struct ketCube_hdcX080_moduleCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
-    ketCube_hdcX080_sensType_t sensType;           /*!< Used sensor type */
-    uint8_t RFU[6];                                /*!< Reserved for future use, decrease size of this field when adding new values to preserve module configuration offsets */
+    union {
+        struct {
+            ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
+            ketCube_hdcX080_sensType_t sensType;           /*!< Used sensor type */
+            ketCube_hdcX080_result_t errno;                /*!< Error indication; meaningful is only the RAM value */
+        };
+        uint8_t raw[8];                                    /*!< 8 bytes are reserved for HDCX080 configuration for future configuration extension */
+    };
 } ketCube_hdcX080_moduleCfg_t;
 
 extern ketCube_hdcX080_moduleCfg_t ketCube_hdcX080_moduleCfg;
@@ -93,6 +116,7 @@ extern ketCube_hdcX080_moduleCfg_t ketCube_hdcX080_moduleCfg;
 * @brief  I2C Timeout.
 */
 #define KETCUBE_HDCX080_I2C_TIMEOUT 0x1000      /*!< Value of Timeout when I2C communication fails */
+#define KETCUBE_HDCX080_I2C_TRY          3      /*!< # repeats if error */
 
 
 /* ============================================ */

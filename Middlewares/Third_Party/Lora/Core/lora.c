@@ -721,11 +721,43 @@ LoraErrorStatus LORA_send(lora_AppData_t* AppData, LoraConfirm_t IsTxConfirmed)
          mcpsReq.Req.Confirmed.Datarate = LoRaParamInit->TxDatarate;
       }
    }
-   if( LoRaMacMcpsRequest( &mcpsReq ) == LORAMAC_STATUS_OK )
-   {
-      return LORA_SUCCESS;
+   
+   /* get status */
+   switch (LoRaMacMcpsRequest( &mcpsReq ) ) {
+       case LORAMAC_STATUS_OK:
+           return LORA_SUCCESS;
+       case LORAMAC_STATUS_BUSY:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: busy");
+           break;
+       case LORAMAC_STATUS_SERVICE_UNKNOWN:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: unknown");
+           break;
+       case LORAMAC_STATUS_PARAMETER_INVALID:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: invalid");
+           break;
+       case LORAMAC_STATUS_NO_NETWORK_JOINED:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: notJoined");
+           break;
+       case LORAMAC_STATUS_LENGTH_ERROR:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: lenErr");
+           break;
+       case LORAMAC_STATUS_MAC_COMMAD_ERROR:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: MACcmdErr");
+       case LORAMAC_STATUS_SKIPPED_APP_DATA:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: skippedAD");
+           break;
+       case LORAMAC_STATUS_NO_CHANNEL_FOUND:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: noCHFound");
+           break;
+       case LORAMAC_STATUS_DUTYCYCLE_RESTRICTED:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: dutyCycle");
+           break;
+       default:
+           ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "McpReq: ?");
+           break;
    }
    return LORA_ERROR;
+   
 }  
 
 #ifdef LORAMAC_CLASSB_ENABLED

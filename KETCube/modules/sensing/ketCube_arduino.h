@@ -1,10 +1,11 @@
 /**
- * @file    ketCube_timer.h
- * @author  Jan Belohoubek
+ * @file    ketCube_arduino.h
+ * @author  Tomáš Hák
+ * @author  Jan Bělohoubek
  * @version 0.2
- * @date    2018-07-12
- * @brief   This file contains definitions for the ketCube Timer(s) driver
- *
+ * @date    2020-10-01
+ * @brief   This file contains definitions for the Arduino driver
+ * 
  * @attention
  *
  * <h2><center>&copy; Copyright (c) 2018 University of West Bohemia in Pilsen
@@ -43,58 +44,53 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __KETCUBE_TIMER_H
-#define __KETCUBE_TIMER_H
+#ifndef __KETCUBE_ARDUINO_H
+#define __KETCUBE_ARDUINO_H
 
 #include "ketCube_cfg.h"
+#include "ketCube_common.h"
 
-/** @defgroup KETCube_Timer KETCube timer
-  * @brief KETCube Timer module
-  * @ingroup KETCube_ModuleDrivers
+/** @defgroup KETCube_Arduino KETCube Arduino
+  * @brief KETCube Arduino module
+  * @ingroup KETCube_SensMods
   * @{
   */
 
-#define KETCUBE_TIMER_NAME                      "timer_drv"         ///< TIMER driver name
-
-extern TIM_HandleTypeDef KETCube_Timer_Htim2;
-
-/**
-* @brief List of available timers
-*/
-typedef enum {
-    KETCUBE_TIMER_LIST_TIM2,    ///< 16-bit auto-reload up/down counter
-    KETCUBE_TIMER_LIST_TIM3,    ///< 16-bit auto-reload up/down counter
-    KETCUBE_TIMER_LIST_TIM21,   ///< 16-bit auto-reload up/down counter.
-    KETCUBE_TIMER_LIST_TIM22,   ///< 16-bit auto-reload up/down counter.
-    KETCUBE_TIMER_LIST_TIM6,    ///< A generic 16-bit timebase
-    KETCUBE_TIMER_LIST_TIM7,    ///< A generic 16-bit timebase
-    KETCUBE_TIMER_LIST_LPTIM,   ///< The low-power timer
-
-    KETCUBE_TIMER_LIST_CNT      ///< # of timers
-} ketCube_Timer_list_t;
+/** @defgroup KETCube_Arduino_defs Public Defines
+  * @brief Public defines
+  * @{
+  */
 
 /**
-* @brief Timer Usage
+* @brief  KETCube module configuration
 */
-typedef struct {
-    bool tim2:1;
-    bool tim3:1;
-    bool tim21:1;
-    bool tim22:1;
-    bool tim6:1;
-    bool tim7:1;
-    bool lptim:1;
-} ketCube_Timer_usage_t;
+typedef struct ketCube_arduino_moduleCfg_t {
+    ketCube_cfg_ModuleCfgByte_t coreCfg;           /*!< KETCube core cfg byte */
+    
+    /* Insert custom configuration here */
+    
+} ketCube_arduino_moduleCfg_t;
 
-/** @defgroup KETCube_Timer_fn Public Functions
+extern ketCube_arduino_moduleCfg_t ketCube_arduino_moduleCfg;
+
+
+/**
+* @}
+*/
+
+
+/** @defgroup KETCube_Arduino_fn Public Functions
   * @brief Public functions
   * @{
   */
 
-extern ketCube_cfg_DrvError_t ketCube_Timer_Init(ketCube_Timer_list_t tim);
-
-extern bool ketCube_Timer_Timer2_IsICEvent(void);
-extern void ketCube_Timer_Timer2_ResetICEvent(void);
+extern ketCube_cfg_ModError_t ketCube_arduino_Init(ketCube_InterModMsg_t
+                                                   *** msg);
+extern ketCube_cfg_ModError_t ketCube_arduino_UnInit(void);
+extern ketCube_cfg_ModError_t ketCube_arduino_ReadData(uint8_t * buffer,
+                                                       uint8_t * len);
+extern ketCube_cfg_ModError_t ketCube_arduino_sleepExit(void);
+extern ketCube_cfg_ModError_t ketCube_arduino_ProcessData(ketCube_InterModMsg_t * msg);
 
 /**
 * @}
@@ -104,4 +100,4 @@ extern void ketCube_Timer_Timer2_ResetICEvent(void);
 * @}
 */
 
-#endif                          /* __KETCUBE_TIMER_H */
+#endif                          /* __KETCUBE_ARDUINO_H */

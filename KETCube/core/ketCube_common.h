@@ -325,6 +325,32 @@ static inline uint8_t ketCube_common_Max(uint8_t a, uint8_t b)
         return b;
 }
 
+/**
+  * @brief Return median from an array of bytes
+  *
+  * @param values shorts array
+  * @param size array size
+  * 
+  * @retval med median
+  *
+  */
+static inline uint8_t ketCube_common_Med8(uint8_t * values, uint16_t size)
+{
+    uint16_t i, j, tmp;
+
+    // bubble-sort -- it's efficient for small arrays
+    for (i = 0; i < size - 1; i++) {
+        for (j = 0; j < size - 1 - i; j++) {
+            if (values[j] < values[j + 1]) {
+                tmp = values[j];
+                values[j] = values[j + 1];
+                values[j + 1] = tmp;
+            }
+        }
+    }
+
+    return (uint8_t) values[size / 2];
+}
 
 /**
   * @brief Return median from an array of shorts
@@ -362,7 +388,7 @@ static inline uint16_t ketCube_common_Med(uint16_t * values, uint16_t size)
   * @retval med median
   *
   */
-static inline uint32_t ketCube_common_Med32(uint32_t * values, uint32_t size)
+static inline uint32_t ketCube_common_Med32(uint32_t * values, uint16_t size)
 {
     uint32_t i, j, tmp;
 

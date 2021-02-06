@@ -146,15 +146,17 @@ typedef enum ketCube_terminal_cmdCheckResult_t {
  * @brief KETCube terminal command parameter type definitions
  */
 typedef enum ketCube_terminal_paramSet_type_t {
-    KETCUBE_TERMINAL_PARAMS_NONE = 0,
-    KETCUBE_TERMINAL_PARAMS_BOOLEAN,
-    KETCUBE_TERMINAL_PARAMS_STRING,
-    KETCUBE_TERMINAL_PARAMS_BYTE,
-    KETCUBE_TERMINAL_PARAMS_MODULEID,
-    KETCUBE_TERMINAL_PARAMS_INT32,
-    KETCUBE_TERMINAL_PARAMS_UINT32,
-    KETCUBE_TERMINAL_PARAMS_INT32_PAIR,
-    KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY
+    KETCUBE_TERMINAL_PARAMS_NONE       = 0,
+    KETCUBE_TERMINAL_PARAMS_BOOLEAN    = 1,
+    KETCUBE_TERMINAL_PARAMS_STRING     = 2,
+    KETCUBE_TERMINAL_PARAMS_INT8       = 3,
+    KETCUBE_TERMINAL_PARAMS_UINT8      = 4,
+    KETCUBE_TERMINAL_PARAMS_BYTE       = 4,
+    KETCUBE_TERMINAL_PARAMS_MODULEID   = 5,
+    KETCUBE_TERMINAL_PARAMS_INT32      = 6,
+    KETCUBE_TERMINAL_PARAMS_UINT32     = 7,
+    KETCUBE_TERMINAL_PARAMS_INT32_PAIR = 8,
+    KETCUBE_TERMINAL_PARAMS_BYTE_ARRAY = 9
 } ketCube_terminal_paramSet_type_t;
 
 /* Maximum length of string returned by command */
@@ -171,6 +173,10 @@ typedef union ketCube_terminal_paramSet_t {
     bool as_bool;
     /* KETCUBE_TERMINAL_PARAMS_BYTE */
     uint8_t as_byte;
+    /* KETCUBE_TERMINAL_PARAMS_UINT8 */
+    uint8_t as_uint8;
+    /* KETCUBE_TERMINAL_PARAMS_INT8 */
+    uint8_t as_int8;
     /* KETCUBE_TERMINAL_PARAMS_MODULEID */
     struct {
         uint16_t module_id;
@@ -277,6 +283,8 @@ static inline int ketCube_terminal_GetIOParamsMinStaticLength(
             return 0;
         case KETCUBE_TERMINAL_PARAMS_BOOLEAN:
             return sizeof(bool);
+        case KETCUBE_TERMINAL_PARAMS_INT8:
+            return sizeof(int8_t);
         case KETCUBE_TERMINAL_PARAMS_BYTE:
             return sizeof(uint8_t);
         case KETCUBE_TERMINAL_PARAMS_MODULEID:

@@ -57,7 +57,8 @@
 
 #define KETCUBE_GPIO_NAME               "gpio_drv"         ///< GPIO driver name
 
-#define KETCUBE_GPIO_LED_PERIOD         500                ///< LED driver blink period in ms
+#define KETCUBE_GPIO_LED_PERIOD               500          ///< LED driver LED flash period in ms
+#define KETCUBE_GPIO_LED_FLASH                 30          ///< LED driver LED flash length in ms
 
 /**
 * @brief List of GPIO PINs

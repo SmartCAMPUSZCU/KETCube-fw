@@ -57,8 +57,9 @@
  */
 void ketCube_lora_OTAAJoin(LoRaMacNvmCtx_t * NvmCtx, ApplyCFListParams_t * CFList)
 {    
-   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "NetID: 0x%04X", NvmCtx->NetID);
-   ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "DevAddr: 0x%04X", NvmCtx->DevAddr);
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "NetID: 0x%04X", NvmCtx->NetID);
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "DevAddr: 0x%04X", NvmCtx->DevAddr);
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Datarate: DR_%d", NvmCtx->MacParams.ChannelsDatarate);
 
    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX1 DR offset: %d", NvmCtx->MacParams.Rx1DrOffset);
    ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "RX2 datarate: %d", NvmCtx->MacParams.Rx2Channel.Datarate);   
@@ -80,7 +81,7 @@ void ketCube_lora_PrintCFList(ApplyCFListParams_t * CFList)
 
    // Size of the optional CF list
    if(CFList->Size != 16) {
-      ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFLIST :: size too small (%d).", CFList->Size);
+      ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFLIST :: size too small (%d).", CFList->Size);
       return;
    }
 
@@ -93,7 +94,7 @@ void ketCube_lora_PrintCFList(ApplyCFListParams_t * CFList)
 
       if(freq != 0) {
          // print freq
-         ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFList :: New Freq: %d Hz", freq);
+         ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "CFList :: New Freq: %d Hz", freq);
       }
    }
 }

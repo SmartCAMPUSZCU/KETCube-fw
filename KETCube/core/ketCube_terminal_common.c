@@ -472,6 +472,7 @@ static void ketCube_terminal_getEEPROMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
 
         case KETCUBE_TERMINAL_PARAMS_NONE:
         case KETCUBE_TERMINAL_PARAMS_BYTE:
+        case KETCUBE_TERMINAL_PARAMS_INT8:
         case KETCUBE_TERMINAL_PARAMS_MODULEID:
         case KETCUBE_TERMINAL_PARAMS_INT32:
         case KETCUBE_TERMINAL_PARAMS_UINT32:
@@ -540,6 +541,7 @@ static void ketCube_terminal_getRAMCfg(ketCube_terminal_cmd_t * cmdDescrPtr)
     {
         case KETCUBE_TERMINAL_PARAMS_NONE:
         case KETCUBE_TERMINAL_PARAMS_BYTE:
+        case KETCUBE_TERMINAL_PARAMS_INT8:
         case KETCUBE_TERMINAL_PARAMS_MODULEID:
         case KETCUBE_TERMINAL_PARAMS_INT32:
         case KETCUBE_TERMINAL_PARAMS_UINT32:

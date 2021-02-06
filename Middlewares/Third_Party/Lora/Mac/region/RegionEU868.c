@@ -907,6 +907,7 @@ LoRaMacStatus_t RegionEU868NextChannel( NextChanParams_t* nextChanParams, uint8_
         nbEnabledChannels = CountNbOfEnabledChannels( nextChanParams->Joined, nextChanParams->Datarate,
                                                       NvmCtx.ChannelsMask, NvmCtx.Channels,
                                                       NvmCtx.Bands, enabledChannels, &delayTx );
+        ketCube_terminal_NewDebugPrintln(KETCUBE_LISTS_MODULEID_LORA, "Enabled Ch: %d", nbEnabledChannels);
     }
     else
     {

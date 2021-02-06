@@ -5,12 +5,15 @@
 ## @file saveConfig.py
 #
 # @author Jan Belohoubek
-# @version 0.2
-# @date    2020-08-10
+# @version 0.2.1
+# @date    2021-01-25
 # @brief   This script is intended to store KETCube configuration to a file
 #
 # @note Requirements:
 #    Standard Python3 installation (Tested Fedora ...)
+#
+# @example
+#     ./dumpConfig.py --port /dev/ttyUSB0 --recipe default.recipe --output def.recipe
 #
 # @attention
 # 
@@ -57,23 +60,44 @@ import sys
 import common.common as common
 import common.terminal as term
 import common.recipe as recipe
+import argparse
 
+# cmdline args
+parser = argparse.ArgumentParser(description='Dump KETCube configuration')
+parser.add_argument('-p', '--port', help='COM port', type=str, default=None)
+parser.add_argument('-r', '--recipe', help='Recipe file for dump', type=str, default=None)
+parser.add_argument('-o', '--output', help='Output recipe file -- store read data', type=str, default=None)
+args = parser.parse_args()
 
 # --- MAIN ---
 
 common.initEnv()
 
-term.selectComPort()
+if args.port == None:
+    term.selectComPort()
+else:
+    term.COM = args.port
+    
 term.initCOM()
 
-term.sendCommand("show LoRa devEUIBoard")
-devEUI = term.getCmdResp(common.Types.PARAMS_BYTE_ARRAY)
-print("DevEUI:", devEUI)
+# Set input recipe
+if args.recipe == None:
+    setRecipe = recipe.processSetShowRecipe("show", "dump.recipe")
+else:
+    setRecipe = recipe.processSetShowRecipe("show", args.recipe)
 
-setRecipe = recipe.processSetShowRecipe("show", "dumpConfig.recipe")
+# Set output recipe
+if args.output == None:
+    term.sendCommand("show LoRa devEUIBoard")
+    devEUI = term.getCmdResp(common.Types.PARAMS_BYTE_ARRAY)
+    print("DevEUI:", devEUI)
+    outf = devEUI
+else:
+    outf = args.output
 
+# Save read config
 try:
-    FILE = open(devEUI, 'w')
+    FILE = open(outf, 'w')
     FILE.write(setRecipe)
     FILE.close()
 except:

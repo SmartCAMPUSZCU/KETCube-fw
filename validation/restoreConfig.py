@@ -5,12 +5,15 @@
 ## @file saveConfig.py
 #
 # @author Jan Belohoubek
-# @version 0.2
-# @date    2020-08-10
+# @version 0.2.1
+# @date    2021-01-25
 # @brief   This script is intended to restore KETCube configuration from a file
 #
 # @note Requirements:
 #    Standard Python3 installation (Tested Fedora ...)
+#
+# @example
+#    ./restoreConfig.py --port /dev/ttyUSB0 --recipe default.recipe
 #
 # @attention
 # 
@@ -57,20 +60,34 @@ import sys
 import common.common as common
 import common.terminal as term
 import common.recipe as recipe
+import argparse
+
+# cmdline args
+parser = argparse.ArgumentParser(description='Restore KETCube configuration')
+parser.add_argument('-p', '--port', help='COM port', type=str, default=None)
+parser.add_argument('-r', '--recipe', help='Recipe file', type=str, default=None)
+args = parser.parse_args()
 
 
 # --- MAIN ---
 
 common.initEnv()
 
-term.selectComPort()
+if args.port == None:
+    term.selectComPort()
+else:
+    term.COM = args.port
+    
 term.initCOM()
 
-term.sendCommand("show LoRa devEUIBoard")
-devEUI = term.getCmdResp(common.Types.PARAMS_BYTE_ARRAY)
-print("DevEUI:", devEUI)
-
-setRecipe = recipe.processSetShowRecipe("set", devEUI)
+if args.recipe == None:
+    # use devEUI-named recipe
+    term.sendCommand("show LoRa devEUIBoard")
+    devEUI = term.getCmdResp(common.Types.PARAMS_BYTE_ARRAY)
+    print("DevEUI:", devEUI)
+    setRecipe = recipe.processSetShowRecipe("set", devEUI)
+else:
+    setRecipe = recipe.processSetShowRecipe("set", "default.recipe")
 
 # do nothing with setRecipe ...
 

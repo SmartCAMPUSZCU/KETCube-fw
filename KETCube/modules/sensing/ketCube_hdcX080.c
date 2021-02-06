@@ -61,8 +61,9 @@
 
 ketCube_hdcX080_moduleCfg_t ketCube_hdcX080_moduleCfg; /*!< Module configuration storage */
 
-ketCube_cfg_ModError_t getHumidity(uint16_t * value);
-ketCube_cfg_ModError_t getTemperature(int16_t * value);
+/* Private function prototypes */
+bool getHumidity(uint16_t * value);
+bool getTemperature(int16_t * value);
 
 /**
  * @brief  Write TexasInstruments I2C periph 16-bit register
@@ -70,18 +71,24 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value);
  * @param  regAddr register address
  * @param  data pointer to 16-bit value
  * 
- * @retval KETCUBE_CFG_DRV_OK in case of success
- * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * @retval retval TRUE in case of success, else return FALSE
  */
-static ketCube_cfg_DrvError_t ketCube_I2C_HDC1080WriteReg(uint8_t devAddr,
-                                                          uint8_t regAddr,
-                                                          uint16_t * data)
+static bool ketCube_I2C_HDC1080WriteReg(uint8_t devAddr,
+                                        uint8_t regAddr,
+                                        uint16_t * data)
 {
     uint8_t buffer[2];
     buffer[0] = (uint8_t) ((*data >> 8) & 0x00FF);
     buffer[1] = (uint8_t) (*data & 0x00FF);
 
-    return ketCube_I2C_WriteData(devAddr, regAddr, &(buffer[0]), 2);
+    /* no error by default */
+    ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_OK;
+    if (ketCube_I2C_WriteData(devAddr, regAddr, &(buffer[0]), 2) == KETCUBE_CFG_DRV_OK) {
+        return TRUE;
+    } else {
+        ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_ERROR_I2CWRITE;
+        return FALSE;
+    }
 }
 
 /**
@@ -90,33 +97,44 @@ static ketCube_cfg_DrvError_t ketCube_I2C_HDC1080WriteReg(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data pointer to 16-bit value
  * 
- * @retval KETCUBE_CFG_DRV_OK in case of success
- * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * @retval retval TRUE in case of success, else return FALSE
  */
-static ketCube_cfg_DrvError_t ketCube_I2C_HDC1080ReadReg(uint8_t devAddr,
-                                                         uint8_t regAddr,
-                                                         uint16_t * data)
+static bool ketCube_I2C_HDC1080ReadReg(uint8_t devAddr,
+                                       uint8_t regAddr,
+                                       uint16_t * data)
 {
     uint8_t buffer[2];
+    uint8_t try;
     
-    /* Write pointer address */
-    if (ketCube_I2C_WriteRawData(devAddr, &regAddr, 1) == KETCUBE_CFG_DRV_ERROR) {
-        return KETCUBE_CFG_DRV_ERROR;
+    for (try = 0; try < KETCUBE_HDCX080_I2C_TRY; try++) {
+        /* Write pointer address */
+        if (ketCube_I2C_WriteRawData(devAddr, &regAddr, 1) == KETCUBE_CFG_DRV_ERROR) {
+            ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_ERROR_I2CWRITEADDR;
+            continue;
+        }
+        
+        /* Wait conversion time */ 
+        if ((regAddr == KETCUBE_HDC1080_HUMIDITY_REG) || (regAddr == KETCUBE_HDC1080_TEMPERATURE_REG)) {
+            HAL_Delay(10);
+        }
+        
+        /* Read data */
+        if (ketCube_I2C_ReadRawData(devAddr, &(buffer[0]), 2) == KETCUBE_CFG_DRV_ERROR) {
+            ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_ERROR_I2CREAD;
+            continue;
+        }
+        
+        /* do not repeat in cas of we are here */
+        break;
     }
     
-    /* Wait conversion time */ 
-    if ((regAddr == KETCUBE_HDC1080_HUMIDITY_REG) || (regAddr == KETCUBE_HDC1080_TEMPERATURE_REG)) {
-        HAL_Delay(10);
+    if (try < KETCUBE_HDCX080_I2C_TRY) {
+        *data = (((uint16_t) buffer[0]) << 8) | buffer[1];
+        ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_OK;
+        return TRUE;
+    } else {
+        return FALSE;
     }
-    
-    /* Read data */
-    if (ketCube_I2C_ReadRawData(devAddr, &(buffer[0]), 2) == KETCUBE_CFG_DRV_ERROR) {
-        return KETCUBE_CFG_DRV_ERROR;
-    }    
-
-    *data = (((uint16_t) buffer[0]) << 8) | buffer[1];
-
-    return KETCUBE_CFG_DRV_OK;
 }
 
 /**
@@ -125,17 +143,19 @@ static ketCube_cfg_DrvError_t ketCube_I2C_HDC1080ReadReg(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data 8-bit value
  * 
- * @retval KETCUBE_CFG_DRV_OK in case of success
- * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * @retval retval TRUE in case of success, else return FALSE
  */
-static ketCube_cfg_DrvError_t ketCube_I2C_HDC2080WriteReg(uint8_t devAddr,
-                                                          uint8_t regAddr,
-                                                          uint8_t data)
-{
-    if (ketCube_I2C_WriteData(devAddr, regAddr, &(data), 1)) {
-        return KETCUBE_CFG_DRV_ERROR;
+static bool ketCube_I2C_HDC2080WriteReg(uint8_t devAddr,
+                                        uint8_t regAddr,
+                                        uint8_t data)
+{    
+    /* no error by default */
+    ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_OK;
+    if (ketCube_I2C_WriteData(devAddr, regAddr, &(data), 1) == KETCUBE_CFG_DRV_OK) {
+        return TRUE;
     } else {
-        return KETCUBE_CFG_DRV_OK;
+        ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_ERROR_I2CWRITE;
+        return FALSE;
     }
 }
 
@@ -145,20 +165,27 @@ static ketCube_cfg_DrvError_t ketCube_I2C_HDC2080WriteReg(uint8_t devAddr,
  * @param  regAddr register address
  * @param  data 8-bit variable pointer
  * 
- * @retval KETCUBE_CFG_DRV_OK in case of success
- * @retval KETCUBE_CFG_DRV_ERROR in case of failure
+ * @retval retval TRUE in case of success, else return FALSE
  */
-static ketCube_cfg_DrvError_t ketCube_I2C_HDC2080ReadReg(uint8_t devAddr,
-                                                         uint8_t regAddr,
-                                                         uint8_t * data)
+static bool ketCube_I2C_HDC2080ReadReg(uint8_t devAddr,
+                                       uint8_t regAddr,
+                                       uint8_t * data)
 {
     /* Write pointer address */
     if (ketCube_I2C_WriteRawData(devAddr, &regAddr, 1) == KETCUBE_CFG_DRV_ERROR) {
-        return KETCUBE_CFG_DRV_ERROR;
+        ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_ERROR_I2CWRITEADDR;
+        return FALSE;
     }
     
     /* Read data */
-    return ketCube_I2C_ReadRawData(devAddr, data, 1);
+    if (ketCube_I2C_ReadRawData(devAddr, data, 1) == KETCUBE_CFG_DRV_ERROR) {
+        ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_ERROR_I2CREAD;
+        return FALSE;
+    }
+       
+    ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_OK;
+    return TRUE;
+    
 }
 
 
@@ -178,9 +205,9 @@ ketCube_cfg_ModError_t ketCube_hdc1080_Init(void)
 
     if (ketCube_I2C_HDC1080WriteReg
         (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_CONFIGURATION_REG,
-         (uint16_t *) & pxInit)) {
+         (uint16_t *) & pxInit) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                      "HDC1080 initialization failed!");
+                                      "HDC1080 initialization failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
         return KETCUBE_CFG_MODULE_ERROR;
     }
 
@@ -209,17 +236,17 @@ ketCube_cfg_ModError_t ketCube_hdc2080_Init(void)
     
     if (ketCube_I2C_HDC2080WriteReg
         (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_CFG_REG,
-         ((uint8_t *) &pxInit)[0] )) {
+         ((uint8_t *) &pxInit)[0] ) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                      "HDC2080 initialization failed!");
+                                      "HDC2080 initialization failed! (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
         return KETCUBE_CFG_MODULE_ERROR;
     }
     
     if (ketCube_I2C_HDC2080WriteReg
         (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_MEASCFG_REG,
-         ((uint8_t *) &pxInit)[1] )) {
+         ((uint8_t *) &pxInit)[1] ) == FALSE) {
         ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                      "HDC2080 initialization failed!");
+                                      "HDC2080 initialization failed! (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
         return KETCUBE_CFG_MODULE_ERROR;
     }
     
@@ -271,11 +298,11 @@ ketCube_cfg_ModError_t ketCube_hdcX080_Init(ketCube_InterModMsg_t *** msg)
 }
 
 /**
- * @brief Initialize the HDC1080 sensor
- *
- * @retval KETCUBE_CFG_MODULE_OK in case of success
- * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
- */
+  * @brief Initialize the HDC1080 sensor
+  *
+  * @retval KETCUBE_CFG_MODULE_OK in case of success
+  * @retval KETCUBE_CFG_MODULE_ERROR in case of failure
+  */
 ketCube_cfg_ModError_t ketCube_hdcX080_UnInit(void)
 {
     // UnInit drivers
@@ -283,13 +310,12 @@ ketCube_cfg_ModError_t ketCube_hdcX080_UnInit(void)
 }
 
 /**
-* @brief  Read HDC1080 Humidity output registers, and calculate humidity.
-* @param  value pointer to the returned humidity value that must be divided by 10 to get the value in [%].
-* 
-* @retval KETCUBE_CFG_MODULE_OK if success
-* @retval KETCUBE_CFG_MODULE_ERROR otherwise
-*/
-ketCube_cfg_ModError_t getHumidity(uint16_t * value)
+  * @brief  Read HDC1080 Humidity output registers, and calculate humidity.
+  * @param  value pointer to the returned humidity value that must be divided by 10 to get the value in [%].
+  * 
+  * @retval retval TRUE in case of success, else return FALSE
+  */
+bool getHumidity(uint16_t * value)
 {
     uint16_t rawH;
     
@@ -297,46 +323,45 @@ ketCube_cfg_ModError_t getHumidity(uint16_t * value)
         case KETCUBE_HDCX080_TYPE_HDC1080:
             if (ketCube_I2C_HDC1080ReadReg
                 (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_HUMIDITY_REG,
-                 &rawH)) {
+                 &rawH) == FALSE) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "Read humidity failed!");
-                return KETCUBE_CFG_MODULE_ERROR;
+                                              "Read humidity failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
+                return FALSE;
             }
             break;
         case KETCUBE_HDCX080_TYPE_HDC2080:
             /* Read LSB first! */
             if (ketCube_I2C_HDC2080ReadReg
                 (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_HUMIDITY_REG_L,
-                 &(((uint8_t *) &rawH)[0]))) {
+                 &(((uint8_t *) &rawH)[0])) == FALSE) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "Read humidity failed!");
-                return KETCUBE_CFG_MODULE_ERROR;
+                                              "Read humidity failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
+                return FALSE;
             }
             if (ketCube_I2C_HDC2080ReadReg
                 (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_HUMIDITY_REG_H,
-                 &(((uint8_t *) &rawH)[1]))) {
+                 &(((uint8_t *) &rawH)[1])) == FALSE) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "Read humidity failed!");
-                return KETCUBE_CFG_MODULE_ERROR;
+                                              "Read humidity failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
+                return FALSE;
             }
             break;
         default:
-            return KETCUBE_CFG_MODULE_ERROR;
+            return FALSE;
     }    
     
     *value = (uint16_t) (((float) (((float) rawH) / pow(2, 16))) * 1000.0);
 
-    return KETCUBE_CFG_MODULE_OK;
+    return TRUE;
 }
 
 /**
-* @brief  Read HDC1080 temperature output registers, and calculate temperature.
-* @param  value a pointer to the returned temperature value that must be divided by 10 to get the value in ['C].
-* 
-* @retval KETCUBE_CFG_MODULE_OK if success
-* @retval KETCUBE_CFG_MODULE_ERROR otherwise
-*/
-ketCube_cfg_ModError_t getTemperature(int16_t * value)
+  * @brief  Read HDC1080 temperature output registers, and calculate temperature.
+  * @param  value a pointer to the returned temperature value that must be divided by 10 to get the value in ['C].
+  * 
+  * @retval retval TRUE in case of success, else return FALSE
+  */
+bool getTemperature(int16_t * value)
 {
     uint16_t rawT;
     
@@ -344,38 +369,38 @@ ketCube_cfg_ModError_t getTemperature(int16_t * value)
         case KETCUBE_HDCX080_TYPE_HDC1080:
             if (ketCube_I2C_HDC1080ReadReg
                 (KETCUBE_HDC1080_I2C_ADDRESS, KETCUBE_HDC1080_TEMPERATURE_REG,
-                 &rawT)) {
+                 &rawT) == FALSE) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "Read temperature failed!");
-                return KETCUBE_CFG_MODULE_ERROR;
+                                              "Read temperature failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
+                return FALSE;
             }
             break;
         case KETCUBE_HDCX080_TYPE_HDC2080:
             /* Read LSB first! */
             if (ketCube_I2C_HDC2080ReadReg
                 (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_TEMPERATURE_REG_L,
-                 &(((uint8_t *) (&rawT))[0]))) {
+                 &(((uint8_t *) (&rawT))[0])) == FALSE) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "Read temperature failed!");
-                return KETCUBE_CFG_MODULE_ERROR;
+                                              "Read temperature failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
+                return FALSE;
             }
             if (ketCube_I2C_HDC2080ReadReg
                 (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_TEMPERATURE_REG_H,
-                 &(((uint8_t *) &rawT)[1]))) {
+                 &(((uint8_t *) &rawT)[1])) == FALSE) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "Read temperature failed!");
-                return KETCUBE_CFG_MODULE_ERROR;
+                                              "Read temperature failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
+                return FALSE;
             }
             break;
         default:
-            return KETCUBE_CFG_MODULE_ERROR;
+            return FALSE;
     }    
     
     *value =
         (int16_t) (10.0 *
                    (((((float) rawT) / pow(2, 16)) * 165.0) - 40.0));
 
-    return KETCUBE_CFG_MODULE_OK;
+    return TRUE;
 }
 
 /**
@@ -405,11 +430,12 @@ ketCube_cfg_ModError_t ketCube_hdcX080_ReadData(uint8_t * buffer,
             pxInit.MeasCfg = KETCUBE_HDC2080_MEASCFG_RHT;
             pxInit.MeasTrig = KETCUBE_HDC2080_MEASTRIG_START;
             
+            ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_OK; /* init errno  */
             if (ketCube_I2C_HDC2080WriteReg
                 (KETCUBE_HDC2080_I2C_ADDRESS, KETCUBE_HDC2080_MEASCFG_REG,
-                 ((uint8_t *) &pxInit)[1] )) {
+                 ((uint8_t *) &pxInit)[1] ) == FALSE) {
                 ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "HDC2080 measurement initialization failed!");
+                                              "HDC2080 measurement initialization failed (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
                 return KETCUBE_CFG_MODULE_ERROR;
             }
             break;
@@ -418,21 +444,23 @@ ketCube_cfg_ModError_t ketCube_hdcX080_ReadData(uint8_t * buffer,
             break;
         default:
         case KETCUBE_HDCX080_TYPE_AUTODETECT:
+            ketCube_hdcX080_moduleCfg.errno = KETCUBE_HDCX080_RESULT_ERROR_SENSDET;
             ketCube_terminal_ErrorPrintln(KETCUBE_LISTS_MODULEID_HDCX080,
-                                              "Module configuration Error!");
+                                              "Module configuration Error (errno = %d)!", ketCube_hdcX080_moduleCfg.errno);
             break;
     }
 
     /* in °C * 10 */
-    if (getTemperature(&temp) == KETCUBE_CFG_MODULE_OK) {
+    if (getTemperature(&temp) == TRUE) {
+        /* sign shift */
         temperature = (uint16_t) (10000 + ((int16_t) (temp)));  /*  x * 10 - 10000 in C */
     } else {
-        temperature = 0xFFFF;   // out-of the range value indicates error
+        temperature = ((0xFF << 8) | (ketCube_hdcX080_moduleCfg.errno));   // out-of the range value indicates error
     }
     
     /* in % * 10  */
-    if (getHumidity(&humidity) == KETCUBE_CFG_MODULE_ERROR) {
-        humidity = 0xFFFF;      // out-of the range value indicates error
+    if (getHumidity(&humidity) == FALSE) {
+        humidity = ((0xFF << 8) | (ketCube_hdcX080_moduleCfg.errno));      // out-of the range value indicates error
     }
 
     buffer[i++] = (temperature >> 8) & 0xFF;

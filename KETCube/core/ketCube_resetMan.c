@@ -54,7 +54,7 @@
  */
 void ketCube_resetMan_requestReset(ketCube_resetMan_reason_t reason) {
     // save reason
-    ketCube_coreCfg.volatileData.resetInfo.reason = reason;
+    ketCube_coreVolatileCfg.resetInfo.reason = reason;
     
     // perform reset
     NVIC_SystemReset();
@@ -69,33 +69,33 @@ void ketCube_resetMan_requestReset(ketCube_resetMan_reason_t reason) {
 void ketCube_resetMan_getResetCause(void) {
     if (__HAL_RCC_GET_FLAG(RCC_FLAG_LPWRRST))
     {
-        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_LOW_POWER;
+        ketCube_coreVolatileCfg.resetInfo.reason = KETCUBE_RESETMAN_REASON_LOW_POWER;
     }
     else if (__HAL_RCC_GET_FLAG(RCC_FLAG_WWDGRST))
     {
-        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_WWDG;
+        ketCube_coreVolatileCfg.resetInfo.reason = KETCUBE_RESETMAN_REASON_WWDG;
     }
     else if (__HAL_RCC_GET_FLAG(RCC_FLAG_IWDGRST))
     {
-        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_IWDG;
+        ketCube_coreVolatileCfg.resetInfo.reason = KETCUBE_RESETMAN_REASON_IWDG;
     }
     else if (__HAL_RCC_GET_FLAG(RCC_FLAG_SFTRST))
     {
         // this is handled by SW mechanism !
-        // !!! do not modify ketCube_coreCfg.volatileData.resetInfo.reason variable here !!!
+        // !!! do not modify ketCube_coreVolatileCfg.resetInfo.reason variable here !!!
         // !!! Flags arealready set !!!
     }
     else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PORRST))
     {
-        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_POR;
+        ketCube_coreVolatileCfg.resetInfo.reason = KETCUBE_RESETMAN_REASON_POR;
     }
     else if (__HAL_RCC_GET_FLAG(RCC_FLAG_PINRST))
     {
-        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_EXTPIN;
+        ketCube_coreVolatileCfg.resetInfo.reason = KETCUBE_RESETMAN_REASON_EXTPIN;
     }
     else
     {
-        ketCube_coreCfg.volatileData.resetInfo.reason = KETCUBE_RESETMAN_REASON_UNKNOWN;
+        ketCube_coreVolatileCfg.resetInfo.reason = KETCUBE_RESETMAN_REASON_UNKNOWN;
     }
 
     __HAL_RCC_CLEAR_RESET_FLAGS();
@@ -107,7 +107,7 @@ void ketCube_resetMan_getResetCause(void) {
  */
 void ketCube_resetMan_info(void) {
     
-    switch(ketCube_coreCfg.volatileData.resetInfo.reason) {
+    switch(ketCube_coreVolatileCfg.resetInfo.reason) {
         case KETCUBE_RESETMAN_REASON_USER_RQ:
         case KETCUBE_RESETMAN_REASON_USER_REMOTE_TERM:
             // this is valid reset reason - reset was invoked by SW - no error
@@ -144,7 +144,7 @@ void ketCube_resetMan_info(void) {
             KETCUBE_TERMINAL_PRINTF("!!! HardFault occured prior the RESET Event !!!");
             KETCUBE_TERMINAL_ENDL();
             KETCUBE_TERMINAL_ENDL();  
-            ketCube_MCU_DumpHardFaultRegs(&(ketCube_coreCfg.volatileData.resetInfo.info.dbg.hardFault));
+            ketCube_MCU_DumpHardFaultRegs(&(ketCube_coreVolatileCfg.resetInfo.info.dbg.hardFault));
             KETCUBE_TERMINAL_ENDL();
             break;
             

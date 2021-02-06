@@ -92,8 +92,8 @@ void KETCube_PeriodRepeatIfNeeded(void)
         return;
     }
     
-    if ((ketCube_coreCfg.volatileData.moduleSendErrorCnt == 0) &&
-        (ketCube_coreCfg.volatileData.modulePerErrorCnt == 0)) {
+    if ((ketCube_coreVolatileCfg.moduleSendErrorCnt == 0) &&
+        (ketCube_coreVolatileCfg.modulePerErrorCnt == 0)) {
         return;        
     }
         
@@ -190,7 +190,7 @@ int main(void)
     ketCube_terminal_Init();
 
     // A hot fix for non-operational RTC after POR - this should be removed in the future
-    if (ketCube_coreCfg.volatileData.resetInfo.reason == KETCUBE_RESETMAN_REASON_POR) {
+    if (ketCube_coreVolatileCfg.resetInfo.reason == KETCUBE_RESETMAN_REASON_POR) {
         //perform SW reset
         ketCube_terminal_CoreSeverityPrintln(KETCUBE_CFG_SEVERITY_INFO,
                                              "POR detected - reseting!");

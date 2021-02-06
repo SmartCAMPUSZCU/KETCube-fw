@@ -95,15 +95,16 @@
 
 extern ketCube_cfg_DrvError_t ketCube_RTC_Init(void);
 
-extern void ketCube_RTC_StopAlarm();
-extern uint32_t ketCube_RTC_GetMinimumTimeout();
+extern void ketCube_RTC_StopAlarm(void);
+extern uint32_t ketCube_RTC_GetMinimumTimeout(void);
 extern void ketCube_RTC_SetAlarm(uint32_t timeout);
 extern uint32_t ketCube_RTC_GetTimerElapsedTime(void);
 extern uint32_t ketCube_RTC_GetTimerValue(void);
 extern uint32_t ketCube_RTC_SetTimerContext(void);
 extern uint32_t ketCube_RTC_GetTimerContext(void) ;
 extern void ketCube_RTC_DelayMs(uint32_t delay);
-extern void ketCube_RTC_setMcuWakeUpTime();
+extern void ketCube_RTC_DelayUs(uint32_t delay);
+extern void ketCube_RTC_setMcuWakeUpTime(void);
 extern int16_t ketCube_RTC_getMcuWakeUpTime(void);
 extern uint32_t ketCube_RTC_ms2Tick(TimerTime_t timeMicroSec);
 extern TimerTime_t ketCube_RTC_Tick2ms(uint32_t tick);
@@ -113,6 +114,7 @@ extern void ketCube_RTC_BKUPWrite( uint32_t Data0, uint32_t Data1);
 extern void ketCube_RTC_BKUPRead( uint32_t *Data0, uint32_t *Data1);
 
 extern uint32_t HAL_GetTick(void);
+extern uint32_t HAL_GetUs(void);
 
 extern void ketCube_RTC_IrqHandler(void);
 

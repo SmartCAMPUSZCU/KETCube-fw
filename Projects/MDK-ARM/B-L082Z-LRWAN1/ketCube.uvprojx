@@ -10,13 +10,13 @@
       <TargetName>LORAWAN_DEVICE_EUIketCube</TargetName>
       <ToolsetNumber>0x4</ToolsetNumber>
       <ToolsetName>ARM-ADS</ToolsetName>
-      <pCCUsed>5060750::V5.06 update 6 (build 750)::ARMCC</pCCUsed>
+      <pCCUsed>5060960::V5.06 update 7 (build 960)::.\ARMCC</pCCUsed>
       <uAC6>0</uAC6>
       <TargetOption>
         <TargetCommonOption>
           <Device>STM32L072CZYx</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.1.6.1</PackID>
+          <PackID>Keil.STM32L0xx_DFP.2.1.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>IROM(0x08000000,0x00030000) IRAM(0x20000000,0x00005000) CPUTYPE("Cortex-M0+") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -184,6 +184,8 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>0</RvdsVP>
+            <RvdsMve>0</RvdsMve>
+            <RvdsCdeCp>0</RvdsCdeCp>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -337,7 +339,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>STM32L082xx,USE_B_L082Z_KETCube,USE_HAL_DRIVER, REGION_EU868,LOW_POWER_DISABLE,DEBUG</Define>
               <Undefine></Undefine>
-              <IncludePath>..\..\inc;..\..\..\Drivers\BSP\CMWX1ZZABZ-0xx;..\..\..\Drivers\BSP\Components\sx1276;..\..\..\Drivers\STM32L0xx_HAL_Driver\Inc;..\..\..\Drivers\CMSIS\Device\ST\STM32L0xx\Include;..\..\..\Drivers\CMSIS\Include;..\..\..\Middlewares\Third_Party\Semtech\Utilities;..\..\..\Middlewares\Third_Party\Lora\Crypto;..\..\..\Middlewares\Third_Party\Lora\Mac;..\..\..\Middlewares\Third_Party\Lora\Utilities;..\..\..\Middlewares\Third_Party\Lora\Core;..\..\..\Middlewares\Third_Party\Lora\Mac\region;..\..\..\KETCube\core;..\..\..\KETCube\modules\actuation;..\..\..\KETCube\modules\sensing;..\..\..\KETCube\modules\communication;..\..\..\Drivers\KETCube\core;..\..\..\Drivers\KETCube\modules</IncludePath>
+              <IncludePath>..\..\inc;..\..\..\Drivers\BSP\CMWX1ZZABZ-0xx;..\..\..\Drivers\BSP\Components\sx1276;..\..\..\Drivers\STM32L0xx_HAL_Driver\Inc;..\..\..\Drivers\CMSIS\Device\ST\STM32L0xx\Include;..\..\..\Drivers\CMSIS\Include;..\..\..\Middlewares\Third_Party\Semtech\Utilities;..\..\..\Middlewares\Third_Party\Lora\Crypto;..\..\..\Middlewares\Third_Party\Lora\Mac;..\..\..\Middlewares\Third_Party\Lora\Utilities;..\..\..\Middlewares\Third_Party\Lora\Core;..\..\..\Middlewares\Third_Party\Lora\Mac\region;..\..\..\KETCube\core;..\..\..\KETCube\modules\actuation;..\..\..\KETCube\modules\sensing;..\..\..\KETCube\modules\communication;..\..\..\Drivers\KETCube\core;..\..\..\Drivers\KETCube\modules;..\..\inc\Sensing;..\..\inc\Drivers;..\..\inc\Communication;..\..\inc\Actuation</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -350,7 +352,7 @@
             <NoWarn>0</NoWarn>
             <uSurpInc>0</uSurpInc>
             <useXO>0</useXO>
-            <uClangAs>0</uClangAs>
+            <ClangAsOpt>4</ClangAsOpt>
             <VariousControls>
               <MiscControls></MiscControls>
               <Define></Define>
@@ -496,6 +498,26 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_flash_ex.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32l0xx_hal_comp.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_comp.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32l0xx_hal_comp_ex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_comp_ex.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32l0xx_hal_iwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_iwdg.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32l0xx_hal_lptim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\STM32L0xx_HAL_Driver\Src\stm32l0xx_hal_lptim.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -517,29 +539,9 @@
               <FilePath>..\..\src\debug.c</FilePath>
             </File>
             <File>
-              <FileName>hw_rtc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\hw_rtc.c</FilePath>
-            </File>
-            <File>
-              <FileName>hw_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\hw_spi.c</FilePath>
-            </File>
-            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\src\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>mlm32l0xx_hal_msp.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\mlm32l0xx_hal_msp.c</FilePath>
-            </File>
-            <File>
-              <FileName>mlm32l0xx_hw.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\src\mlm32l0xx_hw.c</FilePath>
             </File>
             <File>
               <FileName>mlm32l0xx_it.c</FileName>
@@ -729,11 +731,6 @@
           <GroupName>Middlewares/Lora/Utilities</GroupName>
           <Files>
             <File>
-              <FileName>low_power.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Middlewares\Third_Party\Lora\Utilities\low_power.c</FilePath>
-            </File>
-            <File>
               <FileName>systime.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\Middlewares\Third_Party\Lora\Utilities\systime.c</FilePath>
@@ -858,11 +855,6 @@
               </FileOption>
             </File>
             <File>
-              <FileName>ketCube_remote_terminal.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\KETCube\core\ketCube_remote_terminal.h</FilePath>
-            </File>
-            <File>
               <FileName>ketCube_remote_terminal.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\KETCube\core\ketCube_remote_terminal.c</FilePath>
@@ -873,9 +865,9 @@
               <FilePath>..\..\..\KETCube\core\ketCube_terminal_common.c</FilePath>
             </File>
             <File>
-              <FileName>ketCube_terminal_common.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\KETCube\core\ketCube_terminal_common.h</FilePath>
+              <FileName>ketCube_resetMan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\KETCube\core\ketCube_resetMan.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -981,6 +973,67 @@
               <FileType>5</FileType>
               <FilePath>..\..\..\KETCube\modules\communication\ketCube_lora_ext.h</FilePath>
             </File>
+            <File>
+              <FileName>ketCube_testRadio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\KETCube\modules\communication\ketCube_testRadio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_testRadio_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\KETCube\modules\communication\ketCube_testRadio_cmd.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1005,16 +1058,6 @@
               <FileName>ketCube_bmeX80.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\KETCube\modules\sensing\ketCube_bmeX80.h</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_hdc1080.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_hdc1080.c</FilePath>
-            </File>
-            <File>
-              <FileName>ketCube_hdc1080.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\..\..\KETCube\modules\sensing\ketCube_hdc1080.h</FilePath>
             </File>
             <File>
               <FileName>ketCube_ics43432.c</FileName>
@@ -1102,6 +1145,67 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>ketCube_hdcX080.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\KETCube\modules\sensing\ketCube_hdcX080.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_hdcX080_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\KETCube\modules\sensing\ketCube_hdcX080_cmd.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -1136,6 +1240,11 @@
               <FileName>ketCube_gpio.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Drivers\KETCube\core\ketCube_gpio.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_mcu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\KETCube\core\ketCube_mcu.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1176,6 +1285,36 @@
               <FileName>ketCube_timer.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\..\..\Drivers\KETCube\modules\ketCube_timer.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_ad.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\KETCube\modules\ketCube_ad.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_radio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\KETCube\modules\ketCube_radio.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\KETCube\modules\ketCube_rtc.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>Z:\Drivers\KETCube\modules\ketCube_spi.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\drivers\ketCube_buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_max1501.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\drivers\ketCube_max1501.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1293,6 +1432,155 @@
               <FilePath>..\..\..\Middlewares\Third_Party\Lora\Mac\region\RegionUS915.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>Projects/Source/Sensing</GroupName>
+          <Files>
+            <File>
+              <FileName>ketCube_ad7143.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_ad7143.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_adpd188.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_adpd188.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_fdc2214.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_fdc2214.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_ltc2495.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_ltc2495.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_dettex.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_dettex.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_ad7143.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_ad7143.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_ad7143_cmd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_ad7143_cmd.c</FilePath>
+              <FileOption>
+                <CommonProperty>
+                  <UseCPPCompiler>2</UseCPPCompiler>
+                  <RVCTCodeConst>0</RVCTCodeConst>
+                  <RVCTZI>0</RVCTZI>
+                  <RVCTOtherData>0</RVCTOtherData>
+                  <ModuleSelection>0</ModuleSelection>
+                  <IncludeInBuild>0</IncludeInBuild>
+                  <AlwaysBuild>2</AlwaysBuild>
+                  <GenerateAssemblyFile>2</GenerateAssemblyFile>
+                  <AssembleAssemblyFile>2</AssembleAssemblyFile>
+                  <PublicsOnly>2</PublicsOnly>
+                  <StopOnExitCode>11</StopOnExitCode>
+                  <CustomArgument></CustomArgument>
+                  <IncludeLibraryModules></IncludeLibraryModules>
+                  <ComprImg>1</ComprImg>
+                </CommonProperty>
+                <FileArmAds>
+                  <Cads>
+                    <interw>2</interw>
+                    <Optim>0</Optim>
+                    <oTime>2</oTime>
+                    <SplitLS>2</SplitLS>
+                    <OneElfS>2</OneElfS>
+                    <Strict>2</Strict>
+                    <EnumInt>2</EnumInt>
+                    <PlainCh>2</PlainCh>
+                    <Ropi>2</Ropi>
+                    <Rwpi>2</Rwpi>
+                    <wLevel>0</wLevel>
+                    <uThumb>2</uThumb>
+                    <uSurpInc>2</uSurpInc>
+                    <uC99>2</uC99>
+                    <uGnu>2</uGnu>
+                    <useXO>2</useXO>
+                    <v6Lang>0</v6Lang>
+                    <v6LangP>0</v6LangP>
+                    <vShortEn>2</vShortEn>
+                    <vShortWch>2</vShortWch>
+                    <v6Lto>2</v6Lto>
+                    <v6WtE>2</v6WtE>
+                    <v6Rtti>2</v6Rtti>
+                    <VariousControls>
+                      <MiscControls></MiscControls>
+                      <Define></Define>
+                      <Undefine></Undefine>
+                      <IncludePath></IncludePath>
+                    </VariousControls>
+                  </Cads>
+                </FileArmAds>
+              </FileOption>
+            </File>
+            <File>
+              <FileName>ketCube_adpd188.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_adpd188.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_arduino.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_arduino.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_dettex.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_dettex.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_fdc2214.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_fdc2214.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_ltc2495.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_ltc2495.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_arduino.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_arduino.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_sentexcap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_sentexcap.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_sentexcap.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\..\inc\sensing\ketCube_sentexcap.h</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_flooding.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_flooding.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_lmp91000.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_lmp91000.c</FilePath>
+            </File>
+            <File>
+              <FileName>ketCube_arduino_api.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\src\sensing\ketCube_arduino_api.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Projects/Source/Drivers</GroupName>
         </Group>
       </Groups>
     </Target>

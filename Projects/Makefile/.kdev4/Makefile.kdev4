@@ -27,7 +27,7 @@ KETCUBE_CFG_INC_MOD_RXDISPLAY=
 KETCUBE_CFG_INC_MOD_STARNET=
 
 [Filters]
-size=32
+size=33
 
 [Filters][0]
 inclusive=0
@@ -157,6 +157,11 @@ targets=1
 [Filters][31]
 inclusive=0
 pattern=*.pyo
+targets=1
+
+[Filters][32]
+inclusive=0
+pattern=/gdb_startup
 targets=1
 
 [Filters][4]

@@ -483,4 +483,5 @@ ketCube_cfg_DrvError_t ketCube_I2C_STMWriteSingle(uint8_t devAddr,
     return KETCUBE_CFG_DRV_ERROR;
 }
 
+
 #endif // KETCUBE_CFG_INC_DRV_I2C

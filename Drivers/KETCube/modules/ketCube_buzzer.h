@@ -1,9 +1,9 @@
 /**
- * @file    ketCube_timer.h
+ * @file    ketCube_buzzer.h
  * @author  Jan Belohoubek
  * @version 0.2
  * @date    2018-07-12
- * @brief   This file contains definitions for the ketCube Timer(s) driver
+ * @brief   This file contains definitions for the KETCube Buzzer module
  *
  * @attention
  *
@@ -43,65 +43,51 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __KETCUBE_TIMER_H
-#define __KETCUBE_TIMER_H
+#ifndef __KETCUBE_BUZZER_H
+#define __KETCUBE_BUZZER_H
 
 #include "ketCube_cfg.h"
 
-/** @defgroup KETCube_Timer KETCube timer
-  * @brief KETCube Timer module
-  * @ingroup KETCube_ModuleDrivers
+/** @defgroup KETCube_buzzer KETCube Buzzer
+  * @brief KETCube Buzzer driver
+  * @ingroup KETCube_ActMods
   * @{
   */
 
-#define KETCUBE_TIMER_NAME                      "timer_drv"         ///< TIMER driver name
+#define KETCUBE_BUZZER_NAME              "buzzer_drv"         /*!<  Buzzer driver name */
 
-extern TIM_HandleTypeDef KETCube_Timer_Htim2;
+#define KETCUBE_BUZZER_TIMER             KETCUBE_TIMER_LIST_LPTIM
 
-/**
-* @brief List of available timers
-*/
-typedef enum {
-    KETCUBE_TIMER_LIST_TIM2,    ///< 16-bit auto-reload up/down counter
-    KETCUBE_TIMER_LIST_TIM3,    ///< 16-bit auto-reload up/down counter
-    KETCUBE_TIMER_LIST_TIM21,   ///< 16-bit auto-reload up/down counter.
-    KETCUBE_TIMER_LIST_TIM22,   ///< 16-bit auto-reload up/down counter.
-    KETCUBE_TIMER_LIST_TIM6,    ///< A generic 16-bit timebase
-    KETCUBE_TIMER_LIST_TIM7,    ///< A generic 16-bit timebase
-    KETCUBE_TIMER_LIST_LPTIM,   ///< The low-power timer
+#define KETCUBE_BUZZER_TICKS_PER_HZ     4.521                 /*!< Timer ticks per 1 Hz */
 
-    KETCUBE_TIMER_LIST_CNT      ///< # of timers
-} ketCube_Timer_list_t;
+#define KETCUBE_BUZZER_SOUND_QUEUE      8                     /*!< Sound queue depth */
 
 /**
-* @brief Timer Usage
+* @brief  KETCube module configuration
 */
-typedef struct {
-    bool tim2:1;
-    bool tim3:1;
-    bool tim21:1;
-    bool tim22:1;
-    bool tim6:1;
-    bool tim7:1;
-    bool lptim:1;
-} ketCube_Timer_usage_t;
+typedef struct ketCube_buzzer_beep_t {
+    uint16_t frequency;   /*!< Buzzer frequency [Hz] */
+    uint16_t duration;    /*!< Beep duration [ms] */
+    uint16_t mute;        /*!< Mute duration [ms] */
+    bool active;          /*!< Is active now or not */
+} ketCube_buzzer_beep_t;
 
-/** @defgroup KETCube_Timer_fn Public Functions
-  * @brief Public functions
-  * @{
-  */
+/** @defgroup KETCube_buzzer_fn Public Functions
+* @{
+*/
 
-extern ketCube_cfg_DrvError_t ketCube_Timer_Init(ketCube_Timer_list_t tim);
-
-extern bool ketCube_Timer_Timer2_IsICEvent(void);
-extern void ketCube_Timer_Timer2_ResetICEvent(void);
+extern ketCube_cfg_DrvError_t ketCube_buzzer_Init();
+extern ketCube_cfg_DrvError_t ketCube_buzzer_UnInit();
+extern void ketCube_buzzer_Beep(uint16_t freq, uint16_t dur, uint16_t mute);
+extern bool ketCube_buzzer_inProgress();
 
 /**
 * @}
 */
 
+
 /**
 * @}
 */
 
-#endif                          /* __KETCUBE_TIMER_H */
+#endif                          /* __KETCUBE_BUZZER_H */

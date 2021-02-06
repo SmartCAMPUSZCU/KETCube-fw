@@ -94,6 +94,7 @@
 #define LORAWAN_CUSTOM_DATA_PORT                    12
 #define LORAWAN_REMOTE_TERMINAL_PORT                13
 #define LORAWAN_UART2WAN_PORT                       14
+#define LORAWAN_ARDUINO_PORT                        15
 
 /**
  *  LoRa module configuration storage
@@ -145,7 +146,7 @@ LoraFlagStatus LoraMacProcessRequest = LORA_RESET;
 /**
  * Initialises the Lora Parameters
  */
-static LoRaParam_t LoRaParamInit = {LORAWAN_ADR_ON,
+static LoRaParam_t LoRaParamInit = {LORAWAN_ADR_OFF,
                                     DR_0,
                                     LORAWAN_PUBLIC_NETWORK};
 
@@ -169,11 +170,11 @@ ketCube_cfg_ModError_t ketCube_lora_Init(ketCube_InterModMsg_t *** msg)
     ketCube_Radio_Init();
     ketCube_AD_Init();
     
-#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
+#if defined(KETCUBE_CFG_INC_MOD_RXDISPLAY) || defined(KETCUBE_CFG_INC_MOD_UART2WAN) || defined(KETCUBE_CFG_INC_MOD_ARDUINO)
     ketCube_lora_rxData.msg = &(ketCube_lora_rxDataBuff[0]);
     ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
     ketCube_lora_rxData.msgLen = 0;
-    ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
+    //ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
     
     modMsgQueue[0] = &ketCube_lora_rxData;
     modMsgQueue[1] = NULL;
@@ -382,8 +383,8 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
 {
    uint16_t i;
 
-   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s on PORT=%d",
-   ketCube_common_bytes2Str(&(AppData->Buff[0]), AppData->BuffSize), AppData->Port);
+   ketCube_terminal_InfoPrintln(KETCUBE_LISTS_MODULEID_LORA, "Rx DATA=%s on PORT=%d; RSSI=%d; SNR=%d",
+   ketCube_common_bytes2Str(&(AppData->Buff[0]), AppData->BuffSize), AppData->Port, lora_config_rssi_get(), lora_config_snr_get());
 
    if (AppData->Port == LORAWAN_CUSTOM_DATA_PORT) {
       // custom data
@@ -393,13 +394,25 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
       ketCube_remoteTerminal_deferCmd((char*)&(AppData->Buff[0]),
           AppData->BuffSize, &ketCube_lora_RemoteTerminalSend);
       return;
-   } else if (AppData->Port == LORAWAN_HEX_DISPLAY_PORT) {
+   }
+#ifdef KETCUBE_CFG_INC_MOD_RXDISPLAY
+    else if (AppData->Port == LORAWAN_HEX_DISPLAY_PORT) {
       // NOTE: Continue below this conditional block; do not return!
    } else if (AppData->Port == LORAWAN_STRING_DISPLAY_PORT) {
       // NOTE: Continue below this conditional block; do not return!
-   } else if (AppData->Port == LORAWAN_UART2WAN_PORT) {
+   } 
+#endif
+#ifdef KETCUBE_CFG_INC_MOD_UART2WAN
+     else if (AppData->Port == LORAWAN_UART2WAN_PORT) {
       // NOTE: Continue below this conditional block; do not return!
-   } else {
+   } 
+#endif 
+#ifdef KETCUBE_CFG_INC_MOD_ARDUINO
+     else if (AppData->Port == LORAWAN_ARDUINO_PORT) {
+      // NOTE: Continue below this conditional block; do not return!
+   } 
+#endif 
+    else {
       // unknown port
       return;
    }
@@ -421,6 +434,9 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
    if (AppData->Port == LORAWAN_HEX_DISPLAY_PORT) {
       // received HEX
       ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_DATA;
+#if defined(KETCUBE_CFG_INC_MOD_RXDISPLAY)
+      ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
+#endif
    } else if (AppData->Port == LORAWAN_STRING_DISPLAY_PORT) {  
       // received STRING
       if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
@@ -430,6 +446,9 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
          ketCube_lora_rxData.msg[i - 1] = (char) 0;
       }
       ketCube_lora_rxData.msg[0] = KETCUBE_RXDISPLAY_DATATYPE_STRING;
+#if defined(KETCUBE_CFG_INC_MOD_RXDISPLAY)
+      ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_RXDISPLAY;
+#endif
    } 
 #ifdef KETCUBE_CFG_INC_MOD_UART2WAN
    else if (AppData->Port == LORAWAN_UART2WAN_PORT) {
@@ -440,6 +459,18 @@ static void ketCube_lora_RxData(lora_AppData_t * AppData)
             ketCube_lora_rxData.msg[i - 1] = (char) 0;
         }
         ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_UART2WAN;
+   }
+#endif
+
+#ifdef KETCUBE_CFG_INC_MOD_ARDUINO
+   else if (AppData->Port == LORAWAN_ARDUINO_PORT) {
+        if (i < KETCUBE_LORA_RX_BUFFER_LEN) {
+            ketCube_lora_rxData.msg[i] = (char) 0;
+            i++;
+        } else {
+            ketCube_lora_rxData.msg[i - 1] = (char) 0;
+        }
+        ketCube_lora_rxData.modID = KETCUBE_LISTS_MODULEID_ARDUINO;
    }
 #endif
 

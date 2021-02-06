@@ -84,7 +84,7 @@ volatile bool ketCube_MCU_PVD_Det = FALSE;
 
 static volatile bool ketCube_MCU_WD_timWake = FALSE;
 
-volatile ketCube_mcu_LPMode_t ketCube_MCU_LPMode = KETCUBE_MCU_LPMODE_SLEEP;
+volatile ketCube_mcu_LPMode_t ketCube_MCU_LPMode = KETCUBE_MCU_LPMODE_STOP;
 
 /**
   * @brief This function return a random seed
@@ -620,7 +620,7 @@ void HardFaultHandler(unsigned int* pStack) {
     }
     
     // DBG-info structure 
-    ketCube_MCU_HardFaultRegs_t * HardFaultRegs = &(ketCube_coreCfg.volatileData.resetInfo.info.dbg.hardFault);
+    ketCube_MCU_HardFaultRegs_t * HardFaultRegs = &(ketCube_coreVolatileCfg.resetInfo.info.dbg.hardFault);
     
     //
     // Store NVIC registers

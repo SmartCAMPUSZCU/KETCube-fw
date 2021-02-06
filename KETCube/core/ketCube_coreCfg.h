@@ -65,30 +65,45 @@
 /**
 * @brief  KETCube core configuration
 * 
-* @note 128B is reserved for CORE configuration in EEPROM - decrease RFU when adding new fields to the non-volatile part of the scructure - see the summary size of the fields and RFU
+* @note 128B is reserved for CORE configuration in EEPROM
 * 
 */
+#ifdef __ARMCC_VERSION
+#pragma anon_unions
+#endif
 typedef struct ketCube_coreCfg_t {
-    ketCube_cfg_ModuleCfgByte_t coreCfg; ///< KETCube core cfg byte
-    
-    uint32_t basePeriod;                 ///< This period is used by KETCube core to run periodic events
-    uint32_t startDelay;                 ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
-    uint32_t repeatDelay;                 ///< In case of error during the periodic action, the periodic action is repeated after this delay; if 0, it is not applicable
-    
-    ketCube_severity_t severity;         ///< Core messages severity
-    ketCube_severity_t driverSeverity;   ///< Driver(s) messages severity
-    uint16_t remoteTerminalCounter;      ///< Is currently in remote terminal mode (value > 0)? If so, how many basePeriods to reload?
-    
     union {
-        uint16_t moduleSendErrorCnt;     ///< Module periodic-send function error counter
-        uint16_t modulePerErrorCnt;      ///< Module periodic-get function error counter
-        
-        ketCube_resetMan_t resetInfo;    ///< Reset Reasoning
-        
-        uint8_t RFU[111];                ///< This part of EEPROM is RFU, when adding new field into coreCfg, decrease the size of this field to preserve configuration padding for module(s) configuration; 128B is reserved for CORE in total
-    } volatileData;                      ///< This union should aggregate volatile data, whose require no fixed location over KETCube releases
+        struct {
+            ketCube_cfg_ModuleCfgByte_t coreCfg; ///< KETCube core cfg byte
+            
+            uint32_t basePeriod;                 ///< This period is used by KETCube core to run periodic events
+            uint32_t startDelay;                 ///< This delay is used instead ketCube_coreCfg_BasePeriod to run periodic events at the first time
+            uint32_t repeatDelay;                ///< In case of error during the periodic action, the periodic action is repeated after this delay; if 0, it is not applicable
+            
+            ketCube_severity_t severity;         ///< Core messages severity
+            ketCube_severity_t driverSeverity;   ///< Driver(s) messages severity
+            uint16_t remoteTerminalCounter;      ///< Is currently in remote terminal mode (value > 0)? If so, how many basePeriods to reload?
+        };
+        uint8_t RFU[128];                        ///< This part of EEPROM is RFU 128B is reserved for CORE in total
+    };
 } ketCube_coreCfg_t;
 
+
+/**
+* @brief  KETCube volatile core configuration and context
+* 
+*/
+#ifdef __ARMCC_VERSION
+#pragma anon_unions
+#endif
+typedef struct ketCube_coreVolatileCfg_t {
+    uint16_t moduleSendErrorCnt;     ///< Module periodic-send function error counter
+    uint16_t modulePerErrorCnt;      ///< Module periodic-get function error counter
+    
+    ketCube_resetMan_t resetInfo;    ///< Reset Reasoning - this is about 128B
+} ketCube_coreVolatileCfg_t;
+
+extern ketCube_coreVolatileCfg_t ketCube_coreVolatileCfg;
 extern ketCube_coreCfg_t ketCube_coreCfg;
 
 /** @defgroup KETCube_coreCfg_fn Public Functions

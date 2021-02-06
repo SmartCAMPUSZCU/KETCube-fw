@@ -1,6 +1,6 @@
 /**
  *
- * @file    ketCube_s0_cmd.c
+ * @file    ketCube_batMeas_cmd.c
  * @author  Jan Belohoubek
  * @version 0.1
  * @date    2018-08-19

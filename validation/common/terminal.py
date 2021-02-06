@@ -67,7 +67,7 @@ BAUD_SPEED=9600
 TIMEOUT=0.1     # [s]
 
 ### KETCube options
-ENDL=b'\x0a\x0d'
+ENDL=b'\x0a'
 PROMPT=b'>> '
 
 ser = None
@@ -174,23 +174,39 @@ def _sendChar(c):
     global ser
     
     byteArr = [ c ]
+    byteRestore = [ 8 ]
     
     flushRxBuffer()
     
     cnt = 0
     
-    while True:
-        if cnt > 3:
-            return False
-        
-        length = ser.write(byteArr)
-        ser.flush()
-        echo = ser.read(1)
-        if (echo[0] != byteArr[0]):
-            cnt = cnt + 1
-            continue
-        else:
-            return True
+    try:
+        while True:
+            if cnt > 10:
+                return False
+            
+            length = ser.write(byteArr)
+            ser.flush()
+            echo = ser.read(1)
+            if (len(echo) < 1):
+                cnt = cnt + 1
+                continue
+            elif (len(echo) > 1):
+                # probably unrelated cmdline output
+                time.sleep(0.1)
+            
+            if ((echo[0] != byteArr[0]) or (len(echo) > 1)):
+                cnt = cnt + 1
+                time.sleep(0.01)
+                ser.write(byteRestore) # \b
+                # read \b and any unrelated junk
+                echo = ser.read()
+                continue
+            else:
+                return True
+    except Exception as e:
+        print(str(e))
+        return False
 
 ## Send a single command
 #
@@ -199,7 +215,8 @@ def _sendChar(c):
 def sendCommand(cmd):
     global ser, ENDL
     
-    _sendConfirm()
+    #_sendConfirm()
+    _sendChar(ENDL[0])
     time.sleep(0.1)
     flushRxBuffer()
     
@@ -213,7 +230,7 @@ def sendCommand(cmd):
             if (_sendChar(b) == False):
                 common.exitError()    
         
-        if (_sendConfirm() == False):
+        if (_sendChar(ENDL[0]) == False):
             common.exitError()
             
     except:

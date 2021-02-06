@@ -150,8 +150,12 @@ def processSetShowRecipe(setShow, dataRecipe):
             cmd = cmd + " " + records[3].strip()
         
         term.sendCommand(rootCmd + " " + cmd)
+        resp = term.getCmdResp(dataType)
+        if resp == "ERROR":
+            _closeRecipe()
+            common.exitError()
         
-        newSetRecipe = newSetRecipe + records[0] + "; " + records[1] + "; " + records[2] + "; " + term.getCmdResp(dataType) + ";\n"
+        newSetRecipe = newSetRecipe + records[0] + "; " + records[1] + "; " + records[2] + "; " + resp + ";\n"
 
     _closeRecipe()
     

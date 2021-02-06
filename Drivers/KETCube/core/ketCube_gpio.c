@@ -538,7 +538,7 @@ void ketCube_GPIO_SetLED(ketCube_gpio_port_t port, ketCube_gpio_pin_t pin, ketCu
  * 
  */
 void ketCube_gpio_LEDHandler(void* context) {
-    static bool blinkValue = TRUE;
+    static bool blinkValue = FALSE; /* if TRUE, LED is ON */
     bool blink = FALSE; /* is there any reason to "blink" next time ? */
     uint8_t port, pin;
     
@@ -552,12 +552,20 @@ void ketCube_gpio_LEDHandler(void* context) {
             if ((pinDescr[port][pin].used == TRUE) && (pinDescr[port][pin].function == KETCUBE_GPIO_FUNCTION_LED)) {
                 switch(pinDescr[port][pin].settings.LED_state) {
                     case KETCUBE_GPIO_LED_BLINK_SINGLE:
-                        ketCube_GPIO_Write(getPort(port), getPin(pin), pinDescr[port][pin].settings.polarity);
-                        pinDescr[port][pin].settings.LED_state = KETCUBE_GPIO_LED_OFF;
+                        if (blinkValue == TRUE) {
+                            ketCube_GPIO_Write(getPort(port), getPin(pin), pinDescr[port][pin].settings.polarity);
+                            pinDescr[port][pin].settings.LED_state = KETCUBE_GPIO_LED_OFF;
+                        } else {
+                            ketCube_GPIO_Write(getPort(port), getPin(pin), !(pinDescr[port][pin].settings.polarity));
+                        }
                         blink = TRUE; /* timer required ... */
                         break;
                     case KETCUBE_GPIO_LED_BLINK_CONT:
-                        ketCube_GPIO_Write(getPort(port), getPin(pin), blinkValue);
+                        if (blinkValue == TRUE) {
+                            ketCube_GPIO_Write(getPort(port), getPin(pin), pinDescr[port][pin].settings.polarity);
+                        } else {
+                            ketCube_GPIO_Write(getPort(port), getPin(pin), !(pinDescr[port][pin].settings.polarity));
+                        }
                         blink = TRUE; /* timer required ... */
                         break;
                     case KETCUBE_GPIO_LED_ON:
@@ -574,7 +582,13 @@ void ketCube_gpio_LEDHandler(void* context) {
     }
     
     if (blink != FALSE) {
-        TimerSetValue(&ketCube_gpio_LEDTimer, KETCUBE_GPIO_LED_PERIOD);
+        if (blinkValue == TRUE) {
+            // LED ON interval
+            TimerSetValue(&ketCube_gpio_LEDTimer, KETCUBE_GPIO_LED_FLASH);
+        } else {
+            // LED OFF interval
+            TimerSetValue(&ketCube_gpio_LEDTimer, (KETCUBE_GPIO_LED_PERIOD - KETCUBE_GPIO_LED_FLASH));
+        }
         TimerStart(&ketCube_gpio_LEDTimer);
     }
 }

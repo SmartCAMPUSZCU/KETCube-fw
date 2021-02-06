@@ -98,7 +98,7 @@ typedef enum {
     KETCUBE_MODULEID_UPSTREAM_BEGIN         = 128,  /*!< Upstream modules BEGIN */
     KETCUBE_MODULEID_LORA                   = 128,  /*!< Module LoRa */
     KETCUBE_MODULEID_DEBUGDISPLAY           = 129,  /*!< Module DebugDisplay */
-    KETCUBE_MODULEID_HDCX080                = 130,  /*!< Module HDCX080 (HDC1080 and HDC2080 support) */
+    KETCUBE_MODULEID_HDCX080                = 130,  /*!< Module HDCX080: HDC1080/HDC2080 share the common API! */
     KETCUBE_MODULEID_BATMEAS                = 131,  /*!< Module MeasBattery */
     KETCUBE_MODULEID_ADC                    = 132,  /*!< Module ADC */
     KETCUBE_MODULEID_STARNET_CONCENTRATOR   = 133,  /*!< Module starNet */
@@ -111,6 +111,7 @@ typedef enum {
     KETCUBE_MODULEID_ICS43432               = 140,  /*!< Module ICS43432 */
     KETCUBE_MODULEID_TEST_RADIO             = 141,  /*!< Module testRadio */
     KETCUBE_MODULEID_UART2WAN               = 142,  /*!< Module uart2WAN */
+    KETCUBE_MODULEID_ARDUINO                = 143,  /*!< Module Arduino */
 
     /* category 3 - third party modules - ID range 1024 - 65534 */
     
@@ -140,3 +141,4 @@ typedef enum {
 */
 
 #endif
+

@@ -284,6 +284,15 @@ uint32_t ketCube_RTC_ms2Tick(TimerTime_t timeMicroSec) {
 }
 
 /**
+ * @brief converts time in us to time in ticks
+ * @param [IN] time in microseconds
+ * @retval returns time in timer ticks
+ */
+uint32_t ketCube_RTC_us2Tick(TimerTime_t timeMicroSec) {
+  return ( uint32_t) ( ( ((uint64_t)timeMicroSec) * CONV_DENOM * 1000 ) / CONV_NUMER );
+}
+
+/**
  * @brief converts time in ticks to time in ms
  * @param [IN] time in timer ticks
  * @retval returns time in milliseconds
@@ -291,6 +300,15 @@ uint32_t ketCube_RTC_ms2Tick(TimerTime_t timeMicroSec) {
 TimerTime_t ketCube_RTC_Tick2ms(uint32_t tick) {
 /*return( ( timeMicroSec * RTC_ALARM_TIME_BASE ) ); */
   return  ( ( (uint64_t)( tick )* CONV_NUMER ) / CONV_DENOM );
+}
+
+/**
+ * @brief converts time in ticks to time in us
+ * @param [IN] time in timer ticks
+ * @retval returns time in microseconds
+ */
+TimerTime_t ketCube_RTC_Tick2us(uint32_t tick) {
+  return  ( ( (uint64_t)( tick )* CONV_NUMER * 1000) / CONV_DENOM );
 }
 
 /**
@@ -390,6 +408,25 @@ void ketCube_RTC_DelayMs(uint32_t delay) {
 }
 
 /**
+ * @brief a delay of delay us by polling RTC
+ * @param delay in us
+ * @retval none
+ */
+void ketCube_RTC_DelayUs(uint32_t delay) {
+  TimerTime_t delayValue = 0;
+  TimerTime_t timeout = 0;
+
+  delayValue = ketCube_RTC_us2Tick( delay );
+
+  /* Wait delay ms */
+  timeout = ketCube_RTC_GetTimerValue( );
+  while( ( ( ketCube_RTC_GetTimerValue( ) - timeout ) ) < delayValue )
+  {
+    __NOP( );
+  }
+}
+
+/**
  * @brief set Time Reference set also the RTC_DateStruct and RTC_TimeStruct
  * @param none
  * @retval Timer Value
@@ -405,7 +442,16 @@ uint32_t ketCube_RTC_SetTimerContext(void) {
  */
 uint32_t HAL_GetTick(void)
 {
-  return ketCube_RTC_GetTimerValue();
+  return ketCube_RTC_Tick2ms(ketCube_RTC_GetTimerValue());
+}
+
+/**
+ * @brief RTC-based getMicrosecond tick
+ * @retval current us
+ */
+uint32_t HAL_GetUs(void)
+{
+  return ketCube_RTC_Tick2us(ketCube_RTC_GetTimerValue());
 }
 
 
