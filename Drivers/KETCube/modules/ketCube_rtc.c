@@ -284,6 +284,15 @@ uint32_t ketCube_RTC_ms2Tick(TimerTime_t timeMicroSec) {
 }
 
 /**
+ * @brief converts time in us to time in ticks
+ * @param [IN] time in microseconds
+ * @retval returns time in timer ticks
+ */
+uint32_t ketCube_RTC_us2Tick(TimerTime_t timeMicroSec) {
+  return ( uint32_t) ( ( ((uint64_t)timeMicroSec) * CONV_DENOM / 1000 ) / CONV_NUMER );
+}
+
+/**
  * @brief converts time in ticks to time in ms
  * @param [IN] time in timer ticks
  * @retval returns time in milliseconds

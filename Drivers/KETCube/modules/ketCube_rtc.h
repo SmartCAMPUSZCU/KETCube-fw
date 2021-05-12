@@ -107,6 +107,7 @@ extern void ketCube_RTC_setMcuWakeUpTime();
 extern int16_t ketCube_RTC_getMcuWakeUpTime(void);
 extern uint32_t ketCube_RTC_ms2Tick(TimerTime_t timeMicroSec);
 extern TimerTime_t ketCube_RTC_Tick2ms(uint32_t tick);
+extern TimerTime_t ketCube_RTC_Tick2us(uint32_t tick);
 extern uint32_t ketCube_RTC_GetCalendarTime(uint16_t *subSeconds);
 uint32_t ketCube_RTC_GetSysTime(void);
 extern void ketCube_RTC_BKUPWrite( uint32_t Data0, uint32_t Data1);
