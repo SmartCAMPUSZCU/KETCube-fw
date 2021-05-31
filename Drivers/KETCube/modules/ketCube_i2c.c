@@ -134,19 +134,20 @@ ketCube_cfg_DrvError_t ketCube_I2C_Init(void) {
  */
 ketCube_cfg_DrvError_t ketCube_I2C_UnInit(void)
 {
+    // Run UnInit body once only: if (initRuns == 1)
+    
     if (initRuns > 1) {
         initRuns -= 1;
-        return KETCUBE_CFG_DRV_OK;
-    } else if (initRuns == 0) {
+    } else if (initRuns == 1) {
         // UnInit here ...
         HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
         ketCube_GPIO_Release(KETCUBE_MAIN_BOARD_PIN_SCL_PORT, KETCUBE_MAIN_BOARD_PIN_SCL_PIN);
         ketCube_GPIO_Release(KETCUBE_MAIN_BOARD_PIN_SDA_PORT, KETCUBE_MAIN_BOARD_PIN_SDA_PIN);
-        return KETCUBE_CFG_DRV_OK;
+        initRuns = 0;
+    } else {
+        initRuns = 0;
     }
-    // Run UnInit body once only: (initRuns == 1)
-    initRuns -= 1;
-
+    
     return KETCUBE_CFG_DRV_OK;
 }
 
@@ -274,8 +275,6 @@ static void ketCube_I2C_Error()
     for (i = tmpInitRuns; i > 0; i--) {
         ketCube_I2C_UnInit();
     }
-    /* De-initialize the I2C comunication bus */
-    // HAL_I2C_DeInit(&KETCUBE_I2C_Handle);
 
     /* Re-Initiaize the I2C comunication bus */
     for (i = tmpInitRuns; i > 0; i--) {
