@@ -1,0 +1,3 @@
+[submodule "validation/KETCube-python"]
+	path = validation/KETCube-python
+	url = https://github.com/SmartCAMPUSZCU/KETCube-python
